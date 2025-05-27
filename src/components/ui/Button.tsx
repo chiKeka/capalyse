@@ -69,31 +69,25 @@ const Button: React.FC<ButtonProps> = ({
   const variantClasses: Record<ButtonVariant, Record<ButtonState, string>> = {
     primary: {
       default:
-        'bg-teal-600 text-white border border-teal-600 hover:bg-teal-700 focus:ring-teal-500',
-      hover:
-        'bg-teal-700 text-white border border-teal-700 focus:ring-teal-500',
-      loading:
-        'bg-teal-600 text-white border border-teal-600 cursor-wait opacity-80',
-      disabled:
-        'bg-gray-300 text-gray-500 border border-gray-300 cursor-not-allowed',
+        'bg-green text-white hover:bg-primary-green-7 focus:ring-teal-500',
+      hover: 'bg-primary-green-7 text-white focus:ring-teal-500',
+      loading: 'bg-primary-green-4 text-white cursor-wait',
+      disabled: 'bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed',
     },
     secondary: {
       default:
-        'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-500',
-      hover:
-        'bg-gray-50 text-gray-700 border border-gray-300 focus:ring-gray-500',
-      loading:
-        'bg-white text-gray-700 border border-gray-300 cursor-wait opacity-80',
+        'bg-white text-green border border-green hover:bg-gray-50 focus:ring-gray-500',
+      hover: 'bg-[#F4F6F8] text-green border border-green focus:ring-gray-500',
+      loading: 'bg-white text-green border border-green cursor-wait',
       disabled:
-        'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed',
+        'bg-transparent text-black-50 border border-black-50 cursor-not-allowed',
     },
     tertiary: {
       default:
-        'bg-transparent text-gray-700 border-none hover:bg-gray-100 focus:ring-gray-500',
-      hover: 'bg-gray-100 text-gray-700 border-none focus:ring-gray-500',
-      loading:
-        'bg-transparent text-gray-700 border-none cursor-wait opacity-80',
-      disabled: 'bg-transparent text-gray-400 border-none cursor-not-allowed',
+        'bg-transparent text-black-400 border-none hover:bg-gray-100 focus:ring-gray-500',
+      hover: 'bg-[#F1F5F9] text-black-400 border-none focus:ring-gray-500',
+      loading: 'bg-transparent text-black-400 border-none cursor-wait',
+      disabled: 'bg-transparent text-black-300 border-none cursor-not-allowed',
     },
   };
 
@@ -101,12 +95,12 @@ const Button: React.FC<ButtonProps> = ({
   const getIconSizeClass = (buttonSize: ButtonSize): string => {
     switch (buttonSize) {
       case 'small':
-        return 'w-3 h-3';
+        return 'h-[2.25rem]';
       case 'big':
-        return 'w-5 h-5';
+        return 'h-[3.5rem]';
       case 'medium':
       default:
-        return 'w-4 h-4';
+        return 'h-[2.75rem]';
     }
   };
 
