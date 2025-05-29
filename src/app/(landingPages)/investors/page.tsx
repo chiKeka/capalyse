@@ -1,10 +1,10 @@
-"use client";
-import Cta from "@/components/sections/Cta";
-import Cta2 from "@/components/sections/Cta2";
-import InverstmentReadiness from "@/components/sections/Cta3";
-import HowItWorks from "@/components/sections/HowItWorks";
-import SMEsHero from "@/components/sections/SMEsHero";
-import { data, investorCardData } from "@/lib/uitils/contentData";
+'use client';
+import Cta from '@/components/sections/Cta';
+import Cta2 from '@/components/sections/Cta2';
+import InverstmentReadiness from '@/components/sections/Cta3';
+import HowItWorkstoo from '@/components/sections/HowItWorkstoo';
+import SMEsHero from '@/components/sections/SMEsHero';
+import { data, investorCardData } from '@/lib/uitils/contentData';
 
 type Props = {};
 
@@ -16,8 +16,8 @@ function Investors({}: Props) {
         header={
           <>
             <span className="text-green">
-              Discover high-potential African SMEs{" "}
-            </span>{" "}
+              Discover high-potential African SMEs{' '}
+            </span>{' '}
             ready for investment.
           </>
         }
@@ -36,7 +36,7 @@ function Investors({}: Props) {
         smsEcardData={investorCardData}
       />
       {/* how it works section */}
-      <HowItWorks />
+      <HowItWorkstoo />
       {/* key benefits */}
       <Cta2
         reverse={true}

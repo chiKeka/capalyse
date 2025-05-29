@@ -1,4 +1,4 @@
-import Button from "../ui/Button";
+import Button from '../ui/Button';
 
 type Props = {
   heading: React.ReactNode;
@@ -7,11 +7,11 @@ type Props = {
 
 const Cta = ({ heading, text }: Props) => {
   return (
-    <section className="py-20">
+    <section className="py-20 px-4">
       <div className="container mx-auto text-center bg-[#E4F9F3] border border-primary-green-2 rounded-3xl relative">
         <div className="absolute inset-0 h-full">
           <img
-            src={"/images/cta-img.png"}
+            src={'/images/cta-img.png'}
             alt="image"
             className="object-cover xl:object-end h-full w-full"
           />

@@ -19,14 +19,14 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <div className="flex items-center space-x-2">
+            <Link href={'/'} className="flex items-center space-x-2">
               <Image
                 src={'/logo.png'}
                 width={159.26}
                 height={37.9}
                 alt="capalyze"
               />
-            </div>
+            </Link>
           </div>
 
           <div className="hidden lg:block">
@@ -111,11 +111,11 @@ const navlinks = [
   },
   {
     text: 'For SMEs',
-    url: '#',
+    url: '/SMEs',
   },
   {
     text: 'For Investors',
-    url: '#',
+    url: '/investors',
   },
   {
     text: 'Resources',
