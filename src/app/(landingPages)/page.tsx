@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import LandingHero from '@/components/sections/LandingHero';
-import WhoWeServe from '@/components/sections/whoWeServe';
-import HowItWorks from '@/components/sections/HowItWorks';
-import WhyCapalyse from '@/components/sections/WhyCapalyse';
-import Faq from '@/components/sections/faq';
-import Resources from '@/components/sections/Resources';
-import Cta from '@/components/sections/Cta';
+import Cta from "@/components/sections/Cta";
+import Faq from "@/components/sections/faq";
+import HowItWorks from "@/components/sections/HowItWorks";
+import LandingHero from "@/components/sections/LandingHero";
+import Resources from "@/components/sections/Resources";
+import WhoWeServe from "@/components/sections/whoWeServe";
+import WhyCapalyse from "@/components/sections/WhyCapalyse";
 
 export default function CapalyzeLanding() {
   return (
@@ -25,7 +25,17 @@ export default function CapalyzeLanding() {
       {/* Resources */}
       <Resources />
       {/* CTA Section */}
-      <Cta />
+      <Cta
+        heading={
+          <>
+            Ready to make
+            <span className="text-green">
+              smarter <br />
+              capital moves?
+            </span>
+          </>
+        }
+      />
     </>
   );
 }
