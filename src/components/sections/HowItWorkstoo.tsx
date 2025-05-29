@@ -1,43 +1,9 @@
 import { classNames } from '@/lib/uitils';
 import { ReactNode, useState } from 'react';
-import { CIcons } from '../ui/CIcons';
+import { investorsContent, smeContent } from './HowItWorks';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
-const smeContent = [
-  {
-    icon: CIcons.createAccount,
-    title: 'Create an Account',
-    desc: 'Sign up in minutes and access your personalized SME dashboard.',
-  },
-  {
-    icon: CIcons.investment,
-    title: 'Complete the investment readiness assessment',
-    desc: 'Answer structured questions across governance, finance, compliance, traction, and scalability. No documents needed to start.',
-  },
-  {
-    icon: CIcons.discovered,
-    title: 'Get Discovered by Investors',
-    desc: "Once you're ready, we match your profile with investors looking for businesses like yours.",
-  },
-];
 
-const investorsContent = [
-  {
-    icon: CIcons.createAccount,
-    title: 'Create a Profile',
-    desc: 'Sign up and define your investment preferences (sector, geography, ticket size, stage).',
-  },
-  {
-    icon: CIcons.investment,
-    title: 'Access and analyze SME Investment Readiness Reports',
-    desc: 'View only SMEs that match your criteria, pre-screened through our assessment framework.',
-  },
-  {
-    icon: CIcons.engage,
-    title: 'Engage Directly with Founders',
-    desc: 'Book discovery calls, request documents, and track communication — all through the platform.',
-  },
-];
 const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isAnimating, setIsAnimating] = useState(false);
