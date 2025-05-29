@@ -71,36 +71,36 @@ const faqs = [
   {
     question: 'What is Capalyze and who is it for?',
     answer:
-      "Capalyze is a digital platform that helps African SMEs access investment and connect with investors. It's designed for business owners looking to grow their companies and investors seeking opportunities in Africa.",
+      'Capalyze is a digital platform that helps African SMEs prepare for investment and connect with verified investors. It’s also designed for investors seeking fundable, compliant, and investor-ready businesses.',
   },
   {
     question: 'How does the Investment Readiness Score work?',
     answer:
-      'Our proprietary algorithm evaluates your business across multiple dimensions to provide a comprehensive readiness score for investment opportunities.',
+      'The score is calculated based on your responses to a structured business assessment. It evaluates financials, governance, compliance, traction, and scalability to determine how ready your business is to raise funding.',
   },
   {
-    question: 'What companies does does Capalyze cover?',
+    question: 'What compliance areas does Capalyze cover?',
     answer:
-      'We focus on small and medium enterprises across various sectors in Africa, particularly those with growth potential and scalability.',
+      'WCapalyze checks key compliance indicators like business registration, tax status, financial records, ESG signals, and regional trade alignment (AfCFTA, ECOWAS, SADC, EAC).',
   },
   {
-    question: 'Is Capalyze just for businesses in Nigeria?',
+    question: 'Is Capalyze only for businesses in Nigeria?',
     answer:
-      "While we started in Nigeria, we're expanding across Africa to serve businesses throughout the continent.",
+      'No. Capalyze is built to support businesses across Africa, with region-specific tools and scoring frameworks for countries in trade zones like ECOWAS, SADC, EAC, and under AfCFTA.',
   },
   {
     question: "Can I use Capalyze if I'm not currently fundraising?",
     answer:
-      'Yes! Capalyze offers tools and insights to help you prepare for future fundraising and improve your business operations.',
+      "Yes. Capalyze is a long-term growth tool. You can use it to improve your structure, compliance, and documentation even if you're not actively raising capital.",
   },
   {
     question: 'What kind of investors are on the platform?',
     answer:
-      'Our platform connects you with angel investors, VCs, and institutional investors interested in African market opportunities.',
+      'Capalyze works with pre-vetted investors including angel investors, venture capitalists, and development finance institutions interested in African SMEs.',
   },
   {
     question: 'Is my business information safe on Capalyze?',
     answer:
-      'We take data security seriously and employ industry-standard encryption and security measures to protect your business information.',
+      'Yes. We follow industry-standard data protection protocols. Your data is encrypted and never shared without your consent.',
   },
 ];

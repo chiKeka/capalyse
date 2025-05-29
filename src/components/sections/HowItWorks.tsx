@@ -3,7 +3,7 @@ import { ReactNode, useState } from 'react';
 import { CIcons } from '../ui/CIcons';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
-const smeContent = [
+export const smeContent = [
   {
     icon: CIcons.createAccount,
     title: 'Create an Account',
@@ -21,7 +21,7 @@ const smeContent = [
   },
 ];
 
-const investorsContent = [
+export const investorsContent = [
   {
     icon: CIcons.createAccount,
     title: 'Create a Profile',
