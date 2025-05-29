@@ -1,19 +1,19 @@
-"use client";
-import Cta from "@/components/sections/Cta";
-import Cta2 from "@/components/sections/Cta2";
-import InverstmentReadiness from "@/components/sections/Cta3";
-import HowItWorks from "@/components/sections/HowItWorks";
+'use client';
+import Cta from '@/components/sections/Cta';
+import Cta2 from '@/components/sections/Cta2';
+import InverstmentReadiness from '@/components/sections/Cta3';
+import HowItWorkstoo from '@/components/sections/HowItWorkstoo';
 
-import SMEsHero from "@/components/sections/SMEsHero";
-import { smsEcardsData } from "@/lib/uitils/contentData";
+import SMEsHero from '@/components/sections/SMEsHero';
+import { smsEcardsData } from '@/lib/uitils/contentData';
 
 type Props = {};
 const data = [
-  "Know where you stand before stepping into a room with investors",
-  "Learn what matters, when it matters, for your African business",
-  "Find funders who are already looking for businesses like yours.",
-  "Less paperwork, more deal flow.",
-  "Join a growing ecosystem of funders, and advisors across Africa.",
+  'Know where you stand before stepping into a room with investors',
+  'Learn what matters, when it matters, for your African business',
+  'Find funders who are already looking for businesses like yours.',
+  'Less paperwork, more deal flow.',
+  'Join a growing ecosystem of funders, and advisors across Africa.',
 ];
 function SMEs({}: Props) {
   return (
@@ -46,7 +46,7 @@ function SMEs({}: Props) {
         smsEcardData={smsEcardsData}
       />
       {/* how it works section */}
-      <HowItWorks />
+      <HowItWorkstoo isSme />
       {/* key benefits */}
       <Cta2
         data={data}

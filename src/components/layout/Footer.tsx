@@ -1,20 +1,21 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { FaFacebookF, FaGithub, FaInstagram, FaTwitter } from 'react-icons/fa6';
 
 const Footer = () => {
   return (
-    <footer className="bg-teal-800 text-white py-16">
+    <footer className="bg-green text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center space-x-2 mb-6">
+            <Link href={'/'} className="flex items-center space-x-2 mb-6">
               <Image
                 src={'/logo-white.png'}
                 width={185.88}
                 height={44.43}
                 alt="capalyze"
               />
-            </div>
+            </Link>
 
             <div className="flex space-x-4">
               <div className="w-8 h-8">
@@ -80,8 +81,8 @@ export default Footer;
 
 const company = [
   { url: '#', text: 'About' },
-  { url: '#', text: 'For SMEs' },
-  { url: '#', text: 'For Investors' },
+  { url: '/SMEs', text: 'For SMEs' },
+  { url: '/investors', text: 'For Investors' },
   { url: '#', text: 'Contact' },
 ];
 const resources = [
