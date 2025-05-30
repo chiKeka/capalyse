@@ -49,3 +49,46 @@ export const investorCardData = [
 ];
 
 // for investors
+
+// for resources
+
+export const resouresData = [
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-afcfta",
+  },
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-ethiopia",
+  },
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-adisababa",
+  },
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-nigeria",
+  },
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-ganah",
+  },
+  {
+    header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    text: "Explore how the AfCFTA is transforming cross-border trade, reducing barriers, and creating new opportunities for African businesses",
+    image: "/images/resourcesDetails.png",
+    id: "trading-iveorycoast",
+  },
+];
+
+// Resources
