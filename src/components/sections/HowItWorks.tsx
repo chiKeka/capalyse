@@ -1,6 +1,7 @@
 import { classNames } from '@/lib/uitils';
 import { ReactNode, useState } from 'react';
 import { CIcons } from '../ui/CIcons';
+import { motion } from 'framer-motion';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 export const smeContent = [
@@ -55,7 +56,13 @@ const HowItWorks = () => {
   };
 
   return (
-    <section className="pt-16">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      className="pt-16"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-8">
@@ -93,7 +100,7 @@ const HowItWorks = () => {
           )}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

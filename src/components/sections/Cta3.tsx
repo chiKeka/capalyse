@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { motion } from 'framer-motion';
 
 type Props = {
   smsEcardData: { caption: string; text: string }[];
@@ -8,7 +9,13 @@ type Props = {
 
 function InverstmentReadiness({ smsEcardData, header, text }: Props) {
   return (
-    <section className="py-20  relative">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      className="py-20  relative"
+    >
       <div className="lg:max-w-7xl w-[95%] mx-auto py-8 px-4 lg:py-[69px] lg:px-[176px] bg-[#F4FFFC] rounded-[24px] border-1 border-[#ABD2C7]">
         <div className="w-full items-center flex-col flex ">
           <h3 className="text-4xl font-bold text-center">{header}</h3>
@@ -23,7 +30,7 @@ function InverstmentReadiness({ smsEcardData, header, text }: Props) {
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

@@ -1,11 +1,18 @@
-import Button from "../ui/Button";
-import Input from "../ui/Inputs";
+import Button from '../ui/Button';
+import Input from '../ui/Inputs';
+import { motion } from 'framer-motion';
 
 type Props = {};
 
 function Contact({}: Props) {
   return (
-    <section className=" py-20 relative">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      className=" py-20 relative"
+    >
       <div className="max-w-7xl lg:flex-row flex flex-col  justify-between mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="w-full max-w-md mb-8">
           <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
@@ -15,7 +22,7 @@ function Contact({}: Props) {
 
           <p>
             Got any questions or concerns about any of our services? We really
-            can’t wait to hear from you!
+            can't wait to hear from you!
           </p>
         </div>
         <div className="w-full lg:max-w-xl">
@@ -56,7 +63,7 @@ function Contact({}: Props) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

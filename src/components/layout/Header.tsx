@@ -1,13 +1,16 @@
-"use client";
+'use client';
 
-import { useClickOutside } from "@/hooks/use-click-outside";
-import { Menu, X } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRef, useState } from "react";
-import Button from "../ui/Button";
+import { useClickOutside } from '@/hooks/use-click-outside';
+import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRef, useState } from 'react';
+import Button from '../ui/Button';
+import { classNames } from '@/lib/uitils';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
   useClickOutside<HTMLDivElement>(mobileNavRef, () => {
@@ -19,9 +22,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href={"/"} className="flex items-center space-x-2">
+            <Link href={'/'} className="flex items-center space-x-2">
               <Image
-                src={"/logo.png"}
+                src={'/logo.png'}
                 width={159.26}
                 height={37.9}
                 alt="capalyze"
@@ -35,7 +38,10 @@ const Header = () => {
                 <Link
                   key={link.text}
                   href={link.url}
-                  className="text-gray-500 hover:text-teal-600 px-3 py-2 text-sm font-medium"
+                  className={classNames(
+                    'hover:text-teal-600 px-3 py-2 text-sm transition-all duration-300',
+                    pathname === link.url ? 'text-green font-medium' : ''
+                  )}
                 >
                   {link.text}
                 </Link>
@@ -78,7 +84,10 @@ const Header = () => {
               <Link
                 key={link.text}
                 href={link.url}
-                className="text-gray-500 block px-3 py-2 text-base font-medium"
+                className={classNames(
+                  'block px-3 py-2 text-base transition-all duration-300',
+                  pathname === link.url ? 'text-green font-medium' : ''
+                )}
               >
                 {link.text}
               </Link>
@@ -106,23 +115,23 @@ const Header = () => {
 export default Header;
 const navlinks = [
   {
-    text: "About",
-    url: "/about",
+    text: 'About',
+    url: '/about',
   },
   {
-    text: "For SMEs",
-    url: "/SMEs",
+    text: 'For SMEs',
+    url: '/SMEs',
   },
   {
-    text: "For Investors",
-    url: "/investors",
+    text: 'For Investors',
+    url: '/investors',
   },
   {
-    text: "Resources",
-    url: "/resources",
+    text: 'Resources',
+    url: '/resources',
   },
   {
-    text: "Contact",
-    url: "/contact",
+    text: 'Contact',
+    url: '/contact',
   },
 ];

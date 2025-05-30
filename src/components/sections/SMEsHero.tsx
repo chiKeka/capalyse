@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
-import Button from "../ui/Button";
+import { ReactNode } from 'react';
+import Button from '../ui/Button';
+import { motion } from 'framer-motion';
 
 type Props = {
   reverse?: boolean;
@@ -11,11 +12,17 @@ type Props = {
 
 function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
   return (
-    <section className="py-20 relative">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.5 }}
+      className="py-20 relative"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`flex max-md:flex-col-reverse  justify-end gap-12 items-center ${
-            reverse ? "lg:flex-row-reverse" : "lg:flex-row"
+            reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
           }`}
         >
           <div className="xl:max-w-[588px] lg:max-w-[450px]">
@@ -25,7 +32,7 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
             </h1>
 
             <p className="mb-8 leading-relaxed">
-              {text?.split("<br/>").map((line, index, arr) => (
+              {text?.split('<br/>').map((line, index, arr) => (
                 <span key={index}>
                   {line}
                   {index !== arr.length - 1 && <br />}
@@ -47,7 +54,7 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
