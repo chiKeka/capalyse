@@ -1,6 +1,7 @@
 import { classNames } from '@/lib/uitils';
 import { ReactNode, useState } from 'react';
 import { investorsContent, smeContent } from './HowItWorks';
+import { motion } from 'framer-motion';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 
@@ -21,7 +22,13 @@ const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
   };
 
   return (
-    <section className="py-16">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      className="py-16"
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-8">
@@ -35,7 +42,7 @@ const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
           {renderContent(isSme ? smeContent : investorsContent)}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

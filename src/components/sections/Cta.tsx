@@ -1,4 +1,5 @@
 import Button from '../ui/Button';
+import { motion } from 'framer-motion';
 
 type Props = {
   heading: React.ReactNode;
@@ -7,7 +8,13 @@ type Props = {
 
 const Cta = ({ heading, text }: Props) => {
   return (
-    <section className="py-20 px-4">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      className="py-20 px-4"
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+    >
       <div className="container mx-auto text-center bg-[#E4F9F3] border border-primary-green-2 rounded-3xl relative">
         <div className="absolute inset-0 h-full">
           <img
@@ -26,7 +33,7 @@ const Cta = ({ heading, text }: Props) => {
           </Button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

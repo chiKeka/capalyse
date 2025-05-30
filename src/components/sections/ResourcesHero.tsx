@@ -1,5 +1,5 @@
-import Link from "next/link";
-import ResourceCard from "./ResourceCard";
+import Link from 'next/link';
+import ResourceCard from './ResourceCard';
 
 type Data = {
   header: string;

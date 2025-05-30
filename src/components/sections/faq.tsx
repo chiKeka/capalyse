@@ -3,11 +3,18 @@
 import { classNames } from '@/lib/uitils';
 import { MinusIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const Faq = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   return (
-    <section className="py-20">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      className="py-20"
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -61,7 +68,7 @@ const Faq = () => {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
