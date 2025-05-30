@@ -1,4 +1,4 @@
-import Button from "../ui/Button";
+import Button from '../ui/Button';
 
 type Props = {
   data: string[];
@@ -12,7 +12,7 @@ function Cta2({ data, imageSrc, headerTag, reverse }: Props) {
     <section className="bg-green  w-full h-auto">
       <div
         className={`max-w-7xl items-center gap-8 justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${
-          reverse ? "lg:flex-row-reverse" : "lg:flex-row"
+          reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
         } py-[64px]`}
       >
         <img
@@ -27,8 +27,8 @@ function Cta2({ data, imageSrc, headerTag, reverse }: Props) {
           <div className="flex flex-col items-start gap-6">
             {data.map((list, i) => {
               return (
-                <div className="flex gap-3 items-center">
-                  <img src={"/icons/verifyCheck.svg"} className=" w-8 h-8" />
+                <div key={i} className="flex gap-3 items-center">
+                  <img src={'/icons/verifyCheck.svg'} className=" w-8 h-8" />
                   <p className="text-base font-normal text-[#F4F6F8] ">
                     {list}
                   </p>
