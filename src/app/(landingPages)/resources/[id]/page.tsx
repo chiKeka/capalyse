@@ -10,12 +10,13 @@ const getRandomThree = (arr: typeof resouresData) => {
   return [...arr].sort(() => 0.5 - Math.random()).slice(0, 3);
 };
 
-export default function ResourceDetailsPage({
+export default async function ResourceDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const resource = resouresData.find((r) => r.id === params.id);
+  const { id } = await params;
+  const resource = resouresData.find((r) => r.id === id);
 
   if (!resource) return notFound();
 
