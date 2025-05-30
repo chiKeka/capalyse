@@ -1,10 +1,10 @@
 'use client';
-
+import { motion } from 'framer-motion';
 import { useClickOutside } from '@/hooks/use-click-outside';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from '../ui/Button';
 import { classNames } from '@/lib/uitils';
 import { usePathname } from 'next/navigation';
@@ -12,13 +12,43 @@ import { usePathname } from 'next/navigation';
 const Header = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsVisible(currentScrollY < lastScrollY || currentScrollY < 10);
+      setLastScrollY(currentScrollY);
+      setMobileMenuOpen(false);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   useClickOutside<HTMLDivElement>(mobileNavRef, () => {
     setMobileMenuOpen(false);
   });
 
   return (
-    <nav className="bg-white border-b-[0.5px] border-[#EEF6F4] sticky top-0 z-50 py-3">
+    <motion.nav
+      initial={{
+        y: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+      }}
+      animate={{
+        y: isVisible ? 0 : -138,
+        backgroundColor:
+          isVisible && lastScrollY > 0
+            ? 'rgba(255, 255, 255,1)'
+            : 'rgba(255, 255, 255, 0)',
+      }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="bg-white border-b-[0.5px] border-[#EEF6F4] sticky top-0 z-50 py-3"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -108,7 +138,7 @@ const Header = () => {
           </div>
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 };
 
