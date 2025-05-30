@@ -22,7 +22,6 @@ const Header = () => {
       const currentScrollY = window.scrollY;
       setIsVisible(currentScrollY < lastScrollY || currentScrollY < 10);
       setLastScrollY(currentScrollY);
-      setMobileMenuOpen(false);
     };
 
     window.addEventListener('scroll', handleScroll);
