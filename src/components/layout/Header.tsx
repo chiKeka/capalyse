@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Menu, X } from 'lucide-react';
-import Image from 'next/image';
-import { useRef, useState } from 'react';
-import Button from '../ui/Button';
-import { useClickOutside } from '@/hooks/use-click-outside';
-import Link from 'next/link';
+import { useClickOutside } from "@/hooks/use-click-outside";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import Button from "../ui/Button";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,9 +19,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href={'/'} className="flex items-center space-x-2">
+            <Link href={"/"} className="flex items-center space-x-2">
               <Image
-                src={'/logo.png'}
+                src={"/logo.png"}
                 width={159.26}
                 height={37.9}
                 alt="capalyze"
@@ -106,23 +106,23 @@ const Header = () => {
 export default Header;
 const navlinks = [
   {
-    text: 'About',
-    url: '#',
+    text: "About",
+    url: "/about",
   },
   {
-    text: 'For SMEs',
-    url: '/SMEs',
+    text: "For SMEs",
+    url: "/SMEs",
   },
   {
-    text: 'For Investors',
-    url: '/investors',
+    text: "For Investors",
+    url: "/investors",
   },
   {
-    text: 'Resources',
-    url: '#',
+    text: "Resources",
+    url: "/resources",
   },
   {
-    text: 'Contact',
-    url: '#',
+    text: "Contact",
+    url: "/contact",
   },
 ];

@@ -1,4 +1,4 @@
-import Button from "../ui/Button";
+import Button, { ButtonVariant } from "../ui/Button";
 
 type Props = {
   data: string[];
@@ -9,7 +9,7 @@ type Props = {
   cardBg?: string;
   headerTextColor?: string;
   contentTextColor?: string;
-  buttonVariant?: string;
+  buttonVariant?: ButtonVariant;
 };
 
 function Cta2({
@@ -25,7 +25,9 @@ function Cta2({
 }: Props) {
   return (
     <section
-      className={`${componentBg ? componentBg : "bg-green"}  w-full h-auto`}
+      className={`${
+        componentBg ? componentBg : "bg-green"
+      }  w-full p-2 lg:p-0 h-auto`}
     >
       <div
         className={`max-w-7xl  ${
