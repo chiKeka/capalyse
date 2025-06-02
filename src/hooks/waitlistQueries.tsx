@@ -10,7 +10,7 @@ export const useWaitlistCount = () => {
     queryKey: ["waitlistCount"],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/waitlist/count`);
-      return res.data.data;
+      return res?.data.data;
     },
   });
 };

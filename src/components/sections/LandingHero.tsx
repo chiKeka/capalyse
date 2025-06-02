@@ -1,3 +1,5 @@
+"use client";
+import { useWaitlistCount } from "@/hooks/waitlistQueries";
 import Image from "next/image";
 import { useState } from "react";
 import Button from "../ui/Button";
@@ -7,6 +9,8 @@ import { Waitlist } from "./waitlist";
 
 const LandingHero = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const { data, isLoading } = useWaitlistCount();
+  // console.log(data)
   return (
     <section className=" py-20 relative">
       <GridSvg className="absolute" />
@@ -31,6 +35,7 @@ const LandingHero = () => {
                 Get Started
               </Button>
               <Waitlist
+                dataCount={data?.count}
                 isOpen={waitlistOpen}
                 setIsOpen={setWaitlistOpen}
                 title="Don’t Miss Out, Join the Waitlist"

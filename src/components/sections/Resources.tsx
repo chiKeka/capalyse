@@ -61,7 +61,7 @@ const Resources = () => {
             >
               <div className="h-[284px]">
                 <img
-                  src={item.image}
+                  src={item.image || "/image/resources.png"}
                   alt="Success story"
                   className="w-auto h-full object-cover"
                 />

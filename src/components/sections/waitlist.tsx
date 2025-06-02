@@ -17,6 +17,7 @@ interface FundingWarningProps {
   title: string;
   desc: string;
   isOpen: boolean;
+  dataCount?: number;
   setIsOpen: (isOpen: boolean) => void;
 }
 
@@ -25,6 +26,7 @@ export function Waitlist({
   desc,
   isOpen,
   setIsOpen,
+  dataCount,
 }: FundingWarningProps) {
   const { data: count, isLoading } = useWaitlistCount();
   const { mutate: joinWaitlist, isPending } = useCreateWaitlist();
@@ -70,7 +72,7 @@ export function Waitlist({
                 <DialogClose>
                   <Button
                     variant="primary"
-                    className="text-base px-12 w-fit h-[42px] capitalize"
+                    className="text-base px-12 w-fit h-[48px] capitalize"
                     onClick={handleJoin}
                     disabled={isPending}
                   >
@@ -83,7 +85,7 @@ export function Waitlist({
           <div className="mt-6 flex gap-2 items-center">
             <img src="/images/whitelist.png" className="h-[32px]" />
             <p className="font-normal text-base">
-              Join the 10+ others that have signed up
+              Join the {dataCount}+ others that have signed up
             </p>
           </div>
         </DialogContent>
