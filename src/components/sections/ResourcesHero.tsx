@@ -1,17 +1,20 @@
+"use client";
+import { useResources } from "@/hooks/waitlistQueries";
 import Link from "next/link";
 import ResourceCard from "./ResourceCard";
 
 type Data = {
-  header: string;
-  text: string;
+  title: string;
+  desc: string;
   image: string;
   id: string;
-};
-type Props = {
-  data: Data[];
+  link: string;
 };
 
-export const ResourcesHero = ({ data }: Props) => {
+export const ResourcesHero = () => {
+  const { data, isLoading, isError } = useResources();
+  const resources = data?.resources;
+  console.log(resources);
   return (
     <section className=" py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -36,12 +39,15 @@ export const ResourcesHero = ({ data }: Props) => {
           <p>Investors Insight</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-          {data?.map((item, index) => (
-            <Link href={`/resources/${item.id}`} key={index}>
+          {resources?.map((item: Data, index: number) => (
+            <Link
+              href={item?.link}
+              // href={`/resources/${item.id}`} key={index}
+            >
               <ResourceCard
-                header={item.header}
-                text={item.text}
-                image={item.image}
+                header={item?.title}
+                text={item?.desc}
+                image={item?.image}
               />
             </Link>
           ))}

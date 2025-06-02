@@ -3,10 +3,10 @@ import { useState } from "react";
 import Button from "../ui/Button";
 import GridSvg from "../ui/gridSvg";
 import LandingbgSvg from "../ui/landingbgSvg";
-import { Whitelist } from "./whitelist";
+import { Waitlist } from "./waitlist";
 
 const LandingHero = () => {
-  const [whitelistOpen, setWhitelistOpen] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <section className=" py-20 relative">
       <GridSvg className="absolute" />
@@ -24,15 +24,15 @@ const LandingHero = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
-                onClick={() => setWhitelistOpen(true)}
+                onClick={() => setWaitlistOpen(true)}
                 iconPosition="right"
                 className="font-bold"
               >
                 Get Started
               </Button>
-              <Whitelist
-                isOpen={whitelistOpen}
-                setIsOpen={setWhitelistOpen}
+              <Waitlist
+                isOpen={waitlistOpen}
+                setIsOpen={setWaitlistOpen}
                 title="Don’t Miss Out, Join the Waitlist"
                 desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
               />

@@ -1,3 +1,4 @@
+"use client";
 import Button from "../ui/Button";
 import {
   Dialog,
@@ -7,7 +8,9 @@ import {
   DialogPortal,
 } from "../ui/dialog";
 
+import { useCreateWaitlist, useWaitlistCount } from "@/hooks/waitlistQueries";
 import { DialogContent } from "@radix-ui/react-dialog";
+import { useState } from "react";
 import Input from "../ui/Inputs";
 
 interface FundingWarningProps {
@@ -17,12 +20,19 @@ interface FundingWarningProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function Whitelist({
+export function Waitlist({
   title,
   desc,
   isOpen,
   setIsOpen,
 }: FundingWarningProps) {
+  const { data: count, isLoading } = useWaitlistCount();
+  const { mutate: joinWaitlist, isPending } = useCreateWaitlist();
+  const [email, setEmail] = useState("");
+  const handleJoin = () => {
+    if (email) joinWaitlist({ email });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogPortal data-slot="dialog-portal">
@@ -45,20 +55,26 @@ export function Whitelist({
                   </p>
                 </div>
               </div>
-              <div className="flex min-w-full h-auto gap-3 justify-start items-center flex-row">
-                <Input
-                  className="w-full h-[48px]"
-                  type="email"
-                  placeholder="Your Email Address"
-                  name="email"
-                  onChange={() => {}}
-                />
+              <div className=" w-full md:h-[50px] gap-3  items-center md:flex ">
+                <div className="w-full">
+                  <Input
+                    className="w-full flex-1 block h-[48px]"
+                    type="email"
+                    placeholder="Your Email Address"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
                 <DialogClose>
                   <Button
                     variant="primary"
                     className="text-base px-12 w-fit h-[42px] capitalize"
+                    onClick={handleJoin}
+                    disabled={isPending}
                   >
-                    Submit
+                    {isPending ? "Submitting..." : "Submit"}
                   </Button>
                 </DialogClose>
               </div>
