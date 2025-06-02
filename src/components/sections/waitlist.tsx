@@ -2,7 +2,6 @@
 import Button from '../ui/Button';
 import {
   Dialog,
-  DialogClose,
   DialogDescription,
   DialogOverlay,
   DialogPortal,
@@ -12,6 +11,7 @@ import { useCreateWaitlist, useWaitlistCount } from '@/hooks/waitlistQueries';
 import { DialogContent, DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import Input from '../ui/Inputs';
+import { toast } from 'sonner';
 
 interface FundingWarningProps {
   title: string;
@@ -27,10 +27,19 @@ export function Waitlist({
   setIsOpen,
 }: FundingWarningProps) {
   const { data: count, isLoading } = useWaitlistCount();
-  const { mutate: joinWaitlist, isPending } = useCreateWaitlist();
+  const { mutateAsync: joinWaitlist, isPending } = useCreateWaitlist();
   const [email, setEmail] = useState('');
   const handleJoin = () => {
-    if (email) joinWaitlist({ email });
+    if (email)
+      joinWaitlist({ email })
+        .then((res) => {
+          toast.success(res.data.message, {
+            duration: 5000,
+          });
+          setIsOpen(false);
+          setEmail('');
+        })
+        .catch((err) => console.log({ err }));
   };
 
   return (
@@ -68,16 +77,15 @@ export function Waitlist({
                   />
                 </div>
 
-                <DialogClose>
-                  <Button
-                    variant="primary"
-                    className="text-base px-12 w-fit h-[48px] capitalize mb-4"
-                    onClick={handleJoin}
-                    disabled={isPending}
-                  >
-                    {isPending ? 'Submitting...' : 'Submit'}
-                  </Button>
-                </DialogClose>
+                <Button
+                  variant="primary"
+                  className="text-base px-12 w-fit h-[48px] capitalize mb-4"
+                  onClick={handleJoin}
+                  disabled={isPending}
+                  state={isPending ? 'loading' : 'default'}
+                >
+                  Submit
+                </Button>
               </div>
             </div>
           </DialogDescription>

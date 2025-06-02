@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes } from 'react';
-import { ChevronRight, Check, CircleCheck, Loader2 } from 'lucide-react';
+import { ChevronRight, Check, CircleCheck, Loader2Icon } from 'lucide-react';
 
 // Type definitions
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
@@ -112,10 +112,6 @@ const Button: React.FC<ButtonProps> = ({
   const renderIcon = (): React.ReactElement | null => {
     const iconSizeClass = getIconSizeClass(size);
 
-    if (state === 'loading') {
-      return <Loader2 className={`${iconSizeClass} animate-spin`} />;
-    }
-
     switch (iconPosition) {
       case 'left':
       case 'only':
@@ -147,6 +143,7 @@ const Button: React.FC<ButtonProps> = ({
       type="button"
       {...props}
     >
+      {state === 'loading' && <Loader2Icon className="animate-spin w-6 h-6" />}
       {iconPosition === 'left' && renderIcon()}
       {iconPosition !== 'only' && children}
       {iconPosition === 'right' && renderIcon()}
