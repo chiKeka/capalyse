@@ -1,9 +1,16 @@
-import Image from 'next/image';
-import Button from '../ui/Button';
-import GridSvg from '../ui/gridSvg';
-import LandingbgSvg from '../ui/landingbgSvg';
+"use client";
+import { useWaitlistCount } from "@/hooks/waitlistQueries";
+import Image from "next/image";
+import { useState } from "react";
+import Button from "../ui/Button";
+import GridSvg from "../ui/gridSvg";
+import LandingbgSvg from "../ui/landingbgSvg";
+import { Waitlist } from "./waitlist";
 
 const LandingHero = () => {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const { data, isLoading } = useWaitlistCount();
+  // console.log(data)
   return (
     <section className=" py-20 relative">
       <GridSvg className="absolute" />
@@ -20,9 +27,20 @@ const LandingHero = () => {
               value-driven investors across Africa.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="medium" iconPosition="right" className="font-bold">
+              <Button size="medium"
+                onClick={() => setWaitlistOpen(true)}
+                iconPosition="right"
+                className="font-bold"
+              >
                 Get Started
               </Button>
+              <Waitlist
+                dataCount={data?.count}
+                isOpen={waitlistOpen}
+                setIsOpen={setWaitlistOpen}
+                title="Don’t Miss Out, Join the Waitlist"
+                desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
+              />
               <Button size="medium" variant="secondary" className="font-bold">
                 How it works
               </Button>

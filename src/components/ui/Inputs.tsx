@@ -6,7 +6,7 @@ type InputProps = {
   label?: string;
   name: string;
   type: InputType;
-  value: string;
+  value?: string;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
