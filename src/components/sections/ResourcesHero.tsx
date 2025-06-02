@@ -1,7 +1,7 @@
 "use client";
 import { useResources } from "@/hooks/waitlistQueries";
-import Link from "next/link";
-import ResourceCard from "./ResourceCard";
+import Link from 'next/link';
+import ResourceCard from './ResourceCard';
 
 type Data = {
   title: string;

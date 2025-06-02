@@ -106,7 +106,7 @@ const Button: React.FC<ButtonProps> = ({
 
   // Combine all classes
   const buttonClasses: string =
-    `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant][state]} rounded-md ${className}`.trim();
+    `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant][state]} hover:scale-105 transition-all duration-300 rounded-md ${className}`.trim();
 
   // Icon rendering function
   const renderIcon = (): React.ReactElement | null => {

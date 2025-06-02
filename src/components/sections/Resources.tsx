@@ -3,6 +3,7 @@ import { useResources } from "@/hooks/waitlistQueries";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Button from "../ui/Button";
+import { motion } from 'framer-motion';
 
 type Data = {
   title: string;
@@ -31,7 +32,13 @@ const Resources = () => {
     }
   }, [resources]);
   return (
-    <section className="container mx-auto py-20">
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      className="container mx-auto py-20"
+    >
       <div className=" px-4 sm:px-6 lg:px-8">
         <div className="flex items-center max-sm:flex-col sm:justify-between gap-2 mb-14">
           <div className="">
@@ -76,7 +83,7 @@ const Resources = () => {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

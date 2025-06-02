@@ -1,4 +1,5 @@
-import Button, { ButtonVariant } from "../ui/Button";
+import Button, { ButtonVariant } from '../ui/Button';
+import { motion } from 'framer-motion';
 
 type Props = {
   data: string[];
@@ -24,16 +25,20 @@ function Cta2({
   buttonVariant,
 }: Props) {
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 100 }}
+      whileInView={{ opacity: 1, y: 0.5 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
       className={`${
-        componentBg ? componentBg : "bg-green"
+        componentBg ? componentBg : 'bg-green'
       }  w-full p-2 lg:p-0 h-auto`}
     >
       <div
         className={`max-w-7xl  ${
-          cardBg ? cardBg : "transparent"
+          cardBg ? cardBg : 'transparent'
         } items-center gap-8 rounded-[24px] justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${
-          reverse ? "lg:flex-row-reverse" : "lg:flex-row"
+          reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
         } py-[64px]`}
       >
         <img
@@ -44,7 +49,7 @@ function Cta2({
         <div className="flex flex-col gap-10">
           <p
             className={`text-4xl  ${
-              headerTextColor ? headerTextColor : "text-[#F4F6F8]"
+              headerTextColor ? headerTextColor : 'text-[#F4F6F8]'
             }  font-bold text-start`}
           >
             {headerTag}
@@ -52,11 +57,11 @@ function Cta2({
           <div className="flex flex-col items-start gap-6">
             {data.map((list, i) => {
               return (
-                <div className="flex gap-3 items-center">
-                  <img src={"/icons/verifyCheck.svg"} className=" w-8 h-8" />
+                <div key={i} className="flex gap-3 items-center">
+                  <img src={'/icons/verifyCheck.svg'} className=" w-8 h-8" />
                   <p
                     className={`text-base font-normal ${
-                      contentTextColor ? contentTextColor : "text-[#F4F6F8]"
+                      contentTextColor ? contentTextColor : 'text-[#F4F6F8]'
                     }  `}
                   >
                     {list}
@@ -64,13 +69,13 @@ function Cta2({
                 </div>
               );
             })}
-            <Button variant={buttonVariant ? buttonVariant : "secondary"}>
+            <Button variant={buttonVariant ? buttonVariant : 'secondary'}>
               Sign Up Now
             </Button>
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
