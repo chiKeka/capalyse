@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Button from '../ui/Button';
 import { motion } from 'framer-motion';
+import { Waitlist } from './waitlist';
 
 type Props = {
   reverse?: boolean;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
       initial={{ opacity: 0, y: 100 }}
@@ -40,7 +42,11 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
               ))}
             </p>
 
-            <Button iconPosition="right" className="font-bold">
+            <Button
+              onClick={() => setWaitlistOpen(true)}
+              iconPosition="right"
+              className="font-bold"
+            >
               Get Started
             </Button>
           </div>
@@ -54,6 +60,12 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
           </div>
         </div>
       </div>
+      <Waitlist
+        isOpen={waitlistOpen}
+        setIsOpen={setWaitlistOpen}
+        title="Don’t Miss Out, Join the Waitlist"
+        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
+      />
     </motion.section>
   );
 }

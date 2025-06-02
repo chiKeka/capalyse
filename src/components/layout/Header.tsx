@@ -8,8 +8,10 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '../ui/Button';
 import { classNames } from '@/lib/uitils';
 import { usePathname } from 'next/navigation';
+import { Waitlist } from '../sections/waitlist';
 
 const Header = () => {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -86,7 +88,12 @@ const Header = () => {
             >
               Log In
             </Button>
-            <Button variant="primary" size="medium" iconPosition="right">
+            <Button
+              onClick={() => setWaitlistOpen(true)}
+              variant="primary"
+              size="medium"
+              iconPosition="right"
+            >
               Get Started
             </Button>
           </div>
@@ -130,13 +137,24 @@ const Header = () => {
               >
                 Log In
               </Button>
-              <Button variant="primary" size="medium" iconPosition="right">
+              <Button
+                onClick={() => setWaitlistOpen(true)}
+                variant="primary"
+                size="medium"
+                iconPosition="right"
+              >
                 Get Started
               </Button>
             </div>
           </div>
         </div>
       )}
+      <Waitlist
+        isOpen={waitlistOpen}
+        setIsOpen={setWaitlistOpen}
+        title="Don’t Miss Out, Join the Waitlist"
+        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
+      />
     </motion.nav>
   );
 };
