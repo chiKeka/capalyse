@@ -1,9 +1,9 @@
-"use client";
-import { useResources } from "@/hooks/waitlistQueries";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Button from "../ui/Button";
+'use client';
+import { useResources } from '@/hooks/waitlistQueries';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Button from '../ui/Button';
 
 type Data = {
   title: string;
@@ -25,7 +25,7 @@ const Resources = () => {
         title: item?.title,
         desc: item?.desc,
         image: item?.image,
-        id: item?.id,
+        id: item?.link,
         link: item?.link,
       }));
       setRandomResources(getRandomThree(mapped));
@@ -36,7 +36,7 @@ const Resources = () => {
       initial={{ opacity: 0, y: 100 }}
       whileInView={{ opacity: 1, y: 0.5 }}
       viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: "easeInOut", duration: 0.75 }}
+      transition={{ ease: 'easeInOut', duration: 0.75 }}
       className="container mx-auto py-20"
     >
       <div className=" px-4 sm:px-6 lg:px-8">
@@ -47,7 +47,7 @@ const Resources = () => {
               Empower Your Growth With the Right Tools
             </h2>
           </div>
-          <Link href={"/resources"}>
+          <Link href={'/resources'}>
             <Button
               iconPosition="right"
               size="big"
@@ -68,7 +68,7 @@ const Resources = () => {
             >
               <div className="h-[284px]">
                 <img
-                  src={item?.image || "/images/resource.png"}
+                  src={item?.image || '/images/resource.png'}
                   alt="Success story"
                   className="w-auto h-full object-cover"
                 />

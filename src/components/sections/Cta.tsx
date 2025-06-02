@@ -1,5 +1,7 @@
 import Button from '../ui/Button';
 import { motion } from 'framer-motion';
+import { Waitlist } from './waitlist';
+import { useState } from 'react';
 
 type Props = {
   heading: React.ReactNode;
@@ -7,6 +9,7 @@ type Props = {
 };
 
 const Cta = ({ heading, text }: Props) => {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
       initial={{ opacity: 0, y: 100 }}
@@ -28,11 +31,21 @@ const Cta = ({ heading, text }: Props) => {
           <p className="font-normal text-black my-3 text-base ">
             {text ?? text}
           </p>
-          <Button iconPosition="right" size="medium">
+          <Button
+            onClick={() => setWaitlistOpen(true)}
+            iconPosition="right"
+            size="medium"
+          >
             Get Started
           </Button>
         </div>
       </div>
+      <Waitlist
+        isOpen={waitlistOpen}
+        setIsOpen={setWaitlistOpen}
+        title="Don’t Miss Out, Join the Waitlist"
+        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
+      />
     </motion.section>
   );
 };
