@@ -1,7 +1,7 @@
 "use client";
 import { useResources } from "@/hooks/waitlistQueries";
-import Link from 'next/link';
-import ResourceCard from './ResourceCard';
+import Link from "next/link";
+import ResourceCard from "./ResourceCard";
 
 type Data = {
   title: string;
@@ -14,7 +14,7 @@ type Data = {
 export const ResourcesHero = () => {
   const { data, isLoading, isError } = useResources();
   const resources = data?.resources;
-  console.log(resources);
+  // console.log(resources);
   return (
     <section className=" py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
