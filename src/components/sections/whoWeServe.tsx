@@ -1,8 +1,15 @@
 import { CIcons } from '../ui/CIcons';
+import { motion } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/lib/animations';
 
 const WhoWeServe = () => {
   return (
-    <section className="contianer mx-auto pt-20 relative">
+    <motion.section
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      className="contianer mx-auto pt-20 relative"
+    >
       <div className="max-w-[90%] lg:max-w-[75rem] mx-auto px-4 sm:px-6 lg:px-8 bg-primary-green-1 border border-primary-green-2 rounded-3xl pt-[3.875rem] pb-[6.25rem]">
         <div className="text-center mb-[3.4375rem]">
           <span className="text-sm text-green">OUR TARGET AUDIENCE</span>
@@ -13,7 +20,8 @@ const WhoWeServe = () => {
 
         <div className="flex items-center justify-center gap-6 flex-wrap">
           {serveContent.map((item) => (
-            <div
+            <motion.div
+              variants={itemVariants}
               key={item.text}
               className="bg-white p-4 xl:p-6 border border-primary-green-2 rounded-2xl max-w-[485px]"
             >
@@ -35,11 +43,11 @@ const WhoWeServe = () => {
                   ))}
                 </ul>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
