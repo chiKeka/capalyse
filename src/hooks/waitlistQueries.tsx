@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'sonner';
 
-const BASE_URL = 'https://Capalyze-api.ikempeter2020.workers.dev/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+if (!BASE_URL) {
+  throw new Error('NEXT_PUBLIC_API_URL is not set');
+}
 
 // ========== GET: Waitlist Count ==========
 export const useWaitlistCount = () => {
