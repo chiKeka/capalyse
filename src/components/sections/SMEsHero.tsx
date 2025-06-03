@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react';
 import Button from '../ui/Button';
 import { motion } from 'framer-motion';
 import { Waitlist } from './waitlist';
+import { containerVariants } from '@/lib/animations';
 
 type Props = {
   reverse?: boolean;
@@ -15,10 +16,10 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.5 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ margin: '-100px' }}
       className="py-20 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

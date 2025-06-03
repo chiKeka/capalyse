@@ -1,3 +1,4 @@
+import { containerVariants } from '@/lib/animations';
 import Button, { ButtonVariant } from '../ui/Button';
 import { motion } from 'framer-motion';
 
@@ -26,10 +27,9 @@ function Cta2({
 }: Props) {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
       className={`${
         componentBg ? componentBg : 'bg-green'
       }  w-full p-2 lg:p-0 h-auto`}

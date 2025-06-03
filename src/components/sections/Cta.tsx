@@ -2,6 +2,7 @@ import Button from '../ui/Button';
 import { motion } from 'framer-motion';
 import { Waitlist } from './waitlist';
 import { useState } from 'react';
+import { containerVariants, itemVariants } from '@/lib/animations';
 
 type Props = {
   heading: React.ReactNode;
@@ -12,13 +13,15 @@ const Cta = ({ heading, text }: Props) => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
       className="py-20 px-4"
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
     >
-      <div className="container mx-auto text-center bg-[#E4F9F3] border border-primary-green-2 rounded-3xl relative">
+      <motion.div
+        variants={itemVariants}
+        className="container mx-auto text-center bg-[#E4F9F3] border border-primary-green-2 rounded-3xl relative"
+      >
         <div className="absolute inset-0 h-full">
           <img
             src={'/images/cta-img.png'}
@@ -39,7 +42,7 @@ const Cta = ({ heading, text }: Props) => {
             Get Started
           </Button>
         </div>
-      </div>
+      </motion.div>
       <Waitlist
         isOpen={waitlistOpen}
         setIsOpen={setWaitlistOpen}

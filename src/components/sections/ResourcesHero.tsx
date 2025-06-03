@@ -1,7 +1,9 @@
-"use client";
-import { useResources } from "@/hooks/waitlistQueries";
-import Link from "next/link";
-import ResourceCard from "./ResourceCard";
+'use client';
+import { useResources } from '@/hooks/waitlistQueries';
+import ResourceCard from './ResourceCard';
+import { Loader2Icon } from 'lucide-react';
+import { containerVariants } from '@/lib/animations';
+import { motion } from 'framer-motion';
 
 type Data = {
   title: string;
@@ -38,20 +40,26 @@ export const ResourcesHero = () => {
           <p>Readiness Toolkit</p>
           <p>Investors Insight</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-          {resources?.map((item: Data, index: number) => (
-            <Link
-              href={item?.link}
-              // href={`/resources/${item.id}`} key={index}
-            >
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10"
+        >
+          {isLoading ? (
+            <Loader2Icon className="animate-spin h-24 w-24" />
+          ) : (
+            resources?.map((item: Data, index: number) => (
               <ResourceCard
+                key={item?.link}
+                href={item?.link}
                 header={item?.title}
                 text={item?.desc}
                 image={item?.image}
               />
-            </Link>
-          ))}
-        </div>
+            ))
+          )}
+        </motion.div>
       </div>
     </section>
   );

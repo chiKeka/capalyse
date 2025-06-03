@@ -8,13 +8,7 @@ import { motion } from 'framer-motion';
 const Faq = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
-      className="py-20"
-    >
+    <section className="py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -29,7 +23,11 @@ const Faq = () => {
 
         <div className="space-y-4 max-w-[48.0625rem] p-2.5">
           {faqs.map((faq, index) => (
-            <div
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ margin: '-100px' }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               key={index}
               className={classNames(
                 'rounded-lg relative border',
@@ -64,11 +62,11 @@ const Faq = () => {
                   <p className="text-black-400">{faq.answer}</p>
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

@@ -2,6 +2,7 @@ import { classNames } from '@/lib/uitils';
 import { ReactNode, useState } from 'react';
 import { CIcons } from '../ui/CIcons';
 import { motion } from 'framer-motion';
+import { containerVariants } from '@/lib/animations';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 export const smeContent = [
@@ -57,10 +58,9 @@ const HowItWorks = () => {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
       className="pt-16"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,7 +88,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Content container with responsive behavior */}
-        <div className="space-y-8 md:space-y-0 md:relative md:overflow-hidden md:min-h-[400px]">
+        <div className="space-y-8 md:space-y-0 md:relative md:overflow-hidden md:min-h-[400px] mb-4">
           {/* SME Content */}
           {renderContent(smeContent, currentTab === 'For SMEs', 'left')}
 
