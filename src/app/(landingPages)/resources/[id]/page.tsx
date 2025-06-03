@@ -52,6 +52,7 @@ export default async function ResourceDetailsPage({
                 header={item.header}
                 text={item.text}
                 image={item.image}
+                index={index}
               />
             </Link>
           ))}
