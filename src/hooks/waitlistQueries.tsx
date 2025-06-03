@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
 
-const BASE_URL = 'https://capalyze-api.ikempeter2020.workers.dev/api';
+const BASE_URL = 'https://Capalyze-api.ikempeter2020.workers.dev/api';
 
 // ========== GET: Waitlist Count ==========
 export const useWaitlistCount = () => {

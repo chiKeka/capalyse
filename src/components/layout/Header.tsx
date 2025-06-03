@@ -58,7 +58,7 @@ const Header = () => {
                 src={'/logo.png'}
                 width={159.26}
                 height={37.9}
-                alt="capalyze"
+                alt="Capalyse"
               />
             </Link>
           </div>

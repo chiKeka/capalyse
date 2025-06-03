@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Capalyse - Empowering Growth",
-  description: "Capalyze bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+  description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
 };
 
 export default function RootLayout({

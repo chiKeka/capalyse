@@ -13,7 +13,7 @@ const Footer = () => {
                 src={'/logo-white.png'}
                 width={185.88}
                 height={44.43}
-                alt="capalyze"
+                alt="Capalyse"
               />
             </Link>
 
