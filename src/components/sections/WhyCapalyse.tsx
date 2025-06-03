@@ -1,4 +1,5 @@
 import { CIcons } from '../ui/CIcons';
+import { motion } from 'framer-motion';
 
 const why = [
   {
@@ -30,14 +31,18 @@ const WhyCapalyse = () => {
             {/* box-shadow: 0px 4px 24px 0px #04785717;
              */}
             <div className="space-y-6">
-              {why.map((item) => (
-                <div
+              {why.map((item, index) => (
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ margin: '-100px' }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   key={item.text}
                   className="min-h-[4.5rem] font-Inter font-medium text-lg bg-white text-[#101828] flex items-center justify-start shadow-[0px_4px_24px_0px_#04785717] px-6 py-4 max-w-max rounded-lg gap-3"
                 >
                   {item.icon}
                   <span>{item.text}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
