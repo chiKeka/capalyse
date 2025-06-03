@@ -2,6 +2,7 @@ import { classNames } from '@/lib/uitils';
 import { ReactNode, useState } from 'react';
 import { investorsContent, smeContent } from './HowItWorks';
 import { motion } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/lib/animations';
 const tabs = ['For SMEs', 'For Investors'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 
@@ -23,11 +24,10 @@ const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
       className="py-16"
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -52,7 +52,8 @@ const renderContent = (content: Content[]) => {
   return (
     <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-center md:gap-4 xl:gap-8">
       {content.map((item: Content, index: number) => (
-        <div
+        <motion.div
+          variants={itemVariants}
           className={classNames(
             'border border-primary-green-2 p-4 xl:p-6 transition-all duration-300 rounded-lg',
             'md:max-w-[19.4169rem]'
@@ -62,7 +63,7 @@ const renderContent = (content: Content[]) => {
           <div className="mb-6">{item.icon()}</div>
           <h6 className="text-xl font-bold text-gray-800 mb-4">{item.title}</h6>
           <p className="text-gray-600 text-sm">{item.desc}</p>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

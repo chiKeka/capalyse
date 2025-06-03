@@ -53,7 +53,7 @@ export function Waitlist({
           }
         >
           <DialogTitle className="sr-only">{title}</DialogTitle>
-          <DialogDescription className="w-full flex flex-col">
+          <DialogDescription asChild className="w-full flex flex-col">
             <div className="space-y-10  w-full md:space-y-12 text-start flex flex-col items-start">
               <div className="max-w-xl">
                 <p className=" text-2xl font-bold text-[#282828] mb-5">

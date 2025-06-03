@@ -1,3 +1,4 @@
+import { containerVariants } from '@/lib/animations';
 import Button from '../ui/Button';
 import Input from '../ui/Inputs';
 import { motion } from 'framer-motion';
@@ -7,10 +8,10 @@ type Props = {};
 function Contact({}: Props) {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ margin: '-100px' }}
       className=" py-20 relative"
     >
       <div className="max-w-7xl lg:flex-row flex flex-col  justify-between mx-auto px-4 sm:px-6 lg:px-8 relative">

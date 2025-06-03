@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { containerVariants, itemVariants } from '@/lib/animations';
 
 type Props = {
   smsEcardData: { caption: string; text: string }[];
@@ -10,10 +11,9 @@ type Props = {
 function InverstmentReadiness({ smsEcardData, header, text }: Props) {
   return (
     <motion.section
-      initial={{ opacity: 0, y: 100 }}
-      whileInView={{ opacity: 1, y: 0.5 }}
-      viewport={{ once: true, amount: 0.8 }}
-      transition={{ ease: 'easeInOut', duration: 0.75 }}
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
       className="py-20  relative"
     >
       <div className="lg:max-w-7xl w-[95%] mx-auto py-8 px-4 lg:py-[69px] lg:px-[176px] bg-[#F4FFFC] rounded-[24px] border-1 border-[#ABD2C7]">
@@ -38,12 +38,15 @@ export default InverstmentReadiness;
 
 const Cards = ({ caption, text }: { caption: string; text: string }) => {
   return (
-    <div className="rounded-2xl border-1 flex flex-row gap-3 px-6 py-7 xl:h-[131px] lg:h-[155px] border-[#E4E4E7] bg-white ">
+    <motion.div
+      variants={itemVariants}
+      className="rounded-2xl border-1 flex flex-row gap-3 px-6 py-7 xl:h-[131px] lg:h-[155px] border-[#E4E4E7] bg-white "
+    >
       <img src={'/icons/checkIcon.svg'} className=" w-4 h-4" />
       <p className="text-base font-bold">
         {caption}
         <span className="font-normal">{text}</span>
       </p>
-    </div>
+    </motion.div>
   );
 };
