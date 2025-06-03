@@ -120,6 +120,7 @@ const Header = () => {
               <Link
                 key={link.text}
                 href={link.url}
+                onClick={() => setMobileMenuOpen(false)}
                 className={classNames(
                   'block px-3 py-2 text-base transition-all duration-300',
                   pathname === link.url ? 'text-green font-medium' : ''
