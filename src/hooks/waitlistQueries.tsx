@@ -26,10 +26,7 @@ export const useCreateWaitlist = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['waitlistCount'] });
-    },
-    onError: () => {
-      toast.error('Failed to join the waitlist');
-    },
+    }
   });
 };
 
