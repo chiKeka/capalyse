@@ -1,6 +1,6 @@
-import { CIcons } from '../ui/CIcons';
-import { motion } from 'framer-motion';
-import { containerVariants, itemVariants } from '@/lib/animations';
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { motion } from "framer-motion";
+import { CIcons } from "../ui/CIcons";
 
 const WhoWeServe = () => {
   return (
@@ -55,17 +55,26 @@ export default WhoWeServe;
 
 const serveContent = [
   {
-    image: '/images/sme.png',
-    text: 'For SMEs',
-    desc: ['Assess your readiness', 'Access funding', 'Grow sustainably'],
+    image: "/images/sme.png",
+    text: "For SMEs",
+    desc: ["Assess your readiness", "Access funding", "Grow sustainably"],
   },
   {
-    image: '/images/investors.png',
-    text: 'For Investors',
+    image: "/images/investors.png",
+    text: "For Investors",
     desc: [
-      'Discover vetted SMEs',
-      'Diversify your portfolio',
-      'Invest with clarity',
+      "Discover vetted SMEs",
+      "Diversify your portfolio",
+      "Invest with clarity",
+    ],
+  },
+  {
+    image: "/images/investors.png",
+    text: "Development Organisations",
+    desc: [
+      "Track and Measure SME Impact",
+      "Identify High-Potential Businesses",
+      "Strengthen Ecosystem Collaboration",
     ],
   },
 ];
