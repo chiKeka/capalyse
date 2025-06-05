@@ -1,9 +1,8 @@
 'use client';
 import { useResources } from '@/hooks/waitlistQueries';
-import ResourceCard from './ResourceCard';
-import { Loader2Icon } from 'lucide-react';
-import { containerVariants } from '@/lib/animations';
-import { motion } from 'framer-motion';
+import ResourceCard, { ResourceCardSkeleton } from './ResourceCard';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 type Data = {
   title: string;
@@ -13,10 +12,24 @@ type Data = {
   link: string;
 };
 
+
+
 export const ResourcesHero = () => {
   const { data, isLoading, isError } = useResources();
-  const resources = data?.resources;
-  // console.log(resources);
+
+  useEffect(() => {
+    // if (data?.resources) {
+    //   setResources(data?.resources);
+    // }
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error('Failed to fetch resources');
+    }
+  }, [isError]);
+
   return (
     <section className=" py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -40,26 +53,24 @@ export const ResourcesHero = () => {
           <p>Readiness Toolkit</p>
           <p>Investors Insight</p>
         </div>
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 justify-items-center">
           {isLoading ? (
-            <Loader2Icon className="animate-spin h-24 w-24" />
+            Array.from({ length: 6 }, (_, index) => (
+              <ResourceCardSkeleton key={index} />
+            ))
           ) : (
-            resources?.map((item: Data, index: number) => (
+            data?.resources?.map((item: Data, index: number) => (
               <ResourceCard
                 key={item?.link}
                 href={item?.link}
                 header={item?.title}
                 text={item?.desc}
                 image={item?.image}
+                index={index}
               />
             ))
           )}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -46,14 +46,12 @@ const Faq = () => {
                 <span className="font-bold">{faq.question}</span>
                 <div className="">
                   <PlusIcon
-                    className={`h-5 w-5 text-gray-500 transition-transform ${
-                      openFaq === index ? 'rotate-180 opacity-0' : 'opacity-100'
-                    }`}
+                    className={`h-5 w-5 text-gray-500 transition-transform ${openFaq === index ? 'rotate-180 opacity-0' : 'opacity-100'
+                      }`}
                   />
                   <MinusIcon
-                    className={`h-5 w-5 text-gray-500 transition-transform absolute top-1/2 -translate-y-1/2 ${
-                      openFaq === index ? 'rotate-180 opacity-100' : 'opacity-0'
-                    }`}
+                    className={`h-5 w-5 text-gray-500 transition-transform absolute top-1/2 -translate-y-1/2 ${openFaq === index ? 'rotate-180 opacity-100' : 'opacity-0'
+                      }`}
                   />
                 </div>
               </button>
@@ -74,9 +72,9 @@ export default Faq;
 
 const faqs = [
   {
-    question: 'What is Capalyze and who is it for?',
+    question: 'What is Capalyse and who is it for?',
     answer:
-      'Capalyze is a digital platform that helps African SMEs prepare for investment and connect with verified investors. It’s also designed for investors seeking fundable, compliant, and investor-ready businesses.',
+      'Capalyse is a digital platform that helps African SMEs prepare for investment and connect with verified investors. It’s also designed for investors seeking fundable, compliant, and investor-ready businesses.',
   },
   {
     question: 'How does the Investment Readiness Score work?',
@@ -84,27 +82,27 @@ const faqs = [
       'The score is calculated based on your responses to a structured business assessment. It evaluates financials, governance, compliance, traction, and scalability to determine how ready your business is to raise funding.',
   },
   {
-    question: 'What compliance areas does Capalyze cover?',
+    question: 'What compliance areas does Capalyse cover?',
     answer:
-      'WCapalyze checks key compliance indicators like business registration, tax status, financial records, ESG signals, and regional trade alignment (AfCFTA, ECOWAS, SADC, EAC).',
+      'WCapalyse checks key compliance indicators like business registration, tax status, financial records, ESG signals, and regional trade alignment (AfCFTA, ECOWAS, SADC, EAC).',
   },
   {
-    question: 'Is Capalyze only for businesses in Nigeria?',
+    question: 'Is Capalyse only for businesses in Nigeria?',
     answer:
-      'No. Capalyze is built to support businesses across Africa, with region-specific tools and scoring frameworks for countries in trade zones like ECOWAS, SADC, EAC, and under AfCFTA.',
+      'No. Capalyse is built to support businesses across Africa, with region-specific tools and scoring frameworks for countries in trade zones like ECOWAS, SADC, EAC, and under AfCFTA.',
   },
   {
-    question: "Can I use Capalyze if I'm not currently fundraising?",
+    question: "Can I use Capalyse if I'm not currently fundraising?",
     answer:
-      "Yes. Capalyze is a long-term growth tool. You can use it to improve your structure, compliance, and documentation even if you're not actively raising capital.",
+      "Yes. Capalyse is a long-term growth tool. You can use it to improve your structure, compliance, and documentation even if you're not actively raising capital.",
   },
   {
     question: 'What kind of investors are on the platform?',
     answer:
-      'Capalyze works with pre-vetted investors including angel investors, venture capitalists, and development finance institutions interested in African SMEs.',
+      'Capalyse works with pre-vetted investors including angel investors, venture capitalists, and development finance institutions interested in African SMEs.',
   },
   {
-    question: 'Is my business information safe on Capalyze?',
+    question: 'Is my business information safe on Capalyse?',
     answer:
       'Yes. We follow industry-standard data protection protocols. Your data is encrypted and never shared without your consent.',
   },

@@ -30,16 +30,13 @@ function Cta2({
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      className={`${
-        componentBg ? componentBg : 'bg-green'
-      }  w-full p-2 lg:p-0 h-auto`}
+      className={`${componentBg ? componentBg : 'bg-green'
+        }  w-full p-2 lg:p-0 h-auto`}
     >
       <div
-        className={`max-w-7xl  ${
-          cardBg ? cardBg : 'transparent'
-        } items-center gap-8 rounded-[24px] justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${
-          reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
-        } py-[64px]`}
+        className={`max-w-7xl  ${cardBg ? cardBg : 'transparent'
+          } items-center gap-8 rounded-[24px] justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
+          } py-[64px]`}
       >
         <img
           src={imageSrc}
@@ -48,25 +45,30 @@ function Cta2({
         />
         <div className="flex flex-col gap-10">
           <p
-            className={`text-4xl  ${
-              headerTextColor ? headerTextColor : 'text-[#F4F6F8]'
-            }  font-bold text-start`}
+            className={`text-4xl  ${headerTextColor ? headerTextColor : 'text-[#F4F6F8]'
+              }  font-bold text-start`}
           >
             {headerTag}
           </p>
           <div className="flex flex-col items-start gap-6">
             {data.map((list, i) => {
               return (
-                <div key={i} className="flex gap-3 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ margin: '-100px' }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  key={i}
+                  className="flex gap-3 items-center"
+                >
                   <img src={'/icons/verifyCheck.svg'} className=" w-8 h-8" />
                   <p
-                    className={`text-base font-normal ${
-                      contentTextColor ? contentTextColor : 'text-[#F4F6F8]'
-                    }  `}
+                    className={`text-base font-normal ${contentTextColor ? contentTextColor : 'text-[#F4F6F8]'
+                      }  `}
                   >
                     {list}
                   </p>
-                </div>
+                </motion.div>
               );
             })}
             <Button variant={buttonVariant ? buttonVariant : 'secondary'}>

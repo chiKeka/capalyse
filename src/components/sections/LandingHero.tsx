@@ -21,7 +21,7 @@ const LandingHero = () => {
               Empower <span className="text-green">Growth</span>
             </h1>
             <p className="mb-8 leading-relaxed">
-              Capalyze bridges the gap between investment-ready SMEs and
+              Capalyse bridges the gap between investment-ready SMEs and
               value-driven investors across Africa.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">

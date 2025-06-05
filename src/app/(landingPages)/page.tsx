@@ -8,7 +8,7 @@ import Resources from "@/components/sections/Resources";
 import WhoWeServe from "@/components/sections/whoWeServe";
 import WhyCapalyse from "@/components/sections/WhyCapalyse";
 
-export default function CapalyzeLanding() {
+export default function CapalyseLanding() {
   return (
     <>
       {/* Hero Section */}
@@ -17,7 +17,7 @@ export default function CapalyzeLanding() {
       <WhoWeServe />
       {/* How It Works */}
       <HowItWorks />
-      {/* Why Capalyze */}
+      {/* Why Capalyse */}
       <WhyCapalyse />
 
       {/* FAQ Section */}

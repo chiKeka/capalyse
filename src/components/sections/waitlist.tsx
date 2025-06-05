@@ -29,6 +29,7 @@ export function Waitlist({
   const { data: count, isLoading } = useWaitlistCount();
   const { mutateAsync: joinWaitlist, isPending } = useCreateWaitlist();
   const [email, setEmail] = useState('');
+
   const handleJoin = () => {
     if (email)
       joinWaitlist({ email })
@@ -39,7 +40,13 @@ export function Waitlist({
           setIsOpen(false);
           setEmail('');
         })
-        .catch((err) => console.log({ err }));
+        .catch((err) => {
+          if (err.response.data.error) {
+            toast.error(err.response.data.error);
+          } else {
+            toast.error('Failed to join the waitlist');
+          }
+        });
   };
 
   return (

@@ -8,7 +8,7 @@ import { data, investorCardData } from '@/lib/uitils/contentData';
 
 type Props = {};
 
-function Investors({}: Props) {
+function Investors({ }: Props) {
   return (
     <>
       <SMEsHero
@@ -21,7 +21,7 @@ function Investors({}: Props) {
             ready for investment.
           </>
         }
-        text="Capalyze is a data-driven platform that connects investors with vetted, investment-ready African SMEs. We simplify sourcing, reduce risk, and support smarter capital allocation across fast-growing markets. <br/> Whether you're a VC, impact investor, family office, or institutional fund, Capalyze gives you the tools to evaluate, track, and connect with founders aligned to your thesis."
+        text="Capalyse is a data-driven platform that connects investors with vetted, investment-ready African SMEs. We simplify sourcing, reduce risk, and support smarter capital allocation across fast-growing markets. <br/> Whether you're a VC, impact investor, family office, or institutional fund, Capalyse gives you the tools to evaluate, track, and connect with founders aligned to your thesis."
         headerImage="/images/investorHero.png"
         reverse={true}
       />
@@ -29,10 +29,10 @@ function Investors({}: Props) {
       <InverstmentReadiness
         header={
           <>
-            Why <span className="text-green">Capalyze</span>
+            Why <span className="text-green">Capalyse</span>
           </>
         }
-        text="Capalyze removes the guesswork by standardizing SME data and surfacing reliable, actionable insights."
+        text="Capalyse removes the guesswork by standardizing SME data and surfacing reliable, actionable insights."
         smsEcardData={investorCardData}
       />
       {/* how it works section */}

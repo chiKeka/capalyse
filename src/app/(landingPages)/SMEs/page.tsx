@@ -15,7 +15,7 @@ const data = [
   'Less paperwork, more deal flow.',
   'Join a growing ecosystem of funders, and advisors across Africa.',
 ];
-function SMEs({}: Props) {
+function SMEs({ }: Props) {
   return (
     <>
       <SMEsHero
@@ -28,7 +28,7 @@ function SMEs({}: Props) {
           </>
         }
         headerImage="/images/SMEhero.png"
-        text="Capalyze empowers African SMEs to become investment-ready. Whether
+        text="Capalyse empowers African SMEs to become investment-ready. Whether
               you're scaling operations, seeking funding, or improving internal
               structure, we provide the tools and insights to help you succeed,
               with guidance tailored to your growth stage and sector."
@@ -42,7 +42,7 @@ function SMEs({}: Props) {
         }
         text=" Many promising businesses are overlooked due to avoidable issues
             like weak documentation, unclear financials, or compliance gaps.
-            Capalyze helps you get investor-ready."
+            Capalyse helps you get investor-ready."
         smsEcardData={smsEcardsData}
       />
       {/* how it works section */}

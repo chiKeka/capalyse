@@ -26,7 +26,7 @@ const WhyCapalyse = () => {
         <div className="flex max-md:flex-col-reverse justify-end gap-12 items-center">
           <div>
             <h2 className="text-4xl font-bold text-gray-900 mb-8">
-              Why Capalyze?
+              Why Capalyse?
             </h2>
             {/* box-shadow: 0px 4px 24px 0px #04785717;
              */}

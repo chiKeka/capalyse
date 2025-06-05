@@ -1,6 +1,6 @@
 type Props = {};
 
-function AboutHero({}: Props) {
+function AboutHero({ }: Props) {
   return (
     <section className=" py-15 lg:py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -12,7 +12,7 @@ function AboutHero({}: Props) {
               <span className="text-green"> Ideas and Smart Investment </span>
             </h1>
             <p className="mb-8 leading-relaxed text-base font-normal max-w-3xl">
-              Capalyze was born from the realization that African SMEs often
+              Capalyse was born from the realization that African SMEs often
               lack access to structured funding due to investor confidence gaps.
               We created a platform to close that gap; offering tools, insights,
               and connections to scale impact.
