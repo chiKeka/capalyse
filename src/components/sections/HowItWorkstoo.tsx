@@ -54,6 +54,10 @@ const renderContent = (content: Content[]) => {
       {content.map((item: Content, index: number) => (
         <motion.div
           variants={itemVariants}
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ margin: '-100px' }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
           className={classNames(
             'border border-primary-green-2 p-4 xl:p-6 transition-all duration-300 rounded-lg',
             'md:max-w-[19.4169rem]'

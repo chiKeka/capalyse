@@ -1,7 +1,6 @@
 'use client';
 import { useResources } from '@/hooks/waitlistQueries';
-import ResourceCard from './ResourceCard';
-import { Loader2Icon } from 'lucide-react';
+import ResourceCard, { ResourceCardSkeleton } from './ResourceCard';
 
 type Data = {
   title: string;
@@ -12,7 +11,8 @@ type Data = {
 };
 
 export const ResourcesHero = () => {
-  const { data, isLoading, isError } = useResources();
+  const { data, isLoading } = useResources();
+
   return (
     <section className=" py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -36,20 +36,21 @@ export const ResourcesHero = () => {
           <p>Readiness Toolkit</p>
           <p>Investors Insight</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
-          {isLoading ? (
-            <Loader2Icon className="animate-spin h-24 w-24" />
-          ) : (
-            data?.resources?.map((item: Data, index: number) => (
-              <ResourceCard
-                key={item?.link}
-                href={item?.link}
-                header={item?.title}
-                text={item?.desc}
-                image={item?.image}
-              />
-            ))
-          )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 justify-items-center">
+          {isLoading
+            ? Array.from({ length: 6 }, (_, index) => (
+                <ResourceCardSkeleton key={index} />
+              ))
+            : data?.resources?.map((item: Data, index: number) => (
+                <ResourceCard
+                  key={item?.link}
+                  href={item?.link}
+                  header={item?.title}
+                  text={item?.desc}
+                  image={item?.image}
+                  index={index}
+                />
+              ))}
         </div>
       </div>
     </section>

@@ -48,9 +48,11 @@ export default async function ResourceDetailsPage({
           {randomThree.map((item, index) => (
             <Link href={`/resources/${item.id}`} key={index}>
               <ResourceCard
+                href={`/resources/${item.id}`}
                 header={item.header}
                 text={item.text}
                 image={item.image}
+                index={index}
               />
             </Link>
           ))}
