@@ -138,13 +138,14 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #F4F6F8;
   --foreground: #171717;
 }
 
 @theme inline {
   /* Green shades */
   --color-green: #047857;
+  --color-bg: #F4F6F8;
   --color-primary-green-1: #F4FFFC;
   --color-primary-green-2: #ABD2C7;
   --color-primary-green-3: #81BBAB;
