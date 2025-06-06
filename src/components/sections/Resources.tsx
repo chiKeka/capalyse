@@ -1,37 +1,22 @@
 'use client';
-import { useResources } from '@/hooks/waitlistQueries';
-import { motion } from 'framer-motion';
+import { useGetRandomResources } from '@/hooks/waitlistQueries';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import Button from '../ui/Button';
+import { motion } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
 
-type Data = {
+export type Data = {
   title: string;
   desc: string;
   image: string;
   id: string;
   link: string;
 };
-const getRandomThree = (arr: Data[]): Data[] => {
-  return [...arr].sort(() => 0.5 - Math.random()).slice(0, 3);
-};
+
 const Resources = () => {
-  const { data, isLoading } = useResources();
-  const [randomResources, setRandomResources] = useState<Data[]>([]);
-  const resources = data?.resources;
-  useEffect(() => {
-    if (resources) {
-      const mapped = resources?.map((item: any) => ({
-        title: item?.title,
-        desc: item?.desc,
-        image: item?.image,
-        id: item?.link,
-        link: item?.link,
-      }));
-      setRandomResources(getRandomThree(mapped));
-    }
-  }, [resources]);
+  const { data, isLoading } = useGetRandomResources();
+
+  console.log({ data });
   return (
     <motion.section
       variants={containerVariants}
@@ -60,7 +45,7 @@ const Resources = () => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          {randomResources.map((item) => (
+          {data?.map((item) => (
             <motion.div
               key={item.id}
               variants={itemVariants}

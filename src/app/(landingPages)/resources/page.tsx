@@ -1,4 +1,4 @@
-import { ResourcesHero } from "@/components/sections/ResourcesHero";
+import { ResourcesHero } from '@/components/sections/ResourcesHero';
 
 type Props = {};
 
