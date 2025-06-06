@@ -23,7 +23,7 @@ const WhoWeServe = () => {
             <motion.div
               variants={itemVariants}
               key={item.text}
-              className="bg-white p-4 xl:p-6 border border-primary-green-2 rounded-2xl max-w-[485px]"
+              className="bg-white p-4 xl:p-6 border border-primary-green-2 rounded-2xl w-full lg:max-w-[355px]"
             >
               <div className="aspect-w-16 aspect-h-12 rounded-2xl overflow-hidden mb-4">
                 <img
@@ -33,7 +33,7 @@ const WhoWeServe = () => {
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-2">{item.text}</h3>
+                <h3 className="text-xl font-bold mb-2">{item.text}</h3>
                 <ul className="space-y-2">
                   {item.desc.map((desc, i) => (
                     <li key={i} className="flex items-center space-x-2">
@@ -69,7 +69,7 @@ const serveContent = [
     ],
   },
   {
-    image: "/images/investors.png",
+    image: "/images/investor2.png",
     text: "Development Organisations",
     desc: [
       "Track and Measure SME Impact",
