@@ -1,14 +1,12 @@
 'use client';
-import { useResources } from '@/hooks/waitlistQueries';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import Button from '../ui/Button';
+import { motion } from 'framer-motion';
 import { itemVariants } from '@/lib/animations';
-import { toast } from 'sonner';
 import { ResourceCardSkeleton } from './ResourceCard';
+import { useGetRandomResources } from '@/hooks/waitlistQueries';
 
-type Data = {
+export type Data = {
   title: string;
   desc: string;
   image: string;
@@ -19,29 +17,8 @@ const getRandomThree = (arr: Data[]): Data[] => {
   return [...arr].sort(() => 0.5 - Math.random()).slice(0, 3);
 };
 
-
 const Resources = () => {
-  const { data, isLoading, isError } = useResources();
-  const [randomResources, setRandomResources] = useState<Data[]>([]);
-
-  useEffect(() => {
-    if (data?.resources) {
-      const mapped = data?.resources?.map((item: any) => ({
-        title: item?.title,
-        desc: item?.desc,
-        image: item?.image,
-        id: item?.link,
-        link: item?.link,
-      }));
-      setRandomResources(getRandomThree(mapped));
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error('Failed to fetch resources');
-    }
-  }, [isError]);
+  const { data, isLoading } = useGetRandomResources();
 
   return (
     <section className="container mx-auto py-20">
@@ -66,39 +43,37 @@ const Resources = () => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-8">
-          {isLoading ? (
-            Array.from({ length: 3 }, (_, index) => (
-              <ResourceCardSkeleton key={index} variant="landing" />
-            ))
-          ) : (
-            randomResources.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ margin: "-100px" }}
-                variants={itemVariants}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="max-w-[384px] bg-[#FCFCFC] rounded-2xl overflow-hidden border border-black-50"
-              >
-                <Link href={item.link} className="">
-                  <div className="h-[284px]">
-                    <img
-                      src={item?.image || '/images/resource.png'}
-                      alt="Success story"
-                      className="w-auto h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold text-[#121212] mb-4 tracking-tight">
-                      {item.title}
-                    </h3>
-                    <p className="text-[#121212] mb-4">{item.desc}</p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))
-          )}
+          {isLoading
+            ? Array.from({ length: 3 }, (_, index) => (
+                <ResourceCardSkeleton key={index} variant="landing" />
+              ))
+            : data?.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ margin: '-100px' }}
+                  variants={itemVariants}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="max-w-[384px] bg-[#FCFCFC] rounded-2xl overflow-hidden border border-black-50"
+                >
+                  <Link href={item.link} className="">
+                    <div className="h-[284px]">
+                      <img
+                        src={item?.image || '/images/resource.png'}
+                        alt="Success story"
+                        className="w-auto h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-2xl font-bold text-[#121212] mb-4 tracking-tight">
+                        {item.title}
+                      </h3>
+                      <p className="text-[#121212] mb-4">{item.desc}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
         </div>
       </div>
     </section>

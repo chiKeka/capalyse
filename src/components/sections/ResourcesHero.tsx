@@ -1,8 +1,6 @@
 'use client';
 import { useResources } from '@/hooks/waitlistQueries';
 import ResourceCard, { ResourceCardSkeleton } from './ResourceCard';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 type Data = {
   title: string;
@@ -12,23 +10,8 @@ type Data = {
   link: string;
 };
 
-
-
 export const ResourcesHero = () => {
-  const { data, isLoading, isError } = useResources();
-
-  useEffect(() => {
-    // if (data?.resources) {
-    //   setResources(data?.resources);
-    // }
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error('Failed to fetch resources');
-    }
-  }, [isError]);
+  const { data, isLoading } = useResources();
 
   return (
     <section className=" py-20 relative">
@@ -54,22 +37,20 @@ export const ResourcesHero = () => {
           <p>Investors Insight</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 justify-items-center">
-          {isLoading ? (
-            Array.from({ length: 6 }, (_, index) => (
-              <ResourceCardSkeleton key={index} />
-            ))
-          ) : (
-            data?.resources?.map((item: Data, index: number) => (
-              <ResourceCard
-                key={item?.link}
-                href={item?.link}
-                header={item?.title}
-                text={item?.desc}
-                image={item?.image}
-                index={index}
-              />
-            ))
-          )}
+          {isLoading
+            ? Array.from({ length: 6 }, (_, index) => (
+                <ResourceCardSkeleton key={index} />
+              ))
+            : data?.resources?.map((item: Data, index: number) => (
+                <ResourceCard
+                  key={item?.link}
+                  href={item?.link}
+                  header={item?.title}
+                  text={item?.desc}
+                  image={item?.image}
+                  index={index}
+                />
+              ))}
         </div>
       </div>
     </section>
