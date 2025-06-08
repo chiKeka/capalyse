@@ -5,6 +5,8 @@ interface AuthLayoutProps {
   children: React.ReactNode;
   google_signtures?: boolean;
   sub_caption?: string;
+  inputFieldSize?: string;
+  layoutSize?: string;
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({
@@ -12,14 +14,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   children,
   google_signtures,
   sub_caption,
+  inputFieldSize = "max-w-md ",
+  layoutSize = "lg:max-w-2xl",
 }) => {
   return (
     <div className="min-h-screen flex flex-col w-full items-center justify-center bg-[#EEF6F4]  px-4">
-      <div className=" w-full px-4 h-auto lg:max-w-2xl bg-white flex-col flex gap-8 rounded-4xl border border-[#EEF6F4]  items-center  py-10  shadow-lg">
-        {/* <img src={}/> */}
-        <h2 className="font-bold text-3xl text-[#282828] text-center w-full">
-          Capalyse
-        </h2>
+      <div
+        className={`w-full px-4 h-auto ${layoutSize} bg-white flex-col flex gap-8 rounded-4xl border border-[#EEF6F4]  items-center  py-10  shadow-lg`}
+      >
+        <img src="/logo.png" className="w-[199px] h-[47px]" />
         <div>
           <h2 className="text-xl font-bold text-[#2E3034]  text-center">
             {title}
@@ -43,7 +46,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           </>
         )}
 
-        <div className="w-full max-w-md flex-col items-center justify-center flex">
+        <div
+          className={`w-full ${inputFieldSize} flex-col items-center justify-center flex`}
+        >
           {children}
         </div>
       </div>

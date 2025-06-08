@@ -39,7 +39,7 @@ function page({}: Props) {
           </Button>
           <div className="flex flex-col items-center justify-center my-6">
             <Link
-              href={"/login"}
+              href={"/signin"}
               className="flex font-bold text-green text-sm text-center items-center"
             >
               Return to login page

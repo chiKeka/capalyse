@@ -1,50 +1,75 @@
 "use client";
+
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import Link from "next/link";
+import { useState } from "react";
+import BusinassInformationForm from "./businassInformationForm";
+import PersonalInformationForm from "./personalInformationForm";
 
-type Props = {};
+const Page = () => {
+  const [step, setStep] = useState(1);
 
-function page({}: Props) {
+  const isFirstStep = step === 1;
+  const isLastStep = step === 2;
+
+  const handleNext = () => {
+    if (isFirstStep) setStep(2);
+    else handleSubmit();
+  };
+
+  const handleBack = () => {
+    if (isLastStep) setStep(1);
+  };
+
+  const handleSubmit = () => {
+    console.log("Form submitted");
+  };
+
+  const steps = [
+    { id: 1, label: "Personal Information" },
+    { id: 2, label: "Business Information" },
+  ];
+
   return (
-    <>
-      <AuthLayout google_signtures={true} title="Sign in your account">
-        <div className="w-full">
-          <Input
-            name="email"
-            onChange={() => null}
-            type="email"
-            label="Email"
-            className="h-[43px]"
-            placeholder="janeearnest@gmail.com"
-            value=""
-          />
-
-          <Input
-            name="password"
-            onChange={() => null}
-            className="h-[43px]"
-            type="password"
-            label="Password"
-            placeholder="**********"
-            value=""
-          />
-          <Button size="medium" variant="primary" className="font-bold w-full">
-            Sign in
-          </Button>
-          <div className="flex flex-col items-center justify-center my-6">
-            <p className="flex font-normal text-sm text-center items-center">
-              Don't have an account ?.
-              <Link href="/signin" className=" font-bold text-sm text-green">
-                Create account
-              </Link>
-            </p>
+    <AuthLayout
+      layoutSize="lg:max-w-4xl"
+      inputFieldSize="max-w-3xl"
+      google_signtures={false}
+      title="Complete the following information to get started"
+    >
+      <div className="flex w-full border-b border-[#F0F0F0] items-center justify-center mb-6 space-x-12">
+        {steps.map(({ id, label }) => (
+          <div
+            key={id}
+            className={`text-center py-2 text-xs cursor-pointer ${
+              step === id
+                ? "border-b-2 border-green text-green font-bold"
+                : "text-gray-400"
+            }`}
+          >
+            {label}
           </div>
-        </div>
-      </AuthLayout>
-    </>
-  );
-}
+        ))}
+      </div>
 
-export default page;
+      <div className="w-full">
+        {isFirstStep && <PersonalInformationForm />}
+        {isLastStep && <BusinassInformationForm />}
+        <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
+          <Button
+            variant="secondary"
+            onClick={handleBack}
+            disabled={isFirstStep}
+          >
+            {isFirstStep ? "Skip to Dashboard" : "Back"}
+          </Button>
+          <Button variant="primary" onClick={handleNext}>
+            {isLastStep ? "Submit" : "Next"}
+          </Button>
+        </div>
+      </div>
+    </AuthLayout>
+  );
+};
+
+export default Page;
