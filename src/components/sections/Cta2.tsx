@@ -35,7 +35,7 @@ function Cta2({
     >
       <div
         className={`max-w-7xl  ${cardBg ? cardBg : 'transparent'
-          } items-center gap-8 rounded-[24px] justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
+          } items-center gap-16 rounded-[24px] justify-center mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
           } py-[64px]`}
       >
         <img
