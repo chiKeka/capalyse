@@ -1,14 +1,14 @@
-'use client';
-import { motion } from 'framer-motion';
-import { useClickOutside } from '@/hooks/use-click-outside';
-import { Menu, X } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import Button from '../ui/Button';
-import { classNames } from '@/lib/uitils';
-import { usePathname } from 'next/navigation';
-import { Waitlist } from '../sections/waitlist';
+"use client";
+import { useClickOutside } from "@/hooks/use-click-outside";
+import { classNames } from "@/lib/uitils";
+import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Waitlist } from "../sections/waitlist";
+import Button from "../ui/Button";
 
 const Header = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -26,8 +26,8 @@ const Header = () => {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   useClickOutside<HTMLDivElement>(mobileNavRef, () => {
@@ -38,24 +38,24 @@ const Header = () => {
     <motion.nav
       initial={{
         y: 0,
-        backgroundColor: 'rgba(255, 255, 255, 0)',
+        backgroundColor: "rgba(255, 255, 255, 0)",
       }}
       animate={{
         y: isVisible ? 0 : -138,
         backgroundColor:
           isVisible && lastScrollY > 0
-            ? 'rgba(255, 255, 255,1)'
-            : 'rgba(255, 255, 255, 0)',
+            ? "rgba(255, 255, 255,1)"
+            : "rgba(255, 255, 255, 0)",
       }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className="bg-white border-b-[0.5px] border-[#EEF6F4] sticky top-0 z-50 py-3"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href={'/'} className="flex items-center space-x-2">
+            <Link href={"/"} className="flex items-center space-x-2">
               <Image
-                src={'/logo.png'}
+                src={"/logo.png"}
                 width={159.26}
                 height={37.9}
                 alt="Capalyse"
@@ -70,8 +70,8 @@ const Header = () => {
                   key={link.text}
                   href={link.url}
                   className={classNames(
-                    'hover:text-teal-600 px-3 py-2 text-sm transition-all duration-300',
-                    pathname === link.url ? 'text-green font-medium' : ''
+                    "hover:text-teal-600 px-3 py-2 text-sm transition-all duration-300",
+                    pathname === link.url ? "text-green font-medium" : ""
                   )}
                 >
                   {link.text}
@@ -122,8 +122,8 @@ const Header = () => {
                 href={link.url}
                 onClick={() => setMobileMenuOpen(false)}
                 className={classNames(
-                  'block px-3 py-2 text-base transition-all duration-300',
-                  pathname === link.url ? 'text-green font-medium' : ''
+                  "block px-3 py-2 text-base transition-all duration-300",
+                  pathname === link.url ? "text-green font-medium" : ""
                 )}
               >
                 {link.text}
@@ -163,23 +163,27 @@ const Header = () => {
 export default Header;
 const navlinks = [
   {
-    text: 'About',
-    url: '/about',
+    text: "About",
+    url: "/about",
   },
   {
-    text: 'For SMEs',
-    url: '/SMEs',
+    text: "For SMEs",
+    url: "/SMEs",
   },
   {
-    text: 'For Investors',
-    url: '/investors',
+    text: "For Investors",
+    url: "/investors",
   },
   {
-    text: 'Resources',
-    url: '/resources',
+    text: "For Organisations",
+    url: "/organisations",
   },
   {
-    text: 'Contact',
-    url: '/contact',
+    text: "Resources",
+    url: "/resources",
+  },
+  {
+    text: "Contact",
+    url: "/contact",
   },
 ];
