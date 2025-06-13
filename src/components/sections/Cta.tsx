@@ -1,15 +1,16 @@
-import Button from '../ui/Button';
-import { motion } from 'framer-motion';
-import { Waitlist } from './waitlist';
-import { useState } from 'react';
-import { containerVariants, itemVariants } from '@/lib/animations';
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import Button from "../ui/Button";
+import { Waitlist } from "./waitlist";
 
 type Props = {
   heading: React.ReactNode;
   text?: string;
+  buttonText?: string;
 };
 
-const Cta = ({ heading, text }: Props) => {
+const Cta = ({ heading, text, buttonText }: Props) => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
@@ -24,7 +25,7 @@ const Cta = ({ heading, text }: Props) => {
       >
         <div className="absolute inset-0 h-full">
           <img
-            src={'/images/cta-img.png'}
+            src={"/images/cta-img.png"}
             alt="image"
             className="object-cover xl:object-end h-full w-full"
           />
@@ -39,7 +40,7 @@ const Cta = ({ heading, text }: Props) => {
             iconPosition="right"
             size="medium"
           >
-            Get Started
+            {buttonText ? "Explore Opportunities" : "Get Started"}
           </Button>
         </div>
       </motion.div>

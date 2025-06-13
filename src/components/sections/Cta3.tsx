@@ -1,14 +1,15 @@
-import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
-import { containerVariants, itemVariants } from '@/lib/animations';
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { motion } from "framer-motion";
+import { ReactNode } from "react";
 
 type Props = {
   smsEcardData: { caption: string; text: string }[];
   header: ReactNode;
   text: string;
+  gridType?: string;
 };
 
-function InverstmentReadiness({ smsEcardData, header, text }: Props) {
+function InverstmentReadiness({ smsEcardData, header, text, gridType }: Props) {
   return (
     <motion.section
       variants={containerVariants}
@@ -24,7 +25,11 @@ function InverstmentReadiness({ smsEcardData, header, text }: Props) {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 grid-cols-1 items-center justify-center py-8  w-full gap-4 h-auto">
+        <div
+          className={` grid ${
+            gridType ? gridType : "lg:grid-cols-2"
+          } grid-cols-1 items-center justify-center py-8  w-full gap-4 h-auto`}
+        >
           {smsEcardData.map((list, i) => {
             return <Cards key={i} {...list} index={i} />;
           })}
@@ -36,17 +41,25 @@ function InverstmentReadiness({ smsEcardData, header, text }: Props) {
 
 export default InverstmentReadiness;
 
-const Cards = ({ caption, text, index }: { caption: string; text: string, index: number }) => {
+const Cards = ({
+  caption,
+  text,
+  index,
+}: {
+  caption: string;
+  text: string;
+  index: number;
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ margin: '-100px' }}
+      viewport={{ margin: "-100px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       variants={itemVariants}
-      className="rounded-2xl border-1 flex flex-row gap-3 px-6 py-7 xl:h-[131px] lg:h-[155px] border-[#E4E4E7] bg-white "
+      className="rounded-2xl border-1 flex flex-row gap-3 px-6 py-7 xl:min-h-[131px] lg:min-h-[155px] border-[#E4E4E7] bg-white "
     >
-      <img src={'/icons/checkIcon.svg'} className=" w-4 h-4" />
+      <img src={"/icons/checkIcon.svg"} className=" w-4 h-4" />
       <p className="text-base font-bold">
         {caption}
         <span className="font-normal">{text}</span>
