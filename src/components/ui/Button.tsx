@@ -56,7 +56,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses: string =
-    'inline-flex items-center font-bold justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2';
+    'inline-flex items-center font-bold justify-center transition-all duration-200 focus:outline-none focus:ring-0 focus:ring-offset-0';
 
   // Size classes mapping
   const sizeClasses: Record<ButtonSize, string> = {

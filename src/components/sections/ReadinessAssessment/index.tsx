@@ -1,12 +1,49 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, XIcon } from 'lucide-react';
+import { ChevronLeft, XIcon, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import {} from '@radix-ui/react-dialog';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import Button from '@/components/ui/Button';
 import { CIcons } from '@/components/ui/CIcons';
+
+interface Section {
+  id: number;
+  category: string;
+  amount: string;
+  currency: string;
+}
+
+interface FormData {
+  [key: string]: any;
+}
+
+interface Errors {
+  [key: string]: string | null;
+}
+
+interface Question {
+  id: string;
+  title: string;
+  type: string;
+  options?: string[];
+  required: boolean;
+  hasSections?: boolean;
+  hasUpload?: boolean;
+  uploadText?: string;
+  uploadFormats?: string;
+  placeholder?: string;
+  isTwoColumn?: boolean;
+  col1Label?: string;
+  col2Label?: string;
+}
+
+interface SectionData {
+  name: string;
+  totalQuestions: number;
+  questions: Question[];
+}
 
 const AssessmentReadiness = ({
   isOpen,
@@ -17,14 +54,17 @@ const AssessmentReadiness = ({
 }) => {
   const [currentSection, setCurrentSection] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState<FormData>({});
+  const [errors, setErrors] = useState<Errors>({});
+  const [sectionedData, setSectionedData] = useState<{
+    [key: string]: Section[];
+  }>({});
 
   const currentSectionData = sections[currentSection];
   const currentQuestionData = currentSectionData.questions[currentQuestion];
   const totalQuestions = currentSectionData.totalQuestions;
 
-  const validateField = (fieldId, value) => {
+  const validateField = (fieldId: string, value: any): string | null => {
     const question = currentQuestionData;
     if (question.required && (!value || value.toString().trim() === '')) {
       return 'This field is required';
@@ -32,7 +72,23 @@ const AssessmentReadiness = ({
     return null;
   };
 
-  const handleInputChange = (value) => {
+  const validateSections = (
+    fieldId: string,
+    sections: Section[]
+  ): string | null => {
+    if (currentQuestionData.required && sections.length === 0) {
+      return 'At least one section is required';
+    }
+
+    for (const section of sections) {
+      if (!section.category.trim() || !section.amount.trim()) {
+        return 'All category and amount fields must be filled';
+      }
+    }
+    return null;
+  };
+
+  const handleInputChange = (value: any) => {
     const fieldId = `${currentSection}-${currentQuestion}`;
     setFormData((prev) => ({
       ...prev,
@@ -47,17 +103,82 @@ const AssessmentReadiness = ({
     }));
   };
 
+  const handleSectionChange = (
+    sectionId: number,
+    field: 'category' | 'amount' | 'currency',
+    value: string
+  ) => {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    const currentSections = sectionedData[fieldId] || [];
+
+    const updatedSections = currentSections.map((section) =>
+      section.id === sectionId ? { ...section, [field]: value } : section
+    );
+
+    setSectionedData((prev) => ({
+      ...prev,
+      [fieldId]: updatedSections,
+    }));
+
+    // Clear errors when user starts typing
+    const error = validateSections(fieldId, updatedSections);
+    setErrors((prev) => ({
+      ...prev,
+      [fieldId]: error,
+    }));
+  };
+
+  const addSection = () => {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    const currentSections = sectionedData[fieldId] || [];
+    const newSection: Section = {
+      id: Date.now(),
+      category: '',
+      amount: '',
+      currency: 'NGN',
+    };
+
+    setSectionedData((prev) => ({
+      ...prev,
+      [fieldId]: [...currentSections, newSection],
+    }));
+  };
+
+  const removeSection = (sectionId: number) => {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    const currentSections = sectionedData[fieldId] || [];
+
+    setSectionedData((prev) => ({
+      ...prev,
+      [fieldId]: currentSections.filter((section) => section.id !== sectionId),
+    }));
+  };
+
   const handleNext = () => {
     const fieldId = `${currentSection}-${currentQuestion}`;
-    const currentValue = formData[fieldId];
-    const error = validateField(currentQuestionData.id, currentValue);
 
-    if (error) {
-      setErrors((prev) => ({
-        ...prev,
-        [fieldId]: error,
-      }));
-      return;
+    if (currentQuestionData.hasSections) {
+      const currentSections = sectionedData[fieldId] || [];
+      const error = validateSections(fieldId, currentSections);
+
+      if (error) {
+        setErrors((prev) => ({
+          ...prev,
+          [fieldId]: error,
+        }));
+        return;
+      }
+    } else {
+      const currentValue = formData[fieldId];
+      const error = validateField(currentQuestionData.id, currentValue);
+
+      if (error) {
+        setErrors((prev) => ({
+          ...prev,
+          [fieldId]: error,
+        }));
+        return;
+      }
     }
 
     if (currentQuestion < totalQuestions - 1) {
@@ -77,21 +198,139 @@ const AssessmentReadiness = ({
     }
   };
 
-  const handleSectionClick = (sectionIndex) => {
-    setCurrentSection(sectionIndex);
-    setCurrentQuestion(0);
-  };
-
-  const getSectionStatus = (sectionIndex) => {
+  const getSectionStatus = (sectionIndex: number) => {
     if (sectionIndex < currentSection) return 'completed';
     if (sectionIndex === currentSection) return 'active';
     return 'upcoming';
   };
 
+  const renderSectionedInput = () => {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    const currentSections = sectionedData[fieldId] || [];
+    const error = errors[fieldId];
+
+    // Initialize with at least 2 sections if none exist
+    if (currentSections.length === 0) {
+      const initialSections: Section[] = [
+        { id: 1, category: '', amount: '', currency: 'NGN' },
+        { id: 2, category: '', amount: '', currency: 'NGN' },
+      ];
+      setSectionedData((prev) => ({
+        ...prev,
+        [fieldId]: initialSections,
+      }));
+      return null; // Will re-render with sections
+    }
+
+    return (
+      <div className="space-y-4">
+        {currentSections.map((section, index) => (
+          <div key={section.id} className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category
+              </label>
+              <input
+                type="text"
+                value={section.category}
+                onChange={(e) =>
+                  handleSectionChange(section.id, 'category', e.target.value)
+                }
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="Enter category"
+              />
+            </div>
+            <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Amount
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={section.amount}
+                  onChange={(e) =>
+                    handleSectionChange(section.id, 'amount', e.target.value)
+                  }
+                  className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="0.00"
+                />
+                <select
+                  value={section.currency}
+                  onChange={(e) =>
+                    handleSectionChange(section.id, 'currency', e.target.value)
+                  }
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-none text-sm font-medium text-gray-600 focus:outline-none cursor-pointer"
+                >
+                  <option value="NGN">NGN</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                </select>
+              </div>
+              {currentSections.length > 2 && (
+                <button
+                  type="button"
+                  onClick={() => removeSection(section.id)}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                >
+                  <Trash2 size={12} />
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addSection}
+          className="flex items-center gap-2 text-green font-bold hover:text-green transition-colors ml-auto"
+        >
+          <span>Add Section</span>
+          <Plus size={16} />
+        </button>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
+    );
+  };
+
+  function handleCurrencyAmountChange(amount: string) {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    setFormData((prev) => ({
+      ...prev,
+      [fieldId]: {
+        ...prev[fieldId],
+        amount,
+        currency: prev[fieldId]?.currency || 'NGN',
+      },
+    }));
+    const error = validateField(currentQuestionData.id, amount);
+    setErrors((prev) => ({
+      ...prev,
+      [fieldId]: error,
+    }));
+  }
+
+  function handleCurrencyTypeChange(currency: string) {
+    const fieldId = `${currentSection}-${currentQuestion}`;
+    setFormData((prev) => ({
+      ...prev,
+      [fieldId]: {
+        ...prev[fieldId],
+        amount: prev[fieldId]?.amount || '',
+        currency,
+      },
+    }));
+  }
+
   const renderInput = () => {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const value = formData[fieldId] || '';
     const error = errors[fieldId];
+
+    if (currentQuestionData.hasSections) {
+      return renderSectionedInput();
+    }
 
     switch (currentQuestionData.type) {
       case 'select':
@@ -105,7 +344,7 @@ const AssessmentReadiness = ({
               }`}
             >
               <option value="">Select an option</option>
-              {currentQuestionData.options.map((option) => (
+              {currentQuestionData.options?.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -133,7 +372,7 @@ const AssessmentReadiness = ({
       case 'radio':
         return (
           <div className="space-y-3">
-            {currentQuestionData.options.map((option) => (
+            {currentQuestionData.options?.map((option) => (
               <label
                 key={option}
                 className="flex items-center space-x-3 cursor-pointer"
@@ -152,6 +391,46 @@ const AssessmentReadiness = ({
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         );
+      case 'currency': {
+        const currencyValue = value?.currency || 'NGN';
+        const amountValue = value?.amount || '';
+        return (
+          <div>
+            <div className="relative">
+              <input
+                type="number"
+                placeholder={currentQuestionData.placeholder || ''}
+                value={amountValue}
+                onChange={(e) => handleCurrencyAmountChange(e.target.value)}
+                className={`w-full p-3 border rounded-lg focus:ring-0 focus:ring-green-500 focus:border-transparent ${
+                  error ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              <select
+                value={currencyValue}
+                onChange={(e) => handleCurrencyTypeChange(e.target.value)}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 border-none text-sm font-medium text-gray-600 focus:outline-none cursor-pointer border-4 border-transparent bg-bg py-1"
+              >
+                {currentQuestionData.options &&
+                  currentQuestionData.options?.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                {!currentQuestionData.options && (
+                  <>
+                    <option value="NGN">NGN</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                  </>
+                )}
+              </select>
+            </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          </div>
+        );
+      }
 
       default:
         return (
@@ -176,11 +455,11 @@ const AssessmentReadiness = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent
         hideIcon
-        className="p-0 overflow-hidden max-w-[90vw] lg:min-w-[912px]"
+        className="p-0 overflow-hidden max-w-[90vw] lg:min-w-[912px] max-h-[90vh]"
       >
         <DialogTitle className="sr-only">Readiness</DialogTitle>
 
-        <div className=" bg-gray-50 flex min-h-[80vh]">
+        <div className=" bg-gray-50 flex min-h-[80vh] overflow-y-auto no-scrollbar">
           {/* Sidebar */}
           <div className="lg:w-80 bg-primary-green-6 text-white py-8 px-3 md:px-9">
             <div className="flex items-center space-x-3 mb-8">
@@ -206,7 +485,7 @@ const AssessmentReadiness = ({
                   >
                     <div className="bg-primary-green-6 py-0.5">
                       <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold border-2 ${
+                        className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold border-2 pb-1 ${
                           status === 'completed'
                             ? 'border-primary-green-2 bg-primary-green-2 text-primary-green-6'
                             : status === 'active'
@@ -237,7 +516,7 @@ const AssessmentReadiness = ({
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 relative flex-col flex">
+          <div className="flex-1 relative flex-col flex h-full pb-8">
             {/* Header */}
             <div className="px-4 pt-6 pb-3 flex justify-end">
               <button
@@ -249,7 +528,7 @@ const AssessmentReadiness = ({
             </div>
 
             {/* Question Area */}
-            <div className="px-10 pb-8 h-full">
+            <div className="px-10 h-full max-h-[75vh] overflow-y-auto no-scrollbar">
               <div className="max-w-2xl mx-auto h-full flex-col flex">
                 <div className="mb-6">
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -323,38 +602,8 @@ const AssessmentReadiness = ({
 };
 
 export default AssessmentReadiness;
-{
-  /* Quick Tip Sidebar */
-}
-{
-  /* <div className="absolute top-24 right-6 w-80 bg-white rounded-lg shadow-lg p-6">
-          <div className="flex items-center space-x-2 mb-3">
-            <Lightbulb className="w-5 h-5 text-yellow-500" />
-            <span className="font-semibold text-gray-800">Quick Tip</span>
-          </div>
-          <p className="text-sm text-gray-600">
-            Keep your profile and business information updated to boost your
-            credibility and attract investors.
-          </p>
-        </div> */
-}
 
-{
-  /* Compliance Flag */
-}
-{
-  /* <div className="absolute bottom-24 right-6 w-80 bg-white rounded-lg shadow-lg p-6 border-l-4 border-yellow-500">
-          <div className="flex items-center space-x-2 mb-3">
-            <AlertTriangle className="w-5 h-5 text-yellow-500" />
-            <span className="font-semibold text-gray-800">Compliance flag</span>
-          </div>
-          <p className="text-sm text-gray-600">
-            Ensure all regulatory requirements are met before proceeding with
-            investor matching.
-          </p>
-        </div> */
-}
-const sections = [
+const sections: SectionData[] = [
   {
     name: 'Financial Data',
     totalQuestions: 9,
@@ -362,35 +611,47 @@ const sections = [
       {
         id: 'revenue',
         title: "What is your business's total revenue (income) per month?",
-        type: 'select',
+        type: 'currency',
         options: ['NGN', 'USD', 'EUR', 'GBP'],
         required: true,
         hasUpload: true,
         uploadText: 'Upload bank statements from the last 6—12 months',
-        uploadFormats: 'Format includes: PNG, PDF, Word, JPG',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'expenses',
-        title: 'What are your monthly business expenses?',
+        title: 'What are your business expenses every month?',
         type: 'currency',
+        hasSections: true,
         required: true,
+        hasUpload: true,
+        uploadText: 'Upload profit & loss statement or receipts summary',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'profit_margin',
-        title: 'What is your average profit margin?',
+        title: 'What is the value of your current business assets?',
         type: 'percentage',
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText: 'Upload most recent balance sheet or asset inventory',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'cash_flow',
-        title: 'How would you describe your cash flow situation?',
+        title: 'What are your current debts or liabilities?',
         type: 'select',
         options: ['Positive', 'Break-even', 'Negative', 'Seasonal variations'],
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText: 'Upload loan agreements or debt summary (if available)',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'funding_sources',
-        title: 'What are your current funding sources?',
+        title: 'How much equity (investment) have you received so far?',
         type: 'multiselect',
         options: [
           'Personal savings',
@@ -400,32 +661,56 @@ const sections = [
           'Grants',
         ],
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText: 'Upload Shareholder agreements or proof of investment',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'investment_needed',
-        title: 'How much investment do you need?',
+        title: 'How much cash does your business currently have?',
         type: 'currency',
         required: true,
+        hasUpload: true,
+        placeholder: 'Enter amount',
+        uploadText: 'Upload your latest bank statement',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'use_of_funds',
-        title: 'How will you use the investment?',
-        type: 'textarea',
+        title:
+          'How much money are your customers yet to pay you (Accounts Receivable)?',
+        type: 'text',
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText: 'Upload invoicing records or customer payment report',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'financial_projections',
-        title: 'Do you have financial projections for the next 3 years?',
-        type: 'radio',
+        title:
+          'How much money do you owe suppliers or service providers (Accounts Payable)?',
+        type: 'text',
         options: ['Yes', 'No'],
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText: 'Upload supplier bills or accounts payable record',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'accounting_system',
-        title: 'What accounting system do you use?',
+        title:
+          'How much capital (initial money) did you start your business with?',
         type: 'select',
         options: ['QuickBooks', 'Xero', 'Manual spreadsheets', 'Other', 'None'],
         required: true,
+        hasSections: true,
+        hasUpload: true,
+        uploadText:
+          'Upload Proof of transfer, funding agreement, or bank statement (if available)',
+        uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
     ],
   },
@@ -435,57 +720,57 @@ const sections = [
     questions: [
       {
         id: 'ideal_customers',
-        title: 'Who are your ideal customers?',
-        type: 'textarea',
-        placeholder:
-          'Describe the main types of customers you target (age, gender, business size, income level, etc).',
+        title: 'What industry does your business operate in?',
+        type: 'text',
+        placeholder: 'Enter Industry',
         required: true,
+        hasUpload: true,
+        uploadText: 'Upload business plan or pitch deck (Optional)',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'business_model',
-        title: 'What is your business model?',
-        type: 'select',
-        options: [
-          'B2B',
-          'B2C',
-          'B2B2C',
-          'Marketplace',
-          'Subscription',
-          'Other',
-        ],
+        title: 'How many years has your business been operating?',
+        type: 'text',
+        placeholder: 'eg. 5 years',
         required: true,
       },
       {
         id: 'unique_value_proposition',
-        title: 'What is your unique value proposition?',
-        type: 'textarea',
+        title: 'How many people work in your business?',
+        type: 'number',
+        isTwoColumn: true,
         required: true,
+        col1Label: 'Full-time',
+        col2Label: 'Part-time',
       },
       {
         id: 'competitive_advantage',
-        title: 'What is your main competitive advantage?',
-        type: 'textarea',
+        title: 'Where do you operate or sell your products/services?',
+        type: 'text',
+        placeholder: 'List cities, states, or countries you currently serve.',
         required: true,
+      },
+      {
+        id: 'legal_structure',
+        title: 'What is the legal structure of your business?',
+        type: 'text',
+        placeholder:
+          'e.g. Sole Proprietor, Limited Liability Company, Partnership',
+        required: true,
+        hasUpload: true,
+        uploadText: 'Upload CAC Certificate or Certificate of Incorporation',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'business_stage',
-        title: 'What stage is your business in?',
+        title: 'Do you own any intellectual property?',
         type: 'select',
-        options: [
-          'Idea stage',
-          'MVP/Prototype',
-          'Early revenue',
-          'Growth stage',
-          'Established',
-        ],
+        options: ['Yes', 'No'],
         required: true,
-      },
-      {
-        id: 'team_size',
-        title: 'How many people are in your team?',
-        type: 'select',
-        options: ['1 (Solo founder)', '2-5', '6-10', '11-25', '26-50', '50+'],
-        required: true,
+        hasUpload: true,
+        uploadText: 'If yes, Upload Certificates for any trademarks or patents',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
     ],
   },
@@ -494,51 +779,66 @@ const sections = [
     totalQuestions: 8,
     questions: [
       {
-        id: 'daily_operations',
-        title: 'Describe your daily operations',
-        type: 'textarea',
+        id: 'customers',
+        title: 'How many customers do you currently have?',
+        type: 'currency',
+        options: ['monthly', 'yearly'],
+        placeholder: 'Enter Estimated number',
         required: true,
+        hasUpload: true,
+        uploadText: 'Upload CRM report, sales list, or order history',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
-        id: 'production_capacity',
-        title: 'What is your current production capacity?',
-        type: 'text',
+        id: 'customer_acquisition_cost',
+        title: 'How much does it cost to get a new customer? ',
+        type: 'currency',
         required: true,
+        placeholder: 'Enter Amount',
       },
       {
         id: 'supply_chain',
-        title: 'How do you manage your supply chain?',
-        type: 'textarea',
+        title: 'On average, how much does one customer spend per transaction?',
+        type: 'currency',
         required: true,
+        hasUpload: true,
+        uploadText: 'Upload sales report, or receipt samples',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'technology_stack',
-        title: 'What technology do you use in your operations?',
-        type: 'textarea',
+        title: 'How long does it take to close a sale (sales circle)',
+        type: 'text',
         required: false,
       },
       {
         id: 'quality_control',
-        title: 'How do you ensure quality control?',
-        type: 'textarea',
+        title: 'What do you sell?',
+        type: 'text',
+        placeholder: 'List products or services',
         required: true,
       },
       {
         id: 'operational_challenges',
-        title: 'What are your main operational challenges?',
-        type: 'textarea',
+        title: 'How do you price your product or services?',
+        type: 'text',
         required: true,
       },
       {
         id: 'scalability_plans',
-        title: 'How do you plan to scale your operations?',
-        type: 'textarea',
+        title:
+          'Do you keep inventory? If yes, how much stock do you currently hold',
+        type: 'currency',
         required: true,
+        hasUpload: true,
+        uploadText: 'Upload Inventory record or stock list',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'key_metrics',
-        title: 'What are your key operational metrics?',
-        type: 'textarea',
+        title: 'Who are your main supply chain partners or vendors',
+        type: 'text',
+        placeholder: 'List',
         required: true,
       },
     ],
