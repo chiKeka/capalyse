@@ -73,6 +73,29 @@ export const orgCardData = [
 // for investors
 
 // for resources
+export const orgCardData = [
+  {
+    caption: "Inform your programming with reliable data:",
+    text: "Use readiness assessments and ecosystem diagnostics to target support where it’s most needed.",
+  },
+  {
+    caption: "Enable investment-readiness pathways:",
+    text: "Partner with SMEs and local players to build compliance, governance, and financial transparency.",
+  },
+  {
+    caption: "Strengthen local ecosystems:",
+    text: "Collaborate with investors and policymakers to align incentives and scale impact across regions.",
+  },
+];
+
+export const orgData = [
+  "Actionable SME Data",
+  "Regional Compliance Insights",
+  "Partnership Opportunities",
+  "Market Readiness Trends",
+  "Custom Reports & Dashboards",
+];
+
 
 export const resouresData = [
   {

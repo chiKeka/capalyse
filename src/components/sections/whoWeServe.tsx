@@ -1,6 +1,6 @@
-import { CIcons } from '../ui/CIcons';
-import { motion } from 'framer-motion';
 import { containerVariants, itemVariants } from '@/lib/animations';
+import { motion } from 'framer-motion';
+import { CIcons } from '../ui/CIcons';
 
 const WhoWeServe = () => {
   return (
@@ -23,7 +23,7 @@ const WhoWeServe = () => {
             <motion.div
               variants={itemVariants}
               key={item.text}
-              className="bg-white p-4 xl:p-6 border h-full border-primary-green-2 rounded-2xl max-w-[19.7083rem]"
+              className="bg-white p-4 xl:p-6 border border-primary-green-2 rounded-2xl w-full lg:max-w-[355px]"
             >
               <div className="aspect-w-16 aspect-h-12 rounded-2xl overflow-hidden mb-4">
                 <img
@@ -33,9 +33,7 @@ const WhoWeServe = () => {
                 />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2 tracking-tight">
-                  {item.text}
-                </h3>
+                <h3 className="text-xl font-bold mb-2">{item.text}</h3>
                 <ul className="space-y-2">
                   {item.desc.map((desc, i) => (
                     <li key={i} className="flex items-center space-x-2">
@@ -68,6 +66,15 @@ const serveContent = [
       'Discover vetted SMEs',
       'Diversify your portfolio',
       'Invest with clarity',
+    ],
+  },
+  {
+    image: '/images/investor2.png',
+    text: 'Development Organisations',
+    desc: [
+      'Track and Measure SME Impact',
+      'Identify High-Potential Businesses',
+      'Strengthen Ecosystem Collaboration',
     ],
   },
   {

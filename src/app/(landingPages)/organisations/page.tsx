@@ -21,7 +21,7 @@ function Organisation({}: Props) {
           </>
         }
         text="Gain deep insights into business readiness, compliance, and growth needs across <br/> regions. Partner with Capalyze to drive strategic support where it matters most."
-        headerImage="/images/investors.png"
+        headerImage="/images/investor2.png"
         reverse={true}
       />
       {/* invesment readiness */}
