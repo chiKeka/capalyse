@@ -45,7 +45,7 @@ const data = {
     },
     {
       title: 'Resources & Learning',
-      url: '/dashboard/resources',
+      url: '/dashboard/learning',
       icon: BookOpen,
       badge: '32',
     },
