@@ -3,6 +3,7 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import LearningCard from "@/components/sections/dashboardCards/learningCard";
+import OverviewHeaderCard from "@/components/sections/dashboardCards/overviewHeaderCard";
 import Programs from "@/components/sections/dashboardCards/programs";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
@@ -51,6 +52,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
+      <OverviewHeaderCard value={30} />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
         <div className="lg:w-[25%] h-auto w-full ">
           <ReadinessScoreCard scoreValue={5} />
@@ -135,19 +137,6 @@ export default function Page() {
           </DashboardCardLayout>
         </div>
       </div>
-
-      {/* <DashboardCardLayout caption="Matched Investors">
-        base font-normal text-start md:w-'284px]
-        <MatchedInvetors />
-      </DashboardCardLayout>
-
-
-      <DashboardCardLayout caption="Development Programs">
-        <Programs />
-      </DashboardCardLayout>
-
-
-      */}
     </div>
   );
 }

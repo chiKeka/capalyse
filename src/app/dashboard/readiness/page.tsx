@@ -114,7 +114,7 @@ function page({}: Props) {
       <DashboardCardLayout>
         <div className=" flex justify-between items-center ">
           <div className="flex items-center gap-2">
-            <p className="font-bold text-base flex gap-2 text-[#18181B]">
+            <p className="font-bold text-base flex gap-2 items-center text-[#18181B]">
               Documents
               <p className="px-2 py-0.5  text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
                 {documents.length}
