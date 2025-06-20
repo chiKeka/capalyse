@@ -61,19 +61,14 @@ const data = {
     },
     {
       title: 'Support',
-      url: '/support',
+      url: '/dashboard/support',
       icon: LifeBuoy,
     },
   ],
   navSecondary: [
-    // {
-    //   title: 'Support',
-    //   url: '/support',
-    //   icon: LifeBuoy,
-    // },
     {
       title: 'Settings',
-      url: '/settings',
+      url: '/dashboard/settings',
       icon: Settings,
     },
   ],
