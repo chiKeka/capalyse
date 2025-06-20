@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 type Column<T> = {
   header: string;
@@ -7,7 +7,7 @@ type Column<T> = {
 };
 
 type ReusableTableProps<T> = {
-  columns: Column<T>[];
+  columns: any;
   data: T[];
   className?: string;
 };
@@ -15,20 +15,18 @@ type ReusableTableProps<T> = {
 export function ReusableTable<T extends object>({
   columns,
   data,
-  className = "",
+  className = '',
 }: ReusableTableProps<T>) {
   return (
-    <div
-      className={`overflow-x-auto rounded-lg  bg-white ${className}`}
-    >
+    <div className={`overflow-x-auto rounded-lg  bg-white ${className}`}>
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            {columns.map((col, idx) => (
+            {columns.map((col: any, idx: number) => (
               <th
                 key={idx}
                 className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase ${
-                  col.className || ""
+                  col.className || ''
                 }`}
               >
                 {col.header}
@@ -39,12 +37,12 @@ export function ReusableTable<T extends object>({
         <tbody>
           {data.map((row, ridx) => (
             <tr key={ridx} className="hover:bg-gray-50 border">
-              {columns.map((col, cidx) => (
+              {columns.map((col: any, cidx: number) => (
                 <td
                   key={cidx}
-                  className={`px-4 py-3 text-sm ${col.className || ""}`}
+                  className={`px-4 py-3 text-sm ${col.className || ''}`}
                 >
-                  {typeof col.accessor === "function"
+                  {typeof col.accessor === 'function'
                     ? col.accessor(row)
                     : (row as any)[col.accessor]}
                 </td>
