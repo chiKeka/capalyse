@@ -391,4 +391,380 @@ export const CIcons = {
       />
     </svg>
   ),
+  presentationChartIcon: () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15.0833 14.791H4.91666C2.98333 14.791 1.875 13.6827 1.875 11.7494V1.66602C1.875 1.32435 2.15833 1.04102 2.5 1.04102H17.5C17.8417 1.04102 18.125 1.32435 18.125 1.66602V11.7494C18.125 13.6827 17.0167 14.791 15.0833 14.791ZM3.125 2.29102V11.7494C3.125 12.991 3.67499 13.541 4.91666 13.541H15.075C16.3167 13.541 16.8667 12.991 16.8667 11.7494V2.29102H3.125Z"
+        fill="#282828"
+      />
+      <path
+        d="M18.3332 2.29102H1.6665C1.32484 2.29102 1.0415 2.00768 1.0415 1.66602C1.0415 1.32435 1.32484 1.04102 1.6665 1.04102H18.3332C18.6748 1.04102 18.9582 1.32435 18.9582 1.66602C18.9582 2.00768 18.6748 2.29102 18.3332 2.29102Z"
+        fill="#282828"
+      />
+      <path
+        d="M6.66689 18.9577C6.43355 18.9577 6.21688 18.8327 6.10854 18.616C5.95021 18.3077 6.07523 17.9327 6.3919 17.7743L9.37522 16.2827V14.166C9.37522 13.8243 9.65855 13.541 10.0002 13.541C10.3419 13.541 10.6252 13.8243 10.6252 14.166V16.666C10.6252 16.8993 10.4919 17.116 10.2752 17.2244L6.94188 18.891C6.85854 18.9327 6.75855 18.9577 6.66689 18.9577Z"
+        fill="#282828"
+      />
+      <path
+        d="M13.3335 18.9588C13.2418 18.9588 13.1418 18.9338 13.0585 18.8921L9.72513 17.2255C9.4168 17.0671 9.29178 16.6921 9.44178 16.3838C9.60011 16.0755 9.97512 15.9505 10.2835 16.1005L13.6168 17.7671C13.9251 17.9255 14.0501 18.3005 13.9001 18.6088C13.7834 18.8338 13.5585 18.9588 13.3335 18.9588Z"
+        fill="#282828"
+      />
+      <path
+        d="M6.2501 9.79157C6.0751 9.79157 5.89178 9.71658 5.76678 9.56658C5.54178 9.29991 5.58343 8.90824 5.85009 8.68324L8.47511 6.49157C8.71678 6.29157 9.02509 6.20824 9.31676 6.25824C9.61676 6.30824 9.87511 6.49155 10.0334 6.75822L10.9084 8.21655L13.3501 6.18324C13.6168 5.96658 14.0084 5.99989 14.2334 6.26656C14.4584 6.53322 14.4168 6.92489 14.1501 7.14989L11.5251 9.34156C11.2834 9.54156 10.9751 9.62489 10.6834 9.57489C10.3834 9.52489 10.1251 9.34158 9.96676 9.07491L9.09177 7.61658L6.65011 9.64989C6.53344 9.74155 6.39177 9.79157 6.2501 9.79157Z"
+        fill="#282828"
+      />
+    </svg>
+  ),
+  financialModelIcon: () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7.9165 11.4575C7.9165 12.2659 8.54152 12.9159 9.30818 12.9159H10.8748C11.5415 12.9159 12.0832 12.3492 12.0832 11.6409C12.0832 10.8825 11.7498 10.6076 11.2582 10.4326L8.74984 9.55755C8.25817 9.38255 7.92485 9.11588 7.92485 8.34922C7.92485 7.64922 8.4665 7.07422 9.13316 7.07422H10.6998C11.4665 7.07422 12.0915 7.72422 12.0915 8.53255"
+        stroke="#282828"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 6.25V13.75"
+        stroke="#282828"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.3332 9.99935C18.3332 14.5993 14.5998 18.3327 9.99984 18.3327C5.39984 18.3327 1.6665 14.5993 1.6665 9.99935C1.6665 5.39935 5.39984 1.66602 9.99984 1.66602"
+        stroke="#282828"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.3333 4.99935V1.66602H15"
+        stroke="#282828"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.1665 5.83268L18.3332 1.66602"
+        stroke="#282828"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  userCircleIcon: () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M10.0994 10.6497C10.0411 10.6414 9.96611 10.6414 9.89945 10.6497C8.43278 10.5997 7.26611 9.39974 7.26611 7.92474C7.26611 6.41641 8.48278 5.19141 9.99945 5.19141C11.5078 5.19141 12.7328 6.41641 12.7328 7.92474C12.7244 9.39974 11.5661 10.5997 10.0994 10.6497Z"
+        stroke="#282828"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.6166 16.1508C14.1333 17.5091 12.1666 18.3341 9.99997 18.3341C7.8333 18.3341 5.86663 17.5091 4.3833 16.1508C4.46663 15.3674 4.96663 14.6008 5.8583 14.0008C8.14163 12.4841 11.875 12.4841 14.1416 14.0008C15.0333 14.6008 15.5333 15.3674 15.6166 16.1508Z"
+        stroke="#282828"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.99984 18.3327C14.6022 18.3327 18.3332 14.6017 18.3332 9.99935C18.3332 5.39698 14.6022 1.66602 9.99984 1.66602C5.39746 1.66602 1.6665 5.39698 1.6665 9.99935C1.6665 14.6017 5.39746 18.3327 9.99984 18.3327Z"
+        stroke="#282828"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  // Sidebar Icons
+  overview: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15.7522 10.5H10.502V15.7502H15.7522V10.5Z"
+        stroke="currentColor"
+        strokeWidth="1.50006"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.50166 10.5H2.25146V15.7502H7.50166V10.5Z"
+        stroke="currentColor"
+        strokeWidth="1.50006"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.7522 2.25H10.502V7.5002H15.7522V2.25Z"
+        stroke="currentColor"
+        strokeWidth="1.50006"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.50166 2.25H2.25146V7.5002H7.50166V2.25Z"
+        stroke="currentColor"
+        strokeWidth="1.50006"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  readiness: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5.16162 13.6151V12.0625"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9.00195 13.6149V10.5098"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12.8418 13.6144V8.94922"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+      />
+      <path
+        d="M12.8419 4.38867L12.4969 4.79369C10.5843 7.02877 8.01923 8.61133 5.16162 9.32386"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10.6445 4.38867H12.8421V6.57875"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.75166 16.5025H11.2518C15.002 16.5025 16.502 15.0025 16.502 11.2523V6.75215C16.502 3.00201 15.002 1.50195 11.2518 1.50195H6.75166C3.00152 1.50195 1.50146 3.00201 1.50146 6.75215V11.2523C1.50146 15.0025 3.00152 16.5025 6.75166 16.5025Z"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  learning: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g clipPath="url(#clip0_1448_5079)">
+        <path
+          d="M10.5017 1.50195H4.50152C4.10368 1.50195 3.72214 1.65999 3.44082 1.94131C3.15951 2.22262 3.00146 2.60417 3.00146 3.00201V15.0025C3.00146 15.4003 3.15951 15.7818 3.44082 16.0632C3.72214 16.3445 4.10368 16.5025 4.50152 16.5025H13.5019C13.8997 16.5025 14.2812 16.3445 14.5626 16.0632C14.8439 15.7818 15.0019 15.4003 15.0019 15.0025V6.00212L10.5017 1.50195Z"
+          stroke="currentColor"
+          strokeWidth="1.50006"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M12.0017 12.752H6.00146"
+          stroke="currentColor"
+          strokeWidth="1.50006"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M12.0017 9.75195H6.00146"
+          stroke="currentColor"
+          strokeWidth="1.50006"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M7.50152 6.75195H6.75149H6.00146"
+          stroke="currentColor"
+          strokeWidth="1.50006"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M10.502 1.50195V6.00212H15.0021"
+          stroke="currentColor"
+          strokeWidth="1.50006"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1448_5079">
+          <rect
+            width="18.0007"
+            height="18.0007"
+            fill="white"
+            transform="translate(0.00146484 0.00195312)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  ),
+  compliance: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M15.752 5.25405V12.7543C15.752 15.0044 14.6269 16.5045 12.0018 16.5045H6.00161C3.37651 16.5045 2.25146 15.0044 2.25146 12.7543V5.25405C2.25146 3.00396 3.37651 1.50391 6.00161 1.50391H12.0018C14.6269 1.50391 15.752 3.00396 15.752 5.25405Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.877 3.37891V4.87896C10.877 5.70399 11.552 6.37902 12.377 6.37902H13.8771"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.50152 9.75391L6.00146 11.254L7.50152 12.754"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.502 9.75391L12.002 11.254L10.502 12.754"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  networking: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.5021 5.37405C13.4571 5.36655 13.4046 5.36655 13.3596 5.37405C12.3245 5.33655 11.4995 4.48902 11.4995 3.43898C11.4995 2.36644 12.362 1.50391 13.4346 1.50391C14.5071 1.50391 15.3697 2.37394 15.3697 3.43898C15.3622 4.48902 14.5371 5.33655 13.5021 5.37405Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.73 10.8342C13.7576 11.0067 14.8901 10.8267 15.6851 10.2941C16.7427 9.58912 16.7427 8.43408 15.6851 7.72905C14.8826 7.19653 13.7351 7.01652 12.7075 7.19653"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.47988 5.37405C4.52488 5.36655 4.57738 5.36655 4.62238 5.37405C5.65742 5.33655 6.48245 4.48902 6.48245 3.43898C6.48245 2.36644 5.61992 1.50391 4.54738 1.50391C3.47484 1.50391 2.6123 2.37394 2.6123 3.43898C2.6198 4.48902 3.44484 5.33655 4.47988 5.37405Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.25217 10.8342C4.22463 11.0067 3.09209 10.8267 2.29706 10.2941C1.23952 9.58912 1.23952 8.43408 2.29706 7.72905C3.09959 7.19653 4.24713 7.01652 5.27467 7.19653"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.00209 10.9776C8.95708 10.9701 8.90458 10.9701 8.85958 10.9776C7.82454 10.9401 6.99951 10.0925 6.99951 9.0425C6.99951 7.96996 7.86204 7.10742 8.93458 7.10742C10.0071 7.10742 10.8697 7.97746 10.8697 9.0425C10.8622 10.0925 10.0371 10.9476 9.00209 10.9776Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.81903 13.3404C5.76149 14.0454 5.76149 15.2005 6.81903 15.9055C8.01908 16.708 9.98415 16.708 11.1842 15.9055C12.2417 15.2005 12.2417 14.0454 11.1842 13.3404C9.99165 12.5454 8.01908 12.5454 6.81903 13.3404Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  support: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.5019 14.1497H12.9319C12.3318 14.1497 11.7618 14.3822 11.3418 14.8022L10.0593 16.0698C9.47424 16.6473 8.5217 16.6473 7.93668 16.0698L6.65413 14.8022C6.23411 14.3822 5.65659 14.1497 5.06407 14.1497H4.50155C3.2565 14.1497 2.25146 13.1522 2.25146 11.9221V3.73928C2.25146 2.50923 3.2565 1.51172 4.50155 1.51172H13.5019C14.7469 1.51172 15.752 2.50923 15.752 3.73928V11.9221C15.752 13.1447 14.7469 14.1497 13.5019 14.1497Z"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.25171 6.87502C5.25171 6.17749 5.82173 5.60742 6.51926 5.60742C7.21678 5.60742 7.78681 6.17749 7.78681 6.87502C7.78681 8.28507 5.78423 8.43507 5.34171 9.77762C5.25171 10.0551 5.48422 10.3326 5.77673 10.3326H7.78681"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.0319 10.3247V6.04209C12.0319 5.84708 11.9044 5.67453 11.7169 5.62203C11.5293 5.56952 11.3269 5.64453 11.2218 5.80953C10.6818 6.67957 10.0968 7.66961 9.58678 8.53965C9.50428 8.68215 9.50428 8.86966 9.58678 9.01217C9.66928 9.15467 9.82679 9.24463 9.9993 9.24463H12.7519"
+        stroke="currentColor"
+        strokeWidth="1.12504"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 };
