@@ -1,13 +1,13 @@
 import Button from "@/components/ui/Button";
 import CircularScoreBar from "@/components/ui/CircularScoreBar";
-import { useState } from "react";
 
-type Props = {};
+type Props = {
+  scoreValue: number;
+};
 
-function ReadinessScoreCard({}: Props) {
-  const [scoreValue, setScoreValue] = useState(1);
+function ReadinessScoreCard({ scoreValue }: Props) {
   return (
-    <div className="border-1 p-[2%]  justify-between border-[#E8E8E8] flex flex-col  rounded-md w-full md:w-68 h-89">
+    <div className="border-1 p-[3%]  justify-between border-[#E8E8E8] flex flex-col  rounded-md lg:min-w-[276px] w-full  min-h-[356]">
       <p className="font-bold text-base">Readiness Score</p>
 
       <div className="w-full items-center justify-center flex">

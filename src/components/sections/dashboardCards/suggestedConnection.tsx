@@ -2,7 +2,7 @@ type Props = {};
 
 function SuggestedConnection({}: Props) {
   return (
-    <div className="items-center lg:max-w-[389px] h-[46px] w-full md:w-[389px] flex flex-row gap-4 justify-center">
+    <div className="items-center h-[46px] w-full  flex flex-row gap-4 justify-center">
       <div className="flex items-center  w-full gap-3">
         <img
           src="/icons/sportify.svg"

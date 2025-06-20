@@ -1,15 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  BookOpen,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings,
-} from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
@@ -19,6 +11,7 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
+import { CIcons } from './ui/CIcons';
 
 const data = {
   user: {
@@ -30,50 +23,44 @@ const data = {
     {
       title: 'Overview',
       url: '/dashboard',
-      icon: PieChart,
-      isActive: true,
+      icon: CIcons.overview,
     },
     {
       title: 'Readiness Report',
       url: '/dashboard/readiness',
-      icon: BookOpen,
+      icon: CIcons.readiness,
     },
     {
       title: 'Investor Matches',
       url: '/dashboard/investors',
-      icon: Send,
+      icon: CIcons.readiness,
     },
     {
       title: 'Resources & Learning',
       url: '/dashboard/learning',
-      icon: BookOpen,
+      icon: CIcons.learning,
       badge: '32',
     },
     {
       title: 'Pan-African Compliance Hub',
       url: '/dashboard/compliance',
-      icon: Map,
+      icon: CIcons.compliance,
     },
     {
       title: 'Networking',
       url: '/dashboard/networking',
-      icon: Frame,
+      icon: CIcons.networking,
     },
     {
       title: 'Support',
-      url: '/support',
-      icon: LifeBuoy,
+      url: '/dashboard/support',
+      icon: CIcons.support,
     },
   ],
   navSecondary: [
-    // {
-    //   title: 'Support',
-    //   url: '/support',
-    //   icon: LifeBuoy,
-    // },
     {
       title: 'Settings',
-      url: '/settings',
+      url: '/dashboard/settings',
       icon: Settings,
     },
   ],

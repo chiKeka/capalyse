@@ -19,7 +19,7 @@ export function ReusableTable<T extends object>({
 }: ReusableTableProps<T>) {
   return (
     <div
-      className={`overflow-x-auto rounded-lg border border-gray-200 bg-white ${className}`}
+      className={`overflow-x-auto rounded-lg  bg-white ${className}`}
     >
       <table className="min-w-full divide-y divide-gray-200">
         <thead>

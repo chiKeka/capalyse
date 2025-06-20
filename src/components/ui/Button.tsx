@@ -1,3 +1,5 @@
+'use client';
+
 import React, { ButtonHTMLAttributes } from 'react';
 import { ChevronRight, Check, CircleCheck, Loader2Icon } from 'lucide-react';
 
