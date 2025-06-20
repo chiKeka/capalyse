@@ -1,4 +1,5 @@
 "use client";
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
 import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
 import DocumentsTableDemo from "@/components/sections/dashboardCards/documentList";
@@ -12,11 +13,25 @@ export default function Page() {
   return (
     <div>
       <ReadinessScoreCard />
-      <CheckListProgressCard />
-      <EmptyBox />
-      <MatchedInvetors />
-      <SuggestedConnection />
-      <Programs />
+      <DashboardCardLayout caption="Checklist Progress">
+        <CheckListProgressCard />
+      </DashboardCardLayout>
+
+      <DashboardCardLayout caption="Matched Investors">
+        <EmptyBox />
+      </DashboardCardLayout>
+      <DashboardCardLayout caption="Matched Investors">
+        <MatchedInvetors />
+      </DashboardCardLayout>
+
+      <DashboardCardLayout caption="Suggested Connections">
+        <SuggestedConnection />
+      </DashboardCardLayout>
+
+      <DashboardCardLayout caption="Development Programs">
+        <Programs />
+      </DashboardCardLayout>
+
       <CategoryBreakdown />
       <DocumentsTableDemo />
     </div>

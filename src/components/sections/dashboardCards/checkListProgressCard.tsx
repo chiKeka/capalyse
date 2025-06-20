@@ -12,7 +12,7 @@ export default CheckListProgressCard;
 
 const ChecklistCard = () => {
   return (
-    <div className="border-0.5 shadow-sm  border-[#E8E8E8] shadow-gray-500 w-[458px] h-[52px] py-2 px-4 rounded-[4px] justify-between flex items-center ">
+    <div className="border-0.5 shadow-sm  border-[#E8E8E8] shadow-gray-500 w-full md:w-[458px] h-[52px] py-2 px-4 rounded-[4px] justify-between flex items-center ">
       <div>
         <img />
         <p className="text-base font-normal text-[#0B0B0C] ">
