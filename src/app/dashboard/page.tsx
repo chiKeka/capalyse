@@ -2,7 +2,7 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
 import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
-import DocumentsTableDemo from "@/components/sections/dashboardCards/documentList";
+import DocumentsTable from "@/components/sections/dashboardCards/documentList";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import MatchedInvetors from "@/components/sections/dashboardCards/matchedInvetors";
 import Programs from "@/components/sections/dashboardCards/programs";
@@ -24,7 +24,11 @@ export default function Page() {
         <MatchedInvetors />
       </DashboardCardLayout>
 
-      <DashboardCardLayout caption="Suggested Connections">
+      <DashboardCardLayout
+        link="/dashboard/"
+        linkName="See all"
+        caption="Suggested Connections"
+      >
         <SuggestedConnection />
       </DashboardCardLayout>
 
@@ -32,8 +36,10 @@ export default function Page() {
         <Programs />
       </DashboardCardLayout>
 
-      <CategoryBreakdown />
-      <DocumentsTableDemo />
+      <DashboardCardLayout caption="Category Breakdown">
+        <CategoryBreakdown />
+      </DashboardCardLayout>
+      <DocumentsTable />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type Props = {
   children?: React.ReactNode;
   caption?: string;
@@ -5,6 +7,7 @@ type Props = {
   icon?: any;
   link?: string;
   height?: string;
+  linkName?: string;
 };
 
 function DashboardCardLayout({
@@ -13,6 +16,7 @@ function DashboardCardLayout({
   hasIcon,
   height = "h-auto",
   link,
+  linkName,
 }: Props) {
   return (
     <div
@@ -20,6 +24,11 @@ function DashboardCardLayout({
     >
       <div className="flex flex-row itmes-start justify-between">
         <p className="font-bold text-base text-[#18181B]">{caption}</p>
+        {link && (
+          <Link className=" text-green font-bold text-sm" href={link}>
+            {linkName}
+          </Link>
+        )}
       </div>
       {children}
     </div>
