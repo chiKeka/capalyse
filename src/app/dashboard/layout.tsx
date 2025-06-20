@@ -1,6 +1,6 @@
-import { AppSidebar } from '@/components/app-sidebar';
-import { SiteHeader } from '@/components/site-header';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <AppSidebar />
           <SidebarInset>
             <div className="flex flex-1 flex-col gap-4 p-4">
-              <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
+              <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min">
                 {children}
               </div>
             </div>

@@ -5,18 +5,18 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Waitlist } from "../sections/waitlist";
 import Button from "../ui/Button";
 
 const Header = () => {
+  const router = useRouter();
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -132,6 +132,7 @@ const Header = () => {
 
             <div className="px-3 py-2 space-x-2">
               <Button
+                onClick={() => router.push("/signin")}
                 variant="tertiary"
                 size="medium"
                 className="hover:text-gray-700 text-sm !font-bold text-green"
@@ -153,7 +154,7 @@ const Header = () => {
       <Waitlist
         isOpen={waitlistOpen}
         setIsOpen={setWaitlistOpen}
-        title="Don’t Miss Out, Join the Waitlist"
+        title="Don't Miss Out, Join the Waitlist"
         desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
       />
     </motion.nav>

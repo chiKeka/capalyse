@@ -28,6 +28,14 @@ export const data = [
   "Early access to top-performing businesses",
   "Priority invites to demo days and ecosystem briefings",
 ];
+export const orgData = [
+  "Actionable SME Data",
+  "Regional Compliance Insights",
+  "Partnership Opportunities",
+  "Market Readiness Trends",
+  "Custom Reports & Dashboards",
+];
+
 
 export const investorCardData = [
   {
@@ -45,6 +53,20 @@ export const investorCardData = [
   {
     caption: "Make faster, evidence-backed decisions:",
     text: " Use our insights to prioritize leads, reduce diligence time, and invest with confidence.",
+  },
+];
+export const orgCardData = [
+  {
+    caption: "Inform your programming with reliable data:",
+    text: "Use readiness assessments and ecosystem diagnostics to target support where it’s most needed.",
+  },
+  {
+    caption: "Enable investment-readiness pathways:",
+    text: "Partner with SMEs and local players to build compliance, governance, and financial transparency.",
+  },
+  {
+    caption: "Strengthen local ecosystems:",
+    text: "Collaborate with investors and policymakers to align incentives and scale impact across regions.",
   },
 ];
 
