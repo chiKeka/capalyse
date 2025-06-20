@@ -3,7 +3,7 @@ import StraightBar from "@/components/ui/straightBar";
 
 type Props = { value: number };
 
-function OverviewHeaderCard({ value }: Props) {
+export function OverviewHeaderCard({ value }: Props) {
   return (
     <div className="justify-between my-4 flex flex-row">
       <div className="">
@@ -29,4 +29,11 @@ function OverviewHeaderCard({ value }: Props) {
   );
 }
 
-export default OverviewHeaderCard;
+
+
+export function overviewHeaderCard({}: Props) {
+  return (
+    <div>overviewHeaderCard</div>
+  )
+}
+

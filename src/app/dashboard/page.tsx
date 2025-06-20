@@ -3,7 +3,7 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import LearningCard from "@/components/sections/dashboardCards/learningCard";
-import OverviewHeaderCard from "@/components/sections/dashboardCards/overviewHeaderCard";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
 import Programs from "@/components/sections/dashboardCards/programs";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
