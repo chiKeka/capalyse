@@ -36,7 +36,7 @@ function Organisation({}: Props) {
         smsEcardData={orgCardData}
       />
       {/* how it works section */}
-      <HowItWorkstoo />
+      <HowItWorkstoo isOrg />
       {/* key benefits */}
       <Cta2
         reverse={true}
