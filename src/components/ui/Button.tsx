@@ -1,13 +1,13 @@
 'use client';
 
 import React, { ButtonHTMLAttributes } from 'react';
-import { ChevronRight, Check, CircleCheck, Loader2Icon } from 'lucide-react';
+import { ChevronRight, Check, CircleCheck, Loader2Icon, File } from 'lucide-react';
 
 // Type definitions
 type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost';
 type ButtonSize = 'small' | 'medium' | 'big' | 'icon';
 type ButtonState = 'default' | 'hover' | 'loading' | 'disabled';
-type IconPosition = 'none' | 'left' | 'right' | 'only';
+type IconPosition = 'none' | 'left' | 'right' | 'only'| 'file';
 
 interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'size'> {
@@ -133,6 +133,8 @@ const Button: React.FC<ButtonProps> = ({
         );
       case 'right':
         return <ChevronRight className={iconSizeClass} />;
+
+      case 'file': return <img src={'/icons/uploadlight.svg'} className="w-4 h-4" />;
       default:
         return null;
     }
@@ -154,11 +156,12 @@ const Button: React.FC<ButtonProps> = ({
       type="button"
       {...props}
     >
-      {state === 'loading' && <Loader2Icon className="animate-spin w-6 h-6" />}
-      {iconPosition === 'left' && renderIcon()}
-      {iconPosition !== 'only' && children}
-      {iconPosition === 'right' && renderIcon()}
-      {iconPosition === 'only' && renderIcon()}
+      {state === "loading" && <Loader2Icon className="animate-spin w-6 h-6" />}
+      {iconPosition === "left" && renderIcon()}
+      {iconPosition !== "only" && children}
+      {iconPosition === "right" && renderIcon()}
+      {iconPosition === "only" && renderIcon()}
+      {iconPosition === "file" && renderIcon()}
     </button>
   );
 };

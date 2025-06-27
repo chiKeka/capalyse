@@ -1,88 +1,81 @@
 import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
+import { ReusableTable } from "@/components/ui/table";
+import { File, Pen, Trash2 } from "lucide-react";
 
 type Props = {};
+const documents = [
+  {
+    name: "CAC Registration.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
+  },
+  {
+    name: "Pitch Deck.pptx",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
+  },
+  {
+    name: "Financial Statement.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
+  },
+];
 
+const columns = [
+  {
+    header: "File name",
+    accessor: (row: (typeof documents)[0]) => (
+      <div className="flex items-center gap-2">
+        <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
+          <File className="text-green w-5 h-5" />
+        </div>
+
+        <div>
+          <div className="font-medium text-sm text-[#101828]">{row.name}</div>
+          <div className="text-xs text-gray-400">{row.size}</div>
+        </div>
+      </div>
+    ),
+  },
+  { header: "Date uploaded", accessor: "date" },
+  {
+    header: "Status",
+    accessor: (row: (typeof documents)[0]) => (
+      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+        <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
+      </span>
+    ),
+  },
+  {
+    header: "",
+    accessor: () => (
+      <div className="flex gap-4 items-end justify-end">
+        <button className="text-gray-400 hover:text-red-600">
+          <Trash2 className="w-4 h-4" />
+        </button>
+        <button className="text-gray-400 hover:text-green-600">
+          <Pen className="w-4 h-4" />
+        </button>
+      </div>
+    ),
+    className: "text-right",
+  },
+];
 export default function Document({}: Props) {
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
-      <div className="flex flex-col w-full gap-x-6 lg:flex-row">
-        <div className="grid w-full lg:grid-cols-2 gap-2 grid-cols-1">
-          <Input
-            name="Bname"
-            onChange={() => null}
-            type="text"
-            label="Business Name"
-            className="h-[43px]"
-            placeholder="Input Business name "
-            value=""
-          />
-          <Input
-            name="B_reg_no"
-            onChange={() => null}
-            type="text"
-            label="Business Registration Number"
-            className="h-[43px]"
-            placeholder="Input registration number "
-            value=""
-          />
-          <Input
-            name="country"
-            onChange={() => null}
-            type="text"
-            label="Country of Operation"
-            className="h-[43px]"
-            placeholder="John"
-            value=""
-          />
-          <Input
-            name="Bname"
-            onChange={() => null}
-            type="text"
-            label="Business Name"
-            className="h-[43px]"
-            placeholder="John"
-            value=""
-          />
-          <Input
-            name="Bname"
-            onChange={() => null}
-            type="text"
-            label="Business Name"
-            className="h-[43px]"
-            placeholder="John"
-            value=""
-          />
-          <Input
-            name="website"
-            onChange={() => null}
-            type="text"
-            label="Business Website"
-            className="h-[43px]"
-            placeholder="Input your website link"
-            value=""
-          />
-        </div>
-
-        <div className="w-full flex flex-col gap-4 items-center  max-w-44 p-2">
-          <p className="text-[10px] font-bold text-[#2E3034]">
-            Upload Business logo
-          </p>
-          <div className="w-full border-1 boeder-[#ABD2C7] flex flex-col  items-center justify-center gap-2 border-dashed h-20 rounded-md">
-            <img src={"/icons/upload2.svg"} />
-            <p className="text-[#52575C] font-normal text-xs">
-              Click to add logo
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="flex lg:max-w-[83%] mt-8 w-full justify-between lg:flex-row flex-col items-center pr-6">
-        <div className="py-3 px-5 my-6 rounded-[40px] items-center gap-2 w-full max-w-130 bg-[#F4FFFC] inline-flex font-normal text-xs text-[#062039]">
-          <img src={"/icons/circle_warning.svg"} /> PS: Changes made to your
-          profile will be subject to verification
-        </div>
-        <Button variant="primary" size="medium" className="w-fit my-4 ">
-          Save Changes
+      <ReusableTable columns={columns} data={documents} />
+      <div className="flex mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+        <Button
+          iconPosition="file"
+          variant="primary"
+          size="medium"
+          className="w-fit my-4 "
+        >
+          Upload
         </Button>
       </div>
     </div>
