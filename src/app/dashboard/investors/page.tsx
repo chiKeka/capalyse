@@ -1,105 +1,111 @@
-'use client';
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
+"use client";
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { ProfileSheet } from "@/components/ui/profileSheet";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { statusBadge } from '@/components/ui/statusBar';
-import { ReusableTable } from '@/components/ui/table';
-import Image from 'next/image';
+} from "@/components/ui/select";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import Image from "next/image";
+import { useState } from "react";
 type Props = {};
 
 // Example data
 const investors = [
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'Angel',
-    focus: 'Early-stage',
-    status: 'Connected',
-    statusColor: 'green',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "Angel",
+    focus: "Early-stage",
+    status: "Connected",
+    statusColor: "green",
   },
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'VC',
-    focus: 'Tech',
-    status: 'Shortlisted',
-    statusColor: 'yellow',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "VC",
+    focus: "Tech",
+    status: "Shortlisted",
+    statusColor: "yellow",
   },
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'Impact Fund',
-    focus: 'Agriculture',
-    status: 'Viewed',
-    statusColor: 'blue',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "Impact Fund",
+    focus: "Agriculture",
+    status: "Viewed",
+    statusColor: "blue",
   },
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'Angel',
-    focus: 'Early-stage',
-    status: 'Connected',
-    statusColor: 'green',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "Angel",
+    focus: "Early-stage",
+    status: "Connected",
+    statusColor: "green",
   },
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'VC',
-    focus: 'Tech',
-    status: 'Shortlisted',
-    statusColor: 'yellow',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "VC",
+    focus: "Tech",
+    status: "Shortlisted",
+    statusColor: "yellow",
   },
   {
-    name: 'Investor A',
-    avatar: '/images/humanAvater.svg',
-    type: 'Impact Fund',
-    focus: 'Agriculture',
-    status: 'Viewed',
-    statusColor: 'blue',
+    name: "Investor A",
+    avatar: "/images/humanAvater.svg",
+    type: "Impact Fund",
+    focus: "Agriculture",
+    status: "Viewed",
+    statusColor: "blue",
   },
 ];
 
 // Table columns
-const columns = [
-  {
-    header: 'Name',
-    accessor: (row: (typeof investors)[0]) => (
-      <div className="flex items-center gap-2">
-        <Image
-          src={row.avatar}
-          alt={row.name}
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
-        <span className="font-medium text-sm">{row.name}</span>
-      </div>
-    ),
-  },
-  { header: 'Investor Type', accessor: 'type' },
-  { header: 'Investment Focus', accessor: 'focus' },
-  {
-    header: 'Status',
-    accessor: (row: (typeof investors)[0]) => statusBadge(row.status),
-  },
-  {
-    header: 'Action',
-    accessor: () => (
-      <a href="#" className="text-green font-medium hover:underline">
-        View Profile
-      </a>
-    ),
-    className: 'text-green',
-  },
-];
 
 function InvestorsPage({}: Props) {
+  const [open, setOpen] = useState(false);
+  const columns = [
+    {
+      header: "Name",
+      accessor: (row: (typeof investors)[0]) => (
+        <div className="flex items-center gap-2">
+          <Image
+            src={row.avatar}
+            alt={row.name}
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
+          <span className="font-medium text-sm">{row.name}</span>
+        </div>
+      ),
+    },
+    { header: "Investor Type", accessor: "type" },
+    { header: "Investment Focus", accessor: "focus" },
+    {
+      header: "Status",
+      accessor: (row: (typeof investors)[0]) => statusBadge(row.status),
+    },
+    {
+      header: "Action",
+      accessor: () => (
+        <button
+          className="text-green font-medium hover:underline"
+          onClick={() => setOpen(true)}
+        >
+          View Profile
+        </button>
+      ),
+      className: "text-green",
+    },
+  ];
   return (
     <div>
       {/* Filter Section */}
@@ -132,12 +138,13 @@ function InvestorsPage({}: Props) {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
+            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
           </Button>
         </div>
       </div>
 
       <ReusableTable columns={columns} data={investors} />
+      <ProfileSheet open={open} onOpenChange={setOpen} />
     </div>
   );
 }
