@@ -1,3 +1,4 @@
+import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Inputs'
 import React from 'react'
 
@@ -5,8 +6,8 @@ type Props = {}
 
 export default function Summary({}: Props) {
   return (
-    <div>
-      <div className='w-full grid grid-col-1 lg:w-[85%]'>
+    <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
+      <div className="w-full grid grid-col-1 lg:w-[85%]">
         <Input
           name="desc"
           onChange={() => null}
@@ -37,6 +38,9 @@ export default function Summary({}: Props) {
           placeholder="Enter Vision Statement"
           value=""
         />
+      </div>
+      <div className="flex w-full lg:w-[80%] items-end mt-12 justify-end">
+        <Button variant="primary">Submit</Button>
       </div>
     </div>
   );

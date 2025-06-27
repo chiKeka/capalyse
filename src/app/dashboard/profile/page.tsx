@@ -1,13 +1,107 @@
 "use client";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
 import Document from "./document";
+import Team from "./team";
+import StraightBar from "@/components/ui/straightBar";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
+import Info from "./info";
 import Summary from "./summary";
 
 type Props = {};
+interface SettingsTabProps {
+  label: string;
+  icon: string;
+  isActive: boolean;
+  onClick: () => void;
+}
 
-export default function page({}: Props) {
+const SettingsTab: React.FC<SettingsTabProps> = ({
+  label,
+  icon,
+  isActive,
+  onClick,
+}) => {
+  return (
+    <div
+      onClick={onClick}
+      className={`flex items-center cursor-pointer ${
+        isActive ? "text-green border-green" : "text-[#8A8A8A] border-[#EAEAEA]"
+      } border-b-1 p-2 gap-2`}
+    >
+      <img className="w-4 h-4 lg:w-5 lg:h-5" src={icon} alt={`${label} icon`} />
+      <p className="lg:font-medium font-normal text-[10px] lg:text-xs">{label}</p>
+    </div>
+  );
+};
+const tabOptions = [
+  {
+    key: "personal",
+    label: "Business Info",
+    icon: "/icons/briefcaselight.svg",
+    component: <Info />,
+  },
+  {
+    key: "summary",
+    label: "Business Summary",
+    icon: "/icons/briefcasetick.svg",
+    component: <Summary />,
+  },
+  {
+    key: "team",
+    label: "Team",
+    icon: "/icons/team.svg",
+    component: <Team />,
+  },
+  {
+    key: "document",
+    label: "Documents",
+    icon: "/icons/document.svg",
+    component: <Document />,
+  },
+];
+export default function page({ }: Props) {
+    const [formState, setFormState] = useState("personal");
+    const activeTab = tabOptions.find((tab) => tab.key === formState);
   return (
     <div>
-     <Summary/>
+      <div className="justify-between my-4 border-[0.5px] border-[#ABD2C7] bg-[#F4FFFC] p-3 rounded-md lg:p-5 flex flex-row">
+        <div className="flex gap-2 items-center">
+          <img
+            className="rounded-full w-14 h-14"
+            src={"/images/imagefram.svg"}
+          />
+          <div className="gsp-4 flex flex-col">
+            <p className=" text-base font-bold ">Jenny Wilson</p>
+            <p className="text-xs font-normal">jenny@example.com</p>
+          </div>
+        </div>
+        <div className="flex flex-col lg:flex-row gap-y-2 gap-x-12 items-center w-[40%]">
+          <div className="w-full flex flex-1 flex-col ">
+            <div className="items-center w-full text-sm font-normal text-[#18181B] flex justify-between">
+              <p>Profile Completion</p>
+              <p>{80}%</p>
+            </div>
+
+            <StraightBar value={80} />
+          </div>
+          <Button className="" variant="secondary">
+            Preview public profile
+          </Button>
+        </div>
+      </div>
+      <div className="flex my-4 gap-0 w-full">
+        {tabOptions.map((tab) => (
+          <SettingsTab
+            key={tab.key}
+            label={tab.label}
+            icon={tab.icon}
+            isActive={formState === tab.key}
+            onClick={() => setFormState(tab.key)}
+          />
+        ))}
+      </div>
+      <div className="mt-4">{activeTab?.component}</div>
     </div>
   );
 }
