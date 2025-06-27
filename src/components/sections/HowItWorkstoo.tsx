@@ -1,12 +1,18 @@
-import { classNames } from '@/lib/uitils';
-import { ReactNode, useState } from 'react';
-import { investorsContent, smeContent } from './HowItWorks';
-import { motion } from 'framer-motion';
-import { containerVariants, itemVariants } from '@/lib/animations';
-const tabs = ['For SMEs', 'For Investors'];
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { classNames } from "@/lib/uitils";
+import { motion } from "framer-motion";
+import { ReactNode, useState } from "react";
+import { investorsContent, organisationContent, smeContent } from "./HowItWorks";
+const tabs = ["For SMEs", "For Investors", "For Organisations"];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 
-const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
+const HowItWorkstoo = ({
+  isSme,
+  isOrg,
+}: {
+  isSme?: boolean;
+  isOrg?: boolean;
+}) => {
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -39,7 +45,9 @@ const HowItWorkstoo = ({ isSme }: { isSme?: boolean }) => {
         {/* Content container with responsive behavior */}
         <div className="space-y-8 md:space-y-0 md:relative md:overflow-hidden md:min-h-[400px]">
           {/* SME Content */}
-          {renderContent(isSme ? smeContent : investorsContent)}
+          {renderContent(
+            isSme ? smeContent : isOrg ? organisationContent : investorsContent
+          )}
         </div>
       </div>
     </motion.section>
@@ -56,11 +64,11 @@ const renderContent = (content: Content[]) => {
           variants={itemVariants}
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ margin: '-100px' }}
+          viewport={{ margin: "-100px" }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           className={classNames(
-            'border border-primary-green-2 p-4 xl:p-6 transition-all duration-300 rounded-lg',
-            'md:max-w-[19.4169rem]'
+            "border border-primary-green-2 p-4 xl:p-6 transition-all duration-300 rounded-lg",
+            "md:max-w-[19.4169rem]"
           )}
           key={item.title}
         >
