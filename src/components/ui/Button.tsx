@@ -4,8 +4,8 @@ import React, { ButtonHTMLAttributes } from 'react';
 import { ChevronRight, Check, CircleCheck, Loader2Icon } from 'lucide-react';
 
 // Type definitions
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
-type ButtonSize = 'small' | 'medium' | 'big';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost';
+type ButtonSize = 'small' | 'medium' | 'big' | 'icon';
 type ButtonState = 'default' | 'hover' | 'loading' | 'disabled';
 type IconPosition = 'none' | 'left' | 'right' | 'only';
 
@@ -65,6 +65,7 @@ const Button: React.FC<ButtonProps> = ({
     small: 'px-3 py-1.5 text-sm gap-1.5 h-[2.25rem]',
     medium: 'px-4 py-2.5 text-sm gap-2 h-[2.75rem]',
     big: 'px-6 py-3 text-sm gap-2 h-[3.5rem]',
+    icon: 'h-10 w-10',
   };
 
   // Variant classes for different states
@@ -91,6 +92,12 @@ const Button: React.FC<ButtonProps> = ({
       loading: 'bg-transparent text-black-400 border-none cursor-wait',
       disabled: 'bg-transparent text-black-300 border-none cursor-not-allowed',
     },
+    ghost: {
+      default: 'hover:bg-accent hover:text-accent-foreground',
+      hover: 'bg-accent text-accent-foreground',
+      loading: 'bg-transparent cursor-wait',
+      disabled: 'bg-transparent opacity-50 cursor-not-allowed',
+    },
   };
 
   // Helper function to get icon size classes based on button size
@@ -100,6 +107,8 @@ const Button: React.FC<ButtonProps> = ({
         return 'h-[2.25rem]';
       case 'big':
         return 'h-[3.5rem]';
+      case 'icon':
+        return 'h-10 w-10';
       case 'medium':
       default:
         return 'h-[2.75rem]';

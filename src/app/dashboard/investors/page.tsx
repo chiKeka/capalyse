@@ -1,74 +1,74 @@
-"use client";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
+'use client';
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import Image from "next/image";
+} from '@/components/ui/select';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import Image from 'next/image';
 type Props = {};
 
 // Example data
 const investors = [
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Angel",
-    focus: "Early-stage",
-    status: "Connected",
-    statusColor: "green",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'Angel',
+    focus: 'Early-stage',
+    status: 'Connected',
+    statusColor: 'green',
   },
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "VC",
-    focus: "Tech",
-    status: "Shortlisted",
-    statusColor: "yellow",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'VC',
+    focus: 'Tech',
+    status: 'Shortlisted',
+    statusColor: 'yellow',
   },
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Impact Fund",
-    focus: "Agriculture",
-    status: "Viewed",
-    statusColor: "blue",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'Impact Fund',
+    focus: 'Agriculture',
+    status: 'Viewed',
+    statusColor: 'blue',
   },
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Angel",
-    focus: "Early-stage",
-    status: "Connected",
-    statusColor: "green",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'Angel',
+    focus: 'Early-stage',
+    status: 'Connected',
+    statusColor: 'green',
   },
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "VC",
-    focus: "Tech",
-    status: "Shortlisted",
-    statusColor: "yellow",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'VC',
+    focus: 'Tech',
+    status: 'Shortlisted',
+    statusColor: 'yellow',
   },
   {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Impact Fund",
-    focus: "Agriculture",
-    status: "Viewed",
-    statusColor: "blue",
+    name: 'Investor A',
+    avatar: '/images/humanAvater.svg',
+    type: 'Impact Fund',
+    focus: 'Agriculture',
+    status: 'Viewed',
+    statusColor: 'blue',
   },
 ];
 
 // Table columns
 const columns = [
   {
-    header: "Name",
+    header: 'Name',
     accessor: (row: (typeof investors)[0]) => (
       <div className="flex items-center gap-2">
         <Image
@@ -82,34 +82,34 @@ const columns = [
       </div>
     ),
   },
-  { header: "Investor Type", accessor: "type" },
-  { header: "Investment Focus", accessor: "focus" },
+  { header: 'Investor Type', accessor: 'type' },
+  { header: 'Investment Focus', accessor: 'focus' },
   {
-    header: "Status",
+    header: 'Status',
     accessor: (row: (typeof investors)[0]) => statusBadge(row.status),
   },
   {
-    header: "Action",
+    header: 'Action',
     accessor: () => (
       <a href="#" className="text-green font-medium hover:underline">
         View Profile
       </a>
     ),
-    className: "text-green",
+    className: 'text-green',
   },
 ];
 
-function page({}: Props) {
+function InvestorsPage({}: Props) {
   return (
     <div>
       {/* Filter Section */}
-      <div className="flex items-center my-8 justify-between">
+      <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
         <div className="flex items-center mb-8 gap-2">
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Investor Matches
-            <p className="px-2 py-0.5  text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
+            <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
               {investors.length}
-            </p>
+            </span>
           </p>
         </div>
         <div className="flex gap-2 items-center w-full justify-end">
@@ -132,7 +132,7 @@ function page({}: Props) {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
+            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
           </Button>
         </div>
       </div>
@@ -142,4 +142,4 @@ function page({}: Props) {
   );
 }
 
-export default page;
+export default InvestorsPage;

@@ -848,4 +848,109 @@ export const CIcons = {
       />
     </svg>
   ),
+  filter: () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M18.333 5.41602H13.333"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.00033 5.41602H1.66699"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M8.33366 8.33333C9.94449 8.33333 11.2503 7.0275 11.2503 5.41667C11.2503 3.80584 9.94449 2.5 8.33366 2.5C6.72283 2.5 5.41699 3.80584 5.41699 5.41667C5.41699 7.0275 6.72283 8.33333 8.33366 8.33333Z"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.3333 14.584H15"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.66699 14.584H1.66699"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.6667 17.4993C13.2775 17.4993 14.5833 16.1935 14.5833 14.5827C14.5833 12.9719 13.2775 11.666 11.6667 11.666C10.0558 11.666 8.75 12.9719 8.75 14.5827C8.75 16.1935 10.0558 17.4993 11.6667 17.4993Z"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  messageBadge: () => (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22 10V13C22 17 20 19 16 19H15.5C15.19 19 14.89 19.15 14.7 19.4L13.2 21.4C12.54 22.28 11.46 22.28 10.8 21.4L9.3 19.4C9.14 19.18 8.77 19 8.5 19H8C4 19 2 18 2 13V8C2 4 4 2 8 2H14"
+        stroke="#707A8D"
+        strokeWidth="2.25"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M19.5 7C20.8807 7 22 5.88071 22 4.5C22 3.11929 20.8807 2 19.5 2C18.1193 2 17 3.11929 17 4.5C17 5.88071 18.1193 7 19.5 7Z"
+        fill="#DC2626"
+        stroke="#DC2626"
+        strokeWidth="2.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.9965 11H16.0054"
+        stroke="#707A8D"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.9945 11H12.0035"
+        stroke="#707A8D"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.99451 11H8.00349"
+        stroke="#707A8D"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
 };

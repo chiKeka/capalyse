@@ -1,9 +1,6 @@
 'use client';
-import Button from '@/components/ui/Button';
-import { CIcons } from '@/components/ui/CIcons';
-import { statusBadge } from '@/components/ui/statusBar';
+
 import { ReusableTable } from '@/components/ui/table';
-import Image from 'next/image';
 import {
   Pagination,
   PaginationContent,
@@ -13,13 +10,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-
-// Example data
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import Button from '@/components/ui/Button';
+import { CIcons } from '@/components/ui/CIcons';
+import { cn } from '@/lib/utils';
 
 const connections = [
   {
     name: 'GreenPack Solutions Ltd.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/01.png',
     industry: 'Packaging',
     businessType: 'Starter',
     serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
@@ -27,7 +27,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/02.png',
     industry: 'Retail',
     businessType: 'Registered',
     serviceOffered: 'E-commerce Store, Delivery Services',
@@ -35,7 +35,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/03.png',
     industry: 'Agriculture',
     businessType: 'Starter',
     serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
@@ -43,7 +43,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/04.png',
     industry: 'HealthTech',
     businessType: 'Registered',
     serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
@@ -51,7 +51,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/05.png',
     industry: 'Retail',
     businessType: 'Starter',
     serviceOffered: 'E-commerce Store, Delivery Services',
@@ -59,7 +59,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/01.png',
     industry: 'Agriculture',
     businessType: 'Starter',
     serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
@@ -67,7 +67,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/02.png',
     industry: 'HealthTech',
     businessType: 'Registered',
     serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
@@ -75,7 +75,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/03.png',
     industry: 'Retail',
     businessType: 'Starter',
     serviceOffered: 'E-commerce Store, Delivery Services',
@@ -83,7 +83,7 @@ const connections = [
   },
   {
     name: 'Food&Beverage Co.',
-    avatar: '/images/humanAvater.svg',
+    avatar: '/avatars/04.png',
     industry: 'Agriculture',
     businessType: 'Registered',
     serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
@@ -91,67 +91,79 @@ const connections = [
   },
 ];
 
-// Table columns
-const columns = [
-  {
-    header: 'Name',
-    accessor: (row: (typeof connections)[0]) => (
-      <div className="flex items-center gap-2">
-        <Image
-          src={row.avatar}
-          alt={row.name}
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
-        <span className="font-medium text-sm">{row.name}</span>
-      </div>
-    ),
-  },
-  { header: 'Industry', accessor: 'industry' },
-  { header: 'Business Type', accessor: 'businessType' },
-  { header: 'Service Offered', accessor: 'serviceOffered' },
-  {
-    header: 'Status',
-    accessor: (row: (typeof connections)[0]) => statusBadge(row.status),
-  },
-  {
-    header: 'Action',
-    accessor: () => (
-      <div className="flex gap-2">
-        <a href="#" className="text-green font-medium hover:underline">
-          View Profile
-        </a>
-      </div>
-    ),
-  },
-];
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'Connected':
+    case 'Completed':
+      return 'bg-green-100 text-green-800';
+    case 'Shortlisted':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'Viewed':
+      return 'bg-blue-100 text-blue-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
 
-function NetworkingPage() {
+const ConnectionsPage = () => {
+  const columns = [
+    {
+      header: 'Name',
+      accessor: (row: any) => (
+        <div className="flex items-center gap-3">
+          <Avatar>
+            <AvatarImage src={row.avatar} />
+            <AvatarFallback>{row.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <span className="font-medium">{row.name}</span>
+        </div>
+      ),
+    },
+    { header: 'Industry', accessor: 'industry' },
+    { header: 'Business Type', accessor: 'businessType' },
+    { header: 'Service Offered', accessor: 'serviceOffered' },
+    {
+      header: 'Status',
+      accessor: (row: any) => (
+        <Badge
+          variant="status"
+          className={cn('capitalize', getStatusClass(row.status))}
+        >
+          <span
+            className={cn(
+              'mr-2 h-2 w-2 rounded-full',
+              getStatusClass(row.status).replace('text', 'bg')
+            )}
+          />
+          {row.status}
+        </Badge>
+      ),
+    },
+    {
+      header: 'Action',
+      accessor: () => <Button variant="tertiary">View Profile</Button>,
+    },
+  ];
+
   return (
-    <div>
-      {/* Filter Section */}
-      <div className="flex items-center my-8 justify-between">
-        <div className="flex items-center mb-8 gap-2">
-          <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
-            Connections
-            <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {connections.length}
-            </span>
-          </p>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">Connections</h1>
+          <Badge>12</Badge>
         </div>
-        <div className="flex gap-2 items-center w-full justify-end">
+        <div className="flex items-center gap-4">
           <Button variant="secondary">
-            Filter <CIcons.filter />
+            <CIcons.filter /> Filter
           </Button>
-          <Button variant="primary">
-            Message Business
-            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
+          <Button>
+            <CIcons.engage /> Message Business
           </Button>
         </div>
       </div>
-
-      <ReusableTable columns={columns} data={connections} />
+      <div className="border shadow-sm rounded-lg">
+        <ReusableTable columns={columns} data={connections} />
+      </div>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -178,6 +190,6 @@ function NetworkingPage() {
       </Pagination>
     </div>
   );
-}
+};
 
-export default NetworkingPage;
+export default ConnectionsPage;
