@@ -1,9 +1,11 @@
-import Button from "@/components/ui/Button";
-import StraightBar from "@/components/ui/straightBar";
+import Button from '@/components/ui/Button';
+import StraightBar from '@/components/ui/straightBar';
+import { useRouter } from 'next/navigation';
 
-type Props = { value: number };
+type Props = { value: number; link: string };
 
-export function OverviewHeaderCard({ value }: Props) {
+export function OverviewHeaderCard({ value, link }: Props) {
+  const router = useRouter();
   return (
     <div className="justify-between my-4 flex flex-row">
       <div className="">
@@ -21,7 +23,11 @@ export function OverviewHeaderCard({ value }: Props) {
 
           <StraightBar value={value} />
         </div>
-        <Button className="flex-1" variant="tertiary">
+        <Button
+          className="flex-1"
+          variant="tertiary"
+          onClick={() => router.push(link)}
+        >
           Complete Profile
         </Button>
       </div>
@@ -29,11 +35,6 @@ export function OverviewHeaderCard({ value }: Props) {
   );
 }
 
-
-
 export function overviewHeaderCard({}: Props) {
-  return (
-    <div>overviewHeaderCard</div>
-  )
+  return <div>overviewHeaderCard</div>;
 }
-

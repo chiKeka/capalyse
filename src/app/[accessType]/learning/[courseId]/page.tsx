@@ -1,3 +1,4 @@
+'use client';
 import { PlayCircle } from 'lucide-react';
 
 import Button from '@/components/ui/Button';
@@ -17,6 +18,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { useParams } from 'next/navigation';
 
 const courseData = {
   title: 'Trading Across Africa: How AfCFTA is Changing the Game',
@@ -80,6 +82,7 @@ const courseData = {
 };
 
 export default function SingleCoursePage() {
+  const { accessType } = useParams();
   const totalLessons = courseData.modules.flatMap((mod) => mod.lessons).length;
   const completedLessons = courseData.modules
     .flatMap((mod) => mod.lessons)
@@ -91,7 +94,7 @@ export default function SingleCoursePage() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/learning">
+            <BreadcrumbLink href={`/${accessType}/dashboard/learning`}>
               Resources
             </BreadcrumbLink>
           </BreadcrumbItem>

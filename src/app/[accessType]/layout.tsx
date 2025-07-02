@@ -1,12 +1,22 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from '@/components/app-sidebar';
+import { SiteHeader } from '@/components/site-header';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { notFound } from 'next/navigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
+  params: { accessType: string };
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({
+  children,
+  params,
+}: DashboardLayoutProps) {
+  const validTypes = ['investor', 'sme', 'development', 'admin'];
+  if (!validTypes.includes(params.accessType)) {
+    notFound();
+  }
+
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">

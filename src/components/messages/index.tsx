@@ -1,23 +1,8 @@
-import { ArrowLeftIcon, UserIcon } from 'lucide-react';
+import { UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-
-interface Message {
-  id: string;
-  sender: 'me' | 'them';
-  text: string;
-  time: string;
-  avatar?: string;
-  typing?: boolean;
-}
-
-const chatUser = {
-  name: 'Jenny Wilson',
-  type: 'Angel Investor',
-  avatar: '/images/user1.jpg',
-  online: true,
-};
+import { Message } from '../ui/message-sheet';
 
 const initialMessages: Message[] = [
   {
@@ -25,40 +10,56 @@ const initialMessages: Message[] = [
     sender: 'me',
     text: 'Hi, Mandy',
     time: '09:41 AM',
-    avatar: '/images/user1.jpg',
+    avatar: '',
+    senderType: 'Angel Investor',
+    online: true,
   },
   {
     id: '2',
     sender: 'me',
-    text: ",I've tried the app",
+    text: "I've tried the app",
     time: '09:41 AM',
-    avatar: '/images/user1.jpg',
+    avatar: '',
+    senderType: 'Angel Investor',
+    online: true,
   },
   {
     id: '3',
     sender: 'them',
     text: 'Really?',
     time: '09:41 AM',
-    avatar: '/images/user2.jpg',
+    avatar: '',
+    senderType: 'Angel Investor',
+    online: true,
   },
   {
     id: '4',
     sender: 'me',
-    text: ",Yeah, It's really good!",
+    text: "Yeah, It's really good!",
     time: '09:41 AM',
-    avatar: '/images/user1.jpg',
+    avatar: '',
+    senderType: 'Angel Investor',
+    online: true,
   },
   {
     id: '5',
     sender: 'them',
     text: '',
     time: '',
-    avatar: '/images/user2.jpg',
+    avatar: '',
     typing: true,
+    senderType: 'Angel Investor',
+    online: true,
   },
 ];
 
-export default function ChatPage() {
+export default function ChatPage({
+  chatUser,
+  setChatOpen,
+}: {
+  chatUser: Message;
+  setChatOpen: (open: boolean) => void;
+}) {
   const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
@@ -81,6 +82,7 @@ export default function ChatPage() {
           minute: '2-digit',
         }),
         avatar: chatUser.avatar,
+        senderType: chatUser.senderType,
       },
     ]);
     setInput('');
@@ -89,40 +91,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* Header */}
-      <div className="flex items-center gap-3 px-6 py-4 border-b">
-        <button
-          onClick={() => router.back()}
-          aria-label="Back"
-          className="text-emerald-700 hover:bg-emerald-50 rounded-full p-1"
-        >
-          <ArrowLeftIcon className="h-5 w-5" />
-        </button>
-        {chatUser.avatar ? (
-          <Image
-            src={chatUser.avatar}
-            alt={chatUser.name}
-            width={40}
-            height={40}
-            className="rounded-full object-cover"
-          />
-        ) : (
-          <div className="rounded-full bg-muted aspect-square h-10 w-10 flex items-center justify-center">
-            <UserIcon className="h-4 w-4 text-muted-foreground" />
-          </div>
-        )}
-        <div className="flex flex-col ml-2">
-          <span className="font-semibold text-base leading-tight">
-            {chatUser.name}
-          </span>
-          <span className="text-xs text-muted-foreground">{chatUser.type}</span>
-        </div>
-        {chatUser.online && (
-          <span
-            className="ml-2 mt-1 h-2 w-2 rounded-full bg-green-500 inline-block"
-            aria-label="Online"
-          />
-        )}
-      </div>
+
       {/* Chat body */}
       <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-2">
         <div className="mx-auto my-4 text-xs text-muted-foreground">
@@ -132,13 +101,19 @@ export default function ChatPage() {
           msg.typing ? (
             <div key={msg.id} className="flex items-end gap-2 mb-2">
               <div className="flex items-center">
-                <Image
-                  src={'/images/user2.jpg'}
-                  alt="Typing"
-                  width={28}
-                  height={28}
-                  className="rounded-full object-cover"
-                />
+                {msg.avatar ? (
+                  <Image
+                    src={msg.avatar}
+                    alt={msg.sender}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover mr-4"
+                  />
+                ) : (
+                  <div className="rounded-full object-cover mr-4 bg-muted aspect-square h-10 w-10 flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                )}
               </div>
               <div className="bg-muted text-muted-foreground px-4 py-2 rounded-2xl text-sm">
                 Typing...
@@ -151,23 +126,35 @@ export default function ChatPage() {
                   {msg.text}
                 </div>
               </div>
-              <Image
-                src={msg.avatar || ''}
-                alt="Me"
-                width={28}
-                height={28}
-                className="rounded-full object-cover"
-              />
+              {msg.avatar ? (
+                <Image
+                  src={msg.avatar}
+                  alt={msg.sender}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover mr-4"
+                />
+              ) : (
+                <div className="rounded-full object-cover mr-4 bg-muted aspect-square h-10 w-10 flex items-center justify-center">
+                  <UserIcon className="h-4 w-4 text-muted-foreground" />
+                </div>
+              )}
             </div>
           ) : (
             <div key={msg.id} className="flex items-end gap-2 mb-2">
-              <Image
-                src={msg.avatar || ''}
-                alt={chatUser.name}
-                width={28}
-                height={28}
-                className="rounded-full object-cover"
-              />
+              {msg.avatar ? (
+                <Image
+                  src={msg.avatar}
+                  alt={msg.sender}
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover mr-4"
+                />
+              ) : (
+                <div className="rounded-full object-cover mr-4 bg-muted aspect-square h-10 w-10 flex items-center justify-center">
+                  <UserIcon className="h-4 w-4 text-muted-foreground" />
+                </div>
+              )}
               <div className="bg-muted text-gray-700 px-4 py-2 rounded-2xl text-sm max-w-xs">
                 {msg.text}
               </div>
