@@ -89,7 +89,7 @@ export default function ChatPage({
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col max-h-[90vh] bg-white">
       {/* Header */}
 
       {/* Chat body */}

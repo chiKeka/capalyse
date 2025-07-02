@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { NotificationSheet, Notification } from './ui/notification-sheet';
 import { MessageSheet, Message } from './ui/message-sheet';
 
-export function SiteHeader() {
+export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const [openMessages, setOpenMessages] = useState(false);

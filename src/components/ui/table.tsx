@@ -1,4 +1,14 @@
+'use client';
+
 import React from 'react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 
 type Column<T> = {
   header: string;
@@ -10,12 +20,21 @@ type ReusableTableProps<T> = {
   columns: any;
   data: T[];
   className?: string;
+  rowsPerPage?: number;
+
+  page?: number;
+  setPage?: (page: number) => void;
+  totalPages?: number;
 };
 
 export function ReusableTable<T extends object>({
   columns,
-  data,
+  data = [],
   className = '',
+  rowsPerPage = 4,
+  page = 1,
+  setPage,
+  totalPages,
 }: ReusableTableProps<T>) {
   return (
     <div className={`overflow-x-auto rounded-lg  bg-white ${className}`}>
@@ -35,7 +54,7 @@ export function ReusableTable<T extends object>({
           </tr>
         </thead>
         <tbody>
-          {data.map((row, ridx) => (
+          {data?.map((row, ridx) => (
             <tr key={ridx} className="hover:bg-gray-50 border">
               {columns.map((col: any, cidx: number) => (
                 <td
@@ -51,6 +70,48 @@ export function ReusableTable<T extends object>({
           ))}
         </tbody>
       </table>
+      {totalPages && totalPages > 1 && (
+        <div className="pt-5">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage?.(page - 1);
+                  }}
+                  aria-disabled={page === 1}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }).map((_, idx) => (
+                <PaginationItem key={idx}>
+                  <PaginationLink
+                    href="#"
+                    isActive={page === idx + 1}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPage?.(idx + 1);
+                    }}
+                  >
+                    {idx + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage?.(page + 1);
+                  }}
+                  aria-disabled={page === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

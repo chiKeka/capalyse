@@ -53,7 +53,7 @@ export function MessageSheet({
         <SheetHeader className="flex flex-row items-center justify-between border-b px-6 py-4">
           <SheetTitle className="text-lg font-semibold">
             {isChatOpen ? (
-              <div className="flex items-center gap-3 px-6 py-4 border-b">
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => setIsChatOpen(false)}
                   aria-label="Back"

@@ -735,6 +735,44 @@ export const CIcons = {
       />
     </svg>
   ),
+  profile2: () => (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.15957 10.87C9.05957 10.86 8.93957 10.86 8.82957 10.87C6.44957 10.79 4.55957 8.84 4.55957 6.44C4.55957 3.99 6.53957 2 8.99957 2C11.4496 2 13.4396 3.99 13.4396 6.44C13.4296 8.84 11.5396 10.79 9.15957 10.87Z"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.4103 4C18.3503 4 19.9103 5.57 19.9103 7.5C19.9103 9.39 18.4103 10.93 16.5403 11C16.4603 10.99 16.3703 10.99 16.2803 11"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M4.15973 14.56C1.73973 16.18 1.73973 18.82 4.15973 20.43C6.90973 22.27 11.4197 22.27 14.1697 20.43C16.5897 18.81 16.5897 16.17 14.1697 14.56C11.4297 12.73 6.91973 12.73 4.15973 14.56Z"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M18.34 20C19.06 19.85 19.74 19.56 20.3 19.13C21.86 17.96 21.86 16.03 20.3 14.86C19.75 14.44 19.08 14.16 18.37 14"
+        stroke="#047857"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   support: () => (
     <svg
       width="18"
@@ -1117,6 +1155,87 @@ export const CIcons = {
         d="M1.50134 7.8791V6.37905C1.50134 4.33897 2.73139 2.91392 4.64396 2.67391C4.83897 2.6439 5.04148 2.62891 5.25148 2.62891H12.0017C12.1967 2.62891 12.3843 2.6364 12.5643 2.6664C14.4993 2.89141 15.7519 4.32397 15.7519 6.37905V7.4666H14.1918C13.7718 7.4666 13.3893 7.63158 13.1118 7.9166C12.7968 8.22411 12.6168 8.66663 12.6618 9.13914C12.7293 9.94918 13.4718 10.5417 14.2818 10.5417H15.7519V11.6292C15.7519 13.8793 14.2518 15.3794 12.0017 15.3794H10.1267"
         stroke="currentColor"
         strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  stickyNote: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M6.00159 1.50391V3.75399"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12.0018 1.50391V3.75399"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.25159 8.25391H11.2518"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.25159 11.2539H9.00173"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M11.2518 16.5044H6.75163C3.00149 16.5044 2.25146 14.9594 2.25146 11.8693V7.24158C2.25146 3.71645 3.50401 2.77141 6.00161 2.62891H12.0018C14.4994 2.76391 15.752 3.71645 15.752 7.24158V12.0043"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeMiterlimit="10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.7519 12.0039L11.2517 16.5041V14.254C11.2517 12.7539 12.0017 12.0039 13.5018 12.0039H15.7519Z"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  linearGraph: () => (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.7419 9.00455C15.692 9.00455 16.502 8.25452 15.782 5.79443C15.2944 4.13687 13.8694 2.71181 12.2118 2.22429C9.75174 1.50427 9.00171 2.3143 9.00171 4.26437V6.42445C9.00171 8.25452 9.75174 9.00455 11.2518 9.00455H13.7419Z"
+        stroke="#282828"
+        strokeWidth="1.13"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M15.0022 11.0295C14.3046 14.5022 10.9745 17.0222 7.18687 16.4072C4.34426 15.9497 2.05668 13.6621 1.59166 10.8195C0.984137 7.04687 3.48923 3.71675 6.94686 3.01172"
+        stroke="#282828"
+        strokeWidth="1.13"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
