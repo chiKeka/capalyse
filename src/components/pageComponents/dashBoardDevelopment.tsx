@@ -1,58 +1,65 @@
-"use client";
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import LearningCard from "@/components/sections/dashboardCards/learningCard";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import Programs from "@/components/sections/dashboardCards/programs";
-import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
-import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
+'use client';
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import LearningCard from '@/components/sections/dashboardCards/learningCard';
+import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
+import Programs from '@/components/sections/dashboardCards/programs';
+import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
+import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
+import { routes } from '@/lib/routes';
+import { useParams } from 'next/navigation';
 
-export default function Page() {
+export default function DevelopmentDashBoard() {
+  const params = useParams();
   const learningCards = [
     {
-      href: "/",
-      header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+      href: '/',
+      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
     },
     {
-      href: "/",
-      header: "Trading Across Africa: How AfCFTA Is Changing the Game",
+      href: '/',
+      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
     },
   ];
   const checklist = [
     {
-      icon: "/icons/profile.svg",
-      label: "Complete profile",
-      status: "Not Started",
+      icon: '/icons/profile.svg',
+      label: 'Complete profile',
+      status: 'Not Started',
     },
     {
-      icon: "/icons/presentation.svg",
-      label: "Start Readiness Assessment",
-      status: "Not Started",
+      icon: '/icons/presentation.svg',
+      label: 'Start Readiness Assessment',
+      status: 'Not Started',
     },
     {
-      icon: "/icons/money_out.svg",
-      label: "Finish financial section",
-      status: "Not Started",
+      icon: '/icons/money_out.svg',
+      label: 'Finish financial section',
+      status: 'Not Started',
     },
     {
-      icon: "/icons/status_up.svg",
-      label: "Explore investor matches",
-      status: "Not Started",
+      icon: '/icons/status_up.svg',
+      label: 'Explore investor matches',
+      status: 'Not Started',
     },
   ];
 
   const suggestedConnections = [
-    { id: 1, icon: "/icons/user1.svg", name: "Suggested Connection 1" },
-    { id: 2, icon: "/icons/user2.svg", name: "Suggested Connection 2" },
-    { id: 3, icon: "/icons/user3.svg", name: "Suggested Connection 3" },
-    { id: 4, icon: "/icons/user4.svg", name: "Suggested Connection 4" },
-    { id: 5, icon: "/icons/user5.svg", name: "Suggested Connection 5" },
+    { id: 1, icon: '/icons/user1.svg', name: 'Suggested Connection 1' },
+    { id: 2, icon: '/icons/user2.svg', name: 'Suggested Connection 2' },
+    { id: 3, icon: '/icons/user3.svg', name: 'Suggested Connection 3' },
+    { id: 4, icon: '/icons/user4.svg', name: 'Suggested Connection 4' },
+    { id: 5, icon: '/icons/user5.svg', name: 'Suggested Connection 5' },
   ];
 
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
-      <OverviewHeaderCard value={30} />
+      <OverviewHeaderCard
+        value={30}
+        link={routes.development.profile}
+        user={{ name: 'Jane' }}
+      />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
         <div className="lg:w-[25%] h-auto w-full ">
           <ReadinessScoreCard scoreValue={5} />
@@ -66,6 +73,7 @@ export default function Page() {
                   caption={item.label}
                   status={item.status}
                   img={item.icon}
+                  key={idx}
                 />
               ))}
             </div>
@@ -73,7 +81,7 @@ export default function Page() {
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
           <DashboardCardLayout
-            icon={"/images/bulb.svg"}
+            icon={'/images/bulb.svg'}
             caption="Quick Tip"
             height="h-full"
           >
@@ -83,7 +91,7 @@ export default function Page() {
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
-            icon={"/icons/warning.svg"}
+            icon={'/icons/warning.svg'}
             caption="Compliance Flag"
             height="h-full"
           >
@@ -95,7 +103,7 @@ export default function Page() {
         <div className="flex lg:flex-row md:flex-wrap flex-col w-full lg:w-[70%]">
           <DashboardCardLayout
             caption="Learning Hub"
-            link="/"
+            link={`/${params.accessType}/learning`}
             linkName="See all Resources"
           >
             <div className="flex gap-4 my-8 flex-col lg:flex-row items-start ">
@@ -114,7 +122,7 @@ export default function Page() {
       <div className="flex w-full lg:flex-row flex-col gap-4">
         <div className="lg:w-[35%] w-full flex">
           <DashboardCardLayout
-            link="/dashboard/"
+            link={`/${params.accessType}/networking`}
             linkName="See all"
             caption="Suggested Connections"
           >

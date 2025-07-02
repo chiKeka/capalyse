@@ -1,6 +1,11 @@
-type Props = {};
+type Props = {
+  icon?: string;
+  name?: string;
+  category?: string;
+  location?: string;
+};
 
-function SuggestedConnection({}: Props) {
+function SuggestedConnection({ icon, name, category, location }: Props) {
   return (
     <div className="items-center h-[46px] w-full  flex flex-row gap-4 justify-center">
       <div className="flex items-center  w-full gap-3">

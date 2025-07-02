@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { NotificationSheet, Notification } from './ui/notification-sheet';
 import { MessageSheet, Message } from './ui/message-sheet';
 
-export function SiteHeader() {
+export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const [openMessages, setOpenMessages] = useState(false);
@@ -18,22 +18,22 @@ export function SiteHeader() {
   const notifications: Notification[] = [
     // Uncomment to test empty state
     //
-    // {
-    //   id: '1',
-    //   title: '{important} Your account deposit has been received',
-    //   message:
-    //     "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-    //   isImportant: true,
-    //   isUnread: true,
-    // },
-    // {
-    //   id: '2',
-    //   title: 'Your account deposit has been received',
-    //   message:
-    //     "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-    //   isImportant: false,
-    //   isUnread: false,
-    // },
+    {
+      id: '1',
+      title: '{important} Your account deposit has been received',
+      message:
+        "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
+      isImportant: true,
+      isUnread: true,
+    },
+    {
+      id: '2',
+      title: 'Your account deposit has been received',
+      message:
+        "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
+      isImportant: false,
+      isUnread: false,
+    },
   ];
   // Example messages, replace with real data/fetch
   const messages: Message[] = [
@@ -124,7 +124,6 @@ export function SiteHeader() {
             open={openMessages}
             onOpenChange={setOpenMessages}
             messages={messages}
-            onSelectMessage={handleSelectMessage}
             emptyIllustration="/icons/messages.gif"
           />
         </div>

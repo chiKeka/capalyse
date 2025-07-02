@@ -3,7 +3,7 @@ type Props = {
   className?: string;
 };
 
-function StraightBar({ value = 70, className = "" }: Props) {
+function StraightBar({ value = 70, className = '' }: Props) {
   return (
     <div
       className={`w-full h-2 bg-gray-200 rounded-[16px] overflow-hidden ${className}`}

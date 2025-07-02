@@ -72,7 +72,7 @@ const PaginationPrevious = ({
   >
     <div className="flex items-center">
       <ChevronLeft className="h-4 w-4" />
-      <span>Previous</span>
+      <span className="sr-only">Previous</span>
     </div>
   </PaginationLink>
 );
@@ -89,7 +89,7 @@ const PaginationNext = ({
     {...props}
   >
     <div className="flex items-center">
-      <span>Next</span>
+      <span className="sr-only">Next</span>
       <ChevronRight className="h-4 w-4" />
     </div>
   </PaginationLink>

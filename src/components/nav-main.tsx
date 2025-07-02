@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 
 import {
@@ -20,6 +20,8 @@ import {
   SidebarMenuSubItem,
   SidebarMenuBadge,
 } from '@/components/ui/sidebar';
+import { useHasMounted } from '@/hooks/use-has-mounted';
+import Link from 'next/link';
 
 export function NavMain({
   items,
@@ -35,16 +37,28 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const hasMounted = useHasMounted();
   const pathname = usePathname();
+  const param = useParams();
+  if (!hasMounted) return null;
+  console.log({ pathname, param });
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="sr-only">Platform</SidebarGroupLabel>
       <SidebarMenu className="gap-4 mt-6">
-        {items.map((item) => {
-          const isActive =
-            item.url === '/dashboard'
-              ? pathname === item.url
-              : pathname.startsWith(item.url);
+        {items.map((item, idx) => {
+          // Overview is always the first item, with url exactly `/${param.accessType}`
+          const isOverview = idx === 0 && item.url === `/${param.accessType}`;
+          let isActive;
+          if (isOverview) {
+            isActive = pathname === item.url;
+          } else {
+            isActive =
+              pathname.startsWith(item.url) &&
+              pathname !== `/${param.accessType}`;
+          }
+
+          console.log({ url: item?.url, isActive, pathname });
           return (
             <Collapsible key={item.title} asChild defaultOpen={isActive}>
               <SidebarMenuItem className="!p-0">
@@ -54,7 +68,7 @@ export function NavMain({
                   isActive={isActive}
                   className="!p-4 h-auto"
                 >
-                  <a href={item.url}>
+                  <Link href={item.url}>
                     <item.icon />
                     <span className="text-sm">{item.title}</span>{' '}
                     {item.badge && (
@@ -62,7 +76,7 @@ export function NavMain({
                         {item.badge}
                       </SidebarMenuBadge>
                     )}
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
                 {item.items?.length ? (
                   <>
@@ -77,9 +91,9 @@ export function NavMain({
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild>
-                              <a href={subItem.url}>
+                              <Link href={subItem.url}>
                                 <span>{subItem.title}</span>
-                              </a>
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}

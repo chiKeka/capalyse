@@ -77,13 +77,4 @@ const serveContent = [
       'Strengthen Ecosystem Collaboration',
     ],
   },
-  {
-    image: '/images/investors.png',
-    text: 'Development Organisations',
-    desc: [
-      'Discover vetted SMEs',
-      'Diversify your portfolio',
-      'Invest with clarity',
-    ],
-  },
 ];

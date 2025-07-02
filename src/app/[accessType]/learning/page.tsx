@@ -12,7 +12,7 @@ import {
 import Programs from '@/components/sections/dashboardCards/programs';
 import { CIcons } from '@/components/ui/CIcons';
 import { SearchForm } from '@/components/search-form';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 interface LearningTrack {
   id: string;
@@ -55,6 +55,7 @@ const learningTracks: LearningTrack[] = [
 
 export default function ResourcesPage() {
   const router = useRouter();
+  const params = useParams();
   return (
     <div className="space-y-8">
       {/* Recommendation Card */}
@@ -139,7 +140,7 @@ export default function ResourcesPage() {
                     iconPosition="right"
                     className="text-green ml-auto"
                     onClick={() =>
-                      router.push(`/dashboard/learning/${track.id}`)
+                      router.push(`/${params.accessType}/learning/${track.id}`)
                     }
                   >
                     Take Course
