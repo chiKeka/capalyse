@@ -1,11 +1,26 @@
-type Props = {};
+type Props = { status?: "active" | "closed" | "pending" , label?:string};
 
-function Programs({}: Props) {
+function Programs({ status = "active", label }: Props) {
+
+  let bg = "#DCFCE7";
+  let color = "#22C55E";
+
+  if (status === "closed") {
+    color = "#A0A4A8";
+    bg = "#E8E8E8";
+
+  } else if (status === "pending") {
+    color = "#FACC15";
+    bg = "#FEF9C3";
+
+  }
   return (
     <div className="w-full gap-1 rounded-[12px] md:min-h-[239px] h-auto p-6 flex flex-col justify-between border-1 border-[#E8E8E8]">
-      <div className="bg-[#DCFCE7] flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2">
-        <div className="bg-[#22C55E] rounded-full h-2 w-2 " />
-        Open for Applications
+      <div
+        className={`flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2 bg-[${bg}]`}
+      >
+        <div className={`rounded-full h-2 w-2 bg-[${color}]`} />
+        {label}
       </div>
       <p className="font-bold text-lg text-green">
         SME Growth & Formalization Program – Nigeria 2025

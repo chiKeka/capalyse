@@ -3,40 +3,79 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
 
 type Props = {};
-const programs = [1, 2];
+const programs = [
+  { id: 1, status: "active", label: "Open for Applications" },
+  { id: 2, status: "closed", label: "Applications Closed" },
+  { id: 3, status: "active", label: "Open for Applications" },
+  { id: 4, status: "closed", label: "Applications Closed" },
+];
+
+const tabs = ["active", "closed"];
+
 function page({}: Props) {
+  const [currentTab, setCurrentTab] = useState(tabs[0]);
+  const filteredPrograms = programs.filter((p) =>
+    currentTab === "active" ? p.status === "active" : p.status === "closed"
+  );
   return (
     <div className="flex flex-col gap-6">
       <div>
         <DashboardCardLayout height="h-full" caption="">
-          <div>
-                      <div>
-                          <img src={''}/>
-              <p className="text-green text-base font-bold">Program</p>
+          <div className="flex flex-row justify-between">
+            <div>
+              <div className="flex flex-row gap-3">
+                <img src={"/icons/code.svg"} />
+                <p className="text-green text-base font-bold">Program</p>
+              </div>
+              <div className="flex gap-0 my-5">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setCurrentTab(tab)}
+                    className={`transition-all capitalize duration-300 ease-in-out  px-4 py-2 text-sm h-[39px] whitespace-nowrap ${
+                      currentTab === tab
+                        ? "text-green border-b-green border-b font-bold"
+                        : "text-[#A0A4A8] border-b border-b-[#A0A4A8] hover:font-bold"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            <Button>Create New Program</Button>
           </div>
         </DashboardCardLayout>
       </div>
-      {programs.length > 0 ? (
+      {filteredPrograms.length > 0 ? (
         <div className="flex-1 ">
-          <DashboardCardLayout height="h-full" caption="Recent Programs">
+          <DashboardCardLayout
+            height="h-full"
+            // caption={`Recent ${currentTab} Programs`}
+          >
             <div className="my-8 flex-col flex gap-2">
-              {programs.map(() => {
-                return <Programs />;
+              {filteredPrograms.map((program) => {
+                return <Programs status={program.status} label={program.label} key={program.id} />;
               })}
             </div>
           </DashboardCardLayout>
         </div>
       ) : (
         <div className="flex flex-col w-full gap-4 lg:flex-row">
-          <DashboardCardLayout height="h-full" caption="Recent Programs">
+          <DashboardCardLayout
+            height="h-full"
+            caption={`Recent ${currentTab} Programs`}
+          >
             <div className="w-full h-full py-24 flex items-center justify-center">
               <EmptyBox
                 buttonText="Create Program"
                 caption="No Programs Yet!"
-                caption2="You have not created any programs yet."
+                caption2={`You have not created any ${currentTab.toLowerCase()} programs yet.`}
               />
             </div>
           </DashboardCardLayout>
