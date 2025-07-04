@@ -26,6 +26,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 export function NavUser({
   user,
@@ -36,6 +37,7 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const param = useParams();
   const { isMobile } = useSidebar();
 
   return (
@@ -60,7 +62,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -87,7 +89,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                <Link href={"/dashboard/profile"}>Account</Link>
+                <Link href={`/${param?.accessType}/profile`}>Account</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

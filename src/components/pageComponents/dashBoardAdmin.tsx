@@ -9,6 +9,8 @@ import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessSc
 import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
 import { routes } from '@/lib/routes';
 import { useParams } from 'next/navigation';
+import IconCards from '../sections/dashboardCards/iconCards';
+import { CIcons } from '../ui/CIcons';
 
 export default function AdminDashBoard() {
   const params = useParams();
@@ -58,8 +60,23 @@ export default function AdminDashBoard() {
       <OverviewHeaderCard
         value={30}
         link={routes.admin.profile}
-        user={{ name: 'Jane' }}
+        user={{ name: 'Paul' }}
+        textContent="Monitor overall activity, verify users, and manage performance across the ecosystem"
       />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <IconCards
+          label="Total Registered Users"
+          amount={0}
+          icon={CIcons.profile2}
+          extraContent={<div className="flex-1"></div>}
+        />
+        <div className="grid grid-cols-2 gap-5">
+          {overviewCards.map((card) => (
+            <IconCards {...card} key={card?.id} />
+          ))}
+        </div>
+        {/* <IconCards {...card} key={card?.id} /> */}
+      </div>
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
         <div className="lg:w-[25%] h-auto w-full ">
           <ReadinessScoreCard scoreValue={5} />
@@ -148,3 +165,32 @@ export default function AdminDashBoard() {
     </div>
   );
 }
+const overviewCards = [
+  {
+    id: 1,
+    icon: CIcons.walletMoney,
+    label: 'Funds Disbursed',
+    amount: 0,
+    currency: 'NGN',
+    percentage: 152000,
+    direction: 'up',
+  },
+  {
+    id: 2,
+    icon: CIcons.profile2,
+    label: 'Pending Verifications',
+    amount: 10,
+  },
+  {
+    id: 3,
+    icon: CIcons.profile2,
+    label: 'Active Programs',
+    amount: 10,
+  },
+  {
+    id: 4,
+    icon: CIcons.profile2,
+    label: 'Investor-SME Matches',
+    amount: 10,
+  },
+];

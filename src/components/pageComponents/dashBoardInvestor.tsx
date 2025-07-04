@@ -5,10 +5,10 @@ import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessSc
 import { routes } from '@/lib/routes';
 import { useParams } from 'next/navigation';
 import { Card, CardContent } from '../ui/card';
-import Button from '../ui/Button';
 import { useRouter } from 'next/navigation';
 import { CIcons } from '../ui/CIcons';
 import { formatCurrency } from '@/lib/uitils/fns';
+import ResourceCard from '../sections/dashboardCards/ResourceCard';
 
 const learningCards = [
   {
@@ -113,38 +113,7 @@ export default function InvestorDashBoard() {
           >
             <div className="flex gap-4 my-8 flex-col lg:flex-row items-start ">
               {learningCards.map((card, idx) => (
-                <Card key={idx} className="overflow-hidden">
-                  <div className="aspect-video bg-gray-100">
-                    <img src={card.image} alt={card.header} />
-                  </div>
-                  <div className="p-4">
-                    <p className="text-sm bg-yellow-100 text-yellow-900 mb-2 w-max rounded-full px-2 py-0.5">
-                      {card.category}
-                    </p>
-                    <h4 className="font-medium text-black-600 mb-4">
-                      {card.header}
-                    </h4>
-                    <div className="flex flex-col">
-                      <div className="flex-1 text-xs">
-                        Explore how the AfCFTA is transforming cross-border
-                        trade, reducing barriers, and creating new opportunities
-                        for African businesses
-                      </div>
-                      <Button
-                        variant="tertiary"
-                        iconPosition="right"
-                        className="text-green ml-auto"
-                        onClick={() =>
-                          router.push(
-                            `/${params.accessType}/learning/${card.id}`
-                          )
-                        }
-                      >
-                        Read
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
+                <ResourceCard key={idx} {...card} />
               ))}
             </div>
           </DashboardCardLayout>

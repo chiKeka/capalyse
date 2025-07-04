@@ -8,16 +8,16 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from '@/components/ui/breadcrumb';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { CIcons } from '@/components/ui/CIcons';
 import { ReusableTable } from '@/components/ui/table';
-import { formatCurrency } from '@/lib/uitils/fns';
 import { ChevronRight, File } from 'lucide-react';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Button from '@/components/ui/Button';
 import { statusBadge } from '@/components/ui/statusBar';
 import Image from 'next/image';
 import React from 'react';
+import IconCards from '@/components/sections/dashboardCards/iconCards';
 
 type Props = {};
 
@@ -175,21 +175,7 @@ export default function SMEDirectoryPage({}: Props) {
       <div className="flex lg:grid lg:grid-cols-[1fr_1fr_2fr] gap-4 flex-col">
         <div className=" h-auto w-full flex flex-col gap-6 flex-1 justify-between">
           {overviewCards.map((card) => (
-            <Card key={card.id} className="min-h-[159px] h-full shadow-none">
-              <CardContent className="flex flex-col gap-2 justify-between h-full py-4">
-                <div className="flex items-center justify-between gap-2 ">
-                  <span className="font-bold">{card.label}</span>
-                  <div className="text-2xl border border-[#ABD2C7] bg-[#F4FFFC] text-green rounded-md p-2">
-                    {card.icon()}
-                  </div>
-                </div>
-                <span className="text-5xl font-bold mt-auto">
-                  {card.currency
-                    ? formatCurrency(card.amount, 0, 0, card.currency)
-                    : card.amount}
-                </span>
-              </CardContent>
-            </Card>
+            <IconCards {...card} key={card?.id} />
           ))}
         </div>
         <div className=" h-auto w-full ">
