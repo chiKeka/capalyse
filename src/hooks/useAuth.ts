@@ -33,11 +33,10 @@ export const useAuth = () => {
     VerifyResponse,
     Error,
     RegisterCredentials
-    >({
-
+  >({
     mutationFn: async (cred) => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("register"),
+        ApiEndPoints.Register_Activity("initiate"),
         cred
       );
     },
@@ -53,7 +52,7 @@ export const useAuth = () => {
   const current_user = useQuery({
     queryKey: ["current_user"],
     queryFn: () =>
-      unauthenticatedAxios.get(ApiEndPoints.Register_Activity("me")),
+      unauthenticatedAxios.get(ApiEndPoints.Auth_Activity("me")),
   });
   const refresh_token = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {

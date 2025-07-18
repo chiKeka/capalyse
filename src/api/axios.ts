@@ -8,7 +8,7 @@ import axios, {
 import Cookies from "js-cookie";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://api.example.com";
+  process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
 
 // Helper to check if the token is expired
 export const isTokenExpired = (): boolean => {

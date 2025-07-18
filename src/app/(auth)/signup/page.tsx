@@ -63,13 +63,17 @@ export default function SignupPage() {
           />
           {form.password && <PasswordChecker password={form.password} />}
           {errors.password && (
-            <div className="text-red-500 text-xs -mt-1 mb-1">{errors.password}</div>
+            <div className="text-red-500 text-xs -mt-1 mb-1">
+              {errors.password}
+            </div>
           )}
           <Button
+            disabled={registerMutation?.isPending}
             type="submit"
             size="medium"
             variant="primary"
             className="font-bold w-full"
+            state={registerMutation?.isPending ? "loading" : "default"}
           >
             Create Account
           </Button>

@@ -68,10 +68,12 @@ function page({}: Props) {
             </div>
           )}
           <Button
+            disabled={logninMutation?.isPending}
             type="submit"
             size="medium"
             variant="primary"
             className="font-bold w-full"
+            state={logninMutation?.isPending ? 'loading': 'default'}
           >
             Sign in
           </Button>
