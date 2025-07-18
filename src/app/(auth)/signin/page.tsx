@@ -4,11 +4,14 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import PasswordChecker from "@/components/ui/passwordChecker";
 import { useAuth } from "@/hooks/useAuth";
+import { authAtom } from "@/lib/atoms/atoms";
+import { routes } from "@/lib/routes";
 import { validateAuthForm } from "@/lib/uitils/fns";
+import { useSetAtom } from "jotai";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
 type Props = {};
 
 function page({}: Props) {
@@ -17,6 +20,7 @@ function page({}: Props) {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+  const setAuth = useSetAtom(authAtom);
   const router = useRouter();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,8 +34,22 @@ function page({}: Props) {
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
     logninMutation.mutateAsync(form).then((res) => {
+      const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
+      setAuth(user);
+      Cookies.set("access_token", token);
+      Cookies.set("refresh_token", newRefreshToken);
+      // Cookies.set(
+      //   "token_exp",
+      //   (Math.floor(Date.now() / 1000) + expiresIn).toString()
+      // );
       localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
-      router.push("/onboarding");
+      if (user.profileCompletionStep === 1) {
+        router.push("/onboarding");
+      } else {
+        router.push(
+          routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
+        );
+      }
     });
   };
 
@@ -73,7 +91,7 @@ function page({}: Props) {
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={logninMutation?.isPending ? 'loading': 'default'}
+            state={logninMutation?.isPending ? "loading" : "default"}
           >
             Sign in
           </Button>

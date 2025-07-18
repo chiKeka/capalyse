@@ -1,9 +1,9 @@
 import axios, {
-  AxiosInstance,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
   AxiosError,
+  AxiosInstance,
   AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
 import Cookies from "js-cookie";
 
@@ -27,26 +27,21 @@ const refreshToken = async (): Promise<string | null> => {
     const response = await unauthenticatedAxios.post("/auth/refresh", {
       refreshToken: refreshToken,
     });
-    const {
-      accessToken,
-      refreshToken: newRefreshToken,
-      expiresIn,
-    } = response.data;
+    const { token, refreshToken: newRefreshToken, expiresIn } = response.data;
 
-    Cookies.set("access_token", accessToken);
+    Cookies.set("access_token", token);
     Cookies.set("refresh_token", newRefreshToken);
     Cookies.set(
       "token_exp",
       (Math.floor(Date.now() / 1000) + expiresIn).toString()
     );
 
-    return accessToken;
+    return token;
   } catch (error) {
-    // Optional: Logout the user or redirect
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
     Cookies.remove("token_exp");
-    // window.location.href = "/login";
+    window.location.href = "/signin";
     return null;
   }
 };

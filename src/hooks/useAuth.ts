@@ -14,6 +14,13 @@ export interface VerifyResponse {
   };
 }
 
+export const useGetCurrentUser = () => {
+  return useQuery({
+    queryKey: ["current_user"],
+    queryFn: () => api.get(ApiEndPoints.Auth_Activity("me")),
+  });
+};
+
 export const useAuth = () => {
   const router = useRouter();
   const logninMutation = useMutation<
@@ -26,6 +33,7 @@ export const useAuth = () => {
         ApiEndPoints.Auth_Activity("login"),
         cred
       );
+      
     },
   });
 
@@ -49,10 +57,7 @@ export const useAuth = () => {
       );
     },
   });
-  const current_user = useQuery({
-    queryKey: ["current_user"],
-    queryFn: () => unauthenticatedAxios.get(ApiEndPoints.Auth_Activity("me")),
-  });
+
   const refresh_token = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
@@ -146,15 +151,13 @@ export const useAuth = () => {
       );
     },
   });
-  const next_step_reg = useQuery({
-    queryKey: ["next-step-reg"],
-    queryFn: () => api.get(ApiEndPoints.Register_Activity("next-step")),
+  const next_step_reg = useMutation({
+    mutationFn: () => api.get(ApiEndPoints.Register_Activity("next-step")),
   });
   return {
     logninMutation,
     registerMutation,
     refresh_token,
-    current_user,
     googleSigninMutation,
     forgot_password,
     reset_password,
