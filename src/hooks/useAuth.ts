@@ -16,7 +16,11 @@ export interface VerifyResponse {
 
 export const useAuth = () => {
   const router = useRouter();
-  const logninMutation = useMutation({
+  const logninMutation = useMutation<
+    VerifyResponse,
+    Error,
+    RegisterCredentials
+  >({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
         ApiEndPoints.Auth_Activity("login"),
@@ -29,7 +33,8 @@ export const useAuth = () => {
     VerifyResponse,
     Error,
     RegisterCredentials
-  >({
+    >({
+
     mutationFn: async (cred) => {
       return unauthenticatedAxios.post(
         ApiEndPoints.Auth_Activity("register"),
@@ -158,5 +163,8 @@ export const useAuth = () => {
     dev_org,
     investor_investment_info,
     next_step_reg,
+    investor_org_info,
+    generate_token,
+    change_password,
   };
 };

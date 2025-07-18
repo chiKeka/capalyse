@@ -46,7 +46,7 @@ const refreshToken = async (): Promise<string | null> => {
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
     Cookies.remove("token_exp");
-    window.location.href = "/login";
+    // window.location.href = "/login";
     return null;
   }
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 type InputType = "text" | "email" | "password" | "phone" | "textarea";
 
@@ -23,6 +23,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   className,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
   const inputClass =
     "w-full px-4 py-2 border border-[#E8E8E8] placeholder:text-[#A8A8A8] placeholder:text-sm text-sm font-normal placeholder:font-normal rounded-md  focus:outline-none focus:ring-1 focus:ring-green " +
     className;
@@ -43,6 +44,27 @@ const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           className={`${inputClass} h-[160px]`}
         />
+      ) : type === "password" ? (
+        <div className="relative">
+          <input
+            id={name}
+            name={name}
+            type={showPassword ? "text" : "password"}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className={inputClass + " pr-10"}
+          />
+          <span
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+            tabIndex={0}
+            role="button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </span>
+        </div>
       ) : (
         <input
           id={name}

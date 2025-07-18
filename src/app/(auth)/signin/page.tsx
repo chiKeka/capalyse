@@ -2,36 +2,77 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
+import PasswordChecker from "@/components/ui/passwordChecker";
+import { useAuth } from "@/hooks/useAuth";
+import { validateAuthForm } from "@/lib/uitils/fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 type Props = {};
 
-function page({ }: Props) {
-  
+function page({}: Props) {
+  const { logninMutation } = useAuth();
+  const [form, setForm] = useState({ email: "", password: "", role: "SME" });
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
+  const router = useRouter();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validationErrors = validateAuthForm(form);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+    logninMutation.mutateAsync(form).then((res) => {
+      localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
+      router.push("/onboarding");
+    });
+  };
+
   return (
     <>
       <AuthLayout google_signtures={true} title="Sign in your account">
-        <div className="w-full">
+        <form onSubmit={handleSubmit} className="w-full">
           <Input
             name="email"
-            onChange={() => null}
+            onChange={handleChange}
             type="email"
             label="Email"
             className="h-[43px]"
             placeholder="janeearnest@gmail.com"
-            value=""
+            value={form.email}
           />
+          {errors.email && (
+            <div className="text-red-500 text-xs mt-1">{errors.email}</div>
+          )}
 
           <Input
             name="password"
-            onChange={() => null}
+            onChange={handleChange}
             className="h-[43px]"
             type="password"
             label="Password"
             placeholder="**********"
-            value=""
+            value={form.password}
           />
-          <Button size="medium" variant="primary" className="font-bold w-full">
+          {form.password && <PasswordChecker password={form.password} />}
+          {errors.password && (
+            <div className="text-red-500 text-xs -mt-1 mb-1">
+              {errors.password}
+            </div>
+          )}
+          <Button
+            type="submit"
+            size="medium"
+            variant="primary"
+            className="font-bold w-full"
+          >
             Sign in
           </Button>
           <div className="flex flex-col items-center justify-center my-6">
@@ -42,7 +83,7 @@ function page({ }: Props) {
               </Link>
             </p>
           </div>
-        </div>
+        </form>
       </AuthLayout>
     </>
   );
