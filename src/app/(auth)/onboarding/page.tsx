@@ -2,19 +2,26 @@
 
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
+import { onboardingStepAtom } from "@/lib/atoms/atoms";
+import { useAtom } from "jotai";
+import { useRef } from "react";
 import BusinassInformationForm from "./businassInformationForm";
 import PersonalInformationForm from "./personalInformationForm";
 
 const Page = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useAtom(onboardingStepAtom);
+  const personalInfoFormRef = useRef<{ submit: () => void }>(null);
 
   const isFirstStep = step === 1;
   const isLastStep = step === 2;
 
   const handleNext = () => {
-    if (isFirstStep) setStep(2);
-    else handleSubmit();
+    if (isFirstStep) {
+      // Imperatively submit the form in the child
+      personalInfoFormRef.current?.submit();
+    } else {
+      handleSubmit();
+    }
   };
 
   const handleBack = () => {
@@ -53,7 +60,7 @@ const Page = () => {
       </div>
 
       <div className="w-full">
-        {isFirstStep && <PersonalInformationForm />}
+        {isFirstStep && <PersonalInformationForm ref={personalInfoFormRef} />}
         {isLastStep && <BusinassInformationForm />}
         <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
           <Button

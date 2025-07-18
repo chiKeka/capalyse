@@ -1,6 +1,6 @@
 import api, { unauthenticatedAxios } from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
-import { RegisterCredentials } from "@/lib/uitils/types";
+import { PersonalInfoInputs, RegisterCredentials } from "@/lib/uitils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -51,8 +51,7 @@ export const useAuth = () => {
   });
   const current_user = useQuery({
     queryKey: ["current_user"],
-    queryFn: () =>
-      unauthenticatedAxios.get(ApiEndPoints.Auth_Activity("me")),
+    queryFn: () => unauthenticatedAxios.get(ApiEndPoints.Auth_Activity("me")),
   });
   const refresh_token = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
@@ -108,8 +107,12 @@ export const useAuth = () => {
 
   /// Auth Register activity
 
-  const personal_information = useMutation({
-    mutationFn: (cred) => {
+  const personal_information = useMutation<
+    VerifyResponse,
+    Error,
+    PersonalInfoInputs
+  >({
+    mutationFn: async (cred: PersonalInfoInputs): Promise<VerifyResponse> => {
       return api.post(ApiEndPoints.Register_Activity("personal-info"), cred);
     },
   });
