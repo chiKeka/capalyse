@@ -6,7 +6,8 @@ import Link from "next/link";
 
 type Props = {};
 
-function page({}: Props) {
+function page({ }: Props) {
+  
   return (
     <>
       <AuthLayout google_signtures={true} title="Sign in your account">
@@ -36,7 +37,7 @@ function page({}: Props) {
           <div className="flex flex-col items-center justify-center my-6">
             <p className="flex font-normal text-sm text-center items-center">
               Don't have an account ?.
-              <Link href="/signin" className=" font-bold text-sm text-green">
+              <Link href="/signup" className=" font-bold text-sm text-green">
                 Create account
               </Link>
             </p>

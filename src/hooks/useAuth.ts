@@ -1,5 +1,6 @@
 import api, { unauthenticatedAxios } from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
+import { RegisterCredentials } from "@/lib/uitils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -12,7 +13,8 @@ export interface VerifyResponse {
     data?: any;
   };
 }
-const useAuth = () => {
+
+export const useAuth = () => {
   const router = useRouter();
   const logninMutation = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
@@ -23,8 +25,12 @@ const useAuth = () => {
     },
   });
 
-  const registerMutation = useMutation({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
+  const registerMutation = useMutation<
+    VerifyResponse,
+    Error,
+    RegisterCredentials
+  >({
+    mutationFn: async (cred) => {
       return unauthenticatedAxios.post(
         ApiEndPoints.Auth_Activity("register"),
         cred
@@ -141,6 +147,7 @@ const useAuth = () => {
     logninMutation,
     registerMutation,
     refresh_token,
+    current_user,
     googleSigninMutation,
     forgot_password,
     reset_password,
