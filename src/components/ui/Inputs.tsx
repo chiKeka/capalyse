@@ -1,3 +1,4 @@
+import { cn } from "@/lib/uitils/cn";
 import React, { useState } from "react";
 
 type InputType = "text" | "email" | "password" | "phone" | "textarea";
@@ -7,26 +8,38 @@ type InputProps = {
   name: string;
   type: InputType;
   value?: string;
-  onChange: (
+  onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   placeholder?: string;
   className?: string;
-};
+} & Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "type" | "value" | "onChange"
+> &
+  Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "value" | "onChange">;
 
-const Input: React.FC<InputProps> = ({
-  label,
-  name,
-  type,
-  value,
-  onChange,
-  placeholder,
-  className,
-}) => {
+const Input = React.forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  InputProps
+>(({ label, name, type, value, onChange, className = "", ...rest }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
-  const inputClass =
-    "w-full px-4 py-2 border border-[#E8E8E8] placeholder:text-[#A8A8A8] placeholder:text-sm text-sm font-normal placeholder:font-normal rounded-md  focus:outline-none focus:ring-1 focus:ring-green " +
-    className;
+
+  const inputClass = cn(
+    "w-full px-4 py-2 border border-[#E8E8E8] placeholder:text-[#A8A8A8] placeholder:text-sm text-sm font-normal placeholder:font-normal rounded-md focus:outline-none focus:ring-1 focus:ring-green",
+    className
+  );
+
+  // Controlled if value/onChange provided, otherwise uncontrolled (for RHF)
+  const inputProps = {
+    id: name,
+    name,
+    ref,
+    className: inputClass,
+    ...rest,
+    ...(typeof value !== "undefined" ? { value } : {}),
+    ...(typeof onChange !== "undefined" ? { onChange } : {}),
+  };
 
   return (
     <div className="mb-4 max-w-xl ">
@@ -37,22 +50,13 @@ const Input: React.FC<InputProps> = ({
       )}
       {type === "textarea" ? (
         <textarea
-          id={name}
-          name={name}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className={`${inputClass} h-[160px]`}
+          {...(inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
         />
       ) : type === "password" ? (
         <div className="relative">
           <input
-            id={name}
-            name={name}
+            {...(inputProps as React.InputHTMLAttributes<HTMLInputElement>)}
             type={showPassword ? "text" : "password"}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
             className={inputClass + " pr-10"}
           />
           <span
@@ -67,17 +71,13 @@ const Input: React.FC<InputProps> = ({
         </div>
       ) : (
         <input
-          id={name}
-          name={name}
+          {...(inputProps as React.InputHTMLAttributes<HTMLInputElement>)}
           type={type === "phone" ? "tel" : type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className={inputClass}
         />
       )}
     </div>
   );
-};
+});
 
+Input.displayName = "Input";
 export default Input;

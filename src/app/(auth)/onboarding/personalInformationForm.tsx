@@ -96,13 +96,15 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="Country Of Residence"
           placeholder="Select your country of residence"
-          {...register("country", { required: "Country is required" })}
+          {...register("countryOfResidence", {
+            required: "Country is required",
+          })}
           type="text"
-          name="country"
+          name="countryOfResidence"
         />
-        {errors.country && (
+        {errors.countryOfResidence && (
           <span className="col-span-2 text-[10px] text-red-500">
-            {errors.country.message}
+            {errors.countryOfResidence.message}
           </span>
         )}
       </div>
@@ -110,28 +112,16 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="State of residence"
           placeholder="Select your state of residence"
-          {...register("state", { required: "State is required" })}
+          {...register("stateOfResidence", { required: "State is required" })}
           type="text"
-          name="state"
+          name="stateOfResidence"
         />
-        {errors.state && (
+        {errors.stateOfResidence && (
           <span className="col-span-2 text-[10px] text-red-500">
-            {errors.state.message}
+            {errors.stateOfResidence.message}
           </span>
         )}
       </div>
-
-      {personal_information.isError && (
-        <div className="col-span-2 text-red-500">Error submitting info</div>
-      )}
-      {personal_information.isSuccess && (
-        <div className="col-span-2 text-green-500">
-          Info submitted successfully!
-        </div>
-      )}
-      {personal_information.isPending && (
-        <div className="col-span-2 text-blue-500">Submitting...</div>
-      )}
     </form>
   );
 });

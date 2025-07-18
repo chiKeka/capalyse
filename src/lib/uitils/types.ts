@@ -3,12 +3,11 @@ export type RegisterCredentials = {
   password: string;
 };
 
-
 export type PersonalInfoInputs = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   email: string;
-  country: string;
-  state: string;
+  countryOfResidence: string;
+  stateOfResidence: string;
 };
