@@ -28,7 +28,6 @@ const refreshToken = async (): Promise<string | null> => {
       refreshToken: refreshToken,
     });
     const { token, refreshToken: newRefreshToken, expiresIn } = response.data;
-
     Cookies.set("access_token", token);
     Cookies.set("refresh_token", newRefreshToken);
     Cookies.set(
@@ -58,6 +57,8 @@ api.interceptors.request.use(
   ): Promise<InternalAxiosRequestConfig> => {
     if (isTokenExpired()) {
       const newToken = await refreshToken();
+
+
       if (newToken) {
         config.headers.Authorization = `Bearer ${newToken}`;
       }

@@ -17,10 +17,9 @@ const Page = () => {
 
   const handleNext = () => {
     if (isFirstStep) {
-      // Imperatively submit the form in the child
       personalInfoFormRef.current?.submit();
     } else {
-      handleSubmit();
+      // handleSubmit();
     }
   };
 
@@ -28,9 +27,6 @@ const Page = () => {
     if (isLastStep) setStep(1);
   };
 
-  const handleSubmit = () => {
-    console.log("Form submitted");
-  };
 
   const steps = [
     { id: 1, label: "Personal Information" },

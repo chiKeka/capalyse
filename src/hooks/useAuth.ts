@@ -33,7 +33,7 @@ export const useAuth = () => {
         ApiEndPoints.Auth_Activity("login"),
         cred
       );
-      
+
     },
   });
 
@@ -118,7 +118,10 @@ export const useAuth = () => {
     PersonalInfoInputs
   >({
     mutationFn: async (cred: PersonalInfoInputs): Promise<VerifyResponse> => {
-      return api.post(ApiEndPoints.Register_Activity("personal-info"), cred);
+      return api.post(
+        ApiEndPoints.Register_Activity("personal-info"),
+        cred
+      );
     },
   });
 
