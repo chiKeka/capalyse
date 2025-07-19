@@ -115,12 +115,8 @@ export const useAuth = () => {
 
   /// Auth Register activity
 
-  const personal_information = useMutation<
-    VerifyResponse,
-    Error,
-    PersonalInfoInputs
-  >({
-    mutationFn: async (cred: PersonalInfoInputs): Promise<VerifyResponse> => {
+  const personal_information = useMutation({
+    mutationFn: async (cred: PersonalInfoInputs): Promise<any> => {
       return api.post(ApiEndPoints.Register_Activity("personal-info"), cred);
     },
   });
@@ -130,12 +126,8 @@ export const useAuth = () => {
       return api.post(ApiEndPoints.Register_Activity("dev-org-info"), cred);
     },
   });
-  const smes_bussiness_info = useMutation<
-    VerifyResponse,
-    Error,
-    SMEsBusinessInfo
-  >({
-    mutationFn: (cred: SMEsBusinessInfo) => {
+  const smes_bussiness_info = useMutation({
+    mutationFn: (cred: SMEsBusinessInfo): Promise<any> => {
       return api.post(
         ApiEndPoints.Register_Activity("sme-business-info"),
         cred
