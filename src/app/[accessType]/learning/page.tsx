@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchForm } from "@/components/search-form";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
 import { Card } from "@/components/ui/card";
@@ -22,37 +23,6 @@ interface LearningTrack {
   image: string;
   progress: number;
 }
-
-const learningTracks: LearningTrack[] = [
-  {
-    id: "1",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Business Strategy",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "2",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Financial Management",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "3",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Legal & Compliance",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "4",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Fundraising & Pitching",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-];
 
 export default function ResourcesPage() {
   const router = useRouter();
@@ -93,8 +63,11 @@ export default function ResourcesPage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="course">Courses</SelectItem>
-            <SelectItem value="webinar">Webinars</SelectItem>
+            {resource?.data?.categories.map((category: any, id: number) => {
+              <SelectItem key={id} value={category.name}>
+                {category?.name}
+              </SelectItem>;
+            })}
           </SelectContent>
         </Select>
         <div className="flex items-center gap-2">
@@ -107,54 +80,67 @@ export default function ResourcesPage() {
       </div>
 
       {/* Learning Tracks Section */}
-      <Card className="px-[1.375rem] py-5">
+      <Card className="px-[1.375rem] w-full  py-5">
         <h3 className="text-lg font-semibold mb-6">Learning Tracks</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {!resource?.data?.resources.isEmptyArray && (
+          <div className="w-max max-w-full mx-auto">
+            <EmptyBox
+              showButton={false}
+              caption2="No Resouces found check back later, any new resouces added will be found here"
+              caption="No Resouces found check back later"
+            />
+          </div>
+        )}
 
-          {resource?.data && learningTracks.map((track) => (
-            <Card key={track.id} className="overflow-hidden">
-              <div className="aspect-video bg-gray-100">
-                <img src={track.image} alt={track.title} />
-              </div>
-              <div className="p-4">
-                <p className="text-sm bg-yellow-100 text-yellow-900 mb-2 w-max rounded-full px-2 py-0.5">
-                  {track.category}
-                </p>
-                <h4 className="font-medium text-black-600 mb-4">
-                  {track.title}
-                </h4>
-                <div className="flex flex-col">
-                  <div className="flex-1">
-                    <p className="flex justify-between text-sm">
-                      <span>Progress</span>
-                      <span>{track.progress}%</span>
-                    </p>
-                    <div className="h-[5px] bg-gray-100 rounded-full">
-                      <div
-                        className="h-full bg-green rounded-full"
-                        style={{
-                          width: `${
-                            1.5 > track.progress ? 1.5 : track.progress
-                          }%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <Button
-                    variant="tertiary"
-                    iconPosition="right"
-                    className="text-green ml-auto"
-                    onClick={() =>
-                      router.push(`/${params.accessType}/learning/${track.id}`)
-                    }
-                  >
-                    Take Course
-                  </Button>
+        {resource?.data?.resources && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {resource?.data?.resources.map((track: any) => (
+              <Card key={track.id} className="overflow-hidden">
+                <div className="aspect-video bg-gray-100">
+                  <img src={track.image} alt={track.title} />
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+                <div className="p-4">
+                  <p className="text-sm bg-yellow-100 text-yellow-900 mb-2 w-max rounded-full px-2 py-0.5">
+                    {track.category}
+                  </p>
+                  <h4 className="font-medium text-black-600 mb-4">
+                    {track.title}
+                  </h4>
+                  <div className="flex flex-col">
+                    <div className="flex-1">
+                      <p className="flex justify-between text-sm">
+                        <span>Progress</span>
+                        <span>{track.progress}%</span>
+                      </p>
+                      <div className="h-[5px] bg-gray-100 rounded-full">
+                        <div
+                          className="h-full bg-green rounded-full"
+                          style={{
+                            width: `${
+                              1.5 > track.progress ? 1.5 : track.progress
+                            }%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      variant="tertiary"
+                      iconPosition="right"
+                      className="text-green ml-auto"
+                      onClick={() =>
+                        router.push(
+                          `/${params.accessType}/learning/${track.id}`
+                        )
+                      }
+                    >
+                      Take Course
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </Card>
 
       {/* Development Programs Section */}
