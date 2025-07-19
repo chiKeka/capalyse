@@ -16,56 +16,7 @@ import { useState } from "react";
 type Props = {};
 
 // Example data
-const investors = [
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Angel",
-    focus: "Early-stage",
-    status: "Connected",
-    statusColor: "green",
-  },
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "VC",
-    focus: "Tech",
-    status: "Shortlisted",
-    statusColor: "yellow",
-  },
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Impact Fund",
-    focus: "Agriculture",
-    status: "Viewed",
-    statusColor: "blue",
-  },
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Angel",
-    focus: "Early-stage",
-    status: "Connected",
-    statusColor: "green",
-  },
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "VC",
-    focus: "Tech",
-    status: "Shortlisted",
-    statusColor: "yellow",
-  },
-  {
-    name: "Investor A",
-    avatar: "/images/humanAvater.svg",
-    type: "Impact Fund",
-    focus: "Agriculture",
-    status: "Viewed",
-    statusColor: "blue",
-  },
-];
+const investors = [];
 
 // Table columns
 

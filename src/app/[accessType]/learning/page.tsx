@@ -2,7 +2,6 @@
 
 import { SearchForm } from "@/components/search-form";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
 import { Card } from "@/components/ui/card";
 import { CIcons } from "@/components/ui/CIcons";
@@ -165,7 +164,16 @@ export default function ResourcesPage() {
         </Card>
         <Card className="px-5 py-6">
           <p className="text-base font-bold mb-6">Development Programs</p>
-          <Programs />
+
+          <div className="w-max max-w-full mx-auto">
+            <EmptyBox
+              showButton={false}
+              caption2="No Programs found check back later, any new program added will be found here"
+              caption="No Programs found check back later"
+            />
+          </div>
+
+          {/* <Programs /> */}
         </Card>
       </div>
     </div>

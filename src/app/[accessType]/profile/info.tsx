@@ -8,14 +8,18 @@ export default function Info({}: Props) {
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
   console.log(user);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+  }
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
       <div className="flex flex-col w-full gap-x-6 lg:flex-row">
-        <div className="grid w-full lg:grid-cols-2 gap-2 grid-cols-1">
+        <form className="grid w-full lg:grid-cols-2 gap-2 grid-cols-1">
           <Input
             name="Bname"
             onChange={() => null}
             type="text"
+            value={user?.businessName}
             label="Business Name"
             className="h-[43px]"
             placeholder={
@@ -76,7 +80,7 @@ export default function Info({}: Props) {
             }
             value=""
           />
-        </div>
+        </form>
 
         <div className="w-full flex flex-col gap-4 items-center  max-w-44 p-2">
           <p className="text-[10px] font-bold text-[#2E3034]">
