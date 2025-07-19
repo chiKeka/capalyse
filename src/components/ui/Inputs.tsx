@@ -26,7 +26,7 @@ const Input = React.forwardRef<
   const [showPassword, setShowPassword] = useState(false);
 
   const inputClass = cn(
-    "w-full px-4 py-2 border border-[#E8E8E8] placeholder:text-[#A8A8A8] placeholder:text-sm text-sm font-normal placeholder:font-normal rounded-md focus:outline-none focus:ring-1 focus:ring-green",
+    "w-full px-4 py-2  border border-[#E8E8E8] placeholder:text-[#A8A8A8] placeholder:text-sm text-sm font-normal placeholder:font-normal rounded-md focus:outline-none focus:ring-1 focus:ring-green",
     className
   );
 

@@ -1,99 +1,149 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
 import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
-import { useState } from "react";
-
+import { useSmeProfile } from "@/hooks/useSmeProfile";
+import { SMEsBusinessInfo } from "@/lib/uitils/types";
+import { useEffect, useState } from "react";
+import { CountrySelect } from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 type Props = {};
 
 export default function Info({}: Props) {
   const ProfileDetails = useGetCurrentProfile();
-  const [form, setForm] = useState({
-    businessName: "",
-    countryOfOperation: "",
-    businessStage: "SME",
-    industry: "",
-    website: "",
-  });
-
   const { data: user, isLoading, error } = ProfileDetails;
+  const { smes_bussiness_info } = useAuth();
   console.log(user);
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
+  const [selectedCountryName, setSelectedCountryName] = useState(
+    user ? user?.countryOfOperation : ""
+  );
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { errors },
+    watch,
+  } = useForm<SMEsBusinessInfo>({
+    defaultValues: {
+      businessName: "",
+      registrationNumber: "",
+      countryOfOperation: "",
+      businessStage: "",
+      industry: "",
+      website: "",
+    },
+  });
+  const { updateSmeBusinessInfo } = useSmeProfile();
+  useEffect(() => {
+    if (user) {
+      reset({
+        businessName: user.businessName || "",
+        registrationNumber: user.registrationNumber || "",
+        countryOfOperation: user.countryOfOperation || "",
+        businessStage: user.businessStage || "",
+        industry: user.industry || "",
+        website: user.website || "",
+      });
+    }
+  }, [user, reset]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const onSubmit = (data: any) => {
+    updateSmeBusinessInfo
+      .mutateAsync(data)
+      .then(() => {
+        toast.success(data?.message);
+      })
+      .catch((err) => toast.error(err?.msg));
   };
+  const businessStage = watch("businessStage");
+
   return (
-    <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
+    <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6">
       <div className="flex flex-col w-full gap-x-6 lg:flex-row">
         <form className="grid w-full lg:grid-cols-2 gap-2 grid-cols-1">
           <Input
-            name="Bname"
-            onChange={() => null}
             type="text"
-            value={user?.businessName}
+            {...register("businessName", {
+              required: "Business Name is required",
+            })}
             label="Business Name"
-            className="h-[43px]"
-            placeholder={
-              user?.businessName ? user?.businessName : "Input Business name"
-            }
+            className="h-[43px] "
           />
           <Input
-            name="B_reg_no"
-            onChange={() => null}
+            {...register("registrationNumber", {
+              required: "Business Name is required",
+            })}
             type="text"
             label="Business Registration Number"
-            className="h-[43px]"
-            placeholder={user?.businessn}
-            value=""
+            className="h-[43px] "
           />
+
+          <div className="w-full max-w-xl">
+            <label className="block mb-1 text-sm font-normal">
+              Country of Operation
+            </label>
+            <CountrySelect
+              value={selectedCountryName}
+              containerClassName="h-[43px]"
+              inputClassName="px-4 !w-full py-2  !border-none focus:!ring-0 focus:!border-none"
+              onChange={(country: any) => {
+                if (
+                  country &&
+                  typeof country === "object" &&
+                  "id" in country &&
+                  "name" in country
+                ) {
+                  setSelectedCountryName(country.name);
+                  setValue("countryOfOperation", country.name);
+                }
+              }}
+            />
+          </div>
+          <div className="max-w-xl w-full">
+            <label className="block mb-1 text-sm font-normal">
+              Business Stage*
+            </label>
+            <Select
+              value={businessStage}
+              onValueChange={(val) => setValue("businessStage", val)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select business stage" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Idea">Idea</SelectItem>
+                <SelectItem value="Startup">Startup</SelectItem>
+                <SelectItem value="Growth">Growth</SelectItem>
+                <SelectItem value="Mature">Mature</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <Input
-            name="country"
-            onChange={() => null}
-            type="text"
-            label="Country of Operation"
-            className="h-[43px]"
-            placeholder={
-              user?.countryOfOperation
-                ? user?.countryOfOperation[0]
-                : "Select country"
-            }
-          />
-          <Input
-            name="Bstage"
-            onChange={() => null}
-            type="text"
-            label="Business Stage"
-            className="h-[43px]"
-            placeholder={
-              user?.businessStage
-                ? user?.businessStage
-                : "Select Business Stage"
-            }
-            value=""
-          />
-          <Input
-            name="industry"
-            onChange={() => null}
+            {...register("industry", {
+              required: "Business Name is required",
+            })}
             type="text"
             label="Industry"
             className="h-[43px]"
-            placeholder=""
-            value=""
           />
           <Input
-            name="website"
-            onChange={() => null}
+            {...register("website", {
+              required: "Business Name is required",
+            })}
             type="text"
             label="Business Website"
             className="h-[43px]"
-            placeholder={
-              user?.website ? user?.website : "Input your website link"
-            }
-            value=""
           />
         </form>
 
@@ -114,7 +164,13 @@ export default function Info({}: Props) {
           <img src={"/icons/circle_warning.svg"} /> PS: Changes made to your
           profile will be subject to verification
         </div>
-        <Button variant="primary" size="medium" className="w-fit my-4 ">
+        <Button
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+          variant="primary"
+          size="medium"
+          className="w-fit my-4 "
+        >
           Save Changes
         </Button>
       </div>

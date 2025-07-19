@@ -34,7 +34,7 @@ export const ApiEndPoints = {
   Profile_Info: "/me/personal-info",
 
   //SMEs
-  SMEs_Profile: (action?: string) => `/smes/me/{action}`,
+  SMEs_Profile: (action?: string) => `/smes/me/${action}`,
   Delete_SMEs_profile: (memberId?: string) => `/smes/me/team/${memberId}`,
   SMEs_Assessments: (action?: string) => `/smes/me/assessment/${action}`,
   All_Assessments: `/smes/me/assessments`,

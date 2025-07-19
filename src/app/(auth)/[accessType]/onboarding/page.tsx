@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import AuthLayout from '@/components/layout/auth';
-import Button from '@/components/ui/Button';
-import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
-import { useAtom, useAtomValue } from 'jotai';
-import { useRef } from 'react';
-import BusinassInformationForm from './businassInformationForm';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { routes } from '@/lib/routes';
-import { UserType } from '@/lib/utils';
-import { getKeyByValue } from '@/lib/uitils/fns';
+import AuthLayout from "@/components/layout/auth";
+import Button from "@/components/ui/Button";
+import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
+import { routes } from "@/lib/routes";
+import { getKeyByValue } from "@/lib/uitils/fns";
+import { UserType } from "@/lib/utils";
+import { useAtom, useAtomValue } from "jotai";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import BusinassInformationForm from "./businassInformationForm";
 const PersonalInformationForm = dynamic(
-  () => import('./personalInformationForm'),
+  () => import("./personalInformationForm"),
   {
     ssr: false,
   }
@@ -20,13 +20,24 @@ const PersonalInformationForm = dynamic(
 const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
-  const [step, setStep] = useAtom(onboardingStepAtom);
-  const personalInfoFormRef = useRef<{ submit: () => void }>(null);
-  const smeBusinessInfoFormRef = useRef<{ submit: () => void }>(null);
+  const [step] = useAtom(onboardingStepAtom);
+  const [personalLoading, setPersonalLoading] = useState(false);
+  const [smeLoading, setSmeLoading] = useState(false);
+  const personalInfoFormRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+  const smeBusinessInfoFormRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
   const isFirstStep = step === 1;
   const isLastStep = step === 2;
-  console.log({ auth: authState });
 
+  console.log({
+    personal: personalInfoFormRef?.current?.isLoading,
+    smeLoading: smeBusinessInfoFormRef?.current?.isLoading,
+  });
   const handleNext = () => {
     if (authState?.profileCompletionStep === 1) {
       personalInfoFormRef.current?.submit();
@@ -36,10 +47,18 @@ const Page = () => {
   };
 
   const steps = [
-    { id: 1, label: 'Personal Information' },
-    { id: 2, label: 'Business Information' },
+    { id: 1, label: "Personal Information" },
+    { id: 2, label: "Business Information" },
   ];
 
+  useEffect(() => {
+    if (authState?.profileCompletionStep === 2) {
+      setPersonalLoading(false);
+    }
+    if (authState?.profileCompletionStep === 1) {
+      setSmeLoading(false);
+    }
+  }, [authState?.profileCompletionStep]);
   return (
     <AuthLayout
       layoutSize="lg:max-w-4xl"
@@ -53,8 +72,8 @@ const Page = () => {
             key={id}
             className={`text-center py-2 text-xs cursor-pointer ${
               authState?.profileCompletionStep === id
-                ? 'border-b-2 border-green text-green font-bold'
-                : 'text-gray-400'
+                ? "border-b-2 border-green text-green font-bold"
+                : "text-gray-400"
             }`}
           >
             {label}
@@ -64,10 +83,16 @@ const Page = () => {
 
       <div className="w-full">
         {authState?.profileCompletionStep === 1 ? (
-          <PersonalInformationForm ref={personalInfoFormRef} />
+          <PersonalInformationForm
+            ref={personalInfoFormRef}
+            setLoading={setPersonalLoading}
+          />
         ) : null}
         {authState?.profileCompletionStep === 2 && (
-          <BusinassInformationForm ref={smeBusinessInfoFormRef} />
+          <BusinassInformationForm
+            ref={smeBusinessInfoFormRef}
+            setLoading={setSmeLoading}
+          />
         )}
         <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
           <Button
@@ -85,10 +110,14 @@ const Page = () => {
                 : null
             }
           >
-            {isFirstStep ? 'Skip to Dashboard' : 'Back'}
+            {isFirstStep ? "Skip to Dashboard" : "Back"}
           </Button>
-          <Button variant="primary" onClick={handleNext}>
-            {isLastStep ? 'Submit' : 'Next'}
+          <Button
+            variant="primary"
+            onClick={handleNext}
+            state={personalLoading || smeLoading ? "loading" : undefined}
+          >
+            {isLastStep ? "Submit" : "Next"}
           </Button>
         </div>
       </div>

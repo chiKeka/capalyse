@@ -3,11 +3,15 @@ import { ApiEndPoints } from "@/api/endpoints";
 import { useMutation } from "@tanstack/react-query";
 
 export const useSmeProfile = () => {
+
+
   const updateSmeBusinessInfo = useMutation({
     mutationFn: async (cred): Promise<any> => {
       return api.put(ApiEndPoints.SMEs_Profile("business-info"), cred);
     },
   });
+
+  
 
   const updateSmeBusinessDetails = useMutation({
     mutationFn: async (cred): Promise<any> => {
@@ -15,7 +19,7 @@ export const useSmeProfile = () => {
     },
   });
 
-  const addTeamMemeber = useMutation({
+  const updateTeamMemeber = useMutation({
     mutationFn: async (cred): Promise<any> => {
       return api.put(ApiEndPoints.SMEs_Profile("team"), cred);
     },
@@ -29,7 +33,7 @@ export const useSmeProfile = () => {
 
   return {
     updateSmeBusinessInfo,
-    addTeamMemeber,
+    updateTeamMemeber,
     updateSmeBusinessDetails,
     delTeamMemeber,
   };
