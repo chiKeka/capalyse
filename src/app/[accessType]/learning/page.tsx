@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
-import Button from '@/components/ui/Button';
+import { SearchForm } from "@/components/search-form";
+import Programs from "@/components/sections/dashboardCards/programs";
+import Button from "@/components/ui/Button";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import Programs from '@/components/sections/dashboardCards/programs';
-import { CIcons } from '@/components/ui/CIcons';
-import { SearchForm } from '@/components/search-form';
-import { useParams, useRouter } from 'next/navigation';
+} from "@/components/ui/select";
+import { useGetResources } from "@/hooks/useResources";
+import { useParams, useRouter } from "next/navigation";
 
 interface LearningTrack {
   id: string;
@@ -24,31 +25,31 @@ interface LearningTrack {
 
 const learningTracks: LearningTrack[] = [
   {
-    id: '1',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Business Strategy',
-    image: '/images/resource.png',
+    id: "1",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Business Strategy",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '2',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Financial Management',
-    image: '/images/resource.png',
+    id: "2",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Financial Management",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '3',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Legal & Compliance',
-    image: '/images/resource.png',
+    id: "3",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Legal & Compliance",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '4',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Fundraising & Pitching',
-    image: '/images/resource.png',
+    id: "4",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Fundraising & Pitching",
+    image: "/images/resource.png",
     progress: 0,
   },
 ];
@@ -56,6 +57,9 @@ const learningTracks: LearningTrack[] = [
 export default function ResourcesPage() {
   const router = useRouter();
   const params = useParams();
+  const resources = useGetResources();
+  const { data: resource, isLoading, error } = resources;
+  console.log(resource);
   return (
     <div className="space-y-8">
       {/* Recommendation Card */}
@@ -106,7 +110,8 @@ export default function ResourcesPage() {
       <Card className="px-[1.375rem] py-5">
         <h3 className="text-lg font-semibold mb-6">Learning Tracks</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {learningTracks.map((track) => (
+
+          {resource?.data && learningTracks.map((track) => (
             <Card key={track.id} className="overflow-hidden">
               <div className="aspect-video bg-gray-100">
                 <img src={track.image} alt={track.title} />
@@ -184,19 +189,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: 'Business Plan Template',
+    title: "Business Plan Template",
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: 'Investor Pitch Deck Guide',
+    title: "Investor Pitch Deck Guide",
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: 'Financial Model Spreadsheet',
+    title: "Financial Model Spreadsheet",
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

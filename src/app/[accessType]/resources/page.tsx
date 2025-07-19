@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
+import { SearchForm } from "@/components/search-form";
+import ResourceCard from "@/components/sections/dashboardCards/ResourceCard";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { CIcons } from '@/components/ui/CIcons';
-import { SearchForm } from '@/components/search-form';
-import { useParams, useRouter } from 'next/navigation';
-import ResourceCard from '@/components/sections/dashboardCards/ResourceCard';
+} from "@/components/ui/select";
+import { useGetResources } from "@/hooks/useResources";
+import { useParams, useRouter } from "next/navigation";
 
 interface LearningTrack {
   id: string;
@@ -23,31 +24,31 @@ interface LearningTrack {
 
 const learningTracks: LearningTrack[] = [
   {
-    id: '1',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Business Strategy',
-    image: '/images/resource.png',
+    id: "1",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Business Strategy",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '2',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Financial Management',
-    image: '/images/resource.png',
+    id: "2",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Financial Management",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '3',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Legal & Compliance',
-    image: '/images/resource.png',
+    id: "3",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Legal & Compliance",
+    image: "/images/resource.png",
     progress: 0,
   },
   {
-    id: '4',
-    title: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    category: 'Fundraising & Pitching',
-    image: '/images/resource.png',
+    id: "4",
+    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
+    category: "Fundraising & Pitching",
+    image: "/images/resource.png",
     progress: 0,
   },
 ];
@@ -55,6 +56,7 @@ const learningTracks: LearningTrack[] = [
 export default function ResourcesPage() {
   const router = useRouter();
   const params = useParams();
+ 
   return (
     <div className="space-y-8">
       {/* Filter Section */}
@@ -112,19 +114,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: 'Business Plan Template',
+    title: "Business Plan Template",
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: 'Investor Pitch Deck Guide',
+    title: "Investor Pitch Deck Guide",
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: 'Financial Model Spreadsheet',
+    title: "Financial Model Spreadsheet",
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

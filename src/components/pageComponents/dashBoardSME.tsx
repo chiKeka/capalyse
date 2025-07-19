@@ -8,19 +8,21 @@ import Programs from "@/components/sections/dashboardCards/programs";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
 import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function SmeDashBoard() {
   const params = useParams();
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  
+
   const learningCards = [
     {
+      id: "1",
       href: "/",
       header: "Trading Across Africa: How AfCFTA Is Changing the Game",
     },
     {
+      id: "1",
       href: "/",
       header: "Trading Across Africa: How AfCFTA Is Changing the Game",
     },
@@ -55,7 +57,7 @@ export default function SmeDashBoard() {
     { id: 4, icon: "/icons/user4.svg", name: "Suggested Connection 4" },
     { id: 5, icon: "/icons/user5.svg", name: "Suggested Connection 5" },
   ];
-
+  const router = useRouter();
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
@@ -118,7 +120,14 @@ export default function SmeDashBoard() {
           >
             <div className="flex gap-4 my-8 flex-col lg:flex-row items-start ">
               {learningCards.map((card, idx) => (
-                <LearningCard href={card.href} header={card.header} key={idx} />
+                <LearningCard
+                  // onClick={router.push(
+                  //   `/${params.accessType}/learning/${card?.id}`
+                  // )}
+                  href={card.href}
+                  header={card.header}
+                  key={idx}
+                />
               ))}
             </div>
           </DashboardCardLayout>

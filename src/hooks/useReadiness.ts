@@ -10,7 +10,7 @@ export const useGetReadinessScore = () => {
         ApiEndPoints.Investment_Readiness("readiness-score")
       );
 
-      const user = response?.data?.data?.user;
+      const user = response?.data;
       return user;
     },
   });
@@ -23,7 +23,7 @@ export const useGetScoreHistory = () => {
         ApiEndPoints.Investment_Readiness("history")
       );
 
-      const user = response?.data?.data?.user;
+      const user = response?.data;
       return user;
     },
   });
@@ -36,7 +36,7 @@ export const useGetScoreAnalytics = () => {
         ApiEndPoints.Investment_Readiness("analytics")
       );
 
-      const user = response?.data?.data?.user;
+      const user = response?.data;
       return user;
     },
   });
@@ -49,7 +49,7 @@ export const useGetScoreInsight = () => {
         ApiEndPoints.Investment_Readiness("insights")
       );
 
-      const user = response?.data?.data?.user;
+      const user = response?.data;
       return user;
     },
   });
