@@ -9,6 +9,7 @@ import { routes } from "@/lib/routes";
 import { validateAuthForm } from "@/lib/uitils/fns";
 import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -38,12 +39,12 @@ function page({}: Props) {
       setAuth(user);
       Cookies.set("access_token", token);
       Cookies.set("refresh_token", newRefreshToken);
-      // Cookies.set(
-      //   "token_exp",
-      //   (Math.floor(Date.now() / 1000) + expiresIn).toString()
-      // );
+      Cookies.set(
+        "token_exp",
+        Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
+      );
       localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
-      if (user.profileCompletionStep === 1) {
+      if (user.profileCompletionStep <=  2) {
         router.push("/onboarding");
       } else {
         router.push(

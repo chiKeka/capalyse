@@ -1,6 +1,10 @@
 import api, { unauthenticatedAxios } from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
-import { PersonalInfoInputs, RegisterCredentials } from "@/lib/uitils/types";
+import {
+  PersonalInfoInputs,
+  RegisterCredentials,
+  SMEsBusinessInfo,
+} from "@/lib/uitils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -33,7 +37,6 @@ export const useAuth = () => {
         ApiEndPoints.Auth_Activity("login"),
         cred
       );
-
     },
   });
 
@@ -118,10 +121,7 @@ export const useAuth = () => {
     PersonalInfoInputs
   >({
     mutationFn: async (cred: PersonalInfoInputs): Promise<VerifyResponse> => {
-      return api.post(
-        ApiEndPoints.Register_Activity("personal-info"),
-        cred
-      );
+      return api.post(ApiEndPoints.Register_Activity("personal-info"), cred);
     },
   });
 
@@ -130,8 +130,12 @@ export const useAuth = () => {
       return api.post(ApiEndPoints.Register_Activity("dev-org-info"), cred);
     },
   });
-  const smes_bussiness_info = useMutation({
-    mutationFn: (cred) => {
+  const smes_bussiness_info = useMutation<
+    VerifyResponse,
+    Error,
+    SMEsBusinessInfo
+  >({
+    mutationFn: (cred: SMEsBusinessInfo) => {
       return api.post(
         ApiEndPoints.Register_Activity("sme-business-info"),
         cred

@@ -2,31 +2,28 @@
 
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
-import { onboardingStepAtom } from "@/lib/atoms/atoms";
-import { useAtom } from "jotai";
+import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
+import { useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import BusinassInformationForm from "./businassInformationForm";
 import PersonalInformationForm from "./personalInformationForm";
 
 const Page = () => {
+  const authState = useAtomValue(authAtom);
   const [step, setStep] = useAtom(onboardingStepAtom);
   const personalInfoFormRef = useRef<{ submit: () => void }>(null);
-
+  const smeBusinessInfoFormRef = useRef<{ submit: () => void }>(null);
   const isFirstStep = step === 1;
   const isLastStep = step === 2;
+  console.log({ "auth":authState });
 
   const handleNext = () => {
-    if (isFirstStep) {
+    if (authState?.profileCompletionStep === 1) {
       personalInfoFormRef.current?.submit();
     } else {
-      // handleSubmit();
+      smeBusinessInfoFormRef.current?.submit();
     }
   };
-
-  const handleBack = () => {
-    if (isLastStep) setStep(1);
-  };
-
 
   const steps = [
     { id: 1, label: "Personal Information" },
@@ -45,7 +42,7 @@ const Page = () => {
           <div
             key={id}
             className={`text-center py-2 text-xs cursor-pointer ${
-              step === id
+              authState?.profileCompletionStep === id
                 ? "border-b-2 border-green text-green font-bold"
                 : "text-gray-400"
             }`}
@@ -56,14 +53,14 @@ const Page = () => {
       </div>
 
       <div className="w-full">
-        {isFirstStep && <PersonalInformationForm ref={personalInfoFormRef} />}
-        {isLastStep && <BusinassInformationForm />}
+        {authState?.profileCompletionStep === 1 && (
+          <PersonalInformationForm ref={personalInfoFormRef} />
+        )}
+        {authState?.profileCompletionStep === 2 && (
+          <BusinassInformationForm ref={smeBusinessInfoFormRef} />
+        )}
         <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
-          <Button
-            variant="secondary"
-            onClick={handleBack}
-            disabled={isFirstStep}
-          >
+          <Button variant="secondary" disabled={isFirstStep}>
             {isFirstStep ? "Skip to Dashboard" : "Back"}
           </Button>
           <Button variant="primary" onClick={handleNext}>

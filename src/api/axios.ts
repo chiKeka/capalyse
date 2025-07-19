@@ -6,6 +6,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
@@ -32,7 +33,7 @@ const refreshToken = async (): Promise<string | null> => {
     Cookies.set("refresh_token", newRefreshToken);
     Cookies.set(
       "token_exp",
-      (Math.floor(Date.now() / 1000) + expiresIn).toString()
+      Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
     );
 
     return token;
@@ -57,7 +58,6 @@ api.interceptors.request.use(
   ): Promise<InternalAxiosRequestConfig> => {
     if (isTokenExpired()) {
       const newToken = await refreshToken();
-
 
       if (newToken) {
         config.headers.Authorization = `Bearer ${newToken}`;
