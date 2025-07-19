@@ -1,37 +1,43 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CategoryBreakdown from '@/components/sections/dashboardCards/categoryBreakdown';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import Button from '@/components/ui/Button';
-import { ReusableTable } from '@/components/ui/table';
-import { File, Pen, Trash2 } from 'lucide-react';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import Button from "@/components/ui/Button";
+import { ReusableTable } from "@/components/ui/table";
+import {
+  useGetReadinessScore,
+  useGetScoreAnalytics,
+  useGetScoreHistory,
+  useGetScoreInsight,
+} from "@/hooks/useReadiness";
+import { File, Pen, Trash2 } from "lucide-react";
 type Props = {};
 
 const documents = [
   {
-    name: 'CAC Registration.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "CAC Registration.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    name: 'Pitch Deck.pptx',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "Pitch Deck.pptx",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    name: 'Financial Statement.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "Financial Statement.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
 ];
 
 const columns = [
   {
-    header: 'File name',
+    header: "File name",
     accessor: (row: (typeof documents)[0]) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -45,9 +51,9 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Date uploaded', accessor: 'date' },
+  { header: "Date uploaded", accessor: "date" },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: (typeof documents)[0]) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -55,7 +61,7 @@ const columns = [
     ),
   },
   {
-    header: '',
+    header: "",
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
         <button className="text-gray-400 hover:text-red-600">
@@ -66,25 +72,31 @@ const columns = [
         </button>
       </div>
     ),
-    className: 'text-right',
+    className: "text-right",
   },
 ];
 function page({}: Props) {
+  const readinessScore = useGetReadinessScore();
+  const analytics = useGetScoreAnalytics();
+  const scoreHistory = useGetScoreHistory();
+  const scoreInsight = useGetScoreInsight();
+  const { data: score, isLoading, error } = readinessScore;
+
   const checklist = [
     {
       value: 80,
-      label: 'Strong foundation in place',
-      caption: 'Foundational',
+      label: "Strong foundation in place",
+      caption: "Foundational",
     },
     {
       value: 60,
-      label: 'Moderate financial stability',
-      caption: 'Financial Health',
+      label: "Moderate financial stability",
+      caption: "Financial Health",
     },
     {
       value: 45,
-      label: 'Significant gaps in compliance',
-      caption: 'Compliance',
+      label: "Significant gaps in compliance",
+      caption: "Compliance",
     },
   ];
   return (
