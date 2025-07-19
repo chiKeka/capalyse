@@ -1,12 +1,12 @@
 "use client";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import Document from "./document";
-import Team from "./team";
-import StraightBar from "@/components/ui/straightBar";
 import Button from "@/components/ui/Button";
+import StraightBar from "@/components/ui/straightBar";
+import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
 import { useState } from "react";
+import Document from "./document";
 import Info from "./info";
 import Summary from "./summary";
+import Team from "./team";
 
 type Props = {};
 interface SettingsTabProps {
@@ -30,7 +30,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
       } border-b-1 p-2 gap-2`}
     >
       <img className="w-4 h-4 lg:w-5 lg:h-5" src={icon} alt={`${label} icon`} />
-      <p className="lg:font-medium font-normal text-[10px] lg:text-xs">{label}</p>
+      <p className="lg:font-medium font-normal text-[10px] lg:text-xs">
+        {label}
+      </p>
     </div>
   );
 };
@@ -60,9 +62,12 @@ const tabOptions = [
     component: <Document />,
   },
 ];
-export default function page({ }: Props) {
-    const [formState, setFormState] = useState("personal");
-    const activeTab = tabOptions.find((tab) => tab.key === formState);
+export default function page({}: Props) {
+  const [formState, setFormState] = useState("personal");
+  const activeTab = tabOptions.find((tab) => tab.key === formState);
+  const ProfileDetails = useGetCurrentProfile();
+  const { data: user, isLoading, error } = ProfileDetails;
+
   return (
     <div>
       <div className="justify-between my-4 border-[0.5px] border-[#ABD2C7] bg-[#F4FFFC] p-3 rounded-md lg:p-5 flex flex-row">
@@ -72,18 +77,18 @@ export default function page({ }: Props) {
             src={"/images/imagefram.svg"}
           />
           <div className="gsp-4 flex flex-col">
-            <p className=" text-base font-bold ">Jenny Wilson</p>
-            <p className="text-xs font-normal">jenny@example.com</p>
+            <p className=" text-base font-bold ">{user?.firstName}</p>
+            <p className="text-xs font-normal">{user?.email}</p>
           </div>
         </div>
         <div className="flex flex-col lg:flex-row gap-y-2 gap-x-12 items-center w-[40%]">
           <div className="w-full flex flex-1 flex-col ">
             <div className="items-center w-full text-sm font-normal text-[#18181B] flex justify-between">
               <p>Profile Completion</p>
-              <p>{80}%</p>
+              <p>{user?.completionPercentage}%</p>
             </div>
 
-            <StraightBar value={80} />
+            <StraightBar value={user?.completionPercentage} />
           </div>
           <Button className="" variant="secondary">
             Preview public profile

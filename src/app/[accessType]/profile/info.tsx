@@ -1,10 +1,13 @@
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import React from 'react'
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
 
-type Props = {}
+type Props = {};
 
 export default function Info({}: Props) {
+  const ProfileDetails = useGetCurrentProfile();
+  const { data: user, isLoading, error } = ProfileDetails;
+  console.log(user);
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
       <div className="flex flex-col w-full gap-x-6 lg:flex-row">
@@ -15,8 +18,9 @@ export default function Info({}: Props) {
             type="text"
             label="Business Name"
             className="h-[43px]"
-            placeholder="Input Business name "
-            value=""
+            placeholder={
+              user?.businessName ? user?.businessName : "Input Business name"
+            }
           />
           <Input
             name="B_reg_no"
@@ -24,7 +28,7 @@ export default function Info({}: Props) {
             type="text"
             label="Business Registration Number"
             className="h-[43px]"
-            placeholder="Input registration number "
+            placeholder={user?.businessn}
             value=""
           />
           <Input
@@ -33,16 +37,23 @@ export default function Info({}: Props) {
             type="text"
             label="Country of Operation"
             className="h-[43px]"
-            placeholder="John"
-            value=""
+            placeholder={
+              user?.countryOfOperation
+                ? user?.countryOfOperation[0]
+                : "Select country"
+            }
           />
           <Input
-            name="Bname"
+            name="Bstage"
             onChange={() => null}
             type="text"
-            label="Business Name"
+            label="Business Stage"
             className="h-[43px]"
-            placeholder="John"
+            placeholder={
+              user?.businessStage
+                ? user?.businessStage
+                : "Select Business Stage"
+            }
             value=""
           />
           <Input
@@ -60,7 +71,9 @@ export default function Info({}: Props) {
             type="text"
             label="Business Website"
             className="h-[43px]"
-            placeholder="Input your website link"
+            placeholder={
+              user?.website ? user?.website : "Input your website link"
+            }
             value=""
           />
         </div>

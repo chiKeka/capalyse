@@ -14,7 +14,7 @@ export default function SmeDashBoard() {
   const params = useParams();
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  console.log(user);
+  
   const learningCards = [
     {
       href: "/",
