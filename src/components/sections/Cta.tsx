@@ -1,8 +1,9 @@
-import { containerVariants, itemVariants } from "@/lib/animations";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import Button from "../ui/Button";
-import { Waitlist } from "./waitlist";
+import { containerVariants, itemVariants } from '@/lib/animations';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Button from '../ui/Button';
+import { Waitlist } from './waitlist';
+import GetStarted from '../layout/GetStarted';
 
 type Props = {
   heading: React.ReactNode;
@@ -25,7 +26,7 @@ const Cta = ({ heading, text, buttonText }: Props) => {
       >
         <div className="absolute inset-0 h-full">
           <img
-            src={"/images/cta-img.png"}
+            src={'/images/cta-img.png'}
             alt="image"
             className="object-cover xl:object-end h-full w-full"
           />
@@ -35,13 +36,14 @@ const Cta = ({ heading, text, buttonText }: Props) => {
           <p className="font-normal text-black my-3 text-base ">
             {text ?? text}
           </p>
-          <Button
-            onClick={() => setWaitlistOpen(true)}
-            iconPosition="right"
-            size="medium"
-          >
-            {buttonText ? "Explore Opportunities" : "Get Started"}
-          </Button>
+
+          <GetStarted
+            component={
+              <Button size="medium" iconPosition="right">
+                {buttonText ? 'Explore Opportunities' : 'Get Started'}
+              </Button>
+            }
+          />
         </div>
       </motion.div>
       <Waitlist

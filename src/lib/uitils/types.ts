@@ -1,6 +1,7 @@
 export type RegisterCredentials = {
   email: string;
   password: string;
+  role: string;
 };
 
 export type PersonalInfoInputs = {

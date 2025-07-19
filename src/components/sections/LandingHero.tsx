@@ -5,6 +5,7 @@ import Button from '../ui/Button';
 import GridSvg from '../ui/gridSvg';
 import LandingbgSvg from '../ui/landingbgSvg';
 import { Waitlist } from './waitlist';
+import GetStarted from '../layout/GetStarted';
 
 const LandingHero = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -25,14 +26,17 @@ const LandingHero = () => {
               value-driven investors across Africa.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="medium"
-                onClick={() => setWaitlistOpen(true)}
-                iconPosition="right"
-                className="font-bold"
-              >
-                Get Started
-              </Button>
+              <GetStarted
+                component={
+                  <Button
+                    size="medium"
+                    iconPosition="right"
+                    className="font-bold"
+                  >
+                    Get Started
+                  </Button>
+                }
+              />
               <Button size="medium" variant="secondary" className="font-bold">
                 How it works
               </Button>

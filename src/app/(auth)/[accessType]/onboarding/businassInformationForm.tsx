@@ -1,27 +1,27 @@
-import Input from "@/components/ui/Inputs";
+import Input from '@/components/ui/Inputs';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
-import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
-import { SMEsBusinessInfo } from "@/lib/uitils/types";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import { forwardRef, useImperativeHandle, useState } from "react";
-import { CountrySelect } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
+} from '@/components/ui/select';
+import { useAuth } from '@/hooks/useAuth';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { routes } from '@/lib/routes';
+import { SMEsBusinessInfo } from '@/lib/uitils/types';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import { CountrySelect } from 'react-country-state-city';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
 type Props = {};
 
 const BusinassInformationForm = forwardRef((props, ref) => {
-  const [selectedCountryName, setSelectedCountryName] = useState("");
+  const [selectedCountryName, setSelectedCountryName] = useState('');
   const { smes_bussiness_info } = useAuth();
-  const authState = useAtomValue(authAtom);
+  const authState: any = useAtomValue(authAtom);
   const setStep = useSetAtom(onboardingStepAtom);
   const {
     register,
@@ -58,8 +58,8 @@ const BusinassInformationForm = forwardRef((props, ref) => {
           label="Business Name"
           placeholder="Input business name"
           type="text"
-          {...register("businessName", {
-            required: "Business Name is required",
+          {...register('businessName', {
+            required: 'Business Name is required',
           })}
         />
         {errors.businessName && (
@@ -75,8 +75,8 @@ const BusinassInformationForm = forwardRef((props, ref) => {
           label="Business registration number"
           placeholder="Earnest"
           type="text"
-          {...register("registrationNumber", {
-            required: "business Registration number is required",
+          {...register('registrationNumber', {
+            required: 'business Registration number is required',
           })}
         />
         {errors.registrationNumber && (
@@ -96,12 +96,12 @@ const BusinassInformationForm = forwardRef((props, ref) => {
           onChange={(country: any) => {
             if (
               country &&
-              typeof country === "object" &&
-              "id" in country &&
-              "name" in country
+              typeof country === 'object' &&
+              'id' in country &&
+              'name' in country
             ) {
               setSelectedCountryName(country.name);
-              setValue("countryOfOperation", country.name);
+              setValue('countryOfOperation', country.name);
             }
           }}
         />
@@ -113,7 +113,7 @@ const BusinassInformationForm = forwardRef((props, ref) => {
         </label>
         <Select
           // value={watch("businessStage")}
-          onValueChange={(val) => setValue("businessStage", val)}
+          onValueChange={(val) => setValue('businessStage', val)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select business stage" />
@@ -138,7 +138,7 @@ const BusinassInformationForm = forwardRef((props, ref) => {
           label="Industry (Optional)"
           placeholder="select Industry"
           type="text"
-          {...register("industry")}
+          {...register('industry')}
         />
         {errors.industry && (
           <span className="col-span-2 text-[10px] text-red-500">
@@ -153,10 +153,11 @@ const BusinassInformationForm = forwardRef((props, ref) => {
           label="Business website (Optional)"
           placeholder="Input your website link"
           type="text"
-          {...register("website", {
+          {...register('website', {
             pattern: {
-              value: /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-              message: "Please enter a valid URL",
+              value:
+                /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
+              message: 'Please enter a valid URL',
             },
           })}
         />

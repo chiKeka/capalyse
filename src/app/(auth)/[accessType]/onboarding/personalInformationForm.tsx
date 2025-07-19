@@ -1,21 +1,32 @@
-import Input from "@/components/ui/Inputs";
-import { useAuth } from "@/hooks/useAuth";
-import { onboardingStepAtom } from "@/lib/atoms/atoms";
-import { PersonalInfoInputs } from "@/lib/uitils/types";
-import { useSetAtom } from "jotai";
-import { forwardRef, useImperativeHandle, useState } from "react";
-import { CountrySelect, StateSelect } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
+'use client';
+
+import Input from '@/components/ui/Inputs';
+import { useAuth } from '@/hooks/useAuth';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { PersonalInfoInputs } from '@/lib/uitils/types';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import { CountrySelect, StateSelect } from 'react-country-state-city';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 const PersonalInfoForm = forwardRef((props, ref) => {
+  const auth: any = useAtomValue(authAtom);
   const { personal_information } = useAuth();
   const setStep = useSetAtom(onboardingStepAtom);
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
-  } = useForm<PersonalInfoInputs>();
+  } = useForm<PersonalInfoInputs>({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: auth?.email ?? '',
+    },
+  });
 
   useImperativeHandle(ref, () => ({
     submit: () => {
@@ -24,16 +35,17 @@ const PersonalInfoForm = forwardRef((props, ref) => {
     isLoading: personal_information.isPending,
   }));
 
-  const onSubmit = (data: PersonalInfoInputs) => {
+  const onSubmit = (values: PersonalInfoInputs) => {
+    const { email, ...data } = values;
     personal_information.mutateAsync(data, {
       onSuccess: () => setStep((prev) => prev + 1),
-      onError: (error) => console.error(error),
+      onError: (error: any) => toast.error(error?.error),
     });
   };
 
-  const [selectedCountryId, setSelectedCountryId] = useState("");
-  const [selectedCountryName, setSelectedCountryName] = useState("");
-  const [selectedStateName, setSelectedStateName] = useState("");
+  const [selectedCountryId, setSelectedCountryId] = useState('');
+  const [selectedCountryName, setSelectedCountryName] = useState('');
+  const [selectedStateName, setSelectedStateName] = useState('');
 
   return (
     <form
@@ -44,7 +56,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="First Name*"
           placeholder="Jane"
-          {...register("firstName", { required: "First name is required" })}
+          {...register('firstName', { required: 'First name is required' })}
           type="text"
           name="firstName"
         />
@@ -58,7 +70,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="Last Name*"
           placeholder="Earnest"
-          {...register("lastName", { required: "Last name is required" })}
+          {...register('lastName', { required: 'Last name is required' })}
           type="text"
           name="lastName"
         />
@@ -90,7 +102,7 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="Phone Number*"
           placeholder="(+234) 8164763794"
-          {...register("phoneNumber", { required: "Phone Number is required" })}
+          {...register('phoneNumber', { required: 'Phone Number is required' })}
           type="phone"
           name="phoneNumber"
         />
@@ -104,9 +116,10 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <Input
           label="Email Address*"
           placeholder="Janeearnest@gmail.com"
-          {...register("email", { required: "Email is required" })}
+          {...register('email', { required: 'Email is required' })}
           type="email"
           name="email"
+          readOnly={true}
         />
         {errors.email && (
           <span className="col-span-2 text-[10px]  text-red-500">
@@ -120,21 +133,27 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         </label>
         <CountrySelect
           value={selectedCountryName}
+          autoComplete="new-country"
           inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
           onChange={(country: any) => {
+            console.log({ country });
             if (
               country &&
-              typeof country === "object" &&
-              "id" in country &&
-              "name" in country
+              typeof country === 'object' &&
+              'id' in country &&
+              'name' in country
             ) {
               setSelectedCountryId(country.id); // for StateSelect
               setSelectedCountryName(country.name); // for display
-              setValue("countryOfResidence", country.name); // for form
-              setSelectedStateName("");
-              setValue("stateOfResidence", "");
+              setValue('countryOfResidence', country.name); // for form
+              setSelectedStateName('');
+              setValue('stateOfResidence', '');
             }
           }}
+          defaultValue={getValues()?.countryOfResidence as any}
+          onTextChange={(_txt) =>
+            setValue('countryOfResidence', _txt.target.value)
+          }
         />
         {errors.countryOfResidence && (
           <span className="col-span-2 text-[10px] border-none  text-red-500">
@@ -148,13 +167,14 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           State of Residence
         </label>
         <StateSelect
+          autoComplete="new-state"
           countryid={Number(selectedCountryId)}
           value={selectedStateName}
           inputClassName="w-full px-4 py-2 focus:!border-none focus:!ring-0 !border-none"
           onChange={(state: any) => {
-            if (state && typeof state === "object" && "name" in state) {
+            if (state && typeof state === 'object' && 'name' in state) {
               setSelectedStateName(state.name);
-              setValue("stateOfResidence", state.name);
+              setValue('stateOfResidence', state.name);
             }
           }}
         />
@@ -169,7 +189,6 @@ const PersonalInfoForm = forwardRef((props, ref) => {
 });
 
 export default PersonalInfoForm;
-
 
 // {
 //     "message": "{\"success\":false,\"error\":\"Missing or invalid authorization header\"}",
