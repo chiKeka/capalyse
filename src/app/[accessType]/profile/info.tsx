@@ -1,16 +1,31 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { useState } from "react";
 
 type Props = {};
 
 export default function Info({}: Props) {
   const ProfileDetails = useGetCurrentProfile();
+  const [form, setForm] = useState({
+    businessName: "",
+    countryOfOperation: "",
+    businessStage: "SME",
+    industry: "",
+    website: "",
+  });
+
   const { data: user, isLoading, error } = ProfileDetails;
   console.log(user);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
       <div className="flex flex-col w-full gap-x-6 lg:flex-row">
@@ -61,12 +76,12 @@ export default function Info({}: Props) {
             value=""
           />
           <Input
-            name="Bname"
+            name="industry"
             onChange={() => null}
             type="text"
-            label="Business Name"
+            label="Industry"
             className="h-[43px]"
-            placeholder="John"
+            placeholder=""
             value=""
           />
           <Input
