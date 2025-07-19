@@ -5,12 +5,11 @@ interface DashboardLayoutProps {
   children: React.ReactNode;
   params: { accessType: string };
 }
-
+const validTypes = ['investor', 'sme', 'development'];
 export default function DashboardLayout({
   children,
   params,
 }: DashboardLayoutProps) {
-  const validTypes = ['investor', 'sme', 'development'];
   if (!validTypes.includes(params.accessType)) {
     notFound();
   }

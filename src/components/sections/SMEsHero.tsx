@@ -3,6 +3,7 @@ import Button from '../ui/Button';
 import { motion } from 'framer-motion';
 import { Waitlist } from './waitlist';
 import { containerVariants } from '@/lib/animations';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   reverse?: boolean;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
+  const router = useRouter();
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
@@ -44,7 +46,7 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
             </p>
 
             <Button
-              onClick={() => setWaitlistOpen(true)}
+              onClick={() => router.push('/sme/signup')}
               iconPosition="right"
               className="font-bold"
             >
