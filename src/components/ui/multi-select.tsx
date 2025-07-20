@@ -5,7 +5,21 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp, X } from "lucide-react";
 import * as React from "react";
 
-const MultiSelect = SelectPrimitive.Root;
+type MultiSelectProps = SelectPrimitive.SelectProps & {
+  selectedItems?: string[];
+};
+
+const MultiSelect = (props: MultiSelectProps) => {
+  const { selectedItems = [], ...rest } = props;
+  return (
+    <SelectPrimitive.Root
+      key={selectedItems.join(",")}
+      value={undefined}
+      {...rest}
+    />
+  );
+};
+MultiSelect.displayName = SelectPrimitive.Root.displayName;
 
 const MultiSelectGroup = SelectPrimitive.Group;
 

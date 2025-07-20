@@ -27,8 +27,17 @@ export type InvestmentPreferenceInfo = {
   targetRegions: string[];
   targetIndustries: string[];
   businessStage: string[];
-  industry?: string;
-  website?: string;
+  max: number;
+  min: number;
+  min_currency: string;
+  max_cureency: string;
+};
+
+export type investorOrg = {
+  organizationName: "";
+  companyEmail: "";
+  countryHeadquarters: "";
+  website: "";
 };
 
 export type AuthState = {

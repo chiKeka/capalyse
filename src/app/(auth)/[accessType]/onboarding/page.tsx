@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BusinassInformationForm from "./businassInformationForm";
 import InvestmentPreference from "./investmesntPrefernce";
+import InvestorOrganisation from "./investorOrganisation";
+
 const PersonalInformationForm = dynamic(
   () => import("./personalInformationForm"),
   {
@@ -21,9 +23,8 @@ const PersonalInformationForm = dynamic(
 const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
-  const [step] = useAtom(onboardingStepAtom);
-  const [personalLoading, setPersonalLoading] = useState(false);
-  const [smeLoading, setSmeLoading] = useState(false);
+  const [onboardSteps] = useAtom(onboardingStepAtom);
+
   const personalInfoFormRef = useRef<{
     submit: () => void;
     isLoading: boolean;
@@ -36,28 +37,45 @@ const Page = () => {
     submit: () => void;
     isLoading: boolean;
   }>(null);
-  const isFirstStep = step === 1;
-  const isLastStep = step === 2;
-  const isThirdStep = step === 3;
-  console.log({
-    personal: personalInfoFormRef?.current?.isLoading,
-    smeLoading: smeBusinessInfoFormRef?.current?.isLoading,
-  });
+  const investorOrganisationRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const isFirstStep = onboardSteps === 1;
+  const isLastStep = onboardSteps === 2;
+  const isThirdStep = onboardSteps === 3;
+
   const handleNext = () => {
-    if (authState?.profileCompletionStep === 1) {
-      personalInfoFormRef.current?.submit();
-    } else {
-      smeBusinessInfoFormRef.current?.submit();
+    setButtonLoading(true);
+    const role = authState?.role?.toLowerCase();
+    const step = authState?.profileCompletionStep;
+    if (role === "investor") {
+      if (step === 1) {
+        personalInfoFormRef.current?.submit();
+      } else if (step === 2) {
+        investmentPreferenceRef.current?.submit();
+      } else if (step === 3) {
+        investorOrganisationRef.current?.submit();
+      }
+    } else if (role === "sme") {
+      if (step === 1) {
+        personalInfoFormRef.current?.submit();
+      } else if (step === 2) {
+        smeBusinessInfoFormRef.current?.submit();
+      }
+    } else if (role === "organisation") {
+      if (step === 3) {
+        investorOrganisationRef.current?.submit();
+      }
     }
   };
 
   useEffect(() => {
-    if (authState?.profileCompletionStep === 2) {
-      setPersonalLoading(false);
-    }
-    if (authState?.profileCompletionStep === 1) {
-      setSmeLoading(false);
-    }
+    setButtonLoading(false); // Reset button loading on step change
+    setLoading(false); // (optional) Reset other loading state too
   }, [authState?.profileCompletionStep]);
 
   const steps = {
@@ -76,40 +94,60 @@ const Page = () => {
   const roleFormMap = {
     sme: (
       <>
-        {authState?.profileCompletionStep === 1 ? (
+        {authState?.profileCompletionStep === 1 && (
           <PersonalInformationForm
             ref={personalInfoFormRef}
-            setLoading={setPersonalLoading}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
           />
-        ) : null}
+        )}
         {authState?.profileCompletionStep === 2 && (
           <BusinassInformationForm
             ref={smeBusinessInfoFormRef}
-            setLoading={setSmeLoading}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
           />
         )}
       </>
     ),
     investor: (
       <>
-        {authState?.profileCompletionStep === 1 ? (
+        {authState?.profileCompletionStep === 1 && (
           <PersonalInformationForm
             ref={personalInfoFormRef}
-            setLoading={setPersonalLoading}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
           />
-        ) : null}
+        )}
         {authState?.profileCompletionStep === 2 && (
           <InvestmentPreference
             ref={investmentPreferenceRef}
-            setLoading={setSmeLoading}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+        {authState?.profileCompletionStep === 3 && (
+          <InvestorOrganisation
+            ref={investorOrganisationRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
           />
         )}
       </>
     ),
-    organisation: <></>,
+    organisation: (
+      <>
+        {authState?.profileCompletionStep === 1 && (
+          <InvestorOrganisation
+            ref={investorOrganisationRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+      </>
+    ),
   };
 
-  console.log(authState);
   return (
     <AuthLayout
       layoutSize="lg:max-w-4xl"
@@ -164,7 +202,7 @@ const Page = () => {
           <Button
             variant="primary"
             onClick={handleNext}
-            state={personalLoading || smeLoading ? "loading" : undefined}
+            state={buttonLoading || loading ? "loading" : undefined}
           >
             {isLastStep ? "Submit" : "Next"}
           </Button>

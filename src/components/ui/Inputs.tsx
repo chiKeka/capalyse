@@ -1,7 +1,20 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/uitils/cn";
 import React, { useState } from "react";
 
-type InputType = "text" | "email" | "password" | "phone" | "textarea";
+type InputType =
+  | "text"
+  | "email"
+  | "password"
+  | "phone"
+  | "textarea"
+  | "number";
 
 type InputProps = {
   label?: string;
@@ -81,3 +94,55 @@ const Input = React.forwardRef<
 
 Input.displayName = "Input";
 export default Input;
+
+type CurrencyAmountInputProps = {
+  amount: number | "";
+  onAmountChange: (value: number | "") => void;
+  currency: string;
+  tag?: string;
+  onCurrencyChange: (currency: string) => void;
+  currencyOptions?: string[];
+  placeholder?: string;
+};
+
+export function CurrencyAmountInput({
+  amount,
+  onAmountChange,
+  currency,
+  tag,
+  onCurrencyChange,
+  currencyOptions = ["USD", "EUR", "NGN", "GBP"],
+  placeholder = "Amount",
+}: CurrencyAmountInputProps) {
+  return (
+    <div className="flex gap-1 w-full h-auto items-center">
+      {tag && <p className="block mb-1 text-[10px] font-medium">{tag}</p>}
+      <div className="relative w-full">
+        <Input
+          type="number"
+          className="pr-20 h-auto min-h-10 ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          placeholder={placeholder}
+          value={amount}
+          onChange={(e) =>
+            onAmountChange(e.target.value === "" ? "" : Number(e.target.value))
+          }
+          min={0}
+        />
+        <div className="absolute right-0 top-0 h-auto flex items-center">
+          <Select value={currency} onValueChange={onCurrencyChange}>
+            <SelectTrigger className="w-20 h-auto mt-[0.5px] min-h-9 rounded-none rounded-r-md border-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {currencyOptions.map((opt) => (
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 type PersonalInformationFormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
+  onFinish?: () => void;
 };
 const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
   (props, ref) => {
@@ -43,7 +44,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       props.setLoading(personal_information.isPending);
     }, [personal_information.isPending, props]);
 
- 
+
 
 
 

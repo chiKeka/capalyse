@@ -1,4 +1,4 @@
-import Input from "@/components/ui/Inputs";
+import { CurrencyAmountInput } from "@/components/ui/Inputs";
 import {
   MultiSelect,
   MultiSelectContent,
@@ -6,9 +6,9 @@ import {
   MultiSelectTrigger,
   MultiSelectValue,
 } from "@/components/ui/multi-select";
+
 import { useAuth } from "@/hooks/useAuth";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
 import { InvestmentPreferenceInfo } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -22,11 +22,13 @@ import {
 } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type Props = {};
 
 type InvestmentPreferenceormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
+  onFinish?: () => void;
 };
 
 const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
@@ -49,7 +51,13 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       setValue,
       watch,
       formState: { errors },
-    } = useForm<InvestmentPreferenceInfo>();
+    } = useForm<
+      InvestmentPreferenceInfo & {
+        min: number | "";
+        max: number | "";
+        currency: string;
+      }
+    >();
 
     useEffect(() => {
       props.setLoading(investor_investment_info.isPending);
@@ -61,17 +69,28 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       },
       isLoading: investor_investment_info.isPending,
     }));
-
+    const setAuth = useSetAtom(authAtom);
     const router = useRouter();
     const onSubmit = (data: any) => {
-      investor_investment_info.mutateAsync(data, {
-        onSuccess: () =>
-          router.push(
-            routes?.[authState?.role?.toLowerCase() as keyof typeof routes]
-              ?.root
-          ),
-        onError: (error: any) => console.log(error),
-      });
+      const payload = {
+        ...data,
+        investmentTypes: selectedInvestmentTypes,
+        targetRegions: selectedRegions,
+        targetIndustries: selectedIndustries,
+        businessStages: selectedBusinessStages,
+        investmentRange: {
+          min,
+          max,
+          currency,
+        },
+      };
+      console.log("SUBMIT PAYLOAD:", payload);
+      investor_investment_info
+        .mutateAsync(payload)
+        .then((res) => {
+          setAuth((prev: any) => ({ ...prev, ...res?.data?.data?.user }));
+        })
+        .catch((err) => toast.error(err?.message));
     };
 
     const handleRegionChange = (value: string) => {
@@ -114,6 +133,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       const newTypes = selectedInvestmentTypes.filter((item) => item !== value);
       setSelectedInvestmentTypes(newTypes);
       setValue("investmentType", newTypes);
+      setCurrentInvestmentType(undefined); // Reset the select value
     };
 
     const handleBusinessStageChange = (value: string) => {
@@ -131,144 +151,151 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       setValue("businessStage", newStages);
     };
 
+    const [currentInvestmentType, setCurrentInvestmentType] = useState<
+      string | undefined
+    >(undefined);
+
+    const [currency, setCurrency] = useState("USD");
+    const [min, setMin] = useState<number | "">("");
+    const [max, setMax] = useState<number | "">("");
+
     return (
-      <form
-        className="grid md:grid-cols-2 w-full gap-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Investment Type
-          </label>
-          <MultiSelect onValueChange={handleInvestmentTypeChange}>
-            <MultiSelectTrigger
+      <form className="gap-4 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid md:grid-cols-2 w-full gap-4">
+          <div>
+            <label className="block mb-1 text-[10px] font-medium">
+              Investment Type
+            </label>
+            <MultiSelect
               selectedItems={selectedInvestmentTypes}
-              onRemoveItem={handleRemoveInvestmentType}
+              onValueChange={handleInvestmentTypeChange}
             >
-              <MultiSelectValue placeholder="Select investment type" />
-            </MultiSelectTrigger>
-            <MultiSelectContent>
-              <MultiSelectItem value="Equity">Equity</MultiSelectItem>
-              <MultiSelectItem value="Debt">Debt</MultiSelectItem>
-              <MultiSelectItem value="Grant">Grant</MultiSelectItem>
-            </MultiSelectContent>
-          </MultiSelect>
-          {errors.investmentType && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.investmentType.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-sm font-normal">
-            Target Regions
-          </label>
-          <MultiSelect onValueChange={handleRegionChange}>
-            <MultiSelectTrigger
+              <MultiSelectTrigger
+                selectedItems={selectedInvestmentTypes}
+                onRemoveItem={handleRemoveInvestmentType}
+              >
+                <MultiSelectValue placeholder="Select investment type" />
+              </MultiSelectTrigger>
+              <MultiSelectContent>
+                <MultiSelectItem value="Equity">Equity</MultiSelectItem>
+                <MultiSelectItem value="Debt">Debt</MultiSelectItem>
+                <MultiSelectItem value="Grant">Grant</MultiSelectItem>
+              </MultiSelectContent>
+            </MultiSelect>
+            {errors.investmentType && (
+              <span className="col-span-2 text-[10px] text-red-500">
+                {errors.investmentType.message}
+              </span>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 text-[10px] font-medium">
+              Target Regions
+            </label>
+            <MultiSelect
               selectedItems={selectedRegions}
-              onRemoveItem={handleRemoveRegion}
+              onValueChange={handleRegionChange}
             >
-              <MultiSelectValue placeholder="Select Regions" />
-            </MultiSelectTrigger>
-            <MultiSelectContent>
-              <MultiSelectItem value="North_East">North East</MultiSelectItem>
-              <MultiSelectItem value="North_west">North west</MultiSelectItem>
-              <MultiSelectItem value="South_East">South East</MultiSelectItem>
-              <MultiSelectItem value="South_South">South South</MultiSelectItem>
-            </MultiSelectContent>
-          </MultiSelect>
-          {errors.targetRegions && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.targetRegions.message}
-            </span>
-          )}
-        </div>
+              <MultiSelectTrigger
+                selectedItems={selectedRegions}
+                onRemoveItem={handleRemoveRegion}
+              >
+                <MultiSelectValue placeholder="Select Regions" />
+              </MultiSelectTrigger>
+              <MultiSelectContent>
+                <MultiSelectItem value="North_East">North East</MultiSelectItem>
+                <MultiSelectItem value="North_west">North west</MultiSelectItem>
+                <MultiSelectItem value="South_East">South East</MultiSelectItem>
+                <MultiSelectItem value="South_South">
+                  South South
+                </MultiSelectItem>
+              </MultiSelectContent>
+            </MultiSelect>
+            {errors.targetRegions && (
+              <span className="col-span-2 text-[10px] text-red-500">
+                {errors.targetRegions.message}
+              </span>
+            )}
+          </div>
 
-        <div>
-          <label className="block mb-1 text-sm font-normal">
-            Target Industries
-          </label>
-          <MultiSelect onValueChange={handleIndustryChange}>
-            <MultiSelectTrigger
+          <div>
+            <label className="block mb-1 text-[10px] font-medium">
+              Target Industries
+            </label>
+            <MultiSelect
               selectedItems={selectedIndustries}
-              onRemoveItem={handleRemoveIndustry}
+              onValueChange={handleIndustryChange}
             >
-              <MultiSelectValue placeholder="Select Industries" />
-            </MultiSelectTrigger>
-            <MultiSelectContent>
-              <MultiSelectItem value="Ict">ICT</MultiSelectItem>
-              <MultiSelectItem value="TelCom">
-                Tel Communication
-              </MultiSelectItem>
-              <MultiSelectItem value="Health">Health</MultiSelectItem>
-            </MultiSelectContent>
-          </MultiSelect>
-          {errors.targetIndustries && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.targetIndustries.message}
-            </span>
-          )}
-        </div>
+              <MultiSelectTrigger
+                selectedItems={selectedIndustries}
+                onRemoveItem={handleRemoveIndustry}
+              >
+                <MultiSelectValue placeholder="Select Industries" />
+              </MultiSelectTrigger>
+              <MultiSelectContent>
+                <MultiSelectItem value="Ict">ICT</MultiSelectItem>
+                <MultiSelectItem value="TelCom">
+                  Tel Communication
+                </MultiSelectItem>
+                <MultiSelectItem value="Health">Health</MultiSelectItem>
+              </MultiSelectContent>
+            </MultiSelect>
+            {errors.targetIndustries && (
+              <span className="col-span-2 text-[10px] text-red-500">
+                {errors.targetIndustries.message}
+              </span>
+            )}
+          </div>
 
-        <div>
-          <label className="block mb-1 text-sm font-normal">
-            Business Stage*
-          </label>
-          <MultiSelect onValueChange={handleBusinessStageChange}>
-            <MultiSelectTrigger
+          <div>
+            <label className="block mb-1 text-[10px] font-medium">
+              Business Stage*
+            </label>
+            <MultiSelect
               selectedItems={selectedBusinessStages}
-              onRemoveItem={handleRemoveBusinessStage}
+              onValueChange={handleBusinessStageChange}
             >
-              <MultiSelectValue placeholder="Select business stage" />
-            </MultiSelectTrigger>
-            <MultiSelectContent>
-              <MultiSelectItem value="Idea">Idea</MultiSelectItem>
-              <MultiSelectItem value="Startup">Startup</MultiSelectItem>
-              <MultiSelectItem value="Growth">Growth</MultiSelectItem>
-              <MultiSelectItem value="Mature">Mature</MultiSelectItem>
-            </MultiSelectContent>
-          </MultiSelect>
-          {errors.businessStage && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.businessStage.message}
-            </span>
-          )}
+              <MultiSelectTrigger
+                selectedItems={selectedBusinessStages}
+                onRemoveItem={handleRemoveBusinessStage}
+              >
+                <MultiSelectValue placeholder="Select business stage" />
+              </MultiSelectTrigger>
+              <MultiSelectContent>
+                <MultiSelectItem value="Idea">Idea</MultiSelectItem>
+                <MultiSelectItem value="Startup">Startup</MultiSelectItem>
+                <MultiSelectItem value="Growth">Growth</MultiSelectItem>
+                <MultiSelectItem value="Mature">Mature</MultiSelectItem>
+              </MultiSelectContent>
+            </MultiSelect>
+            {errors.businessStage && (
+              <span className="col-span-2 text-[10px] text-red-500">
+                {errors.businessStage.message}
+              </span>
+            )}
+          </div>
         </div>
 
-        <div>
-          <Input
-            className=""
-            label="Industry (Optional)"
-            placeholder="select Industry"
-            type="text"
-            {...register("industry")}
-          />
-          {errors.industry && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.industry.message}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <Input
-            className=""
-            label="Business website (Optional)"
-            placeholder="Input your website link"
-            type="text"
-            {...register("website", {
-              pattern: {
-                value:
-                  /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-                message: "Please enter a valid URL",
-              },
-            })}
-          />
-          {errors.website && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.website.message}
-            </span>
-          )}
+        <div className="flex flex-col">
+          <label className="block mb-1 text-[10px] font-medium">
+            Investment Range
+          </label>
+          <div className="grid md:grid-cols-2 w-full gap-4">
+            <CurrencyAmountInput
+              tag="Min"
+              amount={min}
+              onAmountChange={setMin}
+              currency={currency}
+              onCurrencyChange={setCurrency}
+            />
+            <CurrencyAmountInput
+              tag="Max"
+              amount={max}
+              onAmountChange={setMax}
+              currency={currency}
+              onCurrencyChange={setCurrency}
+            />
+          </div>
         </div>
       </form>
     );

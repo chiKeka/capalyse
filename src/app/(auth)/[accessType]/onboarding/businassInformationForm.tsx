@@ -27,6 +27,7 @@ type Props = {};
 
 type BusinassInformationFormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
+  onFinish?: () => void;
 };
 const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
   (props, ref) => {
