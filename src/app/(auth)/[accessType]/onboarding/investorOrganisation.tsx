@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
 import { investorOrg } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -27,6 +26,7 @@ type Props = {};
 type InvestmentPreferenceormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
+  onSuccess?: () => void;
 };
 
 const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
@@ -70,11 +70,11 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       };
       console.log("SUBMIT PAYLOAD:", payload); // Log payload for user to see
       investor_org_info.mutateAsync(payload, {
-        onSuccess: () =>
-          router.push(
-            routes?.[authState?.role?.toLowerCase() as keyof typeof routes]
-              ?.root
-          ),
+        onSuccess: () => {
+          if (props.onSuccess) {
+            props.onSuccess();
+          }
+        },
         onError: (error: any) => console.log(error),
       });
     };
