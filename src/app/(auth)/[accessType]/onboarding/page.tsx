@@ -1,6 +1,7 @@
 "use client";
 
 import AuthLayout from "@/components/layout/auth";
+import AssessmentReadiness from "@/components/sections/ReadinessAssessment";
 import Button from "@/components/ui/Button";
 import {
   Dialog,
@@ -99,7 +100,7 @@ const Page = () => {
     ],
     investor: [
       { id: 1, label: "Personal Information" },
-      { id: 2, label: "Ivestment Preference" },
+      { id: 2, label: "Investment Preference" },
       { id: 3, label: "Organisation Profile" },
     ],
     organisation: [{ id: 1, label: "" }],
@@ -174,7 +175,8 @@ const Page = () => {
     return "Next";
   };
 
-  const [showSuccessDialog, setShowSuccessDialog] = useState(true);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showReadiness, setShowReadiness] = useState(false);
   const dashboardUrl =
     routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
       ?.root;
@@ -240,24 +242,48 @@ const Page = () => {
         </div>
       </div>
 
-      <Dialog  open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="max-w-xl">
-          <DialogTitle>Success!</DialogTitle>
-          <DialogDescription>
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="md:w-fit flex flex-col items-center p-3">
+          <DialogTitle>
+            <div className="gap-2 flex flex-col">
+              <img
+                src={
+                  authState?.role?.toLowerCase() === "organisation"
+                    ? "/icons/pendingCheck.svg"
+                    : "/icons/successCheck.svg"
+                }
+              />
+              <div
+                className={`${
+                  authState?.role?.toLowerCase() === "organisation"
+                    ? "text-[#D3931C]"
+                    : "text-green"
+                }`}
+              >
+                {authState?.role?.toLowerCase() === "organisation"
+                  ? "Pending Verification"
+                  : "Success!"}
+              </div>
+            </div>
+          </DialogTitle>
+          <DialogDescription className="text-sm w-full max-w-sm font-normal text-center">
             {authState?.role?.toLowerCase() === "sme"
               ? "You have successfully created your account. You can start the Investment Readiness Assessment or you can go straight to your dashboard."
               : authState?.role?.toLowerCase() === "investor"
               ? "Welcome Investor! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete."
               : "We're reviewing your details. You'll get an email once verification is complete."}
           </DialogDescription>
-          <DialogFooter>
+          <DialogFooter className="!flex w-full max-w-sm !flex-col">
             <Button variant="primary" onClick={() => router.push(dashboardUrl)}>
               Go to Dashboard
             </Button>
             {authState?.role?.toLowerCase() === "sme" && (
               <Button
                 variant="secondary"
-                onClick={() => router.push("/sme/readiness")} // Update this path as needed
+                onClick={() => {
+                  setShowSuccessDialog(false);
+                  setShowReadiness(true);
+                }}
               >
                 Start Assessment
               </Button>
@@ -265,6 +291,10 @@ const Page = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AssessmentReadiness
+        setIsOpen={setShowReadiness}
+        isOpen={showReadiness}
+      />
     </AuthLayout>
   );
 };

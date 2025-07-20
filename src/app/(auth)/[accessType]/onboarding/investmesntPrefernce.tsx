@@ -51,6 +51,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       setValue,
       watch,
       formState: { errors },
+      setError,
     } = useForm<
       InvestmentPreferenceInfo & {
         min: number | "";
@@ -63,11 +64,37 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       props.setLoading(investor_investment_info.isPending);
     }, [investor_investment_info.isPending, props]);
 
+    useEffect(() => {
+      register("investmentType", { required: "Investment type is required" });
+      register("targetRegions", { required: "Target region is required" });
+      register("targetIndustries", { required: "Target industry is required" });
+      register("businessStage", { required: "Business stage is required" });
+    }, [register]);
+
     useImperativeHandle(ref, () => ({
       submit: () => {
         return new Promise((resolve) => {
           handleSubmit(
             (values) => {
+              // Custom validation: min < max
+              if (
+                Number.isFinite(min) &&
+                Number.isFinite(max) &&
+                typeof min === "number" &&
+                typeof max === "number" &&
+                min >= max
+              ) {
+                setError("min", {
+                  type: "manual",
+                  message: "Min must be less than Max",
+                });
+                setError("max", {
+                  type: "manual",
+                  message: "Max must be greater than Min",
+                });
+                resolve(false);
+                return;
+              }
               onSubmit(values);
               resolve(true);
             },
@@ -291,20 +318,34 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
             Investment Range
           </label>
           <div className="grid md:grid-cols-2 w-full gap-4">
-            <CurrencyAmountInput
-              tag="Min"
-              amount={min}
-              onAmountChange={setMin}
-              currency={currency}
-              onCurrencyChange={setCurrency}
-            />
-            <CurrencyAmountInput
-              tag="Max"
-              amount={max}
-              onAmountChange={setMax}
-              currency={currency}
-              onCurrencyChange={setCurrency}
-            />
+            <div>
+              <CurrencyAmountInput
+                tag="Min"
+                amount={min}
+                onAmountChange={setMin}
+                currency={currency}
+                onCurrencyChange={setCurrency}
+              />
+              {errors.min && (
+                <span className="col-span-2 text-[10px] text-red-500">
+                  {errors.min.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <CurrencyAmountInput
+                tag="Max"
+                amount={max}
+                onAmountChange={setMax}
+                currency={currency}
+                onCurrencyChange={setCurrency}
+              />
+              {errors.max && (
+                <span className="col-span-2 text-[10px] text-red-500">
+                  {errors.max.message}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </form>
