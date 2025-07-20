@@ -39,7 +39,12 @@ const PersonalInfoForm = forwardRef((props, ref) => {
     const { email, ...data } = values;
     personal_information.mutateAsync(data, {
       onSuccess: () => setStep((prev) => prev + 1),
-      onError: (error: any) => toast.error(error?.error),
+      onError: (error: any) =>
+        toast.error(
+          error?.error?.issues
+            ?.map((issue: any) => issue?.message)
+            ?.join(',') ?? error?.error
+        ),
     });
   };
 
@@ -132,8 +137,11 @@ const PersonalInfoForm = forwardRef((props, ref) => {
           Country Of Residence
         </label>
         <CountrySelect
-          value={selectedCountryName}
           autoComplete="new-country"
+          {...register('countryOfResidence', {
+            required: 'Country of residence is required',
+          })}
+          value={selectedCountryName}
           inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
           onChange={(country: any) => {
             console.log({ country });
@@ -169,7 +177,11 @@ const PersonalInfoForm = forwardRef((props, ref) => {
         <StateSelect
           autoComplete="new-state"
           countryid={Number(selectedCountryId)}
+          {...register('stateOfResidence', {
+            required: 'State of residence is required',
+          })}
           value={selectedStateName}
+          required
           inputClassName="w-full px-4 py-2 focus:!border-none focus:!ring-0 !border-none"
           onChange={(state: any) => {
             if (state && typeof state === 'object' && 'name' in state) {

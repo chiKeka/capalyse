@@ -8,14 +8,15 @@ import WhoWeServe from '@/components/sections/whoWeServe';
 import WhyCapalyse from '@/components/sections/WhyCapalyse';
 import dynamic from 'next/dynamic';
 
+/**
+ * Dynamically import the Resources section to prevent hydration errors.
+ * This disables SSR for the Resources component.
+ */
+const Resources = dynamic(() => import('@/components/sections/Resources'), {
+  ssr: false,
+});
+
 export default function CapalyseLanding() {
-  /**
-   * Dynamically import the Resources section to prevent hydration errors.
-   * This disables SSR for the Resources component.
-   */
-  const Resources = dynamic(() => import('@/components/sections/Resources'), {
-    ssr: false,
-  });
   return (
     <>
       {/* Hero Section */}
