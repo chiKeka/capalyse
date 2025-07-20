@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 
 export function formatCurrency(
   value: number,
@@ -47,9 +48,12 @@ export const handleImageUpload = async (
     'upload_preset',
     process.env.NEXT_PUBLIC_CLOUDINARY_PRESET as string
   );
-  await axios.post(uploadUrl, formData).then(({ data }) => {
-    console.log({ data });
-    onSuccess?.(data);
-    return data?.secure_url;
-  });
+  await axios
+    .post(uploadUrl, formData)
+    .then(({ data }) => {
+      console.log({ data });
+      onSuccess?.(data);
+      return data?.secure_url;
+    })
+    .catch((err) => toast.error(err?.message));
 };

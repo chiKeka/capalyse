@@ -14,6 +14,7 @@ import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 type Props = {};
 
 function page({}: Props) {
@@ -35,27 +36,30 @@ function page({}: Props) {
     const validationErrors = validateAuthForm(form);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
-    logninMutation.mutateAsync(form).then((res) => {
-      const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
-      setAuth(user);
-      Cookies.set('access_token', token);
-      Cookies.set('refresh_token', newRefreshToken);
-      Cookies.set(
-        'token_exp',
-        Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
-      );
-      localStorage.setItem('onBoardignData', JSON.stringify(res?.data));
-      const rootRoute = getKeyByValue(UserType, user?.role);
-      if (rootRoute) {
-        if (user.profileCompletionStep <= 2) {
-          router.push(`/${rootRoute}/onboarding`);
-        } else {
-          router.push(
-            routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
-          );
+    logninMutation
+      .mutateAsync(form)
+      .then((res) => {
+        const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
+        setAuth(user);
+        Cookies.set('access_token', token);
+        Cookies.set('refresh_token', newRefreshToken);
+        Cookies.set(
+          'token_exp',
+          Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
+        );
+        localStorage.setItem('onBoardignData', JSON.stringify(res?.data));
+        const rootRoute = getKeyByValue(UserType, user?.role);
+        if (rootRoute) {
+          if (user.profileCompletionStep <= 2) {
+            router.push(`/${rootRoute}/onboarding`);
+          } else {
+            router.push(
+              routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
+            );
+          }
         }
-      }
-    });
+      })
+      .catch((err) => toast.error(err?.error));
   };
 
   return (
