@@ -47,7 +47,17 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
     }, [smes_bussiness_info.isPending, props]);
     useImperativeHandle(ref, () => ({
       submit: () => {
-        handleSubmit(onSubmit)();
+        return new Promise((resolve) => {
+          handleSubmit(
+            (values) => {
+              onSubmit(values);
+              resolve(true);
+            },
+            () => {
+              resolve(false);
+            }
+          )();
+        });
       },
       isLoading: smes_bussiness_info.isPending,
     }));
@@ -147,15 +157,21 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             </span>
           )}
         </div>
-
         <div>
-          <Input
-            className=""
-            label="Industry (Optional)"
-            placeholder="select Industry"
-            type="text"
-            {...register("industry")}
-          />
+          <label className="block mb-1 text-sm font-medium">
+            Industry (Optional)
+          </label>
+          <Select onValueChange={(val) => setValue("industry", val)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Industry" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Health">Health</SelectItem>
+              <SelectItem value="Ict">Information</SelectItem>
+              <SelectItem value="Telcom">Tel Communication</SelectItem>
+              <SelectItem value="Agro">Agriculture</SelectItem>
+            </SelectContent>
+          </Select>
           {errors.industry && (
             <span className="col-span-2 text-[10px] text-red-500">
               {errors.industry.message}

@@ -45,32 +45,38 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
   const isFirstStep = onboardSteps === 1;
-  const isLastStep = onboardSteps === 2;
+  const isSecond = onboardSteps === 2;
   const isThirdStep = onboardSteps === 3;
 
-  const handleNext = () => {
+  const handleNext = async () => {
     setButtonLoading(true);
     const role = authState?.role?.toLowerCase();
     const step = authState?.profileCompletionStep;
+    let valid = true;
     if (role === "investor") {
       if (step === 1) {
-        personalInfoFormRef.current?.submit();
+        valid = (await personalInfoFormRef.current?.submit()) ?? false;
       } else if (step === 2) {
-        investmentPreferenceRef.current?.submit();
+        valid = (await investmentPreferenceRef.current?.submit()) ?? false;
       } else if (step === 3) {
-        investorOrganisationRef.current?.submit();
+        valid = (await investorOrganisationRef.current?.submit()) ?? false;
       }
     } else if (role === "sme") {
       if (step === 1) {
-        personalInfoFormRef.current?.submit();
+        valid = (await personalInfoFormRef.current?.submit()) ?? false;
       } else if (step === 2) {
-        smeBusinessInfoFormRef.current?.submit();
+        valid = (await smeBusinessInfoFormRef.current?.submit()) ?? false;
       }
     } else if (role === "organisation") {
       if (step === 3) {
-        investorOrganisationRef.current?.submit();
+        valid = (await investorOrganisationRef.current?.submit()) ?? false;
       }
     }
+    if (!valid) {
+      setButtonLoading(false);
+      return;
+    }
+    // Only proceed if valid (if you have additional logic, add here)
   };
 
   useEffect(() => {
@@ -148,6 +154,22 @@ const Page = () => {
     ),
   };
 
+  console.log(authState?.role);
+  const getPrimaryButtonLabel = () => {
+    const role = authState?.role?.toLowerCase();
+    const step = authState?.profileCompletionStep;
+    if (role === "sme") {
+      return step === 2 ? "Submit" : "Next";
+    }
+    if (role === "investor") {
+      return step === 3 ? "Submit" : "Next";
+    }
+    if (role === "organisation") {
+      return step === 1 ? "Submit" : "Next";
+    }
+    return "Next";
+  };
+
   return (
     <AuthLayout
       layoutSize="lg:max-w-4xl"
@@ -204,7 +226,7 @@ const Page = () => {
             onClick={handleNext}
             state={buttonLoading || loading ? "loading" : undefined}
           >
-            {isLastStep ? "Submit" : "Next"}
+            {getPrimaryButtonLabel()}
           </Button>
         </div>
       </div>

@@ -48,7 +48,17 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
 
     useImperativeHandle(ref, () => ({
       submit: () => {
-        handleSubmit(onSubmit)();
+        return new Promise((resolve) => {
+          handleSubmit(
+            (values) => {
+              onSubmit(values);
+              resolve(true);
+            },
+            () => {
+              resolve(false);
+            }
+          )();
+        });
       },
       isLoading: investor_org_info.isPending,
     }));

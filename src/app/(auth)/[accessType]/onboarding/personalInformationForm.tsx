@@ -44,14 +44,19 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       props.setLoading(personal_information.isPending);
     }, [personal_information.isPending, props]);
 
-
-
-
-
-
     useImperativeHandle(ref, () => ({
       submit: () => {
-        handleSubmit(onSubmit)();
+        return new Promise((resolve) => {
+          handleSubmit(
+            (values) => {
+              onSubmit(values);
+              resolve(true);
+            },
+            () => {
+              resolve(false);
+            }
+          )();
+        });
       },
       isLoading: personal_information.isPending,
     }));
