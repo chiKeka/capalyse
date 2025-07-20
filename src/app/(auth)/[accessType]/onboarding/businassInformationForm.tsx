@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
@@ -28,6 +27,7 @@ type Props = {};
 type BusinassInformationFormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
+  onSuccess?: () => void;
 };
 const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
   (props, ref) => {
@@ -64,11 +64,11 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
     const router = useRouter();
     const onSubmit = (data: SMEsBusinessInfo) => {
       smes_bussiness_info.mutateAsync(data, {
-        onSuccess: () =>
-          router.push(
-            routes?.[authState?.role?.toLowerCase() as keyof typeof routes]
-              ?.root
-          ),
+        onSuccess: () => {
+          if (props.onSuccess) {
+            props.onSuccess();
+          }
+        },
         onError: (error) => console.log(error),
       });
     };

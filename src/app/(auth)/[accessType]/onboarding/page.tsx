@@ -2,6 +2,13 @@
 
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { routes } from "@/lib/routes";
 import { getKeyByValue } from "@/lib/uitils/fns";
@@ -11,6 +18,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BusinassInformationForm from "./businassInformationForm";
+import DevelopmentOrganisation from "./developmentOrganisation";
 import InvestmentPreference from "./investmesntPrefernce";
 import InvestorOrganisation from "./investorOrganisation";
 
@@ -112,6 +120,7 @@ const Page = () => {
             ref={smeBusinessInfoFormRef}
             setLoading={setLoading}
             onFinish={() => setButtonLoading(false)}
+            onSuccess={() => setShowSuccessDialog(true)}
           />
         )}
       </>
@@ -137,19 +146,14 @@ const Page = () => {
             ref={investorOrganisationRef}
             setLoading={setLoading}
             onFinish={() => setButtonLoading(false)}
+            onSuccess={() => setShowSuccessDialog(true)}
           />
         )}
       </>
     ),
     organisation: (
       <>
-        {authState?.profileCompletionStep === 1 && (
-          <InvestorOrganisation
-            ref={investorOrganisationRef}
-            setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
-          />
-        )}
+        {authState?.profileCompletionStep === 1 && <DevelopmentOrganisation />}
       </>
     ),
   };
@@ -169,6 +173,11 @@ const Page = () => {
     }
     return "Next";
   };
+
+  const [showSuccessDialog, setShowSuccessDialog] = useState(true);
+  const dashboardUrl =
+    routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
+      ?.root;
 
   return (
     <AuthLayout
@@ -230,6 +239,32 @@ const Page = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog  open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="max-w-xl">
+          <DialogTitle>Success!</DialogTitle>
+          <DialogDescription>
+            {authState?.role?.toLowerCase() === "sme"
+              ? "You have successfully created your account. You can start the Investment Readiness Assessment or you can go straight to your dashboard."
+              : authState?.role?.toLowerCase() === "investor"
+              ? "Welcome Investor! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete."
+              : "We're reviewing your details. You'll get an email once verification is complete."}
+          </DialogDescription>
+          <DialogFooter>
+            <Button variant="primary" onClick={() => router.push(dashboardUrl)}>
+              Go to Dashboard
+            </Button>
+            {authState?.role?.toLowerCase() === "sme" && (
+              <Button
+                variant="secondary"
+                onClick={() => router.push("/sme/readiness")} // Update this path as needed
+              >
+                Start Assessment
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AuthLayout>
   );
 };
