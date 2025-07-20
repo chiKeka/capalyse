@@ -174,7 +174,7 @@ const Page = () => {
     return "Next";
   };
 
-  const [showSuccessDialog, setShowSuccessDialog] = useState(true);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const dashboardUrl =
     routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
       ?.root;
