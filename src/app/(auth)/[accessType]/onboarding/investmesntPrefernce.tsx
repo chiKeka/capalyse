@@ -106,7 +106,6 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       const newTypes = selectedInvestmentTypes.includes(value)
         ? selectedInvestmentTypes.filter((item) => item !== value)
         : [...selectedInvestmentTypes, value];
-      console.log("New investment types:", newTypes);
       setSelectedInvestmentTypes(newTypes);
       setValue("investmentType", newTypes);
     };
@@ -137,8 +136,6 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         className="grid md:grid-cols-2 w-full gap-4"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* Test button to verify console and handlers work */}
-
         <div>
           <label className="block mb-1 text-sm font-medium">
             Investment Type
@@ -162,7 +159,6 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
             </span>
           )}
         </div>
-
         <div>
           <label className="block mb-1 text-sm font-normal">
             Target Regions

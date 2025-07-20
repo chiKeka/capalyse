@@ -21,46 +21,90 @@ const MultiSelectTrigger = React.forwardRef<
   (
     { className, children, selectedItems = [], onRemoveItem, ...props },
     ref
-  ) => (
-    <SelectPrimitive.Trigger
-      ref={ref}
-      className={cn(
-        "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
-      <div className="flex flex-wrap gap-1 flex-1">
-        {selectedItems.length > 0 ? (
-          selectedItems.map((item) => (
-            <span
-              key={item}
-              className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-xs"
-            >
-              {item}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log("Remove button clicked for:", item);
-                  onRemoveItem?.(item);
-                }}
-                className="ml-1 rounded-full z-30 p-0.5 outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-muted-foreground/20"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))
-        ) : (
-          <span className="text-muted-foreground">Select options...</span>
+  ) => {
+    const [isRemoving, setIsRemoving] = React.useState(false);
+
+    const handleRemoveItem = (item: string) => {
+      console.log("X button clicked for item:", item);
+      console.log("Current selectedItems:", selectedItems);
+      setIsRemoving(true);
+      console.log("About to call onRemoveItem with:", item);
+      onRemoveItem?.(item);
+      console.log("onRemoveItem called successfully");
+      // Reset after a short delay
+      setTimeout(() => setIsRemoving(false), 100);
+    };
+
+    return (
+      <SelectPrimitive.Trigger
+        ref={ref}
+        className={cn(
+          "flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
         )}
-      </div>
-      <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-4 w-4 opacity-50" />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
-  )
+        onPointerDown={(e) => {
+          if (isRemoving) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          props.onPointerDown?.(e);
+        }}
+        onClick={(e) => {
+          if (isRemoving) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          props.onClick?.(e);
+        }}
+        {...props}
+      >
+        <div className="flex flex-wrap gap-1 flex-1">
+          {selectedItems.length > 0 ? (
+            selectedItems.map((item) => (
+              <span
+                key={item}
+                className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-1 text-xs"
+              >
+                {item}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                    handleRemoveItem(item);
+                  }}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.nativeEvent.stopImmediatePropagation();
+                  }}
+                  className="ml-1 rounded-full z-30 p-0.5 outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2 hover:bg-muted-foreground/20"
+                  title={`Remove ${item}`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))
+          ) : (
+            <span className="text-muted-foreground">Select options...</span>
+          )}
+        </div>
+        <SelectPrimitive.Icon asChild>
+          <ChevronDown className="h-4 w-4 opacity-50" />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+    );
+  }
 );
 MultiSelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
