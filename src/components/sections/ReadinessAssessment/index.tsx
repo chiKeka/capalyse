@@ -9,6 +9,7 @@ import { ProgressBar } from './ProgressBar';
 import { Navigation } from './Navigation';
 import { Section, SectionData, useReadinessForm } from './useReadinessForm';
 import { handleImageUpload } from '@/lib/uitils/fns';
+import { useState } from 'react';
 
 const AssessmentReadiness = ({
   isOpen,
@@ -37,18 +38,42 @@ const AssessmentReadiness = ({
     getSectionStatus,
     handleCurrencyAmountChange,
     handleCurrencyTypeChange,
+    updateSmeFinancialAssessment,
+    updateSmeBusinessAssessment,
+    updateSmeOperationalAssessment,
+    updateSmeMarketAssessment,
+    updateSmeComplianceAssessment,
   } = useReadinessForm(sections);
+
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
 
   const renderSectionedInput = () => {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const currentSections = sectionedData[fieldId] || [];
     const error = errors[fieldId];
 
+    // Dynamic keys from question config
+    const categoryKey = currentQuestionData.categoryKey || 'category';
+    const amountKey = currentQuestionData.amountKey || 'amount';
+    const dueDateKey = currentQuestionData.categoryDueDateKey;
+
     // Initialize with at least 2 sections if none exist
     if (currentSections.length === 0) {
       const initialSections: Section[] = [
-        { id: 1, category: '', amount: '', currency: 'NGN' },
-        { id: 2, category: '', amount: '', currency: 'NGN' },
+        {
+          id: 1,
+          [categoryKey]: '',
+          [amountKey]: '',
+          currency: 'NGN',
+          ...(dueDateKey ? { [dueDateKey]: '' } : {}),
+        },
+        {
+          id: 2,
+          [categoryKey]: '',
+          [amountKey]: '',
+          currency: 'NGN',
+          ...(dueDateKey ? { [dueDateKey]: '' } : {}),
+        },
       ];
       setSectionedData((prev) => ({
         ...prev,
@@ -62,32 +87,32 @@ const AssessmentReadiness = ({
         {currentSections.map((section, index) => (
           <div key={section.id} className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category
+              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                {categoryKey}
               </label>
               <input
                 type="text"
-                value={section.category}
+                value={section[categoryKey] || ''}
                 onChange={(e) =>
-                  handleSectionChange(section.id, 'category', e.target.value)
+                  handleSectionChange(section.id, categoryKey, e.target.value)
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Enter category"
+                placeholder={`Enter ${categoryKey}`}
               />
             </div>
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Amount
+              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                {amountKey}
               </label>
               <div className="relative">
                 <input
                   type="number"
-                  value={section.amount}
+                  value={section[amountKey] || ''}
                   onChange={(e) =>
-                    handleSectionChange(section.id, 'amount', e.target.value)
+                    handleSectionChange(section.id, amountKey, e.target.value)
                   }
                   className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="0.00"
+                  placeholder={`Enter ${amountKey}`}
                 />
                 <select
                   value={section.currency}
@@ -112,6 +137,22 @@ const AssessmentReadiness = ({
                 </button>
               )}
             </div>
+            {dueDateKey && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                  {dueDateKey}
+                </label>
+                <input
+                  type="date"
+                  value={section[dueDateKey] || ''}
+                  onChange={(e) =>
+                    handleSectionChange(section.id, dueDateKey, e.target.value)
+                  }
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={`Enter ${dueDateKey}`}
+                />
+              </div>
+            )}
           </div>
         ))}
 
@@ -140,39 +181,20 @@ const AssessmentReadiness = ({
 
     if (currentQuestionData.id === 'trade_involvement') {
       const fieldId = `${currentSection}-${currentQuestion}`;
-      const selectedRegions = formData[fieldId]?.regions || [];
-      const uploads = formData[fieldId]?.uploads || {};
+      const selectedRegions = formData[fieldId] || [];
       const error = errors[fieldId];
 
       function handleRegionToggle(region: string) {
         setFormData((prev) => {
-          const prevRegions = prev[fieldId]?.regions || [];
+          const prevRegions = prev[fieldId] || [];
           const newRegions = prevRegions.includes(region)
             ? prevRegions.filter((r: string) => r !== region)
             : [...prevRegions, region];
           return {
             ...prev,
-            [fieldId]: {
-              ...prev[fieldId],
-              regions: newRegions,
-              uploads: prev[fieldId]?.uploads || {},
-            },
+            [fieldId]: newRegions,
           };
         });
-      }
-
-      function handleUploadChange(key: string, file: File | null) {
-        setFormData((prev) => ({
-          ...prev,
-          [fieldId]: {
-            ...prev[fieldId],
-            regions: prev[fieldId]?.regions || [],
-            uploads: {
-              ...prev[fieldId]?.uploads,
-              [key]: file,
-            },
-          },
-        }));
       }
 
       return (
@@ -187,12 +209,12 @@ const AssessmentReadiness = ({
                   onClick={() => handleRegionToggle(region)}
                   className={`px-6 py-2 rounded-full border transition
                     ${
-                      selectedRegions.includes(region)
+                      selectedRegions?.includes(region)
                         ? 'bg-primary-green-6 text-white border-primary-green-6'
                         : 'bg-white text-gray-500 border-gray-300'
                     }
                     focus:outline-none focus:ring-2 focus:ring-green-500`}
-                  aria-pressed={selectedRegions.includes(region)}
+                  aria-pressed={selectedRegions?.includes(region)}
                 >
                   {region}
                 </button>
@@ -204,7 +226,14 @@ const AssessmentReadiness = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {currentQuestionData.uploads?.map((upload: any) => (
               <div key={upload.key}>
-                <div className="mb-2 font-medium">Upload {upload.label}</div>
+                <div className="mb-2 font-medium flex items-center gap-2">
+                  Upload {upload.label}
+                  {uploading[upload.key] && (
+                    <span className="ml-2 text-xs text-gray-500 animate-pulse">
+                      Uploading...
+                    </span>
+                  )}
+                </div>
                 <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
                   <span className="flex items-center gap-2 text-gray-700">
                     <span className="flex items-center justify-center">
@@ -217,14 +246,38 @@ const AssessmentReadiness = ({
                     type="file"
                     className="hidden"
                     accept=".png,.pdf,.doc,.docx,.jpg,.jpeg"
-                    onChange={(e) =>
-                      handleUploadChange(
-                        upload.key,
-                        e.target.files ? e.target.files[0] : null
-                      )
-                    }
+                    onChange={async (e) => {
+                      const file = e.target.files ? e.target.files[0] : null;
+                      if (!file) return;
+                      await handleFileUpload(file, upload.key);
+                    }}
                   />
                 </label>
+                {/* Show uploaded file name if present */}
+                {(() => {
+                  const uploadArr =
+                    formData[
+                      `${currentSection}-${currentQuestion}-uploads-${upload.key}`
+                    ];
+                  if (Array.isArray(uploadArr) && uploadArr.length > 0) {
+                    const fileObj = uploadArr[uploadArr.length - 1];
+                    if (fileObj?.display_name) {
+                      return (
+                        <div className="text-xs text-green-700 mt-2">
+                          Uploaded: {fileObj.display_name}
+                        </div>
+                      );
+                    } else if (fileObj?.url) {
+                      // fallback to url if display_name is not present
+                      return (
+                        <div className="text-xs text-green-700 mt-2">
+                          Uploaded: {fileObj.url.split('/').pop()}
+                        </div>
+                      );
+                    }
+                  }
+                  return null;
+                })()}
                 <p className="text-xs text-gray-400 mt-2">{upload.formats}</p>
               </div>
             ))}
@@ -396,7 +449,7 @@ const AssessmentReadiness = ({
         return (
           <div className="space-y-2">
             <input
-              type="text"
+              type={currentQuestionData.type === 'number' ? 'number' : 'text'}
               value={value}
               onChange={(e) => handleInputChange(e.target.value)}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
@@ -411,11 +464,33 @@ const AssessmentReadiness = ({
 
   const progressPercentage = ((currentQuestion + 1) / totalQuestions) * 100;
 
-  async function handleFileUpload(file: File) {
+  async function handleFileUpload(file: File, uploadKey?: string) {
+    if (uploadKey) setUploading((prev) => ({ ...prev, [uploadKey]: true }));
     await handleImageUpload(file, (res: any) => {
       const fieldId = `${currentSection}-${currentQuestion}`;
       const uploadName = currentQuestionData.uploadName;
-      if (uploadName) {
+      // For trade_involvement (multi-upload)
+      if (
+        (currentQuestionData.id === 'trade_involvement' &&
+          uploadKey === 'export_license') ||
+        uploadKey === 'regional_permit' ||
+        uploadKey === 'trade_certifications'
+      ) {
+        setFormData((prev: any) => {
+          const prevUploads =
+            prev[`${currentSection}-${currentQuestion}-uploads-${uploadKey}`] ||
+            [];
+          // Remove any previous upload for this key
+          const filtered = prevUploads.filter((u: any) => u?.key !== uploadKey);
+          return {
+            ...prev,
+            [`${currentSection}-${currentQuestion}-uploads-${uploadKey}`]: [
+              ...filtered,
+              res?.secure_url ? { key: uploadKey, url: res?.secure_url } : null,
+            ].filter(Boolean),
+          };
+        });
+      } else if (uploadName) {
         setFormData((prev: any) => ({
           ...prev,
           [fieldId]: prev[fieldId],
@@ -425,6 +500,7 @@ const AssessmentReadiness = ({
           ],
         }));
       }
+      if (uploadKey) setUploading((prev) => ({ ...prev, [uploadKey]: false }));
     });
   }
 
@@ -490,7 +566,15 @@ const AssessmentReadiness = ({
                           <span className="flex items-center justify-center">
                             <CIcons.uploadIcon />
                           </span>
-                          Upload document
+                          {uploading[
+                            currentQuestionData.uploadName as string
+                          ] ? (
+                            <span className="ml-2 text-xs text-gray-500 animate-pulse">
+                              Uploading...
+                            </span>
+                          ) : (
+                            'Upload document'
+                          )}
                         </span>
                         <span className="text-gray-500 text-xl">+</span>
                         <input
@@ -500,7 +584,10 @@ const AssessmentReadiness = ({
                           onChange={async (e) => {
                             const file = e.target.files?.[0];
                             if (!file) return;
-                            await handleFileUpload(file);
+                            await handleFileUpload(
+                              file,
+                              currentQuestionData.uploadName
+                            );
                           }}
                         />
                       </label>
@@ -539,6 +626,13 @@ const AssessmentReadiness = ({
                   handleNext={handleNext}
                   totalQuestions={totalQuestions}
                   sections={sections}
+                  loading={
+                    updateSmeFinancialAssessment?.isPending ||
+                    updateSmeBusinessAssessment?.isPending ||
+                    updateSmeOperationalAssessment?.isPending ||
+                    updateSmeMarketAssessment?.isPending ||
+                    updateSmeComplianceAssessment?.isPending
+                  }
                 />
               </div>
             </div>
@@ -554,6 +648,7 @@ export default AssessmentReadiness;
 const sections: SectionData[] = [
   {
     name: 'Financial Data',
+    key: 'financial',
     totalQuestions: 9,
     questions: [
       {
@@ -573,6 +668,8 @@ const sections: SectionData[] = [
         title: 'What are your business expenses every month?',
         type: 'currency',
         hasSections: true,
+        categoryKey: 'category',
+        amountKey: 'amount',
         required: true,
         name: 'monthlyExpenses',
         hasUpload: true,
@@ -586,6 +683,8 @@ const sections: SectionData[] = [
         type: 'percentage',
         required: true,
         hasSections: true,
+        categoryKey: 'type',
+        amountKey: 'value',
         hasUpload: true,
         name: 'businessAssets',
         uploadName: 'assetDocuments',
@@ -599,6 +698,8 @@ const sections: SectionData[] = [
         required: true,
         hasSections: true,
         hasUpload: true,
+        categoryKey: 'type',
+        amountKey: 'amount',
         name: 'businessLiabilities',
         uploadName: 'liabilityDocuments',
         uploadText: 'Upload loan agreements or debt summary (if available)',
@@ -619,6 +720,9 @@ const sections: SectionData[] = [
         hasSections: true,
         hasUpload: true,
         name: 'equityReceived',
+        categoryKey: 'investorName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'date',
         uploadName: 'equityDocuments',
         uploadText: 'Upload Shareholder agreements or proof of investment',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
@@ -645,6 +749,9 @@ const sections: SectionData[] = [
         hasUpload: true,
         name: 'accountsReceivable',
         uploadName: 'receivableDocuments',
+        categoryKey: 'customerName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'dueDate',
         uploadText: 'Upload invoicing records or customer payment report',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -658,6 +765,9 @@ const sections: SectionData[] = [
         hasSections: true,
         hasUpload: true,
         name: 'accountsPayable',
+        categoryKey: 'supplierName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'dueDate',
         uploadName: 'payableDocuments',
         uploadText: 'Upload supplier bills or accounts payable record',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
@@ -666,10 +776,9 @@ const sections: SectionData[] = [
         id: 'accounting_system',
         title:
           'How much capital (initial money) did you start your business with?',
-        type: 'select',
-        options: ['QuickBooks', 'Xero', 'Manual spreadsheets', 'Other', 'None'],
+        type: 'currency',
+        options: ['NGN', 'USD', 'EUR', 'GBP'],
         required: true,
-        hasSections: true,
         hasUpload: true,
         name: 'startingCapital',
         uploadName: 'startingCapitalDocuments',
@@ -682,6 +791,7 @@ const sections: SectionData[] = [
   {
     name: 'Business Information',
     totalQuestions: 6,
+    key: 'businessInfo',
     questions: [
       {
         id: 'ideal_customers',
@@ -698,7 +808,7 @@ const sections: SectionData[] = [
       {
         id: 'business_model',
         title: 'How many years has your business been operating?',
-        type: 'text',
+        type: 'number',
         placeholder: 'eg. 5 years',
         required: true,
         name: 'yearsOfOperation',
@@ -709,6 +819,7 @@ const sections: SectionData[] = [
         type: 'number',
         isTwoColumn: true,
         required: true,
+        name: 'fullTimeEmployees',
         col1Label: 'Full-time',
         col2Label: 'Part-time',
         col1Name: 'fullTimeEmployees',
@@ -752,11 +863,12 @@ const sections: SectionData[] = [
   {
     name: 'Operational Data',
     totalQuestions: 8,
+    key: 'operational',
     questions: [
       {
         id: 'customers',
         title: 'How many customers do you currently have?',
-        type: 'currency',
+        type: 'number',
         options: ['monthly', 'yearly'],
         placeholder: 'Enter Estimated number',
         required: true,
@@ -837,6 +949,7 @@ const sections: SectionData[] = [
   {
     name: 'Market Information',
     totalQuestions: 4,
+    key: 'market',
     questions: [
       {
         id: 'market_size',
@@ -868,14 +981,14 @@ const sections: SectionData[] = [
           'List key players in your market and what makes you different.',
         required: true,
         name: 'competitors',
-        uploadName: 'competitorDocuments',
       },
       {
         id: 'market_strategy',
         title: 'Is your market growing, stable, or shrinking?',
-        type: 'textarea',
+        type: 'select',
         placeholder: 'Provide an estimate or your personal observation.',
         required: true,
+        options: ['Growing', 'Stable', 'Shrinking'],
         name: 'marketTrend',
       },
     ],
@@ -883,6 +996,7 @@ const sections: SectionData[] = [
   {
     name: 'Compliance & Trade Readiness',
     totalQuestions: 2,
+    key: 'compliance',
     questions: [
       {
         id: 'regulatory_compliance',

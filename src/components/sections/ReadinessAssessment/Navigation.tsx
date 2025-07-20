@@ -7,6 +7,7 @@ interface NavigationProps {
   handleBack: () => void;
   handleNext: () => void;
   totalQuestions: number;
+  loading?: boolean;
   sections: { totalQuestions: number }[];
 }
 
@@ -26,6 +27,7 @@ export function Navigation({
   handleNext,
   totalQuestions,
   sections,
+  loading,
 }: NavigationProps) {
   return (
     <div className="flex justify-between items-center mt-auto">
@@ -39,7 +41,11 @@ export function Navigation({
         <ChevronLeft className="w-4 h-4" />
         <span>Back</span>
       </Button>
-      <Button onClick={handleNext} iconPosition="right">
+      <Button
+        state={loading ? 'loading' : 'default'}
+        onClick={handleNext}
+        iconPosition="right"
+      >
         <span>Next</span>
       </Button>
     </div>

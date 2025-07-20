@@ -4,30 +4,30 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useSmeAssessmentMutations = () => {
   const updateSmeFinancialAssessment = useMutation({
-    mutationFn: async (data): Promise<any> => {
+    mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('financial'), data);
     },
   });
 
   const updateSmeBusinessAssessment = useMutation({
-    mutationFn: async (data): Promise<any> => {
+    mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('business-info'), data);
     },
   });
 
   const updateSmeOperationalAssessment = useMutation({
-    mutationFn: async (data): Promise<any> => {
+    mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('operational'), data);
     },
   });
   const updateSmeMarketAssessment = useMutation({
-    mutationFn: async (data): Promise<any> => {
+    mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('market'), data);
     },
   });
 
   const updateSmeComplianceAssessment = useMutation({
-    mutationFn: async (data): Promise<any> => {
+    mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('compliance'), data);
     },
   });
@@ -43,12 +43,18 @@ export const useSmeAssessmentMutations = () => {
 export const useGetSmeAssesments = () => {
   return useQuery({
     queryKey: ['sme_assessment'],
-    queryFn: () => api.get(ApiEndPoints.All_Assessments),
+    queryFn: async () => {
+      const resp = await api.get(ApiEndPoints.All_Assessments);
+      return resp.data.data;
+    },
   });
 };
 export const useGetSmeAssesmentsProgress = () => {
   return useQuery({
     queryKey: ['sme_assessment_progress'],
-    queryFn: () => api.get(ApiEndPoints.SMEs_Assessments('progress')),
+    queryFn: async () => {
+      const resp = await api.get(ApiEndPoints.SMEs_Assessments('progress'));
+      return resp.data.data;
+    },
   });
 };

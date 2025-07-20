@@ -3,13 +3,14 @@ import {
   useGetSmeAssesmentsProgress,
   useSmeAssessmentMutations,
 } from '@/hooks/useSmeAssessments';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export interface Section {
   id: number;
-  category: string;
-  amount: string;
   currency: string;
+  [key: string]: any;
 }
 
 export interface FormData {
@@ -27,7 +28,7 @@ export interface Question {
   options?: string[];
   required: boolean;
   hasSections?: boolean;
-  name?: string;
+  name: string;
   hasUpload?: boolean;
   uploadText?: string;
   uploadFormats?: string;
@@ -38,6 +39,9 @@ export interface Question {
   col1Name?: string;
   col2Name?: string;
   uploadName?: string;
+  categoryKey?: string;
+  amountKey?: string;
+  categoryDueDateKey?: string;
   uploads?: Array<{
     label: string;
     key: string;
@@ -50,6 +54,7 @@ export interface SectionData {
   name: string;
   totalQuestions: number;
   questions: Question[];
+  key?: string;
 }
 
 /**
@@ -57,6 +62,8 @@ export interface SectionData {
  * @param sections The assessment sections data.
  */
 export function useReadinessForm(sections: SectionData[]) {
+  const pathName = usePathname();
+  const router = useRouter();
   const { data: assessments } = useGetSmeAssesments();
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
   const [currentSection, setCurrentSection] = useState(0);
@@ -77,6 +84,26 @@ export function useReadinessForm(sections: SectionData[]) {
     updateSmeMarketAssessment,
     updateSmeComplianceAssessment,
   } = useSmeAssessmentMutations();
+
+  // On mount, skip completed sections
+  useEffect(() => {
+    if (
+      assessmentsProgress &&
+      Array.isArray(assessmentsProgress.completedSections) &&
+      sections.some((s) => s.key)
+    ) {
+      const completed = assessmentsProgress.completedSections;
+      const firstIncompleteIdx = sections.findIndex(
+        (s) => !completed.includes(s.key)
+      );
+      if (firstIncompleteIdx !== -1 && firstIncompleteIdx !== currentSection) {
+        setCurrentSection(firstIncompleteIdx);
+        setCurrentQuestion(0);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assessmentsProgress, sections]);
+
   function validateField(fieldId: string, value: any): string | null {
     const question = currentQuestionData;
     if (question.required && (!value || value.toString().trim() === '')) {
@@ -90,12 +117,20 @@ export function useReadinessForm(sections: SectionData[]) {
     fieldId: string,
     sections: Section[]
   ): string | null {
+    const categoryKey = currentQuestionData.categoryKey || 'category';
+    const amountKey = currentQuestionData.amountKey || 'amount';
     if (currentQuestionData.required && sections.length === 0) {
       return 'At least one section is required';
     }
     for (const section of sections) {
-      if (!section.category.trim() || !section.amount.trim()) {
-        return 'All category and amount fields must be filled';
+      if (
+        !section[categoryKey] ||
+        section[categoryKey].toString().trim() === ''
+      ) {
+        return `${categoryKey} is required for all sections`;
+      }
+      if (!section[amountKey] || section[amountKey].toString().trim() === '') {
+        return `${amountKey} is required for all sections`;
       }
     }
     return null;
@@ -117,7 +152,7 @@ export function useReadinessForm(sections: SectionData[]) {
 
   function handleSectionChange(
     sectionId: number,
-    field: 'category' | 'amount' | 'currency',
+    field: string,
     value: string
   ) {
     const fieldId = `${currentSection}-${currentQuestion}`;
@@ -139,11 +174,15 @@ export function useReadinessForm(sections: SectionData[]) {
   function addSection() {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const currentSections = sectionedData[fieldId] || [];
-    const newSection: Section = {
+    const categoryKey = currentQuestionData.categoryKey || 'category';
+    const amountKey = currentQuestionData.amountKey || 'amount';
+    const dueDateKey = currentQuestionData.categoryDueDateKey;
+    const newSection: any = {
       id: Date.now(),
-      category: '',
-      amount: '',
+      [categoryKey]: '',
+      [amountKey]: '',
       currency: 'NGN',
+      ...(dueDateKey ? { [dueDateKey]: '' } : {}),
     };
     setSectionedData((prev) => ({
       ...prev,
@@ -162,6 +201,7 @@ export function useReadinessForm(sections: SectionData[]) {
 
   function handleNext() {
     const fieldId = `${currentSection}-${currentQuestion}`;
+    const currentPayload: Record<string, any> = {};
     if (currentQuestionData.hasUpload) {
       if (currentQuestionData.uploadName) {
         const uploadVal =
@@ -195,7 +235,25 @@ export function useReadinessForm(sections: SectionData[]) {
     }
 
     if (currentQuestionData.hasSections) {
-      const currentSections = sectionedData[fieldId] || [];
+      const sectionFieldId = `${currentSection}-${currentQuestion}`;
+      const currentSections = sectionedData[sectionFieldId] || [];
+      // Validate all fields in each section
+      for (const section of currentSections) {
+        for (const key of Object.keys(section)) {
+          if (key === 'id') continue;
+          if (
+            section[key] === undefined ||
+            section[key] === null ||
+            section[key].toString().trim() === ''
+          ) {
+            setErrors((prev) => ({
+              ...prev,
+              [fieldId]: `All fields in each section must be filled (missing: ${key})`,
+            }));
+            return;
+          }
+        }
+      }
       const error = validateSections(fieldId, currentSections);
       if (error) {
         setErrors((prev) => ({
@@ -203,6 +261,25 @@ export function useReadinessForm(sections: SectionData[]) {
           [fieldId]: error,
         }));
         return;
+      }
+      if (currentQuestionData.name) {
+        const amountKey = currentQuestionData.amountKey || 'amount';
+        const sectionsArr = currentSections.map((s) => {
+          const { currency, id, ...rest } = s;
+          return {
+            ...rest,
+            [amountKey]: {
+              amount:
+                rest[amountKey] !== undefined
+                  ? Number(rest[amountKey])
+                  : rest[amountKey],
+              currency: currency,
+            },
+          };
+        });
+        currentPayload[currentQuestionData.name] = sectionsArr;
+      } else {
+        currentPayload['sections'] = [];
       }
     } else {
       const currentValue = formData[fieldId];
@@ -214,38 +291,11 @@ export function useReadinessForm(sections: SectionData[]) {
         }));
         return;
       }
-    }
-
-    // Show payload for current question before moving on
-    const currentPayload: Record<string, any> = {};
-    if (
-      currentQuestionData.isTwoColumn &&
-      currentQuestionData.col1Name &&
-      currentQuestionData.col2Name
-    ) {
-      const val = formData[fieldId] || {};
-      currentPayload[currentQuestionData.col1Name] =
-        val.col1 !== undefined ? Number(val.col1) : val.col1;
-      currentPayload[currentQuestionData.col2Name] =
-        val.col2 !== undefined ? Number(val.col2) : val.col2;
-    } else if (currentQuestionData.name) {
-      if (currentQuestionData.hasSections) {
-        const sectionFieldId = `${currentSection}-${currentQuestion}`;
-        const sectionsArr = (sectionedData[sectionFieldId] || []).map((s) => ({
-          ...s,
-          amount: {
-            amount: s.amount !== undefined ? Number(s.amount) : s.amount,
-            currency: s.currency,
-          },
-        }));
-        currentPayload[currentQuestionData.name] = sectionsArr;
-      } else {
-        let val = formData[fieldId];
-        if (val && typeof val === 'object' && 'amount' in val) {
-          val = { ...val, amount: Number(val.amount) };
-        }
-        currentPayload[currentQuestionData.name] = val;
+      let val = formData[fieldId];
+      if (val && typeof val === 'object' && 'amount' in val) {
+        val = { ...val, amount: Number(val.amount) };
       }
+      currentPayload[currentQuestionData.name] = val;
     }
     if (currentQuestionData.uploadName) {
       let uploadVal = formData[`${currentSection}-${currentQuestion}-uploads`];
@@ -278,7 +328,16 @@ export function useReadinessForm(sections: SectionData[]) {
       const payload: Record<string, any> = {};
       for (const q of sectionQuestions) {
         // Always set the field, even if undefined
-        if (q.isTwoColumn && q.col1Name && q.col2Name) {
+        if (q.name === 'hasIntellectualProperty') {
+          const val =
+            formData[`${currentSection}-${sectionQuestions.indexOf(q)}`] || {};
+          console.log({ val });
+          if (val === 'Yes') {
+            payload[q.name] = true;
+          } else {
+            payload[q.name] = false;
+          }
+        } else if (q.isTwoColumn && q.col1Name && q.col2Name) {
           const val =
             formData[`${currentSection}-${sectionQuestions.indexOf(q)}`] || {};
           payload[q.col1Name] =
@@ -290,14 +349,21 @@ export function useReadinessForm(sections: SectionData[]) {
             const sectionFieldId = `${currentSection}-${sectionQuestions.indexOf(
               q
             )}`;
+            const amountKey = q.amountKey || 'amount';
             const sectionsArr = (sectionedData[sectionFieldId] || []).map(
-              (s) => ({
-                ...s,
-                amount: {
-                  amount: s.amount !== undefined ? Number(s.amount) : s.amount,
-                  currency: s.currency,
-                },
-              })
+              (s) => {
+                const { currency, id, ...rest } = s;
+                return {
+                  ...rest,
+                  [amountKey]: {
+                    amount:
+                      rest[amountKey] !== undefined
+                        ? Number(rest[amountKey])
+                        : rest[amountKey],
+                    currency,
+                  },
+                };
+              }
             );
             payload[q.name] = sectionsArr;
           } else {
@@ -305,6 +371,9 @@ export function useReadinessForm(sections: SectionData[]) {
               formData[`${currentSection}-${sectionQuestions.indexOf(q)}`];
             if (val && typeof val === 'object' && 'amount' in val) {
               val = { ...val, amount: Number(val.amount) };
+            }
+            if (typeof val === 'string' && q.type === 'number') {
+              val = Number(val);
             }
             payload[q.name] = val;
           }
@@ -328,7 +397,7 @@ export function useReadinessForm(sections: SectionData[]) {
                   }`
                 ];
 
-              payload[upload.name].push(uploadVal);
+              payload[upload.name].push(uploadVal?.[0]?.url);
             }
           }
         }
@@ -364,10 +433,33 @@ export function useReadinessForm(sections: SectionData[]) {
         mutationPromise
           .then((res) => {
             console.log('API response:', res);
+            // Only move to next step after successful mutation
+            if (
+              currentSection === sections.length - 1 &&
+              currentQuestion === totalQuestions - 1
+            ) {
+              console.log('last section reached', pathName);
+              if (pathName?.includes('onboarding')) {
+                router.push('/sme');
+              } else {
+                window && window?.location?.reload();
+              }
+            } else if (currentSection < sections.length - 1) {
+              setCurrentSection(currentSection + 1);
+              setCurrentQuestion(0);
+            }
           })
           .catch((err) => {
-            console.error('API error:', err);
+            console.log('API error:', err);
+            const errMsg =
+              err?.error?.issues && err?.error?.issues?.length > 0
+                ? err?.error?.issues
+                    ?.map((iss: any) => iss?.message)
+                    ?.join(', ')
+                : err?.error?.error ?? err?.error?.message ?? '';
+            toast.error(errMsg);
           });
+        return; // Prevent moving forward until mutation resolves
       }
     }
 
@@ -448,5 +540,10 @@ export function useReadinessForm(sections: SectionData[]) {
     handleCurrencyTypeChange,
     validateField,
     validateSections,
+    updateSmeFinancialAssessment,
+    updateSmeBusinessAssessment,
+    updateSmeOperationalAssessment,
+    updateSmeMarketAssessment,
+    updateSmeComplianceAssessment,
   };
 }

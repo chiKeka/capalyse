@@ -1,20 +1,23 @@
-import Button from "@/components/ui/Button";
-import { useState } from "react";
-import AssessmentReadiness from "../ReadinessAssessment";
+import Button from '@/components/ui/Button';
+import { useState } from 'react';
+import AssessmentReadiness from '../ReadinessAssessment';
 
 type Props = {
   caption?: string;
   caption2?: string;
   showButton?: boolean;
   buttonText?: string;
+  progress?: number;
 };
 
 function EmptyBox({
-  caption = "No Matched Investor Yet!",
-  caption2 = "You have not taken the Investment Readiness Assessment.",
-  buttonText = "Start Assessment",
+  caption = 'No Matched Investor Yet!',
+  caption2 = 'You have not taken the Investment Readiness Assessment.',
+  buttonText = 'Start Assessment',
   showButton = true,
+  progress = 0,
 }: Props) {
+  console.log({ progress });
   const [open, setOpen] = useState(false);
   return (
     <div className="items-center  my-8 lg:max-w-[437px] w-full md:w-[437px] h-full flex flex-col gap-4 justify-center">
