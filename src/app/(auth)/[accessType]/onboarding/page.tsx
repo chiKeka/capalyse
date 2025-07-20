@@ -1,6 +1,7 @@
 "use client";
 
 import AuthLayout from "@/components/layout/auth";
+import AssessmentReadiness from "@/components/sections/ReadinessAssessment";
 import Button from "@/components/ui/Button";
 import {
   Dialog,
@@ -175,6 +176,7 @@ const Page = () => {
   };
 
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showReadiness, setShowReadiness] = useState(false);
   const dashboardUrl =
     routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
       ?.root;
@@ -278,7 +280,10 @@ const Page = () => {
             {authState?.role?.toLowerCase() === "sme" && (
               <Button
                 variant="secondary"
-                onClick={() => router.push("/sme/readiness")}
+                onClick={() => {
+                  setShowSuccessDialog(false);
+                  setShowReadiness(true);
+                }}
               >
                 Start Assessment
               </Button>
@@ -286,6 +291,10 @@ const Page = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <AssessmentReadiness
+        setIsOpen={setShowReadiness}
+        isOpen={showReadiness}
+      />
     </AuthLayout>
   );
 };
