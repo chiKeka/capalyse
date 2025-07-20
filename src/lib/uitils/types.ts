@@ -16,7 +16,7 @@ export type PersonalInfoInputs = {
 export type SMEsBusinessInfo = {
   businessName: string;
   registrationNumber: string;
-  countryOfOperation: string;
+  countryOfOperation: string[];
   businessStage: string;
   industry: string;
   website: string;
