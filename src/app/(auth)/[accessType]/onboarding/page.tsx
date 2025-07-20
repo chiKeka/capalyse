@@ -99,7 +99,7 @@ const Page = () => {
     ],
     investor: [
       { id: 1, label: "Personal Information" },
-      { id: 2, label: "Ivestment Preference" },
+      { id: 2, label: "Investment Preference" },
       { id: 3, label: "Organisation Profile" },
     ],
     organisation: [{ id: 1, label: "" }],
