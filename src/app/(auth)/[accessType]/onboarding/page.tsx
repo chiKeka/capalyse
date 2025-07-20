@@ -1,18 +1,21 @@
-'use client';
+"use client";
 
-import AuthLayout from '@/components/layout/auth';
-import Button from '@/components/ui/Button';
-import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
-import { useAtom, useAtomValue } from 'jotai';
-import { useRef } from 'react';
-import BusinassInformationForm from './businassInformationForm';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { routes } from '@/lib/routes';
-import { UserType } from '@/lib/utils';
-import { getKeyByValue } from '@/lib/uitils/fns';
+import AuthLayout from "@/components/layout/auth";
+import Button from "@/components/ui/Button";
+import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
+import { routes } from "@/lib/routes";
+import { getKeyByValue } from "@/lib/uitils/fns";
+import { UserType } from "@/lib/utils";
+import { useAtom, useAtomValue } from "jotai";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import BusinassInformationForm from "./businassInformationForm";
+import InvestmentPreference from "./investmesntPrefernce";
+import InvestorOrganisation from "./investorOrganisation";
+
 const PersonalInformationForm = dynamic(
-  () => import('./personalInformationForm'),
+  () => import("./personalInformationForm"),
   {
     ssr: false,
   }
@@ -20,25 +23,152 @@ const PersonalInformationForm = dynamic(
 const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
-  const [step, setStep] = useAtom(onboardingStepAtom);
-  const personalInfoFormRef = useRef<{ submit: () => void }>(null);
-  const smeBusinessInfoFormRef = useRef<{ submit: () => void }>(null);
-  const isFirstStep = step === 1;
-  const isLastStep = step === 2;
-  console.log({ auth: authState });
+  const [onboardSteps] = useAtom(onboardingStepAtom);
 
-  const handleNext = () => {
-    if (authState?.profileCompletionStep === 1) {
-      personalInfoFormRef.current?.submit();
-    } else {
-      smeBusinessInfoFormRef.current?.submit();
+  const personalInfoFormRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+  const smeBusinessInfoFormRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+  const investmentPreferenceRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+  const investorOrganisationRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const isFirstStep = onboardSteps === 1;
+  const isSecond = onboardSteps === 2;
+  const isThirdStep = onboardSteps === 3;
+
+  const handleNext = async () => {
+    setButtonLoading(true);
+    const role = authState?.role?.toLowerCase();
+    const step = authState?.profileCompletionStep;
+    let valid = true;
+    if (role === "investor") {
+      if (step === 1) {
+        valid = (await personalInfoFormRef.current?.submit()) ?? false;
+      } else if (step === 2) {
+        valid = (await investmentPreferenceRef.current?.submit()) ?? false;
+      } else if (step === 3) {
+        valid = (await investorOrganisationRef.current?.submit()) ?? false;
+      }
+    } else if (role === "sme") {
+      if (step === 1) {
+        valid = (await personalInfoFormRef.current?.submit()) ?? false;
+      } else if (step === 2) {
+        valid = (await smeBusinessInfoFormRef.current?.submit()) ?? false;
+      }
+    } else if (role === "organisation") {
+      if (step === 3) {
+        valid = (await investorOrganisationRef.current?.submit()) ?? false;
+      }
     }
+    if (!valid) {
+      setButtonLoading(false);
+      return;
+    }
+    // Only proceed if valid (if you have additional logic, add here)
   };
 
-  const steps = [
-    { id: 1, label: 'Personal Information' },
-    { id: 2, label: 'Business Information' },
-  ];
+  useEffect(() => {
+    setButtonLoading(false); // Reset button loading on step change
+    setLoading(false); // (optional) Reset other loading state too
+  }, [authState?.profileCompletionStep]);
+
+  const steps = {
+    sme: [
+      { id: 1, label: "Personal Information" },
+      { id: 2, label: "Business Information" },
+    ],
+    investor: [
+      { id: 1, label: "Personal Information" },
+      { id: 2, label: "Ivestment Preference" },
+      { id: 3, label: "Organisation Profile" },
+    ],
+    organisation: [{ id: 1, label: "" }],
+  };
+
+  const roleFormMap = {
+    sme: (
+      <>
+        {authState?.profileCompletionStep === 1 && (
+          <PersonalInformationForm
+            ref={personalInfoFormRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+        {authState?.profileCompletionStep === 2 && (
+          <BusinassInformationForm
+            ref={smeBusinessInfoFormRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+      </>
+    ),
+    investor: (
+      <>
+        {authState?.profileCompletionStep === 1 && (
+          <PersonalInformationForm
+            ref={personalInfoFormRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+        {authState?.profileCompletionStep === 2 && (
+          <InvestmentPreference
+            ref={investmentPreferenceRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+        {authState?.profileCompletionStep === 3 && (
+          <InvestorOrganisation
+            ref={investorOrganisationRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+      </>
+    ),
+    organisation: (
+      <>
+        {authState?.profileCompletionStep === 1 && (
+          <InvestorOrganisation
+            ref={investorOrganisationRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+          />
+        )}
+      </>
+    ),
+  };
+
+  console.log(authState?.role);
+  const getPrimaryButtonLabel = () => {
+    const role = authState?.role?.toLowerCase();
+    const step = authState?.profileCompletionStep;
+    if (role === "sme") {
+      return step === 2 ? "Submit" : "Next";
+    }
+    if (role === "investor") {
+      return step === 3 ? "Submit" : "Next";
+    }
+    if (role === "organisation") {
+      return step === 1 ? "Submit" : "Next";
+    }
+    return "Next";
+  };
 
   return (
     <AuthLayout
@@ -48,27 +178,31 @@ const Page = () => {
       title="Complete the following information to get started"
     >
       <div className="flex w-full border-b border-[#F0F0F0] items-center justify-center mb-6 space-x-12">
-        {steps.map(({ id, label }) => (
-          <div
-            key={id}
-            className={`text-center py-2 text-xs cursor-pointer ${
-              authState?.profileCompletionStep === id
-                ? 'border-b-2 border-green text-green font-bold'
-                : 'text-gray-400'
-            }`}
-          >
-            {label}
-          </div>
-        ))}
+        {steps[authState?.role?.toLowerCase() as keyof typeof steps]?.map(
+          ({ id, label }) => (
+            <div
+              key={id}
+              className={`text-center py-2 text-xs cursor-pointer ${
+                authState?.profileCompletionStep === id
+                  ? "border-b-2 border-green text-green font-bold"
+                  : "text-gray-400"
+              }`}
+            >
+              {label}
+            </div>
+          )
+        )}
       </div>
 
       <div className="w-full">
-        {authState?.profileCompletionStep === 1 ? (
-          <PersonalInformationForm ref={personalInfoFormRef} />
-        ) : null}
-        {authState?.profileCompletionStep === 2 && (
-          <BusinassInformationForm ref={smeBusinessInfoFormRef} />
-        )}
+        {
+          roleFormMap[
+            authState?.role?.toLowerCase() as keyof typeof roleFormMap
+          ]
+        }
+      </div>
+
+      <div className="w-full">
         <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
           <Button
             variant="secondary"
@@ -85,10 +219,14 @@ const Page = () => {
                 : null
             }
           >
-            {isFirstStep ? 'Skip to Dashboard' : 'Back'}
+            {isFirstStep ? "Skip to Dashboard" : "Back"}
           </Button>
-          <Button variant="primary" onClick={handleNext}>
-            {isLastStep ? 'Submit' : 'Next'}
+          <Button
+            variant="primary"
+            onClick={handleNext}
+            state={buttonLoading || loading ? "loading" : undefined}
+          >
+            {getPrimaryButtonLabel()}
           </Button>
         </div>
       </div>

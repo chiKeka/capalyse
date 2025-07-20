@@ -5,6 +5,7 @@ import AssessmentReadiness from "../ReadinessAssessment";
 type Props = {
   caption?: string;
   caption2?: string;
+  showButton?: boolean;
   buttonText?: string;
 };
 
@@ -12,6 +13,7 @@ function EmptyBox({
   caption = "No Matched Investor Yet!",
   caption2 = "You have not taken the Investment Readiness Assessment.",
   buttonText = "Start Assessment",
+  showButton = true,
 }: Props) {
   const [open, setOpen] = useState(false);
   return (
@@ -24,11 +26,14 @@ function EmptyBox({
       <p className="font-normal max-w-[206px] text-xs text-[#282828] text-center">
         {caption2}
       </p>
-      <div className="w-ful flex items-center justify-center">
-        <Button variant="secondary" onClick={() => setOpen(true)}>
-          {buttonText}
-        </Button>
-      </div>
+      {showButton && (
+        <div className="w-ful flex items-center justify-center">
+          <Button variant="secondary" onClick={() => setOpen(true)}>
+            {buttonText}
+          </Button>
+        </div>
+      )}
+
       <AssessmentReadiness isOpen={open} setIsOpen={setOpen} />
     </div>
   );

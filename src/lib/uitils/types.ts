@@ -22,6 +22,24 @@ export type SMEsBusinessInfo = {
   website: string;
 };
 
+export type InvestmentPreferenceInfo = {
+  investmentType: string[];
+  targetRegions: string[];
+  targetIndustries: string[];
+  businessStage: string[];
+  max: number;
+  min: number;
+  min_currency: string;
+  max_cureency: string;
+};
+
+export type investorOrg = {
+  organizationName: "";
+  companyEmail: "";
+  countryHeadquarters: "";
+  website: "";
+};
+
 export type AuthState = {
   createdAt: string;
   email: string;

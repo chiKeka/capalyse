@@ -1,3 +1,4 @@
+import Button from "@/components/ui/Button";
 import StraightBar from "@/components/ui/straightBar";
 import { itemVariants } from "@/lib/animations";
 import { motion } from "framer-motion";
@@ -9,8 +10,10 @@ interface Props {
   href: string;
   image?: string;
   index?: any;
+  onClick?: () => void;
 }
-function LearningCard({ header, text, image, href, index }: Props) {
+function LearningCard({ header, text, image, href, index, onClick }: Props) {
+  
   return (
     <motion.div
       initial="hidden"
@@ -40,10 +43,14 @@ function LearningCard({ header, text, image, href, index }: Props) {
 
             <StraightBar value={20} />
           </div>
-
-          <div className="items-end flex w-full justify-end">
-            <p className="text-[#047857] font-bold text-sm">Take Course</p>
-          </div>
+          <Button
+            variant="tertiary"
+            iconPosition="right"
+            className="text-green ml-auto"
+            onClick={() => onclick}
+          >
+            Take Course
+          </Button>
         </div>
       </Link>
     </motion.div>

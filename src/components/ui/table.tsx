@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import React from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -8,7 +7,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
+} from "@/components/ui/pagination";
+import React from "react";
+import EmptyBox from "../sections/dashboardCards/emptyBox";
 
 type Column<T> = {
   header: string;
@@ -30,7 +31,7 @@ type ReusableTableProps<T> = {
 export function ReusableTable<T extends object>({
   columns,
   data = [],
-  className = '',
+  className = "",
   rowsPerPage = 4,
   page = 1,
   setPage,
@@ -45,7 +46,7 @@ export function ReusableTable<T extends object>({
               <th
                 key={idx}
                 className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase ${
-                  col.className || ''
+                  col.className || ""
                 }`}
               >
                 {col.header}
@@ -54,20 +55,32 @@ export function ReusableTable<T extends object>({
           </tr>
         </thead>
         <tbody>
-          {data?.map((row, ridx) => (
-            <tr key={ridx} className="hover:bg-gray-50 border">
-              {columns.map((col: any, cidx: number) => (
-                <td
-                  key={cidx}
-                  className={`px-4 py-3 text-sm ${col.className || ''}`}
-                >
-                  {typeof col.accessor === 'function'
-                    ? col.accessor(row)
-                    : (row as any)[col.accessor]}
-                </td>
-              ))}
+          {data.length === 0 && (
+            <tr>
+              <td colSpan={columns.length}>
+                <EmptyBox
+                  showButton={false}
+                  caption2="No Programs found check back later, any new program added will be found here"
+                  caption="No Programs found check back later"
+                />
+              </td>
             </tr>
-          ))}
+          )}
+          {data &&
+            data?.map((row, ridx) => (
+              <tr key={ridx} className="hover:bg-gray-50 border">
+                {columns.map((col: any, cidx: number) => (
+                  <td
+                    key={cidx}
+                    className={`px-4 py-3 text-sm ${col.className || ""}`}
+                  >
+                    {typeof col.accessor === "function"
+                      ? col.accessor(row)
+                      : (row as any)[col.accessor]}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </table>
       {totalPages && totalPages > 1 && (
