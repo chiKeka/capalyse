@@ -240,24 +240,45 @@ const Page = () => {
         </div>
       </div>
 
-      <Dialog  open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="max-w-xl">
-          <DialogTitle>Success!</DialogTitle>
-          <DialogDescription>
+      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
+        <DialogContent className="md:w-fit flex flex-col items-center p-3">
+          <DialogTitle>
+            <div className="gap-2 flex flex-col">
+              <img
+                src={
+                  authState?.role?.toLowerCase() === "organisation"
+                    ? "/icons/pendingCheck.svg"
+                    : "/icons/successCheck.svg"
+                }
+              />
+              <div
+                className={`${
+                  authState?.role?.toLowerCase() === "organisation"
+                    ? "text-[#D3931C]"
+                    : "text-green"
+                }`}
+              >
+                {authState?.role?.toLowerCase() === "organisation"
+                  ? "Pending Verification"
+                  : "Success!"}
+              </div>
+            </div>
+          </DialogTitle>
+          <DialogDescription className="text-sm w-full max-w-sm font-normal text-center">
             {authState?.role?.toLowerCase() === "sme"
               ? "You have successfully created your account. You can start the Investment Readiness Assessment or you can go straight to your dashboard."
               : authState?.role?.toLowerCase() === "investor"
               ? "Welcome Investor! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete."
               : "We're reviewing your details. You'll get an email once verification is complete."}
           </DialogDescription>
-          <DialogFooter>
+          <DialogFooter className="!flex w-full max-w-sm !flex-col">
             <Button variant="primary" onClick={() => router.push(dashboardUrl)}>
               Go to Dashboard
             </Button>
             {authState?.role?.toLowerCase() === "sme" && (
               <Button
                 variant="secondary"
-                onClick={() => router.push("/sme/readiness")} // Update this path as needed
+                onClick={() => router.push("/sme/readiness")}
               >
                 Start Assessment
               </Button>
