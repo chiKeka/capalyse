@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export function formatCurrency(
   value: number,
   minFD = 2,
@@ -33,3 +35,21 @@ export function validateAuthForm(form: { email: string; password: string }) {
 export function getKeyByValue(obj: any, value: string) {
   return Object.keys(obj).find((key) => obj[key] === value);
 }
+export const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+export const handleImageUpload = async (
+  file: File,
+  onSuccess?: (x: string) => void
+) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append(
+    'upload_preset',
+    process.env.NEXT_PUBLIC_CLOUDINARY_PRESET as string
+  );
+  await axios.post(uploadUrl, formData).then(({ data }) => {
+    console.log({ data });
+    onSuccess?.(data);
+    return data?.secure_url;
+  });
+};

@@ -85,6 +85,7 @@ const Header = () => {
             <Button
               variant="tertiary"
               size="medium"
+              onClick={() => router.push('/signin')}
               className="hover:text-gray-700 text-sm !font-bold text-green"
             >
               Log In
