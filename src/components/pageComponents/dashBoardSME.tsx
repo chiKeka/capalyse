@@ -1,15 +1,15 @@
-'use client';
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import LearningCard from '@/components/sections/dashboardCards/learningCard';
-import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
-import Programs from '@/components/sections/dashboardCards/programs';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
-import { useGetCurrentProfile } from '@/hooks/useProfileManagement';
-import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
-import { useParams, useRouter } from 'next/navigation';
+"use client";
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import LearningCard from "@/components/sections/dashboardCards/learningCard";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
+import Programs from "@/components/sections/dashboardCards/programs";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
+import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
+import { useParams, useRouter } from "next/navigation";
 
 export default function SmeDashBoard() {
   const params = useParams();
@@ -17,50 +17,77 @@ export default function SmeDashBoard() {
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-
+  console.log({ assessmentsProgress, user });
   const learningCards = [
     {
-      id: '1',
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
+      id: "1",
+      href: "/",
+      header: "Trading Across Africa: How AfCFTA Is Changing the Game",
     },
     {
-      id: '1',
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
+      id: "1",
+      href: "/",
+      header: "Trading Across Africa: How AfCFTA Is Changing the Game",
     },
   ];
+  // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
+  //   (x: string) => x
+  // );
+
+  const sectionCompletion = assessmentsProgress?.sectionCompletion || {};
+  const completedSections = assessmentsProgress?.completedSections || [];
+
+  const nextSectionName = completedSections.find(
+    (section: string) => sectionCompletion[section] !== true
+  );
+
+  const label =
+    nextSectionName !== undefined ? `Finish ${nextSectionName}` : "Completed";
+
+  const renderFinanceStatus = () => {
+    const values = Object.values(sectionCompletion);
+
+    if (values.length === 0) return "";
+
+    const allTrue = values.every((v) => v === true);
+    const allFalse = values.every((v) => v === false);
+
+    if (allTrue) return 100;
+    if (allFalse) return 50;
+    return undefined;
+  };
   const checklist = [
     {
-      icon: '/icons/profile.svg',
-      label: 'Complete profile',
-      status: 'Not Started',
+      icon: "/icons/profile.svg",
+      label: "Complete profile",
+      status: user?.completionPercentage || undefined,
     },
     {
-      icon: '/icons/presentation.svg',
-      label: 'Start Readiness Assessment',
-      status: 'Not Started',
+      icon: "/icons/presentation.svg",
+      label: "Start Readiness Assessment",
+      status: assessmentsProgress?.overallCompletionPercentage || undefined,
     },
     {
-      icon: '/icons/money_out.svg',
-      label: 'Finish financial section',
-      status: 'Not Started',
+      icon: "/icons/money_out.svg",
+      label: label,
+      status: renderFinanceStatus() || undefined,
     },
     {
-      icon: '/icons/status_up.svg',
-      label: 'Explore investor matches',
-      status: 'Not Started',
+      icon: "/icons/status_up.svg",
+      label: "Explore investor matches",
+      status: undefined,
     },
   ];
 
   const suggestedConnections = [
-    { id: 1, icon: '/icons/user1.svg', name: 'Suggested Connection 1' },
-    { id: 2, icon: '/icons/user2.svg', name: 'Suggested Connection 2' },
-    { id: 3, icon: '/icons/user3.svg', name: 'Suggested Connection 3' },
-    { id: 4, icon: '/icons/user4.svg', name: 'Suggested Connection 4' },
-    { id: 5, icon: '/icons/user5.svg', name: 'Suggested Connection 5' },
+    { id: 1, icon: "/icons/user1.svg", name: "Suggested Connection 1" },
+    { id: 2, icon: "/icons/user2.svg", name: "Suggested Connection 2" },
+    { id: 3, icon: "/icons/user3.svg", name: "Suggested Connection 3" },
+    { id: 4, icon: "/icons/user4.svg", name: "Suggested Connection 4" },
+    { id: 5, icon: "/icons/user5.svg", name: "Suggested Connection 5" },
   ];
   const router = useRouter();
+
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
@@ -70,9 +97,9 @@ export default function SmeDashBoard() {
         showProgress={true}
         showButton={true}
         buttonProps={{
-          className: 'max-w-max !border-black-50 !text-black-400',
-          variant: 'secondary',
-          iconPosition: 'right',
+          className: "max-w-max !border-black-50 !text-black-400",
+          variant: "secondary",
+          iconPosition: "right",
         }}
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
@@ -96,7 +123,7 @@ export default function SmeDashBoard() {
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
           <DashboardCardLayout
-            icon={'/images/bulb.svg'}
+            icon={"/images/bulb.svg"}
             caption="Quick Tip"
             height="h-full"
           >
@@ -106,7 +133,7 @@ export default function SmeDashBoard() {
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
-            icon={'/icons/warning.svg'}
+            icon={"/icons/warning.svg"}
             caption="Compliance Flag"
             height="h-full"
           >
@@ -145,13 +172,13 @@ export default function SmeDashBoard() {
                       assessmentsProgress?.overallCompletionPercentage ?? 0
                     }% done with your Investment readiness assement, click the button below to continue`
                   : assessmentsProgress?.overallCompletionPercentage === 100
-                  ? 'Assessment Complete awaiting investor matches'
-                  : ''
+                  ? "Assessment Complete awaiting investor matches"
+                  : ""
               }
               buttonText={
                 assessmentsProgress?.overallCompletionPercentage > 0
-                  ? 'Complete Assessment'
-                  : 'Start Assessment'
+                  ? "Complete Assessment"
+                  : "Start Assessment"
               }
               showButton={
                 assessmentsProgress?.overallCompletionPercentage &&

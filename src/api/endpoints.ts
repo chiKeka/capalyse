@@ -61,4 +61,16 @@ export const ApiEndPoints = {
   Investment_interest: (action?: string) => `/investments/interest/${action}`,
   Request_due_delegene: (id: string) =>
     `/investments/interests/${id}/due-diligence`,
+
+  // Notifications
+  Notification: "/notifications",
+  Notifications: (action?: string) => `/notifications/${action}`,
+  Mark_as_Read: (id?: string) => `notifications/${id}/read`,
+
+  //support
+  SupportTicket: "/tickets",
+  TicketsActions: (ticketId: string) => `/tickets/${ticketId}`,
+  TicketMessage: (ticketId: string) => `tickets/${ticketId}/messages`,
+  TicketMessagesAction: (ticketId: string, messageId: string) =>
+    `/tickets/${ticketId}/messages/${messageId}`,
 };

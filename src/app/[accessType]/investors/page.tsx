@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
+import { useRecievedInvestmentInterest } from "@/hooks/useInvesmentInterest";
 import Image from "next/image";
 import { useState } from "react";
 type Props = {};
@@ -22,6 +23,9 @@ const investors = [];
 
 function InvestorsPage({}: Props) {
   const [open, setOpen] = useState(false);
+  const RecievedInvestment = useRecievedInvestmentInterest();
+  const { data: user, isLoading, error } = RecievedInvestment;
+  console.log(user);
   const columns = [
     {
       header: "Name",
