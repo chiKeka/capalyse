@@ -1,6 +1,13 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectItem,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "@/components/ui/multi-select";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -12,7 +19,6 @@ import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
 import { useSmeProfile } from "@/hooks/useSmeProfile";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useEffect, useState } from "react";
-import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -23,6 +29,9 @@ export default function Info({}: Props) {
   const { data: user, isLoading, error } = ProfileDetails;
   const { smes_bussiness_info } = useAuth();
   console.log(user);
+  const [selectedCountry, setSelectedCountry] = useState<string[]>(
+    user?.countryOfOperation || []
+  );
   const [selectedCountryName, setSelectedCountryName] = useState(
     user ? user?.countryOfOperation : ""
   );
@@ -37,7 +46,7 @@ export default function Info({}: Props) {
     defaultValues: {
       businessName: "",
       registrationNumber: "",
-      countryOfOperation: "",
+      countryOfOperation: selectedCountry,
       businessStage: "",
       industry: "",
       website: "",
@@ -46,13 +55,15 @@ export default function Info({}: Props) {
   const { updateSmeBusinessInfo } = useSmeProfile();
   useEffect(() => {
     if (user) {
+      setSelectedCountry(user?.countryOfOperation || []);
       reset({
-        businessName: user.businessName || "",
-        registrationNumber: user.registrationNumber || "",
-        countryOfOperation: user.countryOfOperation || "",
-        businessStage: user.businessStage || "",
-        industry: user.industry || "",
-        website: user.website || "",
+        businessName: user?.businessName || "",
+        registrationNumber: user?.registrationNumber || "",
+
+        countryOfOperation: user?.countryOfOperation || [],
+        businessStage: user?.businessStage || "",
+        industry: user?.industry || "",
+        website: user?.website || "",
       });
     }
   }, [user, reset]);
@@ -60,13 +71,26 @@ export default function Info({}: Props) {
   const onSubmit = (data: any) => {
     updateSmeBusinessInfo
       .mutateAsync(data)
-      .then(() => {
-        toast.success(data?.message);
+      .then((res) => {
+        toast.success("Profile data updated successfully");
       })
       .catch((err) => toast.error(err?.msg));
   };
   const businessStage = watch("businessStage");
+  const handleCountryStageChange = (value: string) => {
+    const newCountry = selectedCountry.includes(value)
+      ? selectedCountry.filter((item) => item !== value)
+      : [...selectedCountry, value];
 
+    setSelectedCountry(newCountry);
+    setValue("countryOfOperation", newCountry);
+  };
+
+  const handleRemoveCountry = (value: string) => {
+    const newCountry = selectedCountry.filter((item) => item !== value);
+    setSelectedCountry(newCountry);
+    setValue("countryOfOperation", newCountry);
+  };
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6">
       <div className="flex flex-col w-full gap-x-6 lg:flex-row">
@@ -88,7 +112,7 @@ export default function Info({}: Props) {
             className="h-[43px] "
           />
 
-          <div className="w-full max-w-xl">
+          {/* <div className="w-full max-w-xl">
             <label className="block mb-1 text-sm font-normal">
               Country of Operation
             </label>
@@ -108,6 +132,34 @@ export default function Info({}: Props) {
                 }
               }}
             />
+          </div> */}
+
+          <div>
+            <label className="block mb-1 text-sm font-medium">
+              Country of Operation
+            </label>
+            <MultiSelect
+              selectedItems={selectedCountry}
+              onValueChange={handleCountryStageChange}
+            >
+              <MultiSelectTrigger
+                selectedItems={selectedCountry}
+                onRemoveItem={handleRemoveCountry}
+              >
+                <MultiSelectValue placeholder="Select business stage" />
+              </MultiSelectTrigger>
+              <MultiSelectContent>
+                <MultiSelectItem value="Nigeria">Nigeria</MultiSelectItem>
+                <MultiSelectItem value="USA">United States</MultiSelectItem>
+                <MultiSelectItem value="Canada">Canada</MultiSelectItem>
+                <MultiSelectItem value="Australlia">Australlia</MultiSelectItem>
+              </MultiSelectContent>
+            </MultiSelect>
+            {errors.businessStage && (
+              <span className="col-span-2 text-[10px] text-red-500">
+                {errors.businessStage.message}
+              </span>
+            )}
           </div>
           <div className="max-w-xl w-full">
             <label className="block mb-1 text-sm font-normal">
@@ -165,6 +217,7 @@ export default function Info({}: Props) {
           profile will be subject to verification
         </div>
         <Button
+          state={updateSmeBusinessInfo.isPending ? "loading" : undefined}
           type="submit"
           onClick={handleSubmit(onSubmit)}
           variant="primary"

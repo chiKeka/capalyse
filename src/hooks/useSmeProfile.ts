@@ -11,7 +11,7 @@ export const useSmeProfile = () => {
     },
   });
 
-  
+
 
   const updateSmeBusinessDetails = useMutation({
     mutationFn: async (cred): Promise<any> => {
@@ -21,7 +21,7 @@ export const useSmeProfile = () => {
 
   const updateTeamMemeber = useMutation({
     mutationFn: async (cred): Promise<any> => {
-      return api.put(ApiEndPoints.SMEs_Profile("team"), cred);
+      return api.post(ApiEndPoints.SMEs_Profile("team"), cred);
     },
   });
 

@@ -1,5 +1,12 @@
 import Input from "@/components/ui/Inputs";
 import {
+  MultiSelect,
+  MultiSelectContent,
+  MultiSelectItem,
+  MultiSelectTrigger,
+  MultiSelectValue,
+} from "@/components/ui/multi-select";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -19,7 +26,6 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { CountrySelect } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { useForm } from "react-hook-form";
 type Props = {};
@@ -41,7 +47,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
       setValue,
       formState: { errors },
     } = useForm<SMEsBusinessInfo>();
-
+    const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
     useEffect(() => {
       props.setLoading(smes_bussiness_info.isPending);
     }, [smes_bussiness_info.isPending, props]);
@@ -71,6 +77,21 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
         },
         onError: (error) => console.log(error),
       });
+    };
+
+    const handleBusinessStageChange = (value: string) => {
+      const newCountry = selectedCountry.includes(value)
+        ? selectedCountry.filter((item) => item !== value)
+        : [...selectedCountry, value];
+
+      setSelectedCountry(newCountry);
+      setValue("countryOfOperation", newCountry);
+    };
+
+    const handleRemoveBusinessStage = (value: string) => {
+      const newCountry = selectedCountry.filter((item) => item !== value);
+      setSelectedCountry(newCountry);
+      setValue("countryOfOperation", newCountry);
     };
 
     return (
@@ -111,7 +132,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             </span>
           )}
         </div>
-
+        {/*
         <div>
           <label className="block mb-1 text-sm font-medium">
             Country of Operation
@@ -131,6 +152,34 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               }
             }}
           />
+        </div> */}
+
+        <div>
+          <label className="block mb-1 text-sm font-medium">
+            Country of Operation
+          </label>
+          <MultiSelect
+            selectedItems={selectedCountry}
+            onValueChange={handleBusinessStageChange}
+          >
+            <MultiSelectTrigger
+              selectedItems={selectedCountry}
+              onRemoveItem={handleRemoveBusinessStage}
+            >
+              <MultiSelectValue placeholder="Select business stage" />
+            </MultiSelectTrigger>
+            <MultiSelectContent>
+              <MultiSelectItem value="Nigeria">Nigeria</MultiSelectItem>
+              <MultiSelectItem value="USA">United States</MultiSelectItem>
+              <MultiSelectItem value="Canada">Canada</MultiSelectItem>
+              <MultiSelectItem value="Australlia">Australlia</MultiSelectItem>
+            </MultiSelectContent>
+          </MultiSelect>
+          {errors.businessStage && (
+            <span className="col-span-2 text-[10px] text-red-500">
+              {errors.businessStage.message}
+            </span>
+          )}
         </div>
 
         <div>
