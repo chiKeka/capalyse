@@ -442,7 +442,7 @@ export function useReadinessForm(sections: SectionData[]) {
               if (pathName?.includes('onboarding')) {
                 router.push('/sme');
               } else {
-                window && window?.location?.reload();
+                // window && window?.location?.reload();
               }
             } else if (currentSection < sections.length - 1) {
               setCurrentSection(currentSection + 1);

@@ -8,7 +8,7 @@ export interface Notification {
   title: string;
   message: string;
   isImportant?: boolean;
-  isUnread?: boolean;
+  isRead?: boolean;
 }
 
 interface NotificationSheetProps {
@@ -22,7 +22,7 @@ export function NotificationSheet({
   onOpenChange,
   notifications,
 }: NotificationSheetProps) {
-  const hasNotifications = notifications.length > 0;
+  const hasNotifications = notifications?.length > 0;
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -38,7 +38,7 @@ export function NotificationSheet({
                 <li key={n.id} className="flex gap-4 items-start">
                   <span className="relative">
                     <CIcons.messageBadge />
-                    {n.isUnread && (
+                    {!n.isRead && (
                       <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 border-2 border-white" />
                     )}
                   </span>

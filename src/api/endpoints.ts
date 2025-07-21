@@ -57,14 +57,35 @@ export const ApiEndPoints = {
   Administration_Config: `/scoring/admin/config`,
   Administration_Queue: `/scoring/admin/queue`,
 
+  //investmenst interest for investor matches
+
+  Investment_interest: (action?: string) => `/investments/interest/${action}`,
+  Request_due_delegene: (id: string) =>
+    `/investments/interests/${id}/due-diligence`,
+
+  // Notifications
+  Notification: '/notifications',
+  Notifications: (action?: string) => `/notifications/${action}`,
+  Mark_as_Read: (id?: string) => `notifications/${id}/read`,
+
+  //support
+  SupportTicket: '/tickets',
+  TicketsActions: (ticketId: string) => `/tickets/${ticketId}`,
+  TicketMessage: (ticketId: string) => `tickets/${ticketId}/messages`,
+  TicketMessagesAction: (ticketId: string, messageId: string) =>
+    `/tickets/${ticketId}/messages/${messageId}`,
+
   // messaging and conversations
 
   Messages_Conversations: '/messages/conversations',
   Single_Conversation: (id: string) => `/messages/conversations/${id}`,
-  Conversation_Messages: (id: string) => `/messages/conversations/${id}/messages`,
+  Conversation_Messages: (id: string) =>
+    `/messages/conversations/${id}/messages`,
   Mark_Conversation_Read: (id: string) => `/messages/conversations/${id}/read`,
-  Block_Conversation: (conversationId: string) => `/messages/conversations/${conversationId}/block`,
-  Unblock_Conversation: (conversationId: string) => `/messages/conversations/${conversationId}/unblock`,
+  Block_Conversation: (conversationId: string) =>
+    `/messages/conversations/${conversationId}/block`,
+  Unblock_Conversation: (conversationId: string) =>
+    `/messages/conversations/${conversationId}/unblock`,
   Send_Message: '/messages/send',
   // Single_Message: (id: string) => `/messages/${id}`,
   Mark_Message_Read: (id: string) => `/messages/${id}/read`,
@@ -105,7 +126,8 @@ export const apiRoutes = {
     registerPersonalInfo: '/auth/register/personal-info',
     registerSmeBusinessInfo: '/auth/register/sme-business-info',
     registerInvestorInvestmentInfo: '/auth/register/investor-investment-info',
-    registerInvestorOrganizationInfo: '/auth/register/investor-organization-info',
+    registerInvestorOrganizationInfo:
+      '/auth/register/investor-organization-info',
     registerDevOrgInfo: '/auth/register/dev-org-info',
     getRegisterNextStep: '/auth/register/next-step',
     login: '/auth/login',
@@ -215,11 +237,15 @@ export const apiRoutes = {
     getConversations: '/messages/conversations',
     getUnreadCount: '/messages/unread-count',
     getConversationById: (id: string) => `/messages/conversations/${id}`,
-    markConversationAsRead: (id: string) => `/messages/conversations/${id}/read`,
-    blockConversation: (conversationId: string) => `/messages/conversations/${conversationId}/block`,
-    unblockConversation: (conversationId: string) => `/messages/conversations/${conversationId}/unblock`,
+    markConversationAsRead: (id: string) =>
+      `/messages/conversations/${id}/read`,
+    blockConversation: (conversationId: string) =>
+      `/messages/conversations/${conversationId}/block`,
+    unblockConversation: (conversationId: string) =>
+      `/messages/conversations/${conversationId}/unblock`,
     sendMessage: '/messages/send',
-    getMessagesForConversation: (id: string) => `/messages/conversations/${id}/messages`,
+    getMessagesForConversation: (id: string) =>
+      `/messages/conversations/${id}/messages`,
     markMessageAsRead: (id: string) => `/messages/${id}/read`,
     deleteMessage: (id: string) => `/messages/${id}`,
     editMessage: (id: string) => `/messages/${id}`,
@@ -233,7 +259,8 @@ export const apiRoutes = {
     getSentInterests: '/investments/interests/sent',
     getReceivedInterests: '/investments/interests/received',
     getPipeline: '/investments/pipeline',
-    requestDueDiligence: (id: string) => `/investments/interests/${id}/due-diligence`,
+    requestDueDiligence: (id: string) =>
+      `/investments/interests/${id}/due-diligence`,
     withdrawInterest: (id: string) => `/investments/interests/${id}`,
     getInterestDetails: (id: string) => `/investments/interests/${id}`,
     respondToInterest: (id: string) => `/investments/interests/${id}/respond`,
@@ -251,8 +278,10 @@ export const apiRoutes = {
     deleteTicket: (ticketId: string) => `/tickets/${ticketId}`,
     addMessage: (ticketId: string) => `/tickets/${ticketId}/messages`,
     getMessages: (ticketId: string) => `/tickets/${ticketId}/messages`,
-    updateMessage: (ticketId: string, messageId: string) => `/tickets/${ticketId}/messages/${messageId}`,
-    deleteMessage: (ticketId: string, messageId: string) => `/tickets/${ticketId}/messages/${messageId}`,
+    updateMessage: (ticketId: string, messageId: string) =>
+      `/tickets/${ticketId}/messages/${messageId}`,
+    deleteMessage: (ticketId: string, messageId: string) =>
+      `/tickets/${ticketId}/messages/${messageId}`,
   },
 
   /**

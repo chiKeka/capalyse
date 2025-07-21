@@ -32,16 +32,14 @@ export default function Info({}: Props) {
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
     user?.countryOfOperation || []
   );
-  const [selectedCountryName, setSelectedCountryName] = useState(
-    user ? user?.countryOfOperation : ""
-  );
+
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    formState: { errors },
     watch,
+    formState: { errors },
   } = useForm<SMEsBusinessInfo>({
     defaultValues: {
       businessName: "",
@@ -56,10 +54,10 @@ export default function Info({}: Props) {
   useEffect(() => {
     if (user) {
       setSelectedCountry(user?.countryOfOperation || []);
+
       reset({
         businessName: user?.businessName || "",
         registrationNumber: user?.registrationNumber || "",
-
         countryOfOperation: user?.countryOfOperation || [],
         businessStage: user?.businessStage || "",
         industry: user?.industry || "",
@@ -111,29 +109,6 @@ export default function Info({}: Props) {
             label="Business Registration Number"
             className="h-[43px] "
           />
-
-          {/* <div className="w-full max-w-xl">
-            <label className="block mb-1 text-sm font-normal">
-              Country of Operation
-            </label>
-            <CountrySelect
-              value={selectedCountryName}
-              containerClassName="h-[43px]"
-              inputClassName="px-4 !w-full py-2  !border-none focus:!ring-0 focus:!border-none"
-              onChange={(country: any) => {
-                if (
-                  country &&
-                  typeof country === "object" &&
-                  "id" in country &&
-                  "name" in country
-                ) {
-                  setSelectedCountryName(country.name);
-                  setValue("countryOfOperation", country.name);
-                }
-              }}
-            />
-          </div> */}
-
           <div>
             <label className="block mb-1 text-sm font-medium">
               Country of Operation
@@ -180,7 +155,6 @@ export default function Info({}: Props) {
               </SelectContent>
             </Select>
           </div>
-
           <Input
             {...register("industry", {
               required: "Business Name is required",
@@ -198,7 +172,6 @@ export default function Info({}: Props) {
             className="h-[43px]"
           />
         </form>
-
         <div className="w-full flex flex-col gap-4 items-center  max-w-44 p-2">
           <p className="text-[10px] font-bold text-[#2E3034]">
             Upload Business logo

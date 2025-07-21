@@ -18,9 +18,10 @@ export default function SmeDashBoard() {
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  
+
   // Fetch readiness score data
-  const { data: readinessScore, isLoading: isReadinessLoading } = useGetReadinessScore();
+  const { data: readinessScore, isLoading: isReadinessLoading } =
+    useGetReadinessScore();
 
   const learningCards = [
     {
@@ -34,26 +35,52 @@ export default function SmeDashBoard() {
       header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
     },
   ];
+  // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
+  //   (x: string) => x
+  // );
+
+  const sectionCompletion = assessmentsProgress?.sectionCompletion || {};
+  const completedSections = assessmentsProgress?.completedSections || [];
+
+  const nextSectionName = completedSections.find(
+    (section: string) => sectionCompletion[section] !== true
+  );
+
+  const label =
+    nextSectionName !== undefined ? `Finish ${nextSectionName}` : 'Completed';
+
+  const renderFinanceStatus = () => {
+    const values = Object.values(sectionCompletion);
+
+    if (values.length === 0) return '';
+
+    const allTrue = values.every((v) => v === true);
+    const allFalse = values.every((v) => v === false);
+
+    if (allTrue) return 100;
+    if (allFalse) return 50;
+    return undefined;
+  };
   const checklist = [
     {
       icon: '/icons/profile.svg',
       label: 'Complete profile',
-      status: 'Not Started',
+      status: user?.completionPercentage || undefined,
     },
     {
       icon: '/icons/presentation.svg',
       label: 'Start Readiness Assessment',
-      status: 'Not Started',
+      status: assessmentsProgress?.overallCompletionPercentage || undefined,
     },
     {
       icon: '/icons/money_out.svg',
-      label: 'Finish financial section',
-      status: 'Not Started',
+      label: label,
+      status: renderFinanceStatus() || undefined,
     },
     {
       icon: '/icons/status_up.svg',
       label: 'Explore investor matches',
-      status: 'Not Started',
+      status: undefined,
     },
   ];
 
@@ -65,6 +92,7 @@ export default function SmeDashBoard() {
     { id: 5, icon: '/icons/user5.svg', name: 'Suggested Connection 5' },
   ];
   const router = useRouter();
+
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
@@ -81,7 +109,7 @@ export default function SmeDashBoard() {
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
         <div className="lg:w-[25%] h-auto w-full ">
-          <ReadinessScoreCard 
+          <ReadinessScoreCard
             readinessData={readinessScore?.data?.currentScore}
             isLoading={isReadinessLoading}
             scoreValue={0} // fallback value

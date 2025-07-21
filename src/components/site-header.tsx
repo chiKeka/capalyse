@@ -1,79 +1,85 @@
-'use client';
+"use client";
 
-import { BellIcon, MailIcon, SidebarIcon } from 'lucide-react';
+import { BellIcon, MailIcon, SidebarIcon } from "lucide-react";
 
-import { SearchForm } from '@/components/search-form';
-import { useSidebar } from '@/components/ui/sidebar';
-import Button from './ui/Button';
-import Image from 'next/image';
-import { useState } from 'react';
-import { NotificationSheet, Notification } from './ui/notification-sheet';
-import { MessageSheet, Message } from './ui/message-sheet';
+import { SearchForm } from "@/components/search-form";
+import { useSidebar } from "@/components/ui/sidebar";
+import { useGetNotifications } from "@/hooks/useNotification";
+import Image from "next/image";
+import { useState } from "react";
+import Button from "./ui/Button";
+import { Message, MessageSheet } from "./ui/message-sheet";
+import { NotificationSheet } from "./ui/notification-sheet";
 
 export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const [openMessages, setOpenMessages] = useState(false);
   // Example notifications, replace with real data/fetch
-  const notifications: Notification[] = [
-    // Uncomment to test empty state
-    //
-    {
-      id: '1',
-      title: '{important} Your account deposit has been received',
-      message:
-        "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-      isImportant: true,
-      isUnread: true,
-    },
-    {
-      id: '2',
-      title: 'Your account deposit has been received',
-      message:
-        "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-      isImportant: false,
-      isUnread: false,
-    },
-  ];
+
+  const Notifications = useGetNotifications();
+  const { data: notifications } = Notifications;
+   
+
+  //  const notifications: Notification[] = [
+  //   // Uncomment to test empty state
+  //   //
+  //   {
+  //     id: '1',
+  //     title: '{important} Your account deposit has been received',
+  //     message:
+  //       "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
+  //     isImportant: true,
+  //     isUnread: true,
+  //   },
+  //   {
+  //     id: '2',
+  //     title: 'Your account deposit has been received',
+  //     message:
+  //       "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
+  //     isImportant: false,
+  //     isUnread: false,
+  //   },
+  // ];
   // Example messages, replace with real data/fetch
   const messages: Message[] = [
     {
-      id: '1',
-      sender: 'Jenny Wilson',
-      senderType: 'Angel Investor',
-      avatar: '',
-      time: '09:41 AM',
+      id: "1",
+      sender: "Jenny Wilson",
+      senderType: "Angel Investor",
+      avatar: "",
+      time: "09:41 AM",
       unreadCount: 2,
     },
     {
-      id: '2',
-      sender: 'Devon Lane',
-      senderType: 'VC',
-      avatar: '',
-      time: '09:41 AM',
+      id: "2",
+      sender: "Devon Lane",
+      senderType: "VC",
+      avatar: "",
+      time: "09:41 AM",
       unreadCount: 2,
     },
     {
-      id: '3',
-      sender: 'Jane Cooper',
-      senderType: 'Angel Investor',
-      avatar: '',
-      time: '09:41 AM',
+      id: "3",
+      sender: "Jane Cooper",
+      senderType: "Angel Investor",
+      avatar: "",
+      time: "09:41 AM",
       unreadCount: 0,
     },
     {
-      id: '4',
-      sender: 'Dianne Russell',
-      senderType: 'Impact Fund',
-      avatar: '',
-      time: '09:41 AM',
+      id: "4",
+      sender: "Dianne Russell",
+      senderType: "Impact Fund",
+      avatar: "",
+      time: "09:41 AM",
       unreadCount: 2,
     },
   ];
   function handleSelectMessage(id: string) {
     // Replace with navigation or chat screen logic
     // For now, just log
-    console.log('Open chat for message id:', id);
+    console.log("Open chat for message id:", id);
   }
   return (
     <header className="bg-background sticky top-0 z-50 flex w-full items-center border-b">
