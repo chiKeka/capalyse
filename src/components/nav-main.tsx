@@ -48,14 +48,16 @@ export function NavMain({
       <SidebarMenu className="gap-4 mt-6">
         {items.map((item, idx) => {
           // Overview is always the first item, with url exactly `/${param.accessType}`
-          const isOverview = idx === 0 && item.url === `/${param.accessType}`;
+          const isOverview =
+            idx === 0 && item.url === `/${param.accessType || 'admin'}`;
           let isActive;
           if (isOverview) {
             isActive = pathname === item.url;
           } else {
             isActive =
               pathname.startsWith(item.url) &&
-              pathname !== `/${param.accessType}`;
+              pathname !== `/${param.accessType}` &&
+              pathname !== `/admin`;
           }
 
           console.log({ url: item?.url, isActive, pathname });

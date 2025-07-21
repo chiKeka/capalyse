@@ -1,16 +1,11 @@
 'use client';
 import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import LearningCard from '@/components/sections/dashboardCards/learningCard';
 import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
-import Programs from '@/components/sections/dashboardCards/programs';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
 import { routes } from '@/lib/routes';
 import { useParams } from 'next/navigation';
 import IconCards from '../sections/dashboardCards/iconCards';
 import { CIcons } from '../ui/CIcons';
+import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
 export default function AdminDashBoard() {
   const params = useParams();
@@ -68,7 +63,22 @@ export default function AdminDashBoard() {
           label="Total Registered Users"
           amount={0}
           icon={CIcons.profile2}
-          extraContent={<div className="flex-1"></div>}
+          extraContent={
+            <div className="flex justify-between mt-auto">
+              {groups?.map((item) => (
+                <div className="text-black-500 text-2xl">
+                  <div className="flex gap-1 items-center text-sm">
+                    <div
+                      className="w-4 h-4 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span>{item.group}</span>
+                  </div>
+                  <h2>{item.count}</h2>
+                </div>
+              ))}
+            </div>
+          }
         />
         <div className="grid grid-cols-2 gap-5">
           {overviewCards.map((card) => (
@@ -78,86 +88,24 @@ export default function AdminDashBoard() {
         {/* <IconCards {...card} key={card?.id} /> */}
       </div>
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
-        <div className="lg:w-[25%] h-auto w-full ">
-          <ReadinessScoreCard scoreValue={5} />
+        <div className="lg:w-[32%] h-auto w-full ">
+          <InvestmentOpportunitiesCard />
         </div>
 
-        <div className="lg:w-[45%] w-full">
-          <DashboardCardLayout caption="Checklist Progress">
+        <div className="lg:w-[60%] w-full">
+          <DashboardCardLayout caption="Support Tickets Open (0)">
             <div className="flex my-8 flex-col gap-3">
-              {checklist.map((item, idx) => (
-                <CheckListProgressCard
-                  caption={item.label}
-                  status={item.status}
-                  img={item.icon}
-                  key={idx}
-                />
-              ))}
-            </div>
-          </DashboardCardLayout>
-        </div>
-        <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
-          <DashboardCardLayout
-            icon={'/images/bulb.svg'}
-            caption="Quick Tip"
-            height="h-full"
-          >
-            <p className="text-sm my-7 font-normal w-[244px]">
-              Keep your profile and documents updated to boost your readiness
-              score and attract investors.
-            </p>
-          </DashboardCardLayout>
-          <DashboardCardLayout
-            icon={'/icons/warning.svg'}
-            caption="Compliance Flag"
-            height="h-full"
-          >
-            {/* <p className="text-sm my-7 font-normal  w-[244px]"></p> */}
-          </DashboardCardLayout>
-        </div>
-      </div>
-      <div className="flex flex-col w-full gap-4 lg:flex-row">
-        <div className="flex lg:flex-row md:flex-wrap flex-col w-full lg:w-[70%]">
-          <DashboardCardLayout
-            caption="Learning Hub"
-            link={`/${params.accessType}/learning`}
-            linkName="See all Resources"
-          >
-            <div className="flex gap-4 my-8 flex-col lg:flex-row items-start ">
-              {learningCards.map((card, idx) => (
-                <LearningCard href={card.href} header={card.header} key={idx} />
-              ))}
-            </div>
-          </DashboardCardLayout>
-        </div>
-        <div>
-          <DashboardCardLayout height="h-full" caption="Matched Investors">
-            <EmptyBox />
-          </DashboardCardLayout>
-        </div>
-      </div>
-      <div className="flex w-full lg:flex-row flex-col gap-4">
-        <div className="lg:w-[35%] w-full flex">
-          <DashboardCardLayout
-            link={`/${params.accessType}/networking`}
-            linkName="See all"
-            caption="Suggested Connections"
-          >
-            <div className="flex my-8 flex-col gap-3">
-              {suggestedConnections.map((item) => (
-                <SuggestedConnection
-                  key={item.id}
-                  icon={item.icon}
-                  name={item.name}
-                />
-              ))}
-            </div>
-          </DashboardCardLayout>
-        </div>
-        <div className="flex-1 ">
-          <DashboardCardLayout height="h-full" caption="Develolopment Programs">
-            <div className="my-8">
-              <Programs />
+              <div className="flex flex-col gap-4">
+                {tickets.map((ticket) => (
+                  <div
+                    key={ticket.label}
+                    className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
+                  >
+                    <span>{ticket.label}</span>
+                    <span>{ticket.count}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </DashboardCardLayout>
         </div>
@@ -193,4 +141,108 @@ const overviewCards = [
     label: 'Investor-SME Matches',
     amount: 10,
   },
+];
+
+const groups = [
+  {
+    group: 'SMEs',
+    count: '0',
+    color: '#5CEBB4',
+  },
+  {
+    group: 'Investors',
+    count: '0',
+    color: '#A5BDFA',
+  },
+  {
+    group: 'Dev Orgs',
+    count: '0',
+    color: '#FCA5A5',
+  },
+];
+
+const investmentData = [
+  { name: 'Agriculture', value: 500000, color: '#5EE173' },
+  { name: 'Finance', value: 500000, color: '#A3B8FF' },
+  { name: 'Health', value: 70000, color: '#FFB3B3' },
+  { name: 'Tech', value: 50000, color: '#FFE6A3' },
+];
+
+function formatNumberShort(num: number): string {
+  if (num >= 1_000_000_000) {
+    const val = Math.floor((num / 1_000_000_000) * 100) / 100;
+    return val + 'b';
+  }
+  if (num >= 1_000_000) {
+    const val = Math.floor((num / 1_000_000) * 100) / 100;
+    return val + 'm';
+  }
+  if (num >= 1_000) {
+    const val = Math.floor((num / 1_000) * 100) / 100;
+    return val + 'k';
+  }
+  return num.toString();
+}
+
+function InvestmentOpportunitiesCard() {
+  const allZero = investmentData.every((entry) => entry.value === 0);
+  const emptyTrackColor = '#E6F9ED'; // light green for empty state
+  const total = investmentData.reduce((sum, entry) => sum + entry.value, 0);
+  return (
+    <DashboardCardLayout caption="Investment Opportunities (₦)">
+      <div className="flex flex-col items-center justify-center h-full py-6">
+        <div className="relative w-56 h-56">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={allZero ? [{ name: 'Empty', value: 1 }] : investmentData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={70}
+                outerRadius={90}
+                stroke="none"
+                startAngle={90}
+                endAngle={-270}
+              >
+                {allZero ? (
+                  <Cell fill={emptyTrackColor} />
+                ) : (
+                  investmentData.map((entry, idx) => (
+                    <Cell key={`cell-${idx}`} fill={entry.color} />
+                  ))
+                )}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-3xl font-bold text-gray-800">
+              ₦{formatNumberShort(total)}
+            </span>
+            <span className="text-gray-400 text-base">Total</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap justify-center gap-6 mt-8">
+          {investmentData.map((entry) => (
+            <div key={entry.name} className="flex items-center gap-2">
+              <span
+                className="inline-block w-4 h-4 rounded-full"
+                style={{ backgroundColor: entry.color, opacity: 0.7 }}
+              />
+              <span className="text-gray-500 text-base font-medium">
+                {entry.name} {formatNumberShort(entry.value)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </DashboardCardLayout>
+  );
+}
+
+const tickets = [
+  { label: 'SME Issues', count: 0 },
+  { label: 'Investor Inquiries', count: 0 },
+  { label: 'Platform Feedback', count: 0 },
 ];
