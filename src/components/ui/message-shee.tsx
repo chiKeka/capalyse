@@ -4,9 +4,6 @@ import { ArrowLeftIcon, RefreshCcwIcon, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import ChatPage from '../messages';
-import { ChatConversation } from '@/lib/uitils/types';
-import { useGetConversations } from '@/hooks/useMessages';
-import { useGetCurrentUser } from '@/hooks/useAuth';
 
 export interface Message {
   id: string;
@@ -23,56 +20,23 @@ export interface Message {
 interface MessageSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  messages: Message[];
   emptyIllustration?: string;
 }
-
-const conversationToMessage = (conversation: ChatConversation, currentUserId: string): Message => {
-  const otherParticipant = conversation.participants?.find(p => p._id !== currentUserId) || conversation.participants?.[0];
-  if (!otherParticipant) {
-    throw new Error('No other participant found in conversation');
-  }
-  
-  return {
-    id: conversation._id,
-    sender: `${otherParticipant.firstName} ${otherParticipant.lastName}`,
-    senderType: otherParticipant.businessName || 'Member', // Use businessName as role fallback
-    avatar: '/icons/default-avatar.svg',
-    time: new Date(conversation.lastMessageAt || conversation.updatedAt).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
-    unreadCount: conversation.unreadCount[currentUserId] || 0,
-    text: '', // No last message content in current API response
-    online: false
-  };
-};
 
 export function MessageSheet({
   open,
   onOpenChange,
+  messages,
   emptyIllustration = '/icons/empty-messages.svg',
 }: MessageSheetProps) {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
-
-  // Fetch conversations using the API
-  const { conversations, isLoading, refetch, pagination } = useGetConversations();
-  
-  // Get current user ID from auth
-  const { data: currentUserResponse } = useGetCurrentUser();
-  const currentUserId = currentUserResponse?.data?.data?.user?.id;
-
-  const messages = conversations.map(conversation => conversationToMessage(conversation, currentUserId));
   const hasMessages = messages.length > 0;
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
-  function onSelectMessage(conversationId: string) {
-    const conversation = conversations.find((conv) => conv._id === conversationId);
-    if (conversation) {
-      setSelectedMessage(conversationToMessage(conversation, currentUserId));
-      setSelectedConversationId(conversationId);
-      setIsChatOpen(true);
-    }
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  function onSelectMessage(id: string) {
+    setSelectedMessage(messages.find((msg) => msg.id === id) || null);
+    setIsChatOpen(true);
   }
   return (
     <Sheet
@@ -131,21 +95,7 @@ export function MessageSheet({
           </SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
-          {/* Pagination info */}
-          {pagination && (
-            <div className="text-xs text-muted-foreground mb-2 px-2">
-              {pagination.total > 0 ? (
-                `Showing ${((pagination.page - 1) * pagination.limit) + 1}-${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} conversations`
-              ) : (
-                'No conversations found'
-              )}
-            </div>
-          )}
-            {isLoading ? (
-            <div className="flex items-center justify-center h-[20vh]">
-              <div className="text-muted-foreground">Loading conversations...</div>
-            </div>
-          ) : hasMessages ? (
+          {hasMessages ? (
             <ul className="divide-y divide-muted-foreground/10">
               {isChatOpen ? (
                 <ChatPage
@@ -220,7 +170,7 @@ export function MessageSheet({
                 variant="tertiary"
                 type="button"
                 className="inline-flex items-center gap-2 text-emerald-700 !text-base font-bold focus:outline-none"
-                onClick={() => refetch()}
+                onClick={() => window.location.reload()}
                 aria-label="Refresh messages"
               >
                 <RefreshCcwIcon className="w-4 h-4" />
@@ -228,37 +178,6 @@ export function MessageSheet({
               </Button>
             </div>
           )}
-          
-          {/* Pagination controls - shown when not in chat mode and has pagination */}
-          {/* {!isChatOpen && pagination && pagination.total > pagination.limit && (
-            <div className="flex items-center justify-center gap-2 px-6 py-3 border-t">
-              <Button
-                variant="tertiary"
-                disabled={!pagination.hasPrev}
-                onClick={() => {
-                  // TODO: Implement pagination - need to add page state management
-                  console.log('Previous page');
-                }}
-                className="text-xs px-3 py-1"
-              >
-                Previous
-              </Button>
-              <span className="text-xs text-muted-foreground px-2">
-                Page {pagination.page}
-              </span>
-              <Button
-                variant="tertiary"
-                disabled={!pagination.hasNext}
-                onClick={() => {
-                  // TODO: Implement pagination - need to add page state management
-                  console.log('Next page');
-                }}
-                className="text-xs px-3 py-1"
-              >
-                Next
-              </Button>
-            </div>
-          )} */}
         </div>
       </SheetContent>
     </Sheet>

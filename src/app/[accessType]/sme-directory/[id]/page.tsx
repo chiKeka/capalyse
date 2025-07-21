@@ -18,6 +18,7 @@ import { statusBadge } from '@/components/ui/statusBar';
 import Image from 'next/image';
 import React from 'react';
 import IconCards from '@/components/sections/dashboardCards/iconCards';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
 
 type Props = {};
 
@@ -108,6 +109,9 @@ const businessProfile = {
 const certificateImage = '/images/certificate-sample.png'; // Use your actual certificate image path
 
 export default function SMEDirectoryPage({}: Props) {
+  // Fetch readiness score data for the SME
+  const { data: readinessData, isLoading: isReadinessLoading } = useGetReadinessScore();
+
   const checklist = [
     {
       value: 80,
@@ -179,7 +183,11 @@ export default function SMEDirectoryPage({}: Props) {
           ))}
         </div>
         <div className=" h-auto w-full ">
-          <ReadinessScoreCard scoreValue={70} />
+          <ReadinessScoreCard 
+            readinessData={readinessData?.data?.currentScore}
+            isLoading={isReadinessLoading}
+            scoreValue={0} // fallback value
+          />
         </div>
 
         <div className=" h-auto w-full">

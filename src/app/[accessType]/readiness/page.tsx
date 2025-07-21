@@ -80,30 +80,78 @@ function page({}: Props) {
   const analytics = useGetScoreAnalytics();
   const scoreHistory = useGetScoreHistory();
   const scoreInsight = useGetScoreInsight();
-  const { data: score, isLoading, error } = readinessScore;
+  const { data: readinessData, isLoading, error } = readinessScore;
 
-  const checklist = [
-    {
-      value: 80,
-      label: "Strong foundation in place",
-      caption: "Foundational",
-    },
-    {
-      value: 60,
-      label: "Moderate financial stability",
-      caption: "Financial Health",
-    },
-    {
-      value: 45,
-      label: "Significant gaps in compliance",
-      caption: "Compliance",
-    },
-  ];
+  // Get category breakdown from API data
+  const getCategoryBreakdown = () => {
+    if (!readinessData?.data?.currentScore?.scores) {
+      return [
+        {
+          value: 80,
+          label: "Strong foundation in place",
+          caption: "Foundational",
+        },
+        {
+          value: 60,
+          label: "Moderate financial stability",
+          caption: "Financial Health",
+        },
+        {
+          value: 45,
+          label: "Significant gaps in compliance",
+          caption: "Compliance",
+        },
+      ];
+    }
+
+    const scores = readinessData.data.currentScore.scores;
+    return [
+      {
+        value: Math.round(scores.businessInfo),
+        label: getScoreLabel(scores.businessInfo),
+        caption: "Business Info",
+      },
+      {
+        value: Math.round(scores.financial),
+        label: getScoreLabel(scores.financial),
+        caption: "Financial Health",
+      },
+      {
+        value: Math.round(scores.operational),
+        label: getScoreLabel(scores.operational),
+        caption: "Operational",
+      },
+      {
+        value: Math.round(scores.market),
+        label: getScoreLabel(scores.market),
+        caption: "Market",
+      },
+      {
+        value: Math.round(scores.compliance),
+        label: getScoreLabel(scores.compliance),
+        caption: "Compliance",
+      },
+    ];
+  };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return "Excellent foundation in place";
+    if (score >= 60) return "Good progress made";
+    if (score >= 40) return "Moderate improvements needed";
+    return "Significant gaps identified";
+  };
+
+  const checklist = getCategoryBreakdown();
+
   return (
     <div className="w-full h-full gap-6 flex flex-col">
       <div className="flex lg:flex-row gap-4 flex-col">
         <div className="lg:w-[25%] h-auto w-full ">
-          <ReadinessScoreCard scoreValue={70} />
+          <ReadinessScoreCard 
+            readinessData={readinessData?.data?.currentScore}
+            isLoading={isLoading}
+            scoreValue={0} // fallback value
+          />
         </div>
 
         <div className="flex-1 h-full">
@@ -123,6 +171,47 @@ function page({}: Props) {
           </DashboardCardLayout>
         </div>
       </div>
+      
+      {/* Recommendations Section */}
+      {/* {readinessData?.data?.currentScore?.recommendations && (
+        <div className="mt-6">
+          <DashboardCardLayout caption="Recommendations">
+            <div className="my-8 space-y-4">
+              {readinessData.data.currentScore.recommendations.map((recommendation, index) => (
+                <div key={recommendation._id} className="border-b pb-4 last:border-b-0">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-base">{recommendation.title}</h3>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      recommendation.priority === 'high' 
+                        ? 'bg-red-100 text-red-800' 
+                        : recommendation.priority === 'medium'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {recommendation.priority.toUpperCase()} PRIORITY
+                    </span>
+                  </div>
+                  <p className="text-gray-600 mb-3">{recommendation.description}</p>
+                  <div className="mb-3">
+                    <span className="text-sm font-medium text-gray-700">
+                      Potential Impact: +{recommendation.impact}% score increase
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Action Items:</h4>
+                    <ul className="list-disc list-inside space-y-1">
+                      {recommendation.actionItems.map((item, itemIndex) => (
+                        <li key={itemIndex} className="text-sm text-gray-600">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </DashboardCardLayout>
+        </div>
+      )} */}
+
       <DashboardCardLayout>
         <div className=" flex justify-between items-center ">
           <div className="flex items-center gap-2">

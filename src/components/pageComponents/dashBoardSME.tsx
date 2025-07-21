@@ -9,6 +9,7 @@ import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessSc
 import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
 import { useGetCurrentProfile } from '@/hooks/useProfileManagement';
 import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
 import { useParams, useRouter } from 'next/navigation';
 
 export default function SmeDashBoard() {
@@ -17,6 +18,9 @@ export default function SmeDashBoard() {
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
   const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
+  
+  // Fetch readiness score data
+  const { data: readinessScore, isLoading: isReadinessLoading } = useGetReadinessScore();
 
   const learningCards = [
     {
@@ -77,7 +81,11 @@ export default function SmeDashBoard() {
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
         <div className="lg:w-[25%] h-auto w-full ">
-          <ReadinessScoreCard scoreValue={5} />
+          <ReadinessScoreCard 
+            readinessData={readinessScore?.data?.currentScore}
+            isLoading={isReadinessLoading}
+            scoreValue={0} // fallback value
+          />
         </div>
 
         <div className="lg:w-[45%] w-full">

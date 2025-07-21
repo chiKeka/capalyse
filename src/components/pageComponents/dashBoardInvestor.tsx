@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { CIcons } from '../ui/CIcons';
 import { formatCurrency } from '@/lib/uitils/fns';
 import ResourceCard from '../sections/dashboardCards/ResourceCard';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
 
 const learningCards = [
   {
@@ -52,6 +53,9 @@ const overviewCards = [
 export default function InvestorDashBoard() {
   const router = useRouter();
   const params = useParams();
+  
+  // Fetch readiness score data
+  const { data: readinessData, isLoading: isReadinessLoading } = useGetReadinessScore();
 
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
@@ -103,7 +107,11 @@ export default function InvestorDashBoard() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6">
-        <ReadinessScoreCard scoreValue={5} />
+        <ReadinessScoreCard 
+          readinessData={readinessData?.data?.currentScore}
+          isLoading={isReadinessLoading}
+          scoreValue={0} // fallback value
+        />
 
         <div className="flex flex-col w-full">
           <DashboardCardLayout
