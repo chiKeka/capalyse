@@ -48,7 +48,14 @@ function page({}: Props) {
           Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
         );
         localStorage.setItem('onBoardignData', JSON.stringify(res?.data));
+        console.log({ user });
+        if (user?.role === 'ADMIN') {
+          router.push(`/admin`);
+          return;
+        }
+
         const rootRoute = getKeyByValue(UserType, user?.role);
+        console.log({ rootRoute });
         if (rootRoute) {
           if (user.profileCompletionStep <= 2) {
             router.push(`/${rootRoute}/onboarding`);

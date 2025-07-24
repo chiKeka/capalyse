@@ -170,7 +170,11 @@ export function useReadinessForm(sections: SectionData[]) {
       [fieldId]: error,
     }));
   }
-
+  console.log(
+    'last section reached',
+    pathName,
+    pathName.includes('onboarding')
+  );
   function addSection() {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const currentSections = sectionedData[fieldId] || [];
@@ -438,11 +442,12 @@ export function useReadinessForm(sections: SectionData[]) {
               currentSection === sections.length - 1 &&
               currentQuestion === totalQuestions - 1
             ) {
+              toast.success('Assessment Completed Successfully');
               console.log('last section reached', pathName);
               if (pathName?.includes('onboarding')) {
                 router.push('/sme');
               } else {
-                // window && window?.location?.reload();
+                window && window?.location?.reload();
               }
             } else if (currentSection < sections.length - 1) {
               setCurrentSection(currentSection + 1);

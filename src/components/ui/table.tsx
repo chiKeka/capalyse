@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import React from "react";
-import EmptyBox from "../sections/dashboardCards/emptyBox";
+// import {
+//   Pagination,
+//   PaginationContent,
+//   PaginationItem,
+//   PaginationLink,
+//   PaginationNext,
+//   PaginationPrevious,
+// } from "@/components/ui/pagination";
+import React from 'react';
+import EmptyBox from '../sections/dashboardCards/emptyBox';
 
 type Column<T> = {
   header: string;
@@ -31,7 +31,7 @@ type ReusableTableProps<T> = {
 export function ReusableTable<T extends object>({
   columns,
   data = [],
-  className = "",
+  className = '',
   rowsPerPage = 4,
   page = 1,
   setPage,
@@ -46,7 +46,7 @@ export function ReusableTable<T extends object>({
               <th
                 key={idx}
                 className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase ${
-                  col.className || ""
+                  col.className || ''
                 }`}
               >
                 {col.header}
@@ -72,9 +72,9 @@ export function ReusableTable<T extends object>({
                 {columns.map((col: any, cidx: number) => (
                   <td
                     key={cidx}
-                    className={`px-4 py-3 text-sm ${col.className || ""}`}
+                    className={`px-4 py-3 text-sm ${col.className || ''}`}
                   >
-                    {typeof col.accessor === "function"
+                    {typeof col.accessor === 'function'
                       ? col.accessor(row)
                       : (row as any)[col.accessor]}
                   </td>
@@ -83,7 +83,7 @@ export function ReusableTable<T extends object>({
             ))}
         </tbody>
       </table>
-      {totalPages && totalPages > 1 && (
+      {/* {totalPages && totalPages > 1 && (
         <div className="pt-5">
           <Pagination>
             <PaginationContent>
@@ -124,7 +124,7 @@ export function ReusableTable<T extends object>({
             </PaginationContent>
           </Pagination>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

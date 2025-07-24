@@ -1,7 +1,6 @@
 'use client';
 
 import UserManagementTabContents from '@/components/pageComponents/UserManagementTabContents';
-import { usePathname } from 'next/navigation';
 
 const tabs = [
   { label: 'SMEs', key: '/admin/user-management' },
@@ -10,12 +9,9 @@ const tabs = [
 ];
 
 const UserManagement = () => {
-  const pathname = usePathname();
-  // Determine active tab by matching the last segment of the path
-
   return (
     <main>
-      <UserManagementTabContents type="sme" />
+      <UserManagementTabContents type="SMEs" />
     </main>
   );
 };

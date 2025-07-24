@@ -117,7 +117,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
             {...register('phoneNumber', {
               required: 'Phone Number is required',
             })}
-            type="number"
+            type="phone"
             name="phoneNumber"
           />
           {errors.phoneNumber && (

@@ -12,19 +12,28 @@ import {
 import { SearchForm } from '../search-form';
 import { useMemo } from 'react';
 import { statusBadge } from '../ui/statusBar';
+import { useInvestorDirectory, useSmeDirectory } from '@/hooks/useDirectories';
+import { notFound } from 'next/navigation';
 
-const UserManagementTabContents = ({ type }: { type: string }) => {
+const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
   const mgtColumns = useMemo(
-    () => (type === 'sme' ? columns : invColumns),
+    () => (type === 'SMEs' ? columns : invColumns),
     [type]
   );
+  const { data: smesd } = useSmeDirectory();
+  const { data: investors } = useInvestorDirectory();
+
+  if (!type) {
+    return notFound();
+  }
+  console.log({ object: smesd?.data });
   return (
     <div>
       <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
         <div className="flex items-center mb-8 gap-2">
-          <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
+          <p className="font-bold whitespace-nowrap text-base flex gap-1 items-center text-[#18181B]">
             <span>
-              <span className="uppercase">{type}</span>s
+              <span>{type}</span>
             </span>
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
               {smes.length}
@@ -55,7 +64,7 @@ const UserManagementTabContents = ({ type }: { type: string }) => {
       </div>
       <ReusableTable
         columns={mgtColumns}
-        data={smes}
+        data={smesd?.data}
         totalPages={Math.ceil(smes.length / 4)}
       />
     </div>
@@ -66,29 +75,37 @@ export default UserManagementTabContents;
 const columns = [
   {
     header: 'Name',
-    accessor: (row: (typeof smes)[0]) => (
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        <Image
-          src={row.avatar}
-          alt={row.name}
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
-        <span className="font-medium text-sm">{row.name}</span>
+        {row?.avatar && (
+          <Image
+            src={row.avatar}
+            alt={row.businessName}
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
+        )}
+        <span className="font-medium text-sm">{row.businessName}</span>
       </div>
     ),
   },
   { header: 'Industry', accessor: 'industry' },
-  { header: 'Country', accessor: 'country' },
-  { header: 'Readiness Score', accessor: 'readiness' },
+  {
+    header: 'Country',
+    accessor: (row: any) => <span>{row?.countryOfOperation?.join(', ')}</span>,
+  },
+  { header: 'Readiness Score', accessor: 'readinessScore' },
   { header: 'Revenue', accessor: 'revenue' },
-  { header: 'Team Size', accessor: 'teamSize' },
+  {
+    header: 'Team Size',
+    accessor: (row: any) => <span>{row?.teamMembers?.length}</span>,
+  },
   {
     header: 'Action',
-    accessor: (row: (typeof smes)[0]) => (
+    accessor: (row: any) => (
       <Link
-        href={`/investor/sme-directory/${row.id}`}
+        href={`/admin/user-management/sme/${row._id}`}
         className="text-green font-medium hover:underline"
       >
         View Profile
@@ -101,7 +118,7 @@ const columns = [
 const invColumns = [
   {
     header: 'Name',
-    accessor: (row: (typeof smes)[0]) => (
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
         <Image
           src={row.avatar}
@@ -118,13 +135,13 @@ const invColumns = [
   { header: 'Investment Focus', accessor: 'focus' },
   {
     header: 'Status',
-    accessor: (row: (typeof smes)[0]) => statusBadge(row.status),
+    accessor: (row: any) => statusBadge(row.status),
   },
   {
     header: 'Action',
-    accessor: (row: (typeof smes)[0]) => (
+    accessor: (row: any) => (
       <Link
-        href={`/investor/sme-directory/${row.id}`}
+        href={`/admin/user-management/investor/${row._id}`}
         className="text-green font-medium hover:underline"
       >
         View Profile
