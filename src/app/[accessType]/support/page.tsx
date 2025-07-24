@@ -15,12 +15,13 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { useSupports } from "@/hooks/useSupport";
+import { useGetSupport, useSupports } from "@/hooks/useSupport";
 import { handleImageUpload } from "@/lib/uitils/fns";
 import { CreateSupportForm, supportAttachment } from "@/lib/uitils/types";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const disputeHistory = [
   {
@@ -48,6 +49,9 @@ const disputeHistory = [
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
+
+  const { data } = useGetSupport();
+  const supportTicket = data?.data;
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [files, setFiles] = useState<supportAttachment[]>([]);
   const {
@@ -57,15 +61,17 @@ const SupportPage = () => {
     formState: { errors },
   } = useForm<CreateSupportForm>();
 
-  const onSubmit = ({ subject, description }: CreateSupportForm) => {
+  const onSubmit = ({ category, description }: CreateSupportForm) => {
     createSupport
       .mutateAsync({
-        subject,
+        subject: category,
         file: files,
         description,
-        category: subject,
+        category,
       })
-      .then(() => {});
+      .then(() => {
+        toast.success("Ticket submitted successfully");
+      });
   };
   const handleFileUpload = async (e: any) => {
     if (e) setFileUploadLoading(true);
@@ -82,9 +88,8 @@ const SupportPage = () => {
       ]);
       setFileUploadLoading(false);
     });
-
-    console.log({ fileUrl });
   };
+  console.log({ supportTicket });
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
       <Card className="grid gap-8 md:grid-cols-2 p-6">
@@ -116,7 +121,10 @@ const SupportPage = () => {
                   <SelectContent>
                     <SelectItem value="technical">Technical Issue</SelectItem>
                     <SelectItem value="billing">Billing Inquiry</SelectItem>
-                    <SelectItem value="service">Service Quality</SelectItem>
+                    <SelectItem value="account">Service Quality</SelectItem>
+                    <SelectItem value="feature_request">
+                      Features Request
+                    </SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -186,7 +194,13 @@ const SupportPage = () => {
                 </div>
               </div>
 
-              <Button size="big" className="w-full">
+              <Button
+                type="submit"
+                disabled={createSupport.isPending || fileUploadLoading}
+                state={createSupport.isPending ? "loading" : undefined}
+                size="big"
+                className="w-full"
+              >
                 Submit
               </Button>
             </form>
@@ -197,23 +211,28 @@ const SupportPage = () => {
         {/* Dispute History */}
         <div className="space-y-6">
           <h6 className="text-[#2E3034] font-bold text-xl">Dispute History</h6>
-          {disputeHistory.length > 0 ? (
+          {supportTicket?.tickets.length > 0 ? (
             <div className="space-y-6">
-              {disputeHistory.map((item, index) => (
+              {supportTicket?.tickets?.map((item: any, index: number) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-start gap-2">
                     <CIcons.messageMinus />
                     <div>
                       <p className="text-sm">
-                        <strong>Ticket No:</strong> <span>{item.ticket}</span>
+                        <strong>Ticket No:</strong>{" "}
+                        <span>{item?.id.slice(0, -8)}</span>
                       </p>
-                      <p className=" text-[#9EA5B1] text-sm">{item.issue}</p>
+                      <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>
                   </div>
                   <div className="text-left">
                     <Badge
                       variant={
-                        item.status as "resolved" | "inProgress" | "unresolved"
+                        item.status as
+                          | "resolved"
+                          | "in_progress"
+                          | "open"
+                          | "closed"
                       }
                       className="capitalize mb-2"
                     >
