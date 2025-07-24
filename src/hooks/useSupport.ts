@@ -1,5 +1,6 @@
 import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
+import { CreateSupportForm } from "@/lib/uitils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetSupport = () => {
@@ -32,25 +33,26 @@ export const useGetTicketMessage = (id: string) => {
 };
 
 export const useSupports = () => {
-  const useCreateSupport = useMutation({
-    mutationFn: async (cred): Promise<any> => {
+
+  const createSupport = useMutation({
+    mutationFn: async (cred: CreateSupportForm): Promise<any> => {
       return api.post(ApiEndPoints.SupportTicket, cred);
     },
   });
 
-  const useCreateTicketMessage = useMutation({
+  const createTicketMessage = useMutation({
     mutationFn: async (cred): Promise<any> => {
       return api.post(ApiEndPoints.TicketMessage(cred?.id), cred);
     },
   });
 
-  const useUpdateTicket = useMutation({
+  const updateTicket = useMutation({
     mutationFn: async (id: string): Promise<any> => {
       return api.put(ApiEndPoints.TicketsActions(id));
     },
   });
 
-  const useUpdateTicketMessage = useMutation({
+  const updateTicketMessage = useMutation({
     mutationFn: async (cred: any): Promise<any> => {
       return api.put(
         ApiEndPoints.TicketMessagesAction(cred?.id, cred?.messageid),
@@ -65,7 +67,7 @@ export const useSupports = () => {
     },
   });
 
-  const useDeleteTicketMessaging = useMutation({
+  const deleteTicketMessaging = useMutation({
     mutationFn: async (cred: any): Promise<any> => {
       return api.delete(
         ApiEndPoints.TicketMessagesAction(cred?.id, cred?.messagei)
@@ -74,11 +76,11 @@ export const useSupports = () => {
   });
 
   return {
-    useDeleteTicketMessaging,
+    deleteTicketMessaging,
     delTicket,
-    useUpdateTicket,
-    useUpdateTicketMessage,
-    useCreateTicketMessage,
-    useCreateSupport,
+    updateTicket,
+    updateTicketMessage,
+    createTicketMessage,
+    createSupport,
   };
 };

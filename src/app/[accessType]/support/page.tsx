@@ -1,46 +1,90 @@
-'use client';
+"use client";
 
-import Button from '@/components/ui/Button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from "@/components/ui/Button";
+import { CIcons } from "@/components/ui/CIcons";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
-import { CIcons } from '@/components/ui/CIcons';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { useSupports } from "@/hooks/useSupport";
+import { handleImageUpload } from "@/lib/uitils/fns";
+import { CreateSupportForm, supportAttachment } from "@/lib/uitils/types";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 const disputeHistory = [
   {
-    ticket: '15235GT',
-    issue: 'Upload Issue',
-    status: 'unresolved',
-    date: '03 August 2023',
-    time: '09:17pm',
+    ticket: "15235GT",
+    issue: "Upload Issue",
+    status: "unresolved",
+    date: "03 August 2023",
+    time: "09:17pm",
   },
   {
-    ticket: '15235GT',
-    issue: 'Upload Issue',
-    status: 'inProgress',
-    date: '03 August 2023',
-    time: '09:17pm',
+    ticket: "15235GT",
+    issue: "Upload Issue",
+    status: "inProgress",
+    date: "03 August 2023",
+    time: "09:17pm",
   },
   {
-    ticket: '15235GT',
-    issue: 'Upload Issue',
-    status: 'resolved',
-    date: '03 August 2023',
-    time: '09:17pm',
+    ticket: "15235GT",
+    issue: "Upload Issue",
+    status: "resolved",
+    date: "03 August 2023",
+    time: "09:17pm",
   },
 ];
 
 const SupportPage = () => {
+  const { createSupport } = useSupports();
+  const [fileUploadLoading, setFileUploadLoading] = useState(false);
+  const [files, setFiles] = useState<supportAttachment[]>([]);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<CreateSupportForm>();
+
+  const onSubmit = ({ subject, description }: CreateSupportForm) => {
+    createSupport
+      .mutateAsync({
+        subject,
+        file: files,
+        description,
+        category: subject,
+      })
+      .then(() => {});
+  };
+  const handleFileUpload = async (e: any) => {
+    if (e) setFileUploadLoading(true);
+    const file = e.target.files[0];
+    const fileUrl = await handleImageUpload(file, (res: any) => {
+      console.log({ res });
+      setFiles([
+        {
+          fileName: res?.original_filename,
+          fileUrl: res?.secure_url,
+          fileSize: res?.bytes,
+          mimeType: res?.format,
+        },
+      ]);
+      setFileUploadLoading(false);
+    });
+
+    console.log({ fileUrl });
+  };
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
       <Card className="grid gap-8 md:grid-cols-2 p-6">
@@ -59,10 +103,10 @@ const SupportPage = () => {
                 </div>
               </div>
             </div>
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select>
+                <Select onValueChange={(val) => setValue("category", val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -76,15 +120,28 @@ const SupportPage = () => {
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.category && (
+                  <span className="col-span-2 text-[10px] text-red-500">
+                    {errors.category.message}
+                  </span>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="description">Detailed Description</Label>
                 <Textarea
+                  {...register("description", {
+                    required: "business Registration number is required",
+                  })}
                   id="description"
                   placeholder="Enter Message"
                   className="min-h-[120px]"
                 />
+                {errors.description && (
+                  <span className="col-span-2 text-[10px] text-red-500">
+                    {errors.description.message}
+                  </span>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -97,12 +154,34 @@ const SupportPage = () => {
                     className="flex flex-col items-center justify-center w-full h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <CIcons.documentUpload />
-                      <p className="mb-2 text-sm text-[#52575C]">
-                        Click to add image/Video
-                      </p>
+                      {!fileUploadLoading ? (
+                        <>
+                          <CIcons.documentUpload />
+
+                          <p className="mb-2 text-sm text-[#52575C]">
+                            Click to add image/Video
+                          </p>
+                        </>
+                      ) : (
+                        <Loader className="animate-spin h-8 w-8 " />
+                      )}
                     </div>
-                    <Input id="upload" type="file" className="hidden" />
+                    <Input
+                      disabled={fileUploadLoading}
+                      name="supportFile"
+                      onChange={handleFileUpload}
+                      id="upload"
+                      type="file"
+                      className="hidden"
+                    />
+
+                    {files?.map((items) => {
+                      return (
+                        <div className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
+                          {items.fileName}
+                        </div>
+                      );
+                    })}
                   </Label>
                 </div>
               </div>
@@ -110,7 +189,7 @@ const SupportPage = () => {
               <Button size="big" className="w-full">
                 Submit
               </Button>
-            </div>
+            </form>
           </div>
           <Separator orientation="vertical" />
         </div>
@@ -134,11 +213,11 @@ const SupportPage = () => {
                   <div className="text-left">
                     <Badge
                       variant={
-                        item.status as 'resolved' | 'inProgress' | 'unresolved'
+                        item.status as "resolved" | "inProgress" | "unresolved"
                       }
                       className="capitalize mb-2"
                     >
-                      {item.status.replace(/([A-Z])/g, ' $1')}
+                      {item.status.replace(/([A-Z])/g, " $1")}
                     </Badge>
                     <p className="text-xs text-gray-500">
                       {item.date} {item.time}

@@ -56,11 +56,11 @@ export type AuthState = {
 // Messaging and conversation types (matching backend interfaces)
 
 export enum MessageType {
-  TEXT = 'text',
-  IMAGE = 'image',
-  FILE = 'file',
-  AUDIO = 'audio',
-  VIDEO = 'video',
+  TEXT = "text",
+  IMAGE = "image",
+  FILE = "file",
+  AUDIO = "audio",
+  VIDEO = "video",
 }
 
 export type MessageAttachment = {
@@ -93,7 +93,6 @@ export type ChatMessagesResponse = {
   data: ChatMessage[];
   pagination: PaginationMeta;
 };
-
 
 export type Message = {
   id: string;
@@ -231,7 +230,9 @@ export const createConversationRequest = (
   participants,
   isGroup: options?.isGroup || false,
   ...(options?.groupName && { groupName: options.groupName }),
-  ...(options?.groupDescription && { groupDescription: options.groupDescription }),
+  ...(options?.groupDescription && {
+    groupDescription: options.groupDescription,
+  }),
   ...(options?.groupAdmin && { groupAdmin: options.groupAdmin }),
 });
 
@@ -252,39 +253,43 @@ export const createSendMessageRequest = (
 });
 
 // Validation helpers (optional - for client-side validation)
-export const validateConversationRequest = (request: CreateConversationRequest): string[] => {
+export const validateConversationRequest = (
+  request: CreateConversationRequest
+): string[] => {
   const errors: string[] = [];
-  
+
   if (!request.participants || request.participants.length < 2) {
-    errors.push('At least 2 participants are required');
+    errors.push("At least 2 participants are required");
   }
-  
+
   if (request.groupName && request.groupName.length > 100) {
-    errors.push('Group name must be less than 100 characters');
+    errors.push("Group name must be less than 100 characters");
   }
-  
+
   if (request.groupDescription && request.groupDescription.length > 500) {
-    errors.push('Group description must be less than 500 characters');
+    errors.push("Group description must be less than 500 characters");
   }
-  
+
   if (request.isGroup && !request.groupAdmin) {
-    errors.push('Group admin is required for group conversations');
+    errors.push("Group admin is required for group conversations");
   }
-  
+
   return errors;
 };
 
-export const validateMessageRequest = (request: SendMessageRequest): string[] => {
+export const validateMessageRequest = (
+  request: SendMessageRequest
+): string[] => {
   const errors: string[] = [];
-  
+
   if (!request.content || request.content.trim().length === 0) {
-    errors.push('Message content is required');
+    errors.push("Message content is required");
   }
-  
+
   if (request.content && request.content.length > 2000) {
-    errors.push('Message content must be less than 2000 characters');
+    errors.push("Message content must be less than 2000 characters");
   }
-  
+
   return errors;
 };
 
@@ -330,7 +335,7 @@ export type ReadinessScoreBreakdown = {
 
 export type ReadinessScoreRecommendation = {
   category: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   title: string;
   description: string;
   impact: number;
@@ -379,4 +384,20 @@ export type ReadinessScoreResponse = {
     improvements: ReadinessScoreImprovements;
     lastUpdated: string;
   };
+};
+
+// support
+
+export type CreateSupportForm = {
+  subject: string;
+  description: string;
+  category: string;
+  file?: supportAttachment[];
+};
+
+export type supportAttachment = {
+  fileName: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
 };
