@@ -5,16 +5,16 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetSupport = () => {
   return useQuery({
-    queryKey: ["sme_assessment"],
+    queryKey: ["sme_Support"],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.SupportTicket);
-      return resp.data.data;
+      return resp?.data
     },
   });
 };
 export const useGetSingleTicket = (id: string) => {
   return useQuery({
-    queryKey: ["sme_assessment"],
+    queryKey: ["sme_single_support"],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.TicketsActions(id));
       return resp.data.data;
@@ -24,7 +24,7 @@ export const useGetSingleTicket = (id: string) => {
 
 export const useGetTicketMessage = (id: string) => {
   return useQuery({
-    queryKey: ["sme_assessment"],
+    queryKey: ["sme_ticket_messages"],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.TicketMessage(id));
       return resp.data.data;
@@ -33,7 +33,6 @@ export const useGetTicketMessage = (id: string) => {
 };
 
 export const useSupports = () => {
-
   const createSupport = useMutation({
     mutationFn: async (cred: CreateSupportForm): Promise<any> => {
       return api.post(ApiEndPoints.SupportTicket, cred);
