@@ -103,7 +103,7 @@ const programColumns = [
   },
   {
     header: 'Status',
-    accessor: (row:any) => (
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
         <div
           className={`w-2 h-2 rounded-full ${
@@ -210,13 +210,15 @@ const generateSMEApplicants = (count = 0) => {
 const smeApplicantsColumns = [
   {
     header: 'Name',
-    accessor: (row:any) => (
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        <img
-          src={row.avatar}
-          alt={row.businessName}
-          className="w-8 h-8 rounded-full object-cover"
-        />
+        {row.avatar ? (
+          <img
+            src={row.avatar}
+            alt={row.businessName}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+        ) : null}
         <span className="font-medium text-sm">{row.businessName}</span>
       </div>
     ),
@@ -231,7 +233,7 @@ const smeApplicantsColumns = [
   },
   {
     header: 'Readiness Score',
-    accessor: (row:any) => (
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium">{row.readinessScore}</span>
       </div>
@@ -244,7 +246,7 @@ const smeApplicantsColumns = [
   },
   {
     header: 'Status',
-    accessor: (row:any) => (
+    accessor: (row: any) => (
       <span
         className={`px-2 py-1 rounded-full text-xs font-medium ${
           row.status === 'Assigned'
@@ -260,7 +262,7 @@ const smeApplicantsColumns = [
   },
   {
     header: 'Action',
-    accessor: (row:any) => (
+    accessor: (row: any) => (
       <button className="text-green-600 font-medium hover:underline text-sm">
         Assign
       </button>

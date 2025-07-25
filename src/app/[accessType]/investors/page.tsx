@@ -1,23 +1,23 @@
-"use client";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
-import { ProfileSheet } from "@/components/ui/profileSheet";
+'use client';
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
+import { ProfileSheet } from '@/components/ui/profileSheet';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { useRecievedInvestmentInterest } from "@/hooks/useInvesmentInterest";
-import Image from "next/image";
-import { useState } from "react";
+} from '@/components/ui/select';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import { useRecievedInvestmentInterest } from '@/hooks/useInvesmentInterest';
+import Image from 'next/image';
+import { useState } from 'react';
 type Props = {};
 
 // Example data
-const investors = [];
+const investors: any = [];
 
 // Table columns
 
@@ -28,7 +28,7 @@ function InvestorsPage({}: Props) {
   console.log(user);
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: (typeof investors)[0]) => (
         <div className="flex items-center gap-2">
           <Image
@@ -42,14 +42,14 @@ function InvestorsPage({}: Props) {
         </div>
       ),
     },
-    { header: "Investor Type", accessor: "type" },
-    { header: "Investment Focus", accessor: "focus" },
+    { header: 'Investor Type', accessor: 'type' },
+    { header: 'Investment Focus', accessor: 'focus' },
     {
-      header: "Status",
+      header: 'Status',
       accessor: (row: (typeof investors)[0]) => statusBadge(row.status),
     },
     {
-      header: "Action",
+      header: 'Action',
       accessor: () => (
         <button
           className="text-green font-medium hover:underline"
@@ -58,7 +58,7 @@ function InvestorsPage({}: Props) {
           View Profile
         </button>
       ),
-      className: "text-green",
+      className: 'text-green',
     },
   ];
   return (
@@ -93,7 +93,7 @@ function InvestorsPage({}: Props) {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
+            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
           </Button>
         </div>
       </div>

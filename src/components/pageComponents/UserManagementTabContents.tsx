@@ -120,13 +120,15 @@ const invColumns = [
     header: 'Name',
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        <Image
-          src={row.avatar}
-          alt={row.name}
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
+        {row.avatar ? (
+          <Image
+            src={row.avatar}
+            alt={row.name}
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
+        ) : null}
         <span className="font-medium text-sm">{row.name}</span>
       </div>
     ),
