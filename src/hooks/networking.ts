@@ -11,3 +11,13 @@ export const useNetworking = () => {
       },
     });
 }
+
+export const useSingleNetworking = () => {
+  return useQuery({
+    queryKey: ["networking"],
+    queryFn: async () => {
+      const resp = await api.get(ApiEndPoints.networking);
+      return resp?.data;
+    },
+  });
+};

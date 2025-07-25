@@ -10,7 +10,7 @@ export interface Notification {
 }
 
 interface NotificationSheetProps {
-  id: string;
+  id?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
@@ -113,6 +113,7 @@ export function NetworkProfileSheet({
   open,
   onOpenChange,
 }: NotificationSheetProps) {
+  
   const colaboration = [
     "Food & Beverage businesses",
     "Retail chains",

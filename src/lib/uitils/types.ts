@@ -395,6 +395,18 @@ export type CreateSupportForm = {
   file?: supportAttachment[];
 };
 
+export type createComplianceForm = {
+  subject: string;
+  description: string;
+  category: string;
+  file?: supportAttachment[];
+};
+export type complianceAttachment = {
+  fileName: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+};
 export type supportAttachment = {
   fileName: string;
   fileUrl: string;

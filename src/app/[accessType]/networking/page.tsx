@@ -16,8 +16,8 @@ function NetworkingPage() {
   const { data } = useNetworking();
   const networking = data?.data;
   const [isOpen, setIsOpen] = useState(false);
-  const [id, setId] = useState(null);
-  console.log(id);
+  const [id, setId] = useState(undefined);
+  console.log({ id, networking });
   const columns = [
     {
       header: "Name",
@@ -35,7 +35,7 @@ function NetworkingPage() {
       ),
     },
     { header: "Industry", accessor: "industry" },
-    { header: "Business Type", accessor: "businessType" },
+    { header: "Business Type", accessor: "businessStage" },
     { header: "Service Offered", accessor: "serviceOffered" },
     {
       header: "Status",
@@ -43,12 +43,12 @@ function NetworkingPage() {
     },
     {
       header: "Action",
-      accessor: (row: string) => (
+      accessor: (row: any) => (
         <div className="flex gap-2">
           <Button
             variant="tertiary"
             onClick={() => {
-              setIsOpen(true), setId(row.id);
+              setIsOpen(true), setId(row._id);
             }}
             className="text-green font-medium hover:underline"
           >
