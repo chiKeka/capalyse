@@ -61,7 +61,7 @@ export function ReusableTable<T extends object>({
           {loading ? (
             <tr>
               <td colSpan={columns.length}>
-                <div className="flex items-center justify-center mt-6">
+                <div className="flex items-center justify-center mt-6 min-h-40">
                   <Loader2Icon className="text-green animate-spin w-12 h-12" />
                 </div>
               </td>

@@ -12,6 +12,16 @@ export const useGetAllTickets = () => {
   });
 };
 
+export const useGetAdminDashboardStats = () => {
+  return useQuery({
+    queryKey: ['admin_dashboard_stats'],
+    queryFn: async () => {
+      const resp = await api.get(apiRoutes.admin.adminDashSats);
+      return resp.data.data;
+    },
+  });
+};
+
 export const useGetInvestorById = (id: string) => {
   return useQuery({
     queryKey: ['get_investor_by_id'],

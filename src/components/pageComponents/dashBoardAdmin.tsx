@@ -6,48 +6,66 @@ import { useParams } from 'next/navigation';
 import IconCards from '../sections/dashboardCards/iconCards';
 import { CIcons } from '../ui/CIcons';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { useGetAdminDashboardStats } from '@/hooks/useAdmin';
+import { useAtomValue } from 'jotai';
+import { authAtom } from '@/lib/atoms/atoms';
+import { formatInvestmentData } from '@/lib/uitils/fns';
 
 export default function AdminDashBoard() {
   const params = useParams();
-  const learningCards = [
+  const auth: any = useAtomValue(authAtom);
+  const { data: adminDashboardStats, isLoading } = useGetAdminDashboardStats();
+  console.log({ adminDashboardStats, auth });
+
+  const investmentData = formatInvestmentData(
+    adminDashboardStats?.investmentOpportunities ?? []
+  );
+  const overviewCards = [
     {
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
+      id: 1,
+      icon: CIcons.walletMoney,
+      label: 'Funds Disbursed',
+      amount: adminDashboardStats?.fundsDisbursed?.amount ?? 0,
+      currency: adminDashboardStats?.fundsDisbursed?.currency ?? 'NGN',
+      percentage: 152000,
+      direction: 'up',
     },
     {
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    },
-  ];
-  const checklist = [
-    {
-      icon: '/icons/profile.svg',
-      label: 'Complete profile',
-      status: 'Not Started',
+      id: 2,
+      icon: CIcons.profile2,
+      label: 'Pending Verifications',
+      amount: adminDashboardStats?.pendingVerifications ?? 10,
     },
     {
-      icon: '/icons/presentation.svg',
-      label: 'Start Readiness Assessment',
-      status: 'Not Started',
+      id: 3,
+      icon: CIcons.profile2,
+      label: 'Active Programs',
+      amount: adminDashboardStats?.activePrograms ?? 10,
     },
     {
-      icon: '/icons/money_out.svg',
-      label: 'Finish financial section',
-      status: 'Not Started',
-    },
-    {
-      icon: '/icons/status_up.svg',
-      label: 'Explore investor matches',
-      status: 'Not Started',
+      id: 4,
+      icon: CIcons.profile2,
+      label: 'Investor-SME Matches',
+      amount: adminDashboardStats?.investorMatches ?? 10,
     },
   ];
 
-  const suggestedConnections = [
-    { id: 1, icon: '/icons/user1.svg', name: 'Suggested Connection 1' },
-    { id: 2, icon: '/icons/user2.svg', name: 'Suggested Connection 2' },
-    { id: 3, icon: '/icons/user3.svg', name: 'Suggested Connection 3' },
-    { id: 4, icon: '/icons/user4.svg', name: 'Suggested Connection 4' },
-    { id: 5, icon: '/icons/user5.svg', name: 'Suggested Connection 5' },
+  const groups = [
+    {
+      group: 'SMEs',
+      count: adminDashboardStats?.totalRegisteredSMEs ?? '0',
+      color: '#5CEBB4',
+    },
+    {
+      group: 'Investors',
+      count: adminDashboardStats?.totalRegisteredInvestors ?? '0',
+      color: '#A5BDFA',
+    },
+    {
+      group: 'Dev Orgs',
+      count: adminDashboardStats?.totalRegisteredDevelopmentOrgs ?? '0',
+      color: '#FCA5A5',
+    },
   ];
 
   return (
@@ -55,13 +73,13 @@ export default function AdminDashBoard() {
       <OverviewHeaderCard
         value={30}
         link={routes.admin.profile}
-        user={{ name: 'Paul' }}
+        user={{ name: auth?.firstName }}
         textContent="Monitor overall activity, verify users, and manage performance across the ecosystem"
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <IconCards
           label="Total Registered Users"
-          amount={0}
+          amount={adminDashboardStats?.totalRegisteredUsers ?? 0}
           icon={CIcons.profile2}
           extraContent={
             <div className="flex justify-between mt-auto">
@@ -89,22 +107,24 @@ export default function AdminDashBoard() {
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 ">
         <div className="lg:col-span-2 h-auto w-full ">
-          <InvestmentOpportunitiesCard />
+          <InvestmentOpportunitiesCard investmentData={investmentData} />
         </div>
 
         <div className="lg:col-span-3 w-full">
           <DashboardCardLayout caption="Support Tickets Open (0)">
             <div className="flex my-8 flex-col gap-3">
               <div className="flex flex-col gap-4">
-                {tickets.map((ticket) => (
-                  <div
-                    key={ticket.label}
-                    className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
-                  >
-                    <span>{ticket.label}</span>
-                    <span>{ticket.count}</span>
-                  </div>
-                ))}
+                {adminDashboardStats?.openTicketsCountByRoles.map(
+                  (ticket: any) => (
+                    <div
+                      key={ticket.userRole}
+                      className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
+                    >
+                      <span>{ticket.userRole}</span>
+                      <span>{ticket.count}</span>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </DashboardCardLayout>
@@ -113,60 +133,6 @@ export default function AdminDashBoard() {
     </div>
   );
 }
-const overviewCards = [
-  {
-    id: 1,
-    icon: CIcons.walletMoney,
-    label: 'Funds Disbursed',
-    amount: 0,
-    currency: 'NGN',
-    percentage: 152000,
-    direction: 'up',
-  },
-  {
-    id: 2,
-    icon: CIcons.profile2,
-    label: 'Pending Verifications',
-    amount: 10,
-  },
-  {
-    id: 3,
-    icon: CIcons.profile2,
-    label: 'Active Programs',
-    amount: 10,
-  },
-  {
-    id: 4,
-    icon: CIcons.profile2,
-    label: 'Investor-SME Matches',
-    amount: 10,
-  },
-];
-
-const groups = [
-  {
-    group: 'SMEs',
-    count: '0',
-    color: '#5CEBB4',
-  },
-  {
-    group: 'Investors',
-    count: '0',
-    color: '#A5BDFA',
-  },
-  {
-    group: 'Dev Orgs',
-    count: '0',
-    color: '#FCA5A5',
-  },
-];
-
-const investmentData = [
-  { name: 'Agriculture', value: 500000, color: '#5EE173' },
-  { name: 'Finance', value: 500000, color: '#A3B8FF' },
-  { name: 'Health', value: 70000, color: '#FFB3B3' },
-  { name: 'Tech', value: 50000, color: '#FFE6A3' },
-];
 
 function formatNumberShort(num: number): string {
   if (num >= 1_000_000_000) {
@@ -184,10 +150,17 @@ function formatNumberShort(num: number): string {
   return num.toString();
 }
 
-function InvestmentOpportunitiesCard() {
-  const allZero = investmentData.every((entry) => entry.value === 0);
+function InvestmentOpportunitiesCard({
+  investmentData,
+}: {
+  investmentData: any;
+}) {
+  const allZero = investmentData.every((entry: any) => entry.value === 0);
   const emptyTrackColor = '#E6F9ED'; // light green for empty state
-  const total = investmentData.reduce((sum, entry) => sum + entry.value, 0);
+  const total = investmentData.reduce(
+    (sum: number, entry: any) => sum + entry.value,
+    0
+  );
   return (
     <DashboardCardLayout caption="Investment Opportunities (₦)">
       <div className="flex flex-col items-center justify-center h-full py-6">
@@ -209,7 +182,7 @@ function InvestmentOpportunitiesCard() {
                 {allZero ? (
                   <Cell fill={emptyTrackColor} />
                 ) : (
-                  investmentData.map((entry, idx) => (
+                  investmentData.map((entry: any, idx: number) => (
                     <Cell key={`cell-${idx}`} fill={entry.color} />
                   ))
                 )}
@@ -224,7 +197,7 @@ function InvestmentOpportunitiesCard() {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-6 mt-8">
-          {investmentData.map((entry) => (
+          {investmentData.map((entry: any) => (
             <div key={entry.name} className="flex items-center gap-2">
               <span
                 className="inline-block w-4 h-4 rounded-full"

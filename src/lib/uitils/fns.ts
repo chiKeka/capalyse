@@ -57,3 +57,33 @@ export const handleImageUpload = async (
     })
     .catch((err) => toast.error(err?.message));
 };
+
+function generateRandomHex() {
+  return (
+    '#' +
+    Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0')
+      .toUpperCase()
+  );
+}
+
+// Function to ensure all colors are unique
+function generateUniqueColors(count: number) {
+  const colors = new Set();
+  while (colors.size < count) {
+    colors.add(generateRandomHex());
+  }
+  return Array.from(colors);
+}
+
+// Main function to transform the data
+export function formatInvestmentData(inputArray: any[]) {
+  const uniqueColors = generateUniqueColors(inputArray.length);
+
+  return inputArray.map((item, index) => ({
+    name: item.industry,
+    value: item.amount,
+    color: uniqueColors[index],
+  }));
+}
