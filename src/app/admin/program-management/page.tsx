@@ -1,18 +1,19 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
+import {
+  programColumns,
+  programsData,
+} from '@/components/ProgramComponents/pageContent';
+import { SearchForm } from '@/components/search-form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { smes } from "@/lib/uitils/contentData";
-import Image from "next/image";
-import Link from "next/link";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import { smes } from '@/lib/uitils/contentData';
 
 const ProgramManagement = ({ type }: { type: string }) => {
   // const mgtColumns = useMemo(
@@ -55,8 +56,8 @@ const ProgramManagement = ({ type }: { type: string }) => {
         </div>
       </div>
       <ReusableTable
-        columns={columns}
-        data={smes}
+        columns={programColumns}
+        data={programsData}
         totalPages={Math.ceil(smes.length / 4)}
       />
     </div>
@@ -64,55 +65,3 @@ const ProgramManagement = ({ type }: { type: string }) => {
 };
 
 export default ProgramManagement;
-
-const columns = [
-  {
-    header: "Name",
-    accessor: (row: (typeof smes)[0]) => (
-      <div className="flex items-center gap-2">
-        <Image
-          src={row.avatar}
-          alt={row.name}
-          width={24}
-          height={24}
-          className="rounded-full"
-        />
-        <span className="font-medium text-sm">{row.name}</span>
-      </div>
-    ),
-  },
-  {
-    header: "Status",
-    accessor: (row: (typeof smes)[0]) => statusBadge(row.status),
-  },
-  { header: "Partner Organisation", accessor: "org" },
-  { header: "Program Duration", accessor: "duration" },
-  { header: "Total Applicants", accessor: "totalApplicants" },
-  { header: "Assigned SMEs", accessor: "assignedSme" },
-
-  {
-    header: "Action",
-    accessor: (row: (typeof smes)[0]) => (
-      <Link
-        href={`/admin/program-management/${row.id}`}
-        className="text-green font-medium hover:underline"
-      >
-        View Profile
-      </Link>
-    ),
-    className: "text-green",
-  },
-];
-
-export const smes = [
-  {
-    id: 1,
-    name: "Business Name",
-    Status: true,
-    avatar: "/images/humanAvater.svg",
-    org: "UNDP Nigeria",
-    duration: "Jan 4 - June 3 2022",
-    totalApplicants: 12,
-    assignedSme: 12,
-  },
-];

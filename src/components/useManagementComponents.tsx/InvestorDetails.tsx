@@ -31,7 +31,11 @@ const InvestorDetails = () => {
               <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
             </Button>
           </div>
-          <EmptyBox />
+          <EmptyBox
+            showButton={false}
+            caption2="Interaction history with SMEs will be found here"
+            caption="No Interaction History Found"
+          />
         </Card>
       </div>
     </div>
