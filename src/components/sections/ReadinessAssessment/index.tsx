@@ -1,49 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronLeft, XIcon, Plus, Trash2 } from 'lucide-react';
-import Image from 'next/image';
+import { XIcon, Plus, Trash2 } from 'lucide-react';
 import {} from '@radix-ui/react-dialog';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import Button from '@/components/ui/Button';
 import { CIcons } from '@/components/ui/CIcons';
-
-interface Section {
-  id: number;
-  category: string;
-  amount: string;
-  currency: string;
-}
-
-interface FormData {
-  [key: string]: any;
-}
-
-interface Errors {
-  [key: string]: string | null;
-}
-
-interface Question {
-  id: string;
-  title: string;
-  type: string;
-  options?: string[];
-  required: boolean;
-  hasSections?: boolean;
-  hasUpload?: boolean;
-  uploadText?: string;
-  uploadFormats?: string;
-  placeholder?: string;
-  isTwoColumn?: boolean;
-  col1Label?: string;
-  col2Label?: string;
-}
-
-interface SectionData {
-  name: string;
-  totalQuestions: number;
-  questions: Question[];
-}
+import { Sidebar } from './Sidebar';
+import { ProgressBar } from './ProgressBar';
+import { Navigation } from './Navigation';
+import { Section, SectionData, useReadinessForm } from './useReadinessForm';
+import { handleImageUpload } from '@/lib/uitils/fns';
+import { useState } from 'react';
 
 const AssessmentReadiness = ({
   isOpen,
@@ -52,168 +18,62 @@ const AssessmentReadiness = ({
   isOpen: boolean;
   setIsOpen: (x: boolean) => void;
 }) => {
-  const [currentSection, setCurrentSection] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [formData, setFormData] = useState<FormData>({});
-  const [errors, setErrors] = useState<Errors>({});
-  const [sectionedData, setSectionedData] = useState<{
-    [key: string]: Section[];
-  }>({});
+  const {
+    currentSection,
+    currentQuestion,
+    formData,
+    setFormData,
+    errors,
+    sectionedData,
+    setSectionedData,
+    currentSectionData,
+    currentQuestionData,
+    totalQuestions,
+    handleInputChange,
+    handleSectionChange,
+    addSection,
+    removeSection,
+    handleNext,
+    handleBack,
+    getSectionStatus,
+    handleCurrencyAmountChange,
+    handleCurrencyTypeChange,
+    updateSmeFinancialAssessment,
+    updateSmeBusinessAssessment,
+    updateSmeOperationalAssessment,
+    updateSmeMarketAssessment,
+    updateSmeComplianceAssessment,
+  } = useReadinessForm(sections);
 
-  const currentSectionData = sections[currentSection];
-  const currentQuestionData = currentSectionData.questions[currentQuestion];
-  const totalQuestions = currentSectionData.totalQuestions;
-
-  const validateField = (fieldId: string, value: any): string | null => {
-    const question = currentQuestionData;
-    if (question.required && (!value || value.toString().trim() === '')) {
-      return 'This field is required';
-    }
-    return null;
-  };
-
-  const validateSections = (
-    fieldId: string,
-    sections: Section[]
-  ): string | null => {
-    if (currentQuestionData.required && sections.length === 0) {
-      return 'At least one section is required';
-    }
-
-    for (const section of sections) {
-      if (!section.category.trim() || !section.amount.trim()) {
-        return 'All category and amount fields must be filled';
-      }
-    }
-    return null;
-  };
-
-  const handleInputChange = (value: any) => {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    setFormData((prev) => ({
-      ...prev,
-      [fieldId]: value,
-    }));
-
-    // Clear error when user starts typing
-    const error = validateField(currentQuestionData.id, value);
-    setErrors((prev) => ({
-      ...prev,
-      [fieldId]: error,
-    }));
-  };
-
-  const handleSectionChange = (
-    sectionId: number,
-    field: 'category' | 'amount' | 'currency',
-    value: string
-  ) => {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    const currentSections = sectionedData[fieldId] || [];
-
-    const updatedSections = currentSections.map((section) =>
-      section.id === sectionId ? { ...section, [field]: value } : section
-    );
-
-    setSectionedData((prev) => ({
-      ...prev,
-      [fieldId]: updatedSections,
-    }));
-
-    // Clear errors when user starts typing
-    const error = validateSections(fieldId, updatedSections);
-    setErrors((prev) => ({
-      ...prev,
-      [fieldId]: error,
-    }));
-  };
-
-  const addSection = () => {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    const currentSections = sectionedData[fieldId] || [];
-    const newSection: Section = {
-      id: Date.now(),
-      category: '',
-      amount: '',
-      currency: 'NGN',
-    };
-
-    setSectionedData((prev) => ({
-      ...prev,
-      [fieldId]: [...currentSections, newSection],
-    }));
-  };
-
-  const removeSection = (sectionId: number) => {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    const currentSections = sectionedData[fieldId] || [];
-
-    setSectionedData((prev) => ({
-      ...prev,
-      [fieldId]: currentSections.filter((section) => section.id !== sectionId),
-    }));
-  };
-
-  const handleNext = () => {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-
-    if (currentQuestionData.hasSections) {
-      const currentSections = sectionedData[fieldId] || [];
-      const error = validateSections(fieldId, currentSections);
-
-      if (error) {
-        setErrors((prev) => ({
-          ...prev,
-          [fieldId]: error,
-        }));
-        return;
-      }
-    } else {
-      const currentValue = formData[fieldId];
-      const error = validateField(currentQuestionData.id, currentValue);
-
-      if (error) {
-        setErrors((prev) => ({
-          ...prev,
-          [fieldId]: error,
-        }));
-        return;
-      }
-    }
-
-    if (currentQuestion < totalQuestions - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else if (currentSection < sections.length - 1) {
-      setCurrentSection(currentSection + 1);
-      setCurrentQuestion(0);
-    }
-  };
-
-  const handleBack = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    } else if (currentSection > 0) {
-      setCurrentSection(currentSection - 1);
-      setCurrentQuestion(sections[currentSection - 1].totalQuestions - 1);
-    }
-  };
-
-  const getSectionStatus = (sectionIndex: number) => {
-    if (sectionIndex < currentSection) return 'completed';
-    if (sectionIndex === currentSection) return 'active';
-    return 'upcoming';
-  };
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
 
   const renderSectionedInput = () => {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const currentSections = sectionedData[fieldId] || [];
     const error = errors[fieldId];
 
+    // Dynamic keys from question config
+    const categoryKey = currentQuestionData.categoryKey || 'category';
+    const amountKey = currentQuestionData.amountKey || 'amount';
+    const dueDateKey = currentQuestionData.categoryDueDateKey;
+
     // Initialize with at least 2 sections if none exist
     if (currentSections.length === 0) {
       const initialSections: Section[] = [
-        { id: 1, category: '', amount: '', currency: 'NGN' },
-        { id: 2, category: '', amount: '', currency: 'NGN' },
+        {
+          id: 1,
+          [categoryKey]: '',
+          [amountKey]: '',
+          currency: 'NGN',
+          ...(dueDateKey ? { [dueDateKey]: '' } : {}),
+        },
+        {
+          id: 2,
+          [categoryKey]: '',
+          [amountKey]: '',
+          currency: 'NGN',
+          ...(dueDateKey ? { [dueDateKey]: '' } : {}),
+        },
       ];
       setSectionedData((prev) => ({
         ...prev,
@@ -227,32 +87,32 @@ const AssessmentReadiness = ({
         {currentSections.map((section, index) => (
           <div key={section.id} className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category
+              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                {categoryKey}
               </label>
               <input
                 type="text"
-                value={section.category}
+                value={section[categoryKey] || ''}
                 onChange={(e) =>
-                  handleSectionChange(section.id, 'category', e.target.value)
+                  handleSectionChange(section.id, categoryKey, e.target.value)
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Enter category"
+                placeholder={`Enter ${categoryKey}`}
               />
             </div>
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Amount
+              <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                {amountKey}
               </label>
               <div className="relative">
                 <input
                   type="number"
-                  value={section.amount}
+                  value={section[amountKey] || ''}
                   onChange={(e) =>
-                    handleSectionChange(section.id, 'amount', e.target.value)
+                    handleSectionChange(section.id, amountKey, e.target.value)
                   }
                   className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="0.00"
+                  placeholder={`Enter ${amountKey}`}
                 />
                 <select
                   value={section.currency}
@@ -277,6 +137,22 @@ const AssessmentReadiness = ({
                 </button>
               )}
             </div>
+            {dueDateKey && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                  {dueDateKey}
+                </label>
+                <input
+                  type="date"
+                  value={section[dueDateKey] || ''}
+                  onChange={(e) =>
+                    handleSectionChange(section.id, dueDateKey, e.target.value)
+                  }
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={`Enter ${dueDateKey}`}
+                />
+              </div>
+            )}
           </div>
         ))}
 
@@ -294,35 +170,6 @@ const AssessmentReadiness = ({
     );
   };
 
-  function handleCurrencyAmountChange(amount: string) {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    setFormData((prev) => ({
-      ...prev,
-      [fieldId]: {
-        ...prev[fieldId],
-        amount,
-        currency: prev[fieldId]?.currency || 'NGN',
-      },
-    }));
-    const error = validateField(currentQuestionData.id, amount);
-    setErrors((prev) => ({
-      ...prev,
-      [fieldId]: error,
-    }));
-  }
-
-  function handleCurrencyTypeChange(currency: string) {
-    const fieldId = `${currentSection}-${currentQuestion}`;
-    setFormData((prev) => ({
-      ...prev,
-      [fieldId]: {
-        ...prev[fieldId],
-        amount: prev[fieldId]?.amount || '',
-        currency,
-      },
-    }));
-  }
-
   const renderInput = () => {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const value = formData[fieldId] || '';
@@ -330,6 +177,172 @@ const AssessmentReadiness = ({
 
     if (currentQuestionData.hasSections) {
       return renderSectionedInput();
+    }
+
+    if (currentQuestionData.id === 'trade_involvement') {
+      const fieldId = `${currentSection}-${currentQuestion}`;
+      const selectedRegions = formData[fieldId] || [];
+      const error = errors[fieldId];
+
+      function handleRegionToggle(region: string) {
+        setFormData((prev) => {
+          const prevRegions = prev[fieldId] || [];
+          const newRegions = prevRegions.includes(region)
+            ? prevRegions.filter((r: string) => r !== region)
+            : [...prevRegions, region];
+          return {
+            ...prev,
+            [fieldId]: newRegions,
+          };
+        });
+      }
+
+      return (
+        <div className="space-y-6">
+          <div>
+            <div className="mb-2 font-medium">Select any that apply:</div>
+            <div className="flex gap-3 flex-wrap">
+              {currentQuestionData.options?.map((region) => (
+                <button
+                  key={region}
+                  type="button"
+                  onClick={() => handleRegionToggle(region)}
+                  className={`px-6 py-2 rounded-full border transition
+                    ${
+                      selectedRegions?.includes(region)
+                        ? 'bg-primary-green-6 text-white border-primary-green-6'
+                        : 'bg-white text-gray-500 border-gray-300'
+                    }
+                    focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  aria-pressed={selectedRegions?.includes(region)}
+                >
+                  {region}
+                </button>
+              ))}
+            </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {currentQuestionData.uploads?.map((upload: any) => (
+              <div key={upload.key}>
+                <div className="mb-2 font-medium flex items-center gap-2">
+                  Upload {upload.label}
+                  {uploading[upload.key] && (
+                    <span className="ml-2 text-xs text-gray-500 animate-pulse">
+                      Uploading...
+                    </span>
+                  )}
+                </div>
+                <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
+                  <span className="flex items-center gap-2 text-gray-700">
+                    <span className="flex items-center justify-center">
+                      <CIcons.uploadIcon />
+                    </span>
+                    Upload document
+                  </span>
+                  <span className="text-gray-500 text-xl">+</span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept=".png,.pdf,.doc,.docx,.jpg,.jpeg"
+                    onChange={async (e) => {
+                      const file = e.target.files ? e.target.files[0] : null;
+                      if (!file) return;
+                      await handleFileUpload(file, upload.key);
+                    }}
+                  />
+                </label>
+                {/* Show uploaded file name if present */}
+                {(() => {
+                  const uploadArr =
+                    formData[
+                      `${currentSection}-${currentQuestion}-uploads-${upload.key}`
+                    ];
+                  if (Array.isArray(uploadArr) && uploadArr.length > 0) {
+                    const fileObj = uploadArr[uploadArr.length - 1];
+                    if (fileObj?.display_name) {
+                      return (
+                        <div className="text-xs text-green-700 mt-2">
+                          Uploaded: {fileObj.display_name}
+                        </div>
+                      );
+                    } else if (fileObj?.url) {
+                      // fallback to url if display_name is not present
+                      return (
+                        <div className="text-xs text-green-700 mt-2">
+                          Uploaded: {fileObj.url.split('/').pop()}
+                        </div>
+                      );
+                    }
+                  }
+                  return null;
+                })()}
+                <p className="text-xs text-gray-400 mt-2">{upload.formats}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // --- Two-column layout for isTwoColumn questions ---
+    if (currentQuestionData.isTwoColumn) {
+      const fieldId = `${currentSection}-${currentQuestion}`;
+      const value = formData[fieldId] || { col1: '', col2: '' };
+      const error = errors[fieldId];
+
+      function handleColChange(col: 'col1' | 'col2', val: string) {
+        setFormData((prev) => ({
+          ...prev,
+          [fieldId]: {
+            ...prev[fieldId],
+            [col]: val,
+          },
+        }));
+      }
+
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor={`${fieldId}-col1`}
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              {currentQuestionData.col1Label || 'Full-time'}
+            </label>
+            <input
+              id={`${fieldId}-col1`}
+              type="number"
+              value={value.col1 || ''}
+              onChange={(e) => handleColChange('col1', e.target.value)}
+              placeholder="eg. 2"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              aria-label={currentQuestionData.col1Label || 'Full-time'}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor={`${fieldId}-col2`}
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              {currentQuestionData.col2Label || 'Part-time'}
+            </label>
+            <input
+              id={`${fieldId}-col2`}
+              type="number"
+              value={value.col2 || ''}
+              onChange={(e) => handleColChange('col2', e.target.value)}
+              placeholder="eg. 2"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              aria-label={currentQuestionData.col2Label || 'Part-time'}
+            />
+          </div>
+          {error && (
+            <p className="col-span-2 text-red-500 text-sm mt-2">{error}</p>
+          )}
+        </div>
+      );
     }
 
     switch (currentQuestionData.type) {
@@ -436,7 +449,7 @@ const AssessmentReadiness = ({
         return (
           <div className="space-y-2">
             <input
-              type="text"
+              type={currentQuestionData.type === 'number' ? 'number' : 'text'}
               value={value}
               onChange={(e) => handleInputChange(e.target.value)}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
@@ -451,6 +464,46 @@ const AssessmentReadiness = ({
 
   const progressPercentage = ((currentQuestion + 1) / totalQuestions) * 100;
 
+  async function handleFileUpload(file: File, uploadKey?: string) {
+    if (uploadKey) setUploading((prev) => ({ ...prev, [uploadKey]: true }));
+    await handleImageUpload(file, (res: any) => {
+      const fieldId = `${currentSection}-${currentQuestion}`;
+      const uploadName = currentQuestionData.uploadName;
+      // For trade_involvement (multi-upload)
+      if (
+        (currentQuestionData.id === 'trade_involvement' &&
+          uploadKey === 'export_license') ||
+        uploadKey === 'regional_permit' ||
+        uploadKey === 'trade_certifications'
+      ) {
+        setFormData((prev: any) => {
+          const prevUploads =
+            prev[`${currentSection}-${currentQuestion}-uploads-${uploadKey}`] ||
+            [];
+          // Remove any previous upload for this key
+          const filtered = prevUploads.filter((u: any) => u?.key !== uploadKey);
+          return {
+            ...prev,
+            [`${currentSection}-${currentQuestion}-uploads-${uploadKey}`]: [
+              ...filtered,
+              res?.secure_url ? { key: uploadKey, url: res?.secure_url } : null,
+            ].filter(Boolean),
+          };
+        });
+      } else if (uploadName) {
+        setFormData((prev: any) => ({
+          ...prev,
+          [fieldId]: prev[fieldId],
+          [`${currentSection}-${currentQuestion}-uploads`]: [res?.secure_url],
+          [`${currentSection}-${currentQuestion}-uploads-filename`]: [
+            res?.display_name,
+          ],
+        }));
+      }
+      if (uploadKey) setUploading((prev) => ({ ...prev, [uploadKey]: false }));
+    });
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent
@@ -461,88 +514,40 @@ const AssessmentReadiness = ({
 
         <div className=" bg-gray-50 flex min-h-[80vh] overflow-y-auto no-scrollbar">
           {/* Sidebar */}
-          <div className="lg:w-80 bg-primary-green-6 text-white py-8 px-3 md:px-9">
-            <div className="flex items-center space-x-3 mb-8">
-              <Image
-                src={'/logo-white.png'}
-                width={130.28}
-                height={31.07}
-                alt="capalyze"
-                className="max-md:hidden"
-              />
-            </div>
-
-            <div className="max-h-auto relative flex-col gap-6 flex overflow-hidden">
-              <div className="absolute left-[11px] top-6 h-full w-px bg-white z-0 mb-0.5"></div>
-              {sections.map((section, index) => {
-                const status = getSectionStatus(index);
-                return (
-                  <div
-                    key={section.name}
-                    className={`flex items-center md:space-x-3 rounded-lg cursor-pointer transition-colors relative ${
-                      status === 'active' ? '' : ''
-                    }`}
-                  >
-                    <div className="bg-primary-green-6 py-0.5">
-                      <div
-                        className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold border-2 pb-1 ${
-                          status === 'completed'
-                            ? 'border-primary-green-2 bg-primary-green-2 text-primary-green-6'
-                            : status === 'active'
-                            ? 'border-primary-green-2 text-primary-green-2'
-                            : 'border-bg text-bg'
-                        }`}
-                      >
-                        <span className="max-md:hidden">{'✓'}</span>
-                        <span className="md:hidden">{index + 1}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 text-xs max-md:hidden">
-                      <div
-                        className={
-                          status === 'upcoming'
-                            ? 'text-bg'
-                            : 'text-primary-green-2 font-bold'
-                        }
-                      >
-                        {section.name}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <Sidebar
+            sections={sections}
+            currentSection={currentSection}
+            getSectionStatus={getSectionStatus}
+          />
 
           {/* Main Content */}
           <div className="flex-1 relative flex-col flex h-full pb-8">
             {/* Header */}
-            <div className="px-4 pt-6 pb-3 flex justify-end">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-error-300/10 flex justify-center items-center cursor-pointer"
-              >
-                <XIcon strokeWidth="3.5" className="w-3 h-3 text-error-300" />
-              </button>
+            <div className="flex items-center font-bold justify-between px-4 pt-6 pb-3 f">
+              <div className="text-black-300 text-xs font-normal md:hidden">
+                Step {currentSection + 1} of 5
+              </div>
+              <h2 className="text-center text-green md:hidden">
+                {currentSectionData.name}
+              </h2>
+              <div className="flex justify-end md:ml-auto">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-gray-400 hover:text-gray-600 w-8 h-8 rounded-full bg-error-300/10 flex justify-center items-center cursor-pointer"
+                >
+                  <XIcon strokeWidth="3.5" className="w-3 h-3 text-error-300" />
+                </button>
+              </div>
             </div>
 
             {/* Question Area */}
             <div className="px-10 h-full max-h-[75vh] overflow-y-auto no-scrollbar">
               <div className="max-w-2xl mx-auto h-full flex-col flex">
-                <div className="mb-6">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progressPercentage}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-end items-center mb-2">
-                    <span className="text-sm text-gray-500">
-                      Question {currentQuestion + 1} of {totalQuestions}
-                    </span>
-                  </div>
-                </div>
+                <ProgressBar
+                  currentQuestion={currentQuestion}
+                  totalQuestions={totalQuestions}
+                  progressPercentage={progressPercentage}
+                />
 
                 <h1 className="text-2xl font-semibold text-gray-800 mb-8">
                   {currentQuestion + 1}. {currentQuestionData.title}
@@ -561,11 +566,51 @@ const AssessmentReadiness = ({
                           <span className="flex items-center justify-center">
                             <CIcons.uploadIcon />
                           </span>
-                          Upload document
+                          {uploading[
+                            currentQuestionData.uploadName as string
+                          ] ? (
+                            <span className="ml-2 text-xs text-gray-500 animate-pulse">
+                              Uploading...
+                            </span>
+                          ) : (
+                            'Upload document'
+                          )}
                         </span>
                         <span className="text-gray-500 text-xl">+</span>
-                        <input type="file" className="hidden" />
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            await handleFileUpload(
+                              file,
+                              currentQuestionData.uploadName
+                            );
+                          }}
+                        />
                       </label>
+                      {/* Show uploaded file name if present */}
+                      {(() => {
+                        const uploadName = currentQuestionData.uploadName;
+                        const fileNames =
+                          formData[
+                            `${currentSection}-${currentQuestion}-uploads-filename`
+                          ];
+                        if (
+                          uploadName &&
+                          Array.isArray(fileNames) &&
+                          fileNames.length > 0
+                        ) {
+                          return (
+                            <div className="text-xs text-green-700 mt-2">
+                              Uploaded: {fileNames.join(', ')}
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
                       <p className="text-xs text-gray-400 mt-2">
                         {currentQuestionData.uploadFormats}
                       </p>
@@ -574,24 +619,21 @@ const AssessmentReadiness = ({
                 </div>
 
                 {/* Navigation */}
-                <div className="flex justify-between items-center mt-auto">
-                  <Button
-                    variant="secondary"
-                    onClick={handleBack}
-                    state={
-                      currentSection === 0 && currentQuestion === 0
-                        ? 'disabled'
-                        : 'default'
-                    }
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    <span>Back</span>
-                  </Button>
-
-                  <Button onClick={handleNext} iconPosition="right">
-                    <span>Next</span>
-                  </Button>
-                </div>
+                <Navigation
+                  currentSection={currentSection}
+                  currentQuestion={currentQuestion}
+                  handleBack={handleBack}
+                  handleNext={handleNext}
+                  totalQuestions={totalQuestions}
+                  sections={sections}
+                  loading={
+                    updateSmeFinancialAssessment?.isPending ||
+                    updateSmeBusinessAssessment?.isPending ||
+                    updateSmeOperationalAssessment?.isPending ||
+                    updateSmeMarketAssessment?.isPending ||
+                    updateSmeComplianceAssessment?.isPending
+                  }
+                />
               </div>
             </div>
           </div>
@@ -606,6 +648,7 @@ export default AssessmentReadiness;
 const sections: SectionData[] = [
   {
     name: 'Financial Data',
+    key: 'financial',
     totalQuestions: 9,
     questions: [
       {
@@ -614,7 +657,9 @@ const sections: SectionData[] = [
         type: 'currency',
         options: ['NGN', 'USD', 'EUR', 'GBP'],
         required: true,
+        name: 'totalMonthlyRevenue',
         hasUpload: true,
+        uploadName: 'revenueDocuments',
         uploadText: 'Upload bank statements from the last 6—12 months',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
@@ -623,8 +668,12 @@ const sections: SectionData[] = [
         title: 'What are your business expenses every month?',
         type: 'currency',
         hasSections: true,
+        categoryKey: 'category',
+        amountKey: 'amount',
         required: true,
+        name: 'monthlyExpenses',
         hasUpload: true,
+        uploadName: 'expenseDocuments',
         uploadText: 'Upload profit & loss statement or receipts summary',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -634,18 +683,25 @@ const sections: SectionData[] = [
         type: 'percentage',
         required: true,
         hasSections: true,
+        categoryKey: 'type',
+        amountKey: 'value',
         hasUpload: true,
+        name: 'businessAssets',
+        uploadName: 'assetDocuments',
         uploadText: 'Upload most recent balance sheet or asset inventory',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
       {
         id: 'cash_flow',
         title: 'What are your current debts or liabilities?',
-        type: 'select',
-        options: ['Positive', 'Break-even', 'Negative', 'Seasonal variations'],
+        type: 'text',
         required: true,
         hasSections: true,
         hasUpload: true,
+        categoryKey: 'type',
+        amountKey: 'amount',
+        name: 'businessLiabilities',
+        uploadName: 'liabilityDocuments',
         uploadText: 'Upload loan agreements or debt summary (if available)',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -663,6 +719,11 @@ const sections: SectionData[] = [
         required: true,
         hasSections: true,
         hasUpload: true,
+        name: 'equityReceived',
+        categoryKey: 'investorName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'date',
+        uploadName: 'equityDocuments',
         uploadText: 'Upload Shareholder agreements or proof of investment',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -672,6 +733,8 @@ const sections: SectionData[] = [
         type: 'currency',
         required: true,
         hasUpload: true,
+        name: 'availableCash',
+        uploadName: 'cashDocuments',
         placeholder: 'Enter amount',
         uploadText: 'Upload your latest bank statement',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
@@ -684,6 +747,11 @@ const sections: SectionData[] = [
         required: true,
         hasSections: true,
         hasUpload: true,
+        name: 'accountsReceivable',
+        uploadName: 'receivableDocuments',
+        categoryKey: 'customerName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'dueDate',
         uploadText: 'Upload invoicing records or customer payment report',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -696,6 +764,11 @@ const sections: SectionData[] = [
         required: true,
         hasSections: true,
         hasUpload: true,
+        name: 'accountsPayable',
+        categoryKey: 'supplierName',
+        amountKey: 'amount',
+        categoryDueDateKey: 'dueDate',
+        uploadName: 'payableDocuments',
         uploadText: 'Upload supplier bills or accounts payable record',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
       },
@@ -703,11 +776,12 @@ const sections: SectionData[] = [
         id: 'accounting_system',
         title:
           'How much capital (initial money) did you start your business with?',
-        type: 'select',
-        options: ['QuickBooks', 'Xero', 'Manual spreadsheets', 'Other', 'None'],
+        type: 'currency',
+        options: ['NGN', 'USD', 'EUR', 'GBP'],
         required: true,
-        hasSections: true,
         hasUpload: true,
+        name: 'startingCapital',
+        uploadName: 'startingCapitalDocuments',
         uploadText:
           'Upload Proof of transfer, funding agreement, or bank statement (if available)',
         uploadFormats: 'Format include; PNG  PDF Word JPG',
@@ -717,6 +791,7 @@ const sections: SectionData[] = [
   {
     name: 'Business Information',
     totalQuestions: 6,
+    key: 'businessInfo',
     questions: [
       {
         id: 'ideal_customers',
@@ -725,15 +800,18 @@ const sections: SectionData[] = [
         placeholder: 'Enter Industry',
         required: true,
         hasUpload: true,
+        name: 'industry',
+        uploadName: 'industryDocuments',
         uploadText: 'Upload business plan or pitch deck (Optional)',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'business_model',
         title: 'How many years has your business been operating?',
-        type: 'text',
+        type: 'number',
         placeholder: 'eg. 5 years',
         required: true,
+        name: 'yearsOfOperation',
       },
       {
         id: 'unique_value_proposition',
@@ -741,15 +819,11 @@ const sections: SectionData[] = [
         type: 'number',
         isTwoColumn: true,
         required: true,
+        name: 'fullTimeEmployees',
         col1Label: 'Full-time',
         col2Label: 'Part-time',
-      },
-      {
-        id: 'competitive_advantage',
-        title: 'Where do you operate or sell your products/services?',
-        type: 'text',
-        placeholder: 'List cities, states, or countries you currently serve.',
-        required: true,
+        col1Name: 'fullTimeEmployees',
+        col2Name: 'partTimeEmployees',
       },
       {
         id: 'legal_structure',
@@ -759,8 +833,18 @@ const sections: SectionData[] = [
           'e.g. Sole Proprietor, Limited Liability Company, Partnership',
         required: true,
         hasUpload: true,
+        name: 'legalStructure',
+        uploadName: 'legalStructureDocuments',
         uploadText: 'Upload CAC Certificate or Certificate of Incorporation',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
+      },
+      {
+        id: 'competitive_advantage',
+        title: 'Where do you operate or sell your products/services?',
+        type: 'text',
+        placeholder: 'List cities, states, or countries you currently serve.',
+        required: true,
+        name: 'operationLocation',
       },
       {
         id: 'business_stage',
@@ -769,6 +853,8 @@ const sections: SectionData[] = [
         options: ['Yes', 'No'],
         required: true,
         hasUpload: true,
+        name: 'hasIntellectualProperty',
+        uploadName: 'intellectualPropertyDocuments',
         uploadText: 'If yes, Upload Certificates for any trademarks or patents',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
@@ -777,15 +863,18 @@ const sections: SectionData[] = [
   {
     name: 'Operational Data',
     totalQuestions: 8,
+    key: 'operational',
     questions: [
       {
         id: 'customers',
         title: 'How many customers do you currently have?',
-        type: 'currency',
+        type: 'number',
         options: ['monthly', 'yearly'],
         placeholder: 'Enter Estimated number',
         required: true,
         hasUpload: true,
+        name: 'customerCount',
+        uploadName: 'customerCountDocuments',
         uploadText: 'Upload CRM report, sales list, or order history',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
@@ -795,6 +884,7 @@ const sections: SectionData[] = [
         type: 'currency',
         required: true,
         placeholder: 'Enter Amount',
+        name: 'costToAcquireCustomer',
       },
       {
         id: 'supply_chain',
@@ -802,6 +892,8 @@ const sections: SectionData[] = [
         type: 'currency',
         required: true,
         hasUpload: true,
+        name: 'averageCustomerSpend',
+        uploadName: 'customerSpendDocuments',
         uploadText: 'Upload sales report, or receipt samples',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
@@ -810,6 +902,7 @@ const sections: SectionData[] = [
         title: 'How long does it take to close a sale (sales circle)',
         type: 'text',
         required: false,
+        name: 'salesCycleLength',
       },
       {
         id: 'quality_control',
@@ -817,12 +910,14 @@ const sections: SectionData[] = [
         type: 'text',
         placeholder: 'List products or services',
         required: true,
+        name: 'productsServices',
       },
       {
         id: 'operational_challenges',
         title: 'How do you price your product or services?',
         type: 'text',
         required: true,
+        name: 'pricingStrategy',
       },
       {
         id: 'scalability_plans',
@@ -831,6 +926,8 @@ const sections: SectionData[] = [
         type: 'currency',
         required: true,
         hasUpload: true,
+        name: 'currentStockValue',
+        uploadName: 'inventoryDocuments',
         uploadText: 'Upload Inventory record or stock list',
         uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
@@ -838,67 +935,108 @@ const sections: SectionData[] = [
         id: 'key_metrics',
         title: 'Who are your main supply chain partners or vendors',
         type: 'text',
-        placeholder: 'List',
+        placeholder:
+          'List companies or individuals you rely on to deliver your product/service.',
         required: true,
+        hasUpload: true,
+        name: 'mainSuppliers',
+        uploadName: 'supplierDocuments',
+        uploadText: 'Upload Supply agreements or invoices',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
     ],
   },
   {
     name: 'Market Information',
     totalQuestions: 4,
+    key: 'market',
     questions: [
       {
         id: 'market_size',
-        title: 'What is your target market size?',
+        title: 'Who are your ideal customers?',
         type: 'textarea',
+        placeholder:
+          'Describe the main types of customers you target (age, gender, business size, income level, etc).',
         required: true,
+        name: 'idealCustomers',
       },
       {
         id: 'market_trends',
-        title: 'What are the key trends in your market?',
+        title: 'What is the size of the market you are serving?',
         type: 'textarea',
+        placeholder:
+          'Estimate how many people or businesses need your product/service in your area.',
         required: true,
+        hasUpload: true,
+        name: 'marketSize',
+        uploadName: 'marketSizeDocuments',
+        uploadText: 'Upload Business plan or market analysis report',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
         id: 'competitors',
-        title: 'Who are your main competitors?',
+        title: 'Who are your biggest competitors?',
         type: 'textarea',
+        placeholder:
+          'List key players in your market and what makes you different.',
         required: true,
+        name: 'competitors',
       },
       {
         id: 'market_strategy',
-        title: 'What is your go-to-market strategy?',
-        type: 'textarea',
+        title: 'Is your market growing, stable, or shrinking?',
+        type: 'select',
+        placeholder: 'Provide an estimate or your personal observation.',
         required: true,
+        options: ['Growing', 'Stable', 'Shrinking'],
+        name: 'marketTrend',
       },
     ],
   },
   {
     name: 'Compliance & Trade Readiness',
     totalQuestions: 2,
+    key: 'compliance',
     questions: [
       {
         id: 'regulatory_compliance',
-        title: 'Are you compliant with relevant regulations?',
-        type: 'radio',
-        options: [
-          'Yes, fully compliant',
-          'Partially compliant',
-          'Not yet compliant',
-        ],
+        title: 'Enter your TIN (Tax Identification Number)?',
+        type: 'text',
+        placeholder: 'eg. 1082983784',
         required: true,
+        hasUpload: true,
+        name: 'taxIdentificationNumber',
+        uploadName: 'taxDocuments',
+        uploadText: 'Upload Tax Clearance Certificate',
+        uploadFormats: 'Format include: PNG, PDF, Word, JPG',
       },
       {
-        id: 'trade_readiness',
-        title: 'How ready are you for international trade?',
-        type: 'select',
-        options: [
-          'Very ready',
-          'Somewhat ready',
-          'Need preparation',
-          'Not ready',
-        ],
+        id: 'trade_involvement',
+        title: 'Are you involved in trade across African regions?',
+        type: 'checkbox',
+        options: ['AfCFTA', 'ECOWAS', 'SADC', 'EAC'],
         required: true,
+        name: 'tradeRegions',
+        uploads: [
+          {
+            label: 'Export license',
+            key: 'export_license',
+            name: 'licenseDocuments',
+            formats: 'Format include: PNG, PDF, Word, JPG',
+          },
+          {
+            label: 'Regional business permit',
+            key: 'regional_permit',
+            name: 'licenseDocuments',
+            formats: 'Format include: PNG, PDF, Word, JPG',
+          },
+          {
+            label: 'Trade certifications',
+            key: 'trade_certifications',
+            name: 'licenseDocuments',
+            formats: 'Format include: PNG, PDF, Word, JPG',
+          },
+        ],
       },
     ],
   },

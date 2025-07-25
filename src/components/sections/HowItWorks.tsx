@@ -1,9 +1,9 @@
+import { containerVariants } from '@/lib/animations';
 import { classNames } from '@/lib/uitils';
+import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
 import { CIcons } from '../ui/CIcons';
-import { motion } from 'framer-motion';
-import { containerVariants } from '@/lib/animations';
-const tabs = ['For SMEs', 'For Investors'];
+const tabs = ['For SMEs', 'For Investors', 'For Organisation'];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 export const smeContent = [
   {
@@ -20,6 +20,23 @@ export const smeContent = [
     icon: CIcons.discovered,
     title: 'Get Discovered by Investors',
     desc: "Once you're ready, we match your profile with investors looking for businesses like yours.",
+  },
+];
+export const organisationContent = [
+  {
+    icon: CIcons.createAccount,
+    title: 'Create a Profile',
+    desc: 'Sign up as a development organization and define your focus areas — sectors, regions, and capacity-building priorities.',
+  },
+  {
+    icon: CIcons.investment,
+    title: 'Explore SME Insights',
+    desc: 'Access investment readiness data, compliance trends, and regional gaps across hundreds of African SMEs.',
+  },
+  {
+    icon: CIcons.engage,
+    title: 'Engage Directly with Founders',
+    desc: 'Use data to inform your programs, fund technical assistance, or collaborate directly with SMEs.',
   },
 ];
 
@@ -68,14 +85,14 @@ const HowItWorks = () => {
           <h2 className="text-4xl font-bold text-gray-900 mb-8">
             How It Works
           </h2>
-          <div className="flex justify-center space-x-2 mb-12">
+          <div className="flex sm:justify-center space-x-2 mb-12 overflow-x-auto no-scrollbar">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleTabChange(tab)}
                 disabled={isAnimating}
                 className={classNames(
-                  'transition-all duration-300 ease-in-out rounded px-8 py-2 text-sm h-[39px]',
+                  'transition-all duration-300 ease-in-out rounded px-4 sm:px-8 py-2 text-sm h-[39px] whitespace-nowrap',
                   currentTab === tab
                     ? 'bg-green text-white font-bold'
                     : 'text-green hover:font-bold'
@@ -96,6 +113,11 @@ const HowItWorks = () => {
           {renderContent(
             investorsContent,
             currentTab === 'For Investors',
+            'right'
+          )}
+          {renderContent(
+            organisationContent,
+            currentTab === 'For Organisation',
             'right'
           )}
         </div>

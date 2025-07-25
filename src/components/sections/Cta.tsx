@@ -1,15 +1,17 @@
-import Button from '../ui/Button';
-import { motion } from 'framer-motion';
-import { Waitlist } from './waitlist';
-import { useState } from 'react';
 import { containerVariants, itemVariants } from '@/lib/animations';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import Button from '../ui/Button';
+import { Waitlist } from './waitlist';
+import GetStarted from '../layout/GetStarted';
 
 type Props = {
   heading: React.ReactNode;
   text?: string;
+  buttonText?: string;
 };
 
-const Cta = ({ heading, text }: Props) => {
+const Cta = ({ heading, text, buttonText }: Props) => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
@@ -34,13 +36,14 @@ const Cta = ({ heading, text }: Props) => {
           <p className="font-normal text-black my-3 text-base ">
             {text ?? text}
           </p>
-          <Button
-            onClick={() => setWaitlistOpen(true)}
-            iconPosition="right"
-            size="medium"
-          >
-            Get Started
-          </Button>
+
+          <GetStarted
+            component={
+              <Button size="medium" iconPosition="right">
+                {buttonText ? 'Explore Opportunities' : 'Get Started'}
+              </Button>
+            }
+          />
         </div>
       </motion.div>
       <Waitlist

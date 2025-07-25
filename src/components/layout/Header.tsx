@@ -1,22 +1,23 @@
 'use client';
-import { motion } from 'framer-motion';
 import { useClickOutside } from '@/hooks/use-click-outside';
+import { classNames } from '@/lib/uitils';
+import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Button from '../ui/Button';
-import { classNames } from '@/lib/uitils';
-import { usePathname } from 'next/navigation';
 import { Waitlist } from '../sections/waitlist';
+import Button from '../ui/Button';
+import GetStarted from './GetStarted';
 
 const Header = () => {
+  const router = useRouter();
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
   const mobileNavRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -84,18 +85,19 @@ const Header = () => {
             <Button
               variant="tertiary"
               size="medium"
+              onClick={() => router.push('/signin')}
               className="hover:text-gray-700 text-sm !font-bold text-green"
             >
               Log In
             </Button>
-            <Button
-              onClick={() => setWaitlistOpen(true)}
-              variant="primary"
-              size="medium"
-              iconPosition="right"
-            >
-              Get Started
-            </Button>
+
+            <GetStarted
+              component={
+                <Button variant="primary" size="medium" iconPosition="right">
+                  Get Started
+                </Button>
+              }
+            />
           </div>
 
           <div className="lg:hidden">
@@ -132,20 +134,21 @@ const Header = () => {
 
             <div className="px-3 py-2 space-x-2">
               <Button
+                onClick={() => router.push('/signin')}
                 variant="tertiary"
                 size="medium"
                 className="hover:text-gray-700 text-sm !font-bold text-green"
               >
                 Log In
               </Button>
-              <Button
-                onClick={() => setWaitlistOpen(true)}
-                variant="primary"
-                size="medium"
-                iconPosition="right"
-              >
-                Get Started
-              </Button>
+
+              <GetStarted
+                component={
+                  <Button variant="primary" size="medium" iconPosition="right">
+                    Get Started
+                  </Button>
+                }
+              />
             </div>
           </div>
         </div>
@@ -153,7 +156,7 @@ const Header = () => {
       <Waitlist
         isOpen={waitlistOpen}
         setIsOpen={setWaitlistOpen}
-        title="Don’t Miss Out, Join the Waitlist"
+        title="Don't Miss Out, Join the Waitlist"
         desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
       />
     </motion.nav>
@@ -173,6 +176,10 @@ const navlinks = [
   {
     text: 'For Investors',
     url: '/investors',
+  },
+  {
+    text: 'For Organisations',
+    url: '/organisations',
   },
   {
     text: 'Resources',

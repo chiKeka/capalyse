@@ -36,8 +36,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
         {google_signtures && (
           <>
-            <button className="max-w-md w-full rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center">
-              <img /> Sign up with Google
+            <button className="max-w-md w-full gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center">
+              <img  src={'/icons/google.svg'} /> Sign up with Google
             </button>
             <div className="flex w-full max-w-md gap-2 items-center justify-center ">
               <hr className="h-[0.5px] w-full bg-[#1261AC]" /> or
