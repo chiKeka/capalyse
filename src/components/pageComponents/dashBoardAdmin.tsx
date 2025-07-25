@@ -2,7 +2,6 @@
 import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
 import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
 import { routes } from '@/lib/routes';
-import { useParams } from 'next/navigation';
 import IconCards from '../sections/dashboardCards/iconCards';
 import { CIcons } from '../ui/CIcons';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
@@ -10,9 +9,9 @@ import { useGetAdminDashboardStats } from '@/hooks/useAdmin';
 import { useAtomValue } from 'jotai';
 import { authAtom } from '@/lib/atoms/atoms';
 import { formatInvestmentData } from '@/lib/uitils/fns';
+import { Loader2Icon } from 'lucide-react';
 
 export default function AdminDashBoard() {
-  const params = useParams();
   const auth: any = useAtomValue(authAtom);
   const { data: adminDashboardStats, isLoading } = useGetAdminDashboardStats();
   console.log({ adminDashboardStats, auth });
@@ -82,26 +81,32 @@ export default function AdminDashBoard() {
           amount={adminDashboardStats?.totalRegisteredUsers ?? 0}
           icon={CIcons.profile2}
           extraContent={
-            <div className="flex justify-between mt-auto">
-              {groups?.map((item) => (
-                <div key={item?.group} className="text-black-500 text-2xl">
-                  <div className="flex gap-1 items-center text-sm">
-                    <div
-                      className="w-4 h-4 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span>{item.group}</span>
+            isLoading ? (
+              <Loader2Icon className="animate-spin text-green w-12 h-12" />
+            ) : (
+              <div className="flex justify-between mt-auto">
+                {groups?.map((item) => (
+                  <div key={item?.group} className="text-black-500 text-2xl">
+                    <div className="flex gap-1 items-center text-sm">
+                      <div
+                        className="w-4 h-4 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span>{item.group}</span>
+                    </div>
+                    <h2>{item.count}</h2>
                   </div>
-                  <h2>{item.count}</h2>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )
           }
         />
         <div className="grid grid-cols-2 gap-5">
-          {overviewCards.map((card) => (
-            <IconCards {...card} key={card?.id} />
-          ))}
+          {isLoading ? (
+            <Loader2Icon className="animate-spin text-green w-12 h-12" />
+          ) : (
+            overviewCards.map((card) => <IconCards {...card} key={card?.id} />)
+          )}
         </div>
         {/* <IconCards {...card} key={card?.id} /> */}
       </div>
@@ -112,21 +117,25 @@ export default function AdminDashBoard() {
 
         <div className="lg:col-span-3 w-full">
           <DashboardCardLayout caption="Support Tickets Open (0)">
-            <div className="flex my-8 flex-col gap-3">
-              <div className="flex flex-col gap-4">
-                {adminDashboardStats?.openTicketsCountByRoles.map(
-                  (ticket: any) => (
-                    <div
-                      key={ticket.userRole}
-                      className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
-                    >
-                      <span>{ticket.userRole}</span>
-                      <span>{ticket.count}</span>
-                    </div>
-                  )
-                )}
+            {isLoading ? (
+              <Loader2Icon className="animate-spin text-green w-12 h-12" />
+            ) : (
+              <div className="flex my-8 flex-col gap-3">
+                <div className="flex flex-col gap-4">
+                  {adminDashboardStats?.openTicketsCountByRoles.map(
+                    (ticket: any) => (
+                      <div
+                        key={ticket.userRole}
+                        className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
+                      >
+                        <span>{ticket.userRole}</span>
+                        <span>{ticket.count}</span>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </DashboardCardLayout>
         </div>
       </div>
