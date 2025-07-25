@@ -40,21 +40,23 @@ export const useSmeAssessmentMutations = () => {
   };
 };
 
-export const useGetSmeAssesments = () => {
+export const useGetSmeAssesments = (enabled?: boolean) => {
   return useQuery({
     queryKey: ['sme_assessment'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.All_Assessments);
       return resp.data.data;
     },
+    enabled,
   });
 };
-export const useGetSmeAssesmentsProgress = () => {
+export const useGetSmeAssesmentsProgress = (enabled?: boolean) => {
   return useQuery({
     queryKey: ['sme_assessment_progress'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.SMEs_Assessments('progress'));
       return resp.data.data;
     },
+    enabled,
   });
 };

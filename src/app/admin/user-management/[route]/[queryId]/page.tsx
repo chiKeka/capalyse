@@ -4,7 +4,7 @@ import DevOrgDetails from '@/components/useManagementComponents.tsx/DevOrgDetail
 import InvestorDetails from '@/components/useManagementComponents.tsx/InvestorDetails';
 import SMEDetails from '@/components/useManagementComponents.tsx/SMEDetails';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 
 const SingleMgtProfilePage = () => {
   const params = useParams();
@@ -24,9 +24,15 @@ const SingleMgtProfilePage = () => {
           Business Profile
         </Link>
       </p>
-      {params?.route === 'investor' && <InvestorDetails />}
-      {params?.route === 'dev' && <DevOrgDetails />}
-      {params?.route === 'sme' && <SMEDetails />}
+      {params?.route === 'investor' ? (
+        <InvestorDetails id={params?.queryId as string} />
+      ) : params?.route === 'dev' ? (
+        <DevOrgDetails id={params?.queryId as string} />
+      ) : params?.route === 'sme' ? (
+        <SMEDetails id={params?.queryId as string} />
+      ) : (
+        notFound()
+      )}
     </div>
   );
 };

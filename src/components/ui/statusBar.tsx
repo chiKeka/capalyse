@@ -1,7 +1,7 @@
 export const statusBadge = (status: string) => {
   let color = '';
   let text = status;
-  if (status === 'Connected' || status === 'Active')
+  if (status === 'Connected' || status === 'active')
     color = 'bg-green-100 text-green-700';
   if (status === 'Shortlisted') color = 'bg-yellow-100 text-yellow-700';
   if (status === 'Viewed') color = 'bg-blue-100 text-blue-700';
@@ -11,7 +11,7 @@ export const statusBadge = (status: string) => {
     >
       <span
         className={`w-2 h-2 rounded-full ${
-          status === 'Connected' || status === 'Active'
+          status === 'Connected' || status === 'active'
             ? 'bg-green-500'
             : status === 'Shortlisted'
             ? 'bg-yellow-400'

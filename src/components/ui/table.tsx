@@ -10,6 +10,7 @@
 // } from "@/components/ui/pagination";
 import React from 'react';
 import EmptyBox from '../sections/dashboardCards/emptyBox';
+import { Loader2Icon } from 'lucide-react';
 
 type Column<T> = {
   header: string;
@@ -26,6 +27,7 @@ type ReusableTableProps<T> = {
   page?: number;
   setPage?: (page: number) => void;
   totalPages?: number;
+  loading?: boolean;
 };
 
 export function ReusableTable<T extends object>({
@@ -36,6 +38,7 @@ export function ReusableTable<T extends object>({
   page = 1,
   setPage,
   totalPages,
+  loading,
 }: ReusableTableProps<T>) {
   return (
     <div className={`overflow-x-auto rounded-lg  bg-white ${className}`}>
@@ -55,7 +58,15 @@ export function ReusableTable<T extends object>({
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 && (
+          {loading ? (
+            <tr>
+              <td colSpan={columns.length}>
+                <div className="flex items-center justify-center mt-6">
+                  <Loader2Icon className="text-green animate-spin w-12 h-12" />
+                </div>
+              </td>
+            </tr>
+          ) : data.length === 0 ? (
             <tr>
               <td colSpan={columns.length}>
                 <EmptyBox
@@ -65,7 +76,8 @@ export function ReusableTable<T extends object>({
                 />
               </td>
             </tr>
-          )}
+          ) : null}
+
           {data &&
             data?.map((row, ridx) => (
               <tr key={ridx} className="hover:bg-gray-50 border">

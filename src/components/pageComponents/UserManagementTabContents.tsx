@@ -1,4 +1,3 @@
-import { smes } from '@/lib/uitils/contentData';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReusableTable } from '../ui/table';
@@ -20,8 +19,26 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
     () => (type === 'SMEs' ? columns : invColumns),
     [type]
   );
-  const { data: smesd } = useSmeDirectory();
-  const { data: investors } = useInvestorDirectory();
+  const { data: smesd, isLoading } = useSmeDirectory(type === 'SMEs');
+  const { data: investors, isLoading: isLoadingInvestors } =
+    useInvestorDirectory(type === 'Investors');
+  const data = useMemo(() => {
+    const loading = isLoading || isLoadingInvestors;
+    if (loading) {
+      return null;
+    }
+    if (type === 'SMEs') {
+      return smesd;
+    }
+    if (type === 'Investors') {
+      return investors;
+    }
+    return null;
+  }, [type, smesd, investors, isLoading, isLoadingInvestors]);
+
+  const loading = useMemo(() => {
+    return type === 'SMEs' ? isLoading : isLoadingInvestors;
+  }, [isLoading, isLoadingInvestors, type]);
 
   if (!type) {
     return notFound();
@@ -36,7 +53,7 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
               <span>{type}</span>
             </span>
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {smes.length}
+              {data?.pagination?.total || 0}
             </span>
           </p>
         </div>
@@ -64,8 +81,9 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
       </div>
       <ReusableTable
         columns={mgtColumns}
-        data={smesd?.data}
-        totalPages={Math.ceil(smes.length / 4)}
+        data={data?.data}
+        loading={loading}
+        totalPages={Math.ceil(data?.pagination?.total / 4)}
       />
     </div>
   );

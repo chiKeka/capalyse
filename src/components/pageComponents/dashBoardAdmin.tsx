@@ -87,12 +87,12 @@ export default function AdminDashBoard() {
         </div>
         {/* <IconCards {...card} key={card?.id} /> */}
       </div>
-      <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
-        <div className="lg:w-[32%] h-auto w-full ">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 ">
+        <div className="lg:col-span-2 h-auto w-full ">
           <InvestmentOpportunitiesCard />
         </div>
 
-        <div className="lg:w-[60%] w-full">
+        <div className="lg:col-span-3 w-full">
           <DashboardCardLayout caption="Support Tickets Open (0)">
             <div className="flex my-8 flex-col gap-3">
               <div className="flex flex-col gap-4">

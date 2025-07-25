@@ -1,16 +1,29 @@
+import { Loader2Icon } from 'lucide-react';
 import EmptyBox from '../sections/dashboardCards/emptyBox';
 import Button from '../ui/Button';
 import { Card } from '../ui/card';
 import ContactDetails from './ContactDetails';
 import Documents from './Documents';
 import Verification from './Verification';
+import { useGetInvestorById } from '@/hooks/useAdmin';
+import { toast } from 'sonner';
+import { notFound } from 'next/navigation';
 
-const InvestorDetails = () => {
+const InvestorDetails = ({ id }: { id: string }) => {
+  const { data: businessProfile, isLoading, error } = useGetInvestorById(id);
+  console.log({ businessProfile, error });
+  if (isLoading) return <Loader2Icon className="animate-spin w-12 h-12" />;
+  if (error) {
+    toast.error((error as any)?.error);
+    return notFound();
+  }
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 mt-6">
       <div className="space-y-6 lg:col-span-2">
-        <ContactDetails />
-        <Verification />
+        <ContactDetails data={businessProfile} />
+        <Verification
+          verificationStatus={businessProfile?.verificationStatus ?? 'Pending'}
+        />
       </div>
       <div className="lg:col-span-3 space-y-6">
         <Card className="px-6">
