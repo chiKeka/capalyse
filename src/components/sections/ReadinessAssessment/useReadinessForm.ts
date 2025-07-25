@@ -3,7 +3,7 @@ import {
   useGetSmeAssesmentsProgress,
   useSmeAssessmentMutations,
 } from '@/hooks/useSmeAssessments';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -63,9 +63,14 @@ export interface SectionData {
  */
 export function useReadinessForm(sections: SectionData[]) {
   const pathName = usePathname();
+  const params = useParams();
   const router = useRouter();
-  const { data: assessments } = useGetSmeAssesments();
-  const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
+  const { data: assessments } = useGetSmeAssesments(
+    params?.accessType === 'sme'
+  );
+  const { data: assessmentsProgress } = useGetSmeAssesmentsProgress(
+    params?.accessType === 'sme'
+  );
   const [currentSection, setCurrentSection] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<FormData>({});

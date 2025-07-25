@@ -213,6 +213,3 @@ export const smes = [
     status: 'pending',
   },
 ];
-
-
-

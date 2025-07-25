@@ -36,7 +36,7 @@ const page = (props: Props) => {
         <div className="flex flex-col gap-0">
           <span className="text-2xl font-bold text-black">SME Growth 2.0</span>
           <span className="text-gray-500 text-sm">
-            UNDP Nigeria {statusBadge('Active')}
+            UNDP Nigeria {statusBadge('active')}
           </span>
         </div>
         <div className="space-x-3">
@@ -55,7 +55,7 @@ const page = (props: Props) => {
         <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
           <div className="flex items-center mb-8 gap-2">
             <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
-              Investment Ready Businesses
+              SME Applicants
               <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
                 {smes.length}
               </span>
