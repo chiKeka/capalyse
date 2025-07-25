@@ -129,7 +129,7 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
           <MessageSheet
             open={openMessages}
             onOpenChange={setOpenMessages}
-            messages={messages}
+            // messages={messages}
             emptyIllustration="/icons/messages.gif"
           />
         </div>

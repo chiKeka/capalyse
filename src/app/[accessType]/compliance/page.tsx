@@ -127,7 +127,7 @@ function CompliancePage() {
                         <Loader className="animate-spin h-8 w-8 " />
                       )}
                     </div>
-                    <Input
+                    <input
                       // disabled={fileUploadLoading}
                       name="supportFile"
                       // onChange={handleFileUpload}

@@ -24,6 +24,7 @@ interface MessageSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   emptyIllustration?: string;
+  // messages: Message[];
 }
 
 const conversationToMessage = (conversation: ChatConversation, currentUserId: string): Message => {

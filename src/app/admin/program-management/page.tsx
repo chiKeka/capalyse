@@ -15,11 +15,9 @@ import {
 import { ReusableTable } from '@/components/ui/table';
 import { smes } from '@/lib/uitils/contentData';
 
-const ProgramManagement = ({ type }: { type: string }) => {
-  // const mgtColumns = useMemo(
-  //   () => (type === "sme" ? columns : invColumns),
-  //   [type]
-  // );
+const ProgramManagement = async ({ params }: { params: Promise<{ type: string }> }) => {
+  const { type } = await params;
+  
   return (
     <div>
       <div className="flex items-center my-8 justify-between max-lg:flex-wrap">

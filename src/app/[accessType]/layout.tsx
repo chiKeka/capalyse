@@ -3,14 +3,16 @@ import { notFound } from 'next/navigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
-  params: { accessType: string };
+  params: Promise<{ accessType: string }>;
 }
 const validTypes = ['investor', 'sme', 'development'];
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
   params,
 }: DashboardLayoutProps) {
-  if (!validTypes.includes(params.accessType)) {
+  const { accessType } = await params;
+  
+  if (!validTypes.includes(accessType)) {
     notFound();
   }
 

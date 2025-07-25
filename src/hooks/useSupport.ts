@@ -40,7 +40,7 @@ export const useSupports = () => {
   });
 
   const createTicketMessage = useMutation({
-    mutationFn: async (cred): Promise<any> => {
+    mutationFn: async (cred: any): Promise<any> => {
       return api.post(ApiEndPoints.TicketMessage(cred?.id), cred);
     },
   });

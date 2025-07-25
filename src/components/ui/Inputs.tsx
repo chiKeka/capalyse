@@ -97,7 +97,7 @@ export default Input;
 
 type CurrencyAmountInputProps = {
   amount: number | "";
-  onAmountChange: (value: number | "") => void;
+  onAmountChange: (value: number | string | undefined) => void;
   currency: string;
   tag?: string;
   onCurrencyChange: (currency: string) => void;
@@ -119,10 +119,11 @@ export function CurrencyAmountInput({
       {tag && <p className="block mb-1 text-[10px] font-medium">{tag}</p>}
       <div className="relative w-full">
         <Input
+          name="amount"
           type="number"
           className="pr-20 h-auto min-h-10 ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           placeholder={placeholder}
-          value={amount}
+          value={amount as string}
           onChange={(e) =>
             onAmountChange(e.target.value === "" ? "" : Number(e.target.value))
           }

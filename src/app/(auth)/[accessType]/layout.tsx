@@ -3,14 +3,15 @@ import { notFound } from 'next/navigation';
 
 const validTypes = Object.keys(UserType);
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { accessType: string };
+  params: Promise<{ accessType: string }>;
 }>) {
-  if (!validTypes.includes(params.accessType)) {
+  const { accessType } = await params;
+  if (!validTypes.includes(accessType)) {
     notFound();
   }
   return <main>{children}</main>;

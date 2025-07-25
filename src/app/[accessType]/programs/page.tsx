@@ -60,7 +60,7 @@ function page({}: Props) {
           >
             <div className="my-8 flex-col flex gap-2">
               {filteredPrograms.map((program) => {
-                return <Programs status={program.status} label={program.label} key={program.id} />;
+                return <Programs status={program.status as "pending" | "active" | "closed"} label={program.label} key={program.id} />;
               })}
             </div>
           </DashboardCardLayout>

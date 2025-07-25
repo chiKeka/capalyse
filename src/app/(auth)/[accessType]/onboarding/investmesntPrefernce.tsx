@@ -322,7 +322,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
               <CurrencyAmountInput
                 tag="Min"
                 amount={min}
-                onAmountChange={setMin}
+                onAmountChange={(value) => setMin(value as number)}
                 currency={currency}
                 onCurrencyChange={setCurrency}
               />
@@ -336,7 +336,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
               <CurrencyAmountInput
                 tag="Max"
                 amount={max}
-                onAmountChange={setMax}
+                onAmountChange={(value) => setMax(value as number)}
                 currency={currency}
                 onCurrencyChange={setCurrency}
               />
