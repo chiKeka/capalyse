@@ -18,7 +18,6 @@ type Props = {};
 
 // Example data
 const investors = [];
-
 // Table columns
 
 function InvestorsPage({}: Props) {
