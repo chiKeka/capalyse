@@ -204,7 +204,7 @@ const SupportPage = () => {
               </Button>
             </form>
           </div>
-          <Separator orientation="vertical" />
+          <Separator className="hidden md:block" orientation="vertical" />
         </div>
 
         {/* Dispute History */}
