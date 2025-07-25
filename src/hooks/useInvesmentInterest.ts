@@ -12,6 +12,16 @@ export const useRecievedInvestmentInterest = () => {
   });
 };
 
+export const useInvestorMatches = () => {
+  return useQuery({
+    queryKey: ["investor_matches"],
+    queryFn: async () => {
+      const resp = await api.get(ApiEndPoints.investor_matches);
+      return resp?.data;
+    },
+  });
+};
+
 export const useInvestmentInterestDetails = (id: string) => {
   return useQuery({
     queryKey: ["investments_details"],

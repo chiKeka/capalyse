@@ -39,6 +39,7 @@ export const ApiEndPoints = {
   SMEs_Assessments: (action?: string) => `/smes/me/assessment/${action}`,
   All_Assessments: `/smes/me/assessment`,
   Submit_Assessment: `/smes/me/assessment/submit`,
+  investor_matches: 'investment-matches/me',
 
   //investor
 
@@ -92,7 +93,8 @@ export const ApiEndPoints = {
   Edit_Message: (id: string) => `/messages/${id}`,
 
   //networking
-  networking: "smes/directory" ,
+  networking: "smes/directory",
+
 };
 
 /**

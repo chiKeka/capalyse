@@ -89,7 +89,6 @@ const SupportPage = () => {
       setFileUploadLoading(false);
     });
   };
-  console.log({ supportTicket });
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
       <Card className="grid gap-8 md:grid-cols-2 p-6">
@@ -205,7 +204,7 @@ const SupportPage = () => {
               </Button>
             </form>
           </div>
-          <Separator orientation="vertical" />
+          <Separator className="hidden md:block" orientation="vertical" />
         </div>
 
         {/* Dispute History */}

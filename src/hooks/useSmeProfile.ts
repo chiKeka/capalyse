@@ -1,17 +1,13 @@
 import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useSmeProfile = () => {
-
-
   const updateSmeBusinessInfo = useMutation({
     mutationFn: async (cred): Promise<any> => {
       return api.put(ApiEndPoints.SMEs_Profile("business-info"), cred);
     },
   });
-
-
 
   const updateSmeBusinessDetails = useMutation({
     mutationFn: async (cred): Promise<any> => {
