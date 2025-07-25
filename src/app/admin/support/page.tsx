@@ -13,18 +13,13 @@ function page({}: Props) {
           <Button variant="primary">Change Staus</Button>
         </div>
         <div className="grid grid-cols-5 gap-6">
-          <div className="col-span-3 flex gap-6">
-            <div>
+          <div className="col-span-3 flex gap-6 ">
+            <div className="w-full">
               <div className="border rounded-lg border-[#ABD2C7] bg-[#F4FFFC] px-6 py-3 text-center">
                 <div>
                   <h6 className="text-[#2E3034] font-semibold text-xl">
                     Make a complaint
                   </h6>
-                  <div className="text-[#36394D] text-sm">
-                    Please fill out the following form with your complaint. We
-                    will review your request and follow up with you as soon as
-                    possible.
-                  </div>
                 </div>
               </div>
               <div className="border mt-12 rounded-lg border-[##E8E8E8] min-h-24  px-6 py-3 justify-center flex flex-col text-start">
@@ -45,7 +40,7 @@ function page({}: Props) {
 
             <Separator className="hidden md:block" orientation="vertical" />
           </div>
-          <div className="col-span2">Reports</div>
+          <div className="col-span-2">Reports</div>
         </div>
       </Card>
     </div>
