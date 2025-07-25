@@ -7,24 +7,38 @@ import { ReusableTable } from "@/components/ui/table";
 import { useNetworking } from "@/hooks/networking";
 import Image from "next/image";
 import { useState } from "react";
-
-// Example data
-
-// Table columns
+interface NetworkingProfile {
+  _id: string;
+  logo: string;
+  name: string;
+  businessName: string;
+  industry: string;
+  businessStage: string;
+  serviceOffered: string;
+  status: string;
+}
 
 function NetworkingPage() {
   const { data } = useNetworking();
   const networking = data?.data;
-  const [isOpen, setIsOpen] = useState(false);
-  const [id, setId] = useState(undefined);
-  console.log({ id, networking });
+  const [selectedProfile, setSelectedProfile] =
+    useState<NetworkingProfile | null>(null);
+
+  const handleViewProfile = (profile: NetworkingProfile) => {
+    console.log(profile);
+    setSelectedProfile(profile);
+  };
+
+  const handleCloseSheet = () => {
+    setSelectedProfile(null);
+  };
   const columns = [
     {
       header: "Name",
-      accessor: (row: any) => (
+      accessor: (row: NetworkingProfile) => (
         <div className="flex items-center gap-2">
           <Image
-            src={row?.avatar}
+            src={row?.logo ? row?.logo : ""}
             alt={row?.name}
             width={24}
             height={24}
@@ -39,17 +53,15 @@ function NetworkingPage() {
     { header: "Service Offered", accessor: "serviceOffered" },
     {
       header: "Status",
-      accessor: (row: any) => statusBadge(row?.status),
+      accessor: (row: NetworkingProfile) => statusBadge(row?.status),
     },
     {
       header: "Action",
-      accessor: (row: any) => (
+      accessor: (row: NetworkingProfile) => (
         <div className="flex gap-2">
           <Button
             variant="tertiary"
-            onClick={() => {
-              setIsOpen(true), setId(row._id);
-            }}
+            onClick={() => handleViewProfile(row)}
             className="text-green font-medium hover:underline"
           >
             View Profile
@@ -82,7 +94,12 @@ function NetworkingPage() {
       </div>
 
       <ReusableTable columns={columns} data={networking} />
-      <NetworkProfileSheet id={id} onOpenChange={setIsOpen} open={isOpen} />
+      <NetworkProfileSheet
+        id={selectedProfile?._id}
+        onOpenChange={(open) => !open && handleCloseSheet()}
+        data={selectedProfile}
+        open={!!selectedProfile}
+      />
     </div>
   );
 }

@@ -10,12 +10,17 @@ export interface Notification {
 }
 
 interface NotificationSheetProps {
+  data?: any;
   id?: string;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }
 
-export function ProfileSheet({ open, onOpenChange }: NotificationSheetProps) {
+export function ProfileSheet({
+  open,
+  onOpenChange,
+  data,
+}: NotificationSheetProps) {
   const investment = [
     { name: "Viaplay Group", icon: "/images/viaPlay.svg" },
     { name: "Spotify", icon: "/icons/sportify.svg" },
@@ -47,6 +52,8 @@ export function ProfileSheet({ open, onOpenChange }: NotificationSheetProps) {
       activity: "Kentucky, USA",
     },
   ];
+
+  console.log(data);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -109,11 +116,11 @@ export function ProfileSheet({ open, onOpenChange }: NotificationSheetProps) {
 }
 
 export function NetworkProfileSheet({
+  data,
   id,
   open,
   onOpenChange,
 }: NotificationSheetProps) {
-  
   const colaboration = [
     "Food & Beverage businesses",
     "Retail chains",
@@ -131,6 +138,8 @@ export function NetworkProfileSheet({
     "Custom-printed eco-bags",
     "Bulk packaging supply",
   ];
+
+  console.log(data);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -140,17 +149,17 @@ export function NetworkProfileSheet({
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-row gap-2">
             <img
-              src={"/icons/sportify.svg"}
+              src={data ? data?.logo : "/icons/sportify.svg"}
               className="rounded-full h-21 w-21"
             />
             <div>
               <p className="text-black font-bold text-2xl">
-                GreenPack Solutions Ltd
+                {data ? data?.businessName : "GreenPack Solutions Ltd"}
               </p>
               <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
-                <p>Packaging</p>
+                <p>{data ? data?.businessStage : "Packaging"}</p>
                 <p className="text-2xl font-medium mb-2">.</p>
-                <p>Nigeria</p>
+                <p>{data ? data?.countryOfOperation.join(", ") : "Lagos"}</p>
               </span>
               <span className="inline-flex mt-2 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
                 <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> Connected
@@ -158,7 +167,7 @@ export function NetworkProfileSheet({
             </div>
           </div>
 
-          <div className="font-bold text-base text- mt-13">
+          {/* <div className="font-bold text-base text- mt-13">
             Business Summary
           </div>
 
@@ -193,7 +202,7 @@ export function NetworkProfileSheet({
                 );
               })}
             </div>
-          </div>
+          </div> */}
           <div className="my-6">
             <p className="font-bold mb-4 text-base text-[#0B0B0C]">Contact</p>
             <div className="flex flex-wrap w-full p-2 gap-3">
