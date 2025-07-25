@@ -1,12 +1,15 @@
-import api, { unauthenticatedAxios } from "@/api/axios";
-import { ApiEndPoints } from "@/api/endpoints";
+import api, { unauthenticatedAxios } from '@/api/axios';
+import { ApiEndPoints } from '@/api/endpoints';
 import {
   PersonalInfoInputs,
   RegisterCredentials,
   SMEsBusinessInfo,
-} from "@/lib/uitils/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+} from '@/lib/uitils/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useSetAtom } from 'jotai';
+import Cookies from 'js-cookie';
+import { authAtom } from '@/lib/atoms/atoms';
 
 export interface VerifyResponse {
   data: {
@@ -20,13 +23,16 @@ export interface VerifyResponse {
 
 export const useGetCurrentUser = () => {
   return useQuery({
-    queryKey: ["current_user"],
-    queryFn: () => api.get(ApiEndPoints.Auth_Activity("me")),
+    queryKey: ['current_user'],
+    queryFn: () => api.get(ApiEndPoints.Auth_Activity('me')),
   });
 };
 
 export const useAuth = () => {
   const router = useRouter();
+  const setAuth = useSetAtom(authAtom);
+  const queryClient = useQueryClient();
+
   const logninMutation = useMutation<
     VerifyResponse,
     Error,
@@ -34,7 +40,7 @@ export const useAuth = () => {
   >({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("login"),
+        ApiEndPoints.Auth_Activity('login'),
         cred
       );
     },
@@ -47,7 +53,7 @@ export const useAuth = () => {
   >({
     mutationFn: async (cred) => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Register_Activity("initiate"),
+        ApiEndPoints.Register_Activity('initiate'),
         cred
       );
     },
@@ -55,7 +61,7 @@ export const useAuth = () => {
   const googleSigninMutation = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("google"),
+        ApiEndPoints.Auth_Activity('google'),
         cred
       );
     },
@@ -64,7 +70,7 @@ export const useAuth = () => {
   const refresh_token = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("refresh"),
+        ApiEndPoints.Auth_Activity('refresh'),
         cred
       );
     },
@@ -72,7 +78,7 @@ export const useAuth = () => {
   const verify_email = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("verify-email"),
+        ApiEndPoints.Auth_Activity('verify-email'),
         cred
       );
     },
@@ -80,7 +86,7 @@ export const useAuth = () => {
   const forgot_password = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("forgot-password"),
+        ApiEndPoints.Auth_Activity('forgot-password'),
         cred
       );
     },
@@ -88,7 +94,7 @@ export const useAuth = () => {
   const reset_password = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("reset-password"),
+        ApiEndPoints.Auth_Activity('reset-password'),
         cred
       );
     },
@@ -96,20 +102,36 @@ export const useAuth = () => {
   const change_password = useMutation({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("change-password"),
+        ApiEndPoints.Auth_Activity('change-password'),
         cred
       );
     },
   });
   const generate_token = useMutation({
     mutationFn: async (): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(ApiEndPoints.Auth_Activity("token"));
+      return unauthenticatedAxios.post(ApiEndPoints.Auth_Activity('token'));
     },
   });
 
-  const logout = useMutation({
+  const signOutMutation = useMutation({
     mutationFn: async () => {
-      return unauthenticatedAxios.post(ApiEndPoints.Auth_Activity("logout"));
+      // Best effort call to backend, client logout should proceed regardless
+      try {
+        await api.post(ApiEndPoints.Auth_Activity('logout'));
+      } catch (error) {
+        console.error('Backend logout failed, proceeding with client logout.');
+      }
+    },
+    onSuccess: () => {
+      // 1. Remove all cookies
+      Object.keys(Cookies.get()).forEach((cookieName) =>
+        Cookies.remove(cookieName)
+      );
+      // 2. Reset Jotai auth state
+      setAuth(null);
+      // 3. Clear react-query cache and redirect
+      queryClient.clear();
+      router.push('/signin');
     },
   });
 
@@ -117,19 +139,19 @@ export const useAuth = () => {
 
   const personal_information = useMutation({
     mutationFn: async (cred: Partial<PersonalInfoInputs>): Promise<any> => {
-      return api.post(ApiEndPoints.Register_Activity("personal-info"), cred);
+      return api.post(ApiEndPoints.Register_Activity('personal-info'), cred);
     },
   });
 
   const dev_org = useMutation({
     mutationFn: (cred) => {
-      return api.post(ApiEndPoints.Register_Activity("dev-org-info"), cred);
+      return api.post(ApiEndPoints.Register_Activity('dev-org-info'), cred);
     },
   });
   const smes_bussiness_info = useMutation({
     mutationFn: (cred: SMEsBusinessInfo): Promise<any> => {
       return api.post(
-        ApiEndPoints.Register_Activity("sme-business-info"),
+        ApiEndPoints.Register_Activity('sme-business-info'),
         cred
       );
     },
@@ -137,7 +159,7 @@ export const useAuth = () => {
   const investor_investment_info = useMutation({
     mutationFn: (cred): Promise<any> => {
       return api.post(
-        ApiEndPoints.Register_Activity("investor-investment-info"),
+        ApiEndPoints.Register_Activity('investor-investment-info'),
         cred
       );
     },
@@ -145,13 +167,13 @@ export const useAuth = () => {
   const investor_org_info = useMutation({
     mutationFn: (cred) => {
       return api.post(
-        ApiEndPoints.Register_Activity("investor-organization-info"),
+        ApiEndPoints.Register_Activity('investor-organization-info'),
         cred
       );
     },
   });
   const next_step_reg = useMutation({
-    mutationFn: () => api.get(ApiEndPoints.Register_Activity("next-step")),
+    mutationFn: () => api.get(ApiEndPoints.Register_Activity('next-step')),
   });
   return {
     logninMutation,
@@ -160,7 +182,7 @@ export const useAuth = () => {
     googleSigninMutation,
     forgot_password,
     reset_password,
-    logout,
+    signOutMutation,
     verify_email,
     personal_information,
     smes_bussiness_info,

@@ -9,6 +9,14 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -27,6 +35,11 @@ import {
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import Button from './ui/Button';
+import { useAtomValue } from 'jotai';
+import { authAtom } from '@/lib/atoms/atoms';
 
 export function NavUser({
   user,
@@ -37,8 +50,27 @@ export function NavUser({
     avatar: string;
   };
 }) {
+  const [showLogout, setShowLogout] = useState(false);
   const param = useParams();
   const { isMobile } = useSidebar();
+  const { signOutMutation } = useAuth();
+  const auth: any = useAtomValue(authAtom);
+  const handleLogout = () => {
+    signOutMutation.mutate();
+  };
+  const renderUserDetails = useCallback(() => {
+    if (auth) {
+      return (
+        <>
+          <span className="truncate font-medium">{`${auth?.firstName || ''} ${
+            auth?.lastName || ''
+          }`}</span>
+          <span className="truncate text-xs">{auth?.email}</span>
+        </>
+      );
+    }
+    return null;
+  }, [auth]);
 
   return (
     <SidebarMenu>
@@ -54,8 +86,7 @@ export function NavUser({
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                {renderUserDetails()}
               </div>
               <ArrowRightIcon className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -73,8 +104,7 @@ export function NavUser({
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  {renderUserDetails()}
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -101,13 +131,40 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setShowLogout(true)}>
               <LogOut />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <Dialog open={showLogout} onOpenChange={setShowLogout}>
+        <DialogContent className="sm:!max-w-[425px]" hideIcon>
+          <DialogHeader>
+            <DialogTitle className="text-center">Log out</DialogTitle>
+            <DialogDescription className="text-center py-6 font-medium">
+              Are you sure you want to log out from Capalyse?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              size="small"
+              variant="secondary"
+              onClick={() => setShowLogout(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="small"
+              className="bg-red-600 hover:bg-red-700"
+              onClick={handleLogout}
+              state={signOutMutation.isPending ? 'loading' : 'default'}
+            >
+              Log out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarMenu>
   );
 }

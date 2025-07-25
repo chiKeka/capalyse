@@ -66,7 +66,7 @@ export default function AdminDashBoard() {
           extraContent={
             <div className="flex justify-between mt-auto">
               {groups?.map((item) => (
-                <div className="text-black-500 text-2xl">
+                <div key={item?.group} className="text-black-500 text-2xl">
                   <div className="flex gap-1 items-center text-sm">
                     <div
                       className="w-4 h-4 rounded-full flex-shrink-0"
