@@ -5,6 +5,8 @@ import { BellIcon, MailIcon, SidebarIcon } from "lucide-react";
 import { SearchForm } from "@/components/search-form";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useGetNotifications } from "@/hooks/useNotification";
+import { notificationAtom } from "@/lib/atoms/atoms";
+import { useAtomValue } from "jotai";
 import Image from "next/image";
 import { useState } from "react";
 import Button from "./ui/Button";
@@ -15,33 +17,12 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
   const [openMessages, setOpenMessages] = useState(false);
-  // Example notifications, replace with real data/fetch
 
   const Notifications = useGetNotifications();
   const { data: notifications } = Notifications;
-   
 
-  //  const notifications: Notification[] = [
-  //   // Uncomment to test empty state
-  //   //
-  //   {
-  //     id: '1',
-  //     title: '{important} Your account deposit has been received',
-  //     message:
-  //       "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-  //     isImportant: true,
-  //     isUnread: true,
-  //   },
-  //   {
-  //     id: '2',
-  //     title: 'Your account deposit has been received',
-  //     message:
-  //       "we've successfully received your deposit. Thank you for your prompt payment! Your account balance is now updated",
-  //     isImportant: false,
-  //     isUnread: false,
-  //   },
-  // ];
-  // Example messages, replace with real data/fetch
+  const unreadCount = useAtomValue(notificationAtom);
+
   const messages: Message[] = [
     {
       id: "1",
@@ -118,7 +99,12 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
           >
             <BellIcon />
             {/* Optionally add a red dot if there are unread notifications */}
-            <span className="absolute -top-1 right-0 rounded-full bg-red-500 aspect-square text-white h-3 w-3 flex items-center p-0.5 justify-center font-bold text-[11px]" />
+
+            {unreadCount! >= 1 && (
+              <span className="absolute -top-1 right-0 rounded-full bg-red-500 aspect-square text-white h-3 w-3 flex items-center p-0.5 justify-center font-bold text-[11px]">
+                {unreadCount}
+              </span>
+            )}
           </button>
           <NotificationSheet
             open={open}

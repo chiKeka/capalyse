@@ -2,6 +2,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
 import { CIcons } from './CIcons';
 import { RefreshCcwIcon } from 'lucide-react';
 import Button from './Button';
+import { useAtomValue } from 'jotai';
+import { notificationAtom } from '@/lib/atoms/atoms';
 
 export interface Notification {
   id: string;
@@ -23,6 +25,7 @@ export function NotificationSheet({
   notifications,
 }: NotificationSheetProps) {
   const hasNotifications = notifications?.length > 0;
+  
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
