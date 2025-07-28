@@ -1,11 +1,12 @@
-import Button from '@/components/ui/Button';
-import { ChevronLeft } from 'lucide-react';
+import Button from "@/components/ui/Button";
+import { ChevronLeft } from "lucide-react";
 
 interface NavigationProps {
   currentSection: number;
   currentQuestion: number;
   handleBack: () => void;
   handleNext: () => void;
+  handleSkip: () => void;
   totalQuestions: number;
   loading?: boolean;
   sections: { totalQuestions: number }[];
@@ -17,6 +18,7 @@ interface NavigationProps {
  * @param currentQuestion Current question index.
  * @param handleBack Handler for Back button.
  * @param handleNext Handler for Next button.
+ * @param handleSkip Handler for skipping
  * @param totalQuestions Number of questions in current section.
  * @param sections All section data.
  */
@@ -25,6 +27,7 @@ export function Navigation({
   currentQuestion,
   handleBack,
   handleNext,
+  handleSkip,
   totalQuestions,
   sections,
   loading,
@@ -35,19 +38,29 @@ export function Navigation({
         variant="secondary"
         onClick={handleBack}
         state={
-          currentSection === 0 && currentQuestion === 0 ? 'disabled' : 'default'
+          currentSection === 0 && currentQuestion === 0 ? "disabled" : "default"
         }
       >
         <ChevronLeft className="w-4 h-4" />
         <span>Back</span>
       </Button>
-      <Button
-        state={loading ? 'loading' : 'default'}
-        onClick={handleNext}
-        iconPosition="right"
-      >
-        <span>Next</span>
-      </Button>
+
+      <div>
+        <Button
+          variant="tertiary"
+          className="text-error-100"
+          onClick={handleSkip}
+        >
+          Skip
+        </Button>
+        <Button
+          state={loading ? "loading" : "default"}
+          onClick={handleNext}
+          iconPosition="right"
+        >
+          <span>Next</span>
+        </Button>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
+import { ReusableTable } from "@/components/ui/table";
 import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
 import { useSmeProfile } from "@/hooks/useSmeProfile";
 import { useEffect, useState } from "react";
@@ -68,101 +69,114 @@ export default function Team({}: Props) {
       .catch((err) => toast.error(err?.msg));
   };
 
+  const columns = [
+    { header: "Name", accessor: "name" },
+    { header: "Email", accessor: "email" },
+    { header: "Role", accessor: "role" },
+  ];
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 "
-    >
-      {fields.map((field, index) => (
-        <div
-          key={field.id}
-          className="grid w-full lg:grid-cols-3 lg:max-w-[80%] gap-2 grid-cols-1 mb-4"
-        >
-          <Input
-            {...register(`teamMembers.${index}.name` as const, {
-              required: "Name is required",
-            })}
-            type="text"
-            label="Name"
-            className="h-[43px]"
-            placeholder="Enter Name"
-          />
-          {errors.teamMembers?.[index]?.name && (
-            <span className="text-[10px] text-red-500">
-              {errors.teamMembers[index]?.name?.message}
-            </span>
-          )}
-
-          <Input
-            {...register(`teamMembers.${index}.email` as const, {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            type="email"
-            label="Email"
-            className="h-[43px]"
-            placeholder="Enter Email"
-          />
-          {errors.teamMembers?.[index]?.email && (
-            <span className="text-[10px] text-red-500">
-              {errors.teamMembers[index]?.email?.message}
-            </span>
-          )}
-
-          <div className="flex  items-center gap-2">
+    <>
+      {user?.teamMembers && (
+        <div className="w-full h-auto my-10">
+          <ReusableTable columns={columns} data={user?.teamMembers} />{" "}
+        </div>
+      )}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 "
+      >
+        {fields.map((field, index) => (
+          <div
+            key={field.id}
+            className="grid w-full lg:grid-cols-3 lg:max-w-[80%] gap-2 grid-cols-1 mb-4"
+          >
             <Input
-              {...register(`teamMembers.${index}.role` as const, {
-                required: "Role is required",
+              {...register(`teamMembers.${index}.name` as const, {
+                required: "Name is required",
               })}
               type="text"
-              label="Role"
+              label="Name"
               className="h-[43px]"
-              placeholder="Enter role"
+              placeholder="Enter Name"
             />
-            {fields.length > 1 && (
-              <Button
-                type="button"
-                variant="tertiary"
-                onClick={() => removeTeamMember(index)}
-                className="h-[43px] px-3"
-              >
-                Remove
-              </Button>
+            {errors.teamMembers?.[index]?.name && (
+              <span className="text-[10px] text-red-500">
+                {errors.teamMembers[index]?.name?.message}
+              </span>
+            )}
+
+            <Input
+              {...register(`teamMembers.${index}.email` as const, {
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              })}
+              type="email"
+              label="Email"
+              className="h-[43px]"
+              placeholder="Enter Email"
+            />
+            {errors.teamMembers?.[index]?.email && (
+              <span className="text-[10px] text-red-500">
+                {errors.teamMembers[index]?.email?.message}
+              </span>
+            )}
+
+            <div className="flex  items-center gap-2">
+              <Input
+                {...register(`teamMembers.${index}.role` as const, {
+                  required: "Role is required",
+                })}
+                type="text"
+                label="Role"
+                className="h-[43px]"
+                placeholder="Enter role"
+              />
+              {fields.length > 1 && (
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  onClick={() => removeTeamMember(index)}
+                  className="h-[43px] px-3"
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+            {errors.teamMembers?.[index]?.role && (
+              <span className="text-[10px] text-red-500">
+                {errors.teamMembers[index]?.role?.message}
+              </span>
             )}
           </div>
-          {errors.teamMembers?.[index]?.role && (
-            <span className="text-[10px] text-red-500">
-              {errors.teamMembers[index]?.role?.message}
-            </span>
-          )}
+        ))}
+
+        <div className="flex text-green font-bold text-sm lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={addTeamMember}
+            className="w-fit border-none"
+          >
+            Add Section +
+          </Button>
         </div>
-      ))}
 
-      <div className="flex text-green font-bold text-sm lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={addTeamMember}
-          className="w-fit border-none"
-        >
-          Add Section +
-        </Button>
-      </div>
-
-      <div className="flex lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
-        <Button
-          variant="primary"
-          size="medium"
-          className="w-fit my-4"
-          type="submit"
-          state={updateTeamMemeber.isPending ? "loading" : undefined}
-        >
-          Save Changes
-        </Button>
-      </div>
-    </form>
+        <div className="flex lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+          <Button
+            variant="primary"
+            size="medium"
+            className="w-fit my-4"
+            type="submit"
+            state={updateTeamMemeber.isPending ? "loading" : undefined}
+          >
+            Save Changes
+          </Button>
+        </div>
+      </form>
+    </>
   );
 }

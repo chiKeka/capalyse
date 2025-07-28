@@ -2,10 +2,10 @@ import {
   useGetSmeAssesments,
   useGetSmeAssesmentsProgress,
   useSmeAssessmentMutations,
-} from '@/hooks/useSmeAssessments';
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+} from "@/hooks/useSmeAssessments";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export interface Section {
   id: number;
@@ -66,10 +66,10 @@ export function useReadinessForm(sections: SectionData[]) {
   const params = useParams();
   const router = useRouter();
   const { data: assessments } = useGetSmeAssesments(
-    params?.accessType === 'sme'
+    params?.accessType === "sme"
   );
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress(
-    params?.accessType === 'sme'
+    params?.accessType === "sme"
   );
   const [currentSection, setCurrentSection] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -111,8 +111,8 @@ export function useReadinessForm(sections: SectionData[]) {
 
   function validateField(fieldId: string, value: any): string | null {
     const question = currentQuestionData;
-    if (question.required && (!value || value.toString().trim() === '')) {
-      return 'This field is required';
+    if (question.required && (!value || value.toString().trim() === "")) {
+      return "This field is required";
     }
 
     return null;
@@ -122,19 +122,19 @@ export function useReadinessForm(sections: SectionData[]) {
     fieldId: string,
     sections: Section[]
   ): string | null {
-    const categoryKey = currentQuestionData.categoryKey || 'category';
-    const amountKey = currentQuestionData.amountKey || 'amount';
+    const categoryKey = currentQuestionData.categoryKey || "category";
+    const amountKey = currentQuestionData.amountKey || "amount";
     if (currentQuestionData.required && sections.length === 0) {
-      return 'At least one section is required';
+      return "At least one section is required";
     }
     for (const section of sections) {
       if (
         !section[categoryKey] ||
-        section[categoryKey].toString().trim() === ''
+        section[categoryKey].toString().trim() === ""
       ) {
         return `${categoryKey} is required for all sections`;
       }
-      if (!section[amountKey] || section[amountKey].toString().trim() === '') {
+      if (!section[amountKey] || section[amountKey].toString().trim() === "") {
         return `${amountKey} is required for all sections`;
       }
     }
@@ -176,22 +176,22 @@ export function useReadinessForm(sections: SectionData[]) {
     }));
   }
   console.log(
-    'last section reached',
+    "last section reached",
     pathName,
-    pathName.includes('onboarding')
+    pathName.includes("onboarding")
   );
   function addSection() {
     const fieldId = `${currentSection}-${currentQuestion}`;
     const currentSections = sectionedData[fieldId] || [];
-    const categoryKey = currentQuestionData.categoryKey || 'category';
-    const amountKey = currentQuestionData.amountKey || 'amount';
+    const categoryKey = currentQuestionData.categoryKey || "category";
+    const amountKey = currentQuestionData.amountKey || "amount";
     const dueDateKey = currentQuestionData.categoryDueDateKey;
     const newSection: any = {
       id: Date.now(),
-      [categoryKey]: '',
-      [amountKey]: '',
-      currency: 'NGN',
-      ...(dueDateKey ? { [dueDateKey]: '' } : {}),
+      [categoryKey]: "",
+      [amountKey]: "",
+      currency: "NGN",
+      ...(dueDateKey ? { [dueDateKey]: "" } : {}),
     };
     setSectionedData((prev) => ({
       ...prev,
@@ -218,7 +218,7 @@ export function useReadinessForm(sections: SectionData[]) {
         if (!uploadVal || !Array.isArray(uploadVal) || uploadVal.length === 0) {
           setErrors((prev) => ({
             ...prev,
-            [fieldId]: 'Document upload is required',
+            [fieldId]: "Document upload is required",
           }));
           return;
         }
@@ -235,7 +235,7 @@ export function useReadinessForm(sections: SectionData[]) {
           if (!uploadVal) {
             setErrors((prev) => ({
               ...prev,
-              [fieldId]: 'Document upload is required',
+              [fieldId]: "Document upload is required",
             }));
             return;
           }
@@ -249,11 +249,11 @@ export function useReadinessForm(sections: SectionData[]) {
       // Validate all fields in each section
       for (const section of currentSections) {
         for (const key of Object.keys(section)) {
-          if (key === 'id') continue;
+          if (key === "id") continue;
           if (
             section[key] === undefined ||
             section[key] === null ||
-            section[key].toString().trim() === ''
+            section[key].toString().trim() === ""
           ) {
             setErrors((prev) => ({
               ...prev,
@@ -272,7 +272,7 @@ export function useReadinessForm(sections: SectionData[]) {
         return;
       }
       if (currentQuestionData.name) {
-        const amountKey = currentQuestionData.amountKey || 'amount';
+        const amountKey = currentQuestionData.amountKey || "amount";
         const sectionsArr = currentSections.map((s) => {
           const { currency, id, ...rest } = s;
           return {
@@ -288,7 +288,7 @@ export function useReadinessForm(sections: SectionData[]) {
         });
         currentPayload[currentQuestionData.name] = sectionsArr;
       } else {
-        currentPayload['sections'] = [];
+        currentPayload["sections"] = [];
       }
     } else {
       const currentValue = formData[fieldId];
@@ -301,7 +301,7 @@ export function useReadinessForm(sections: SectionData[]) {
         return;
       }
       let val = formData[fieldId];
-      if (val && typeof val === 'object' && 'amount' in val) {
+      if (val && typeof val === "object" && "amount" in val) {
         val = { ...val, amount: Number(val.amount) };
       }
       currentPayload[currentQuestionData.name] = val;
@@ -329,7 +329,7 @@ export function useReadinessForm(sections: SectionData[]) {
     )
       currentPayload[currentQuestionData.name] = undefined;
 
-    console.log('Current question payload:', currentPayload);
+    console.log("Current question payload:", currentPayload);
 
     // If last question in section, format payload and mock API call
     if (currentQuestion === totalQuestions - 1) {
@@ -337,11 +337,11 @@ export function useReadinessForm(sections: SectionData[]) {
       const payload: Record<string, any> = {};
       for (const q of sectionQuestions) {
         // Always set the field, even if undefined
-        if (q.name === 'hasIntellectualProperty') {
+        if (q.name === "hasIntellectualProperty") {
           const val =
             formData[`${currentSection}-${sectionQuestions.indexOf(q)}`] || {};
           console.log({ val });
-          if (val === 'Yes') {
+          if (val === "Yes") {
             payload[q.name] = true;
           } else {
             payload[q.name] = false;
@@ -358,7 +358,7 @@ export function useReadinessForm(sections: SectionData[]) {
             const sectionFieldId = `${currentSection}-${sectionQuestions.indexOf(
               q
             )}`;
-            const amountKey = q.amountKey || 'amount';
+            const amountKey = q.amountKey || "amount";
             const sectionsArr = (sectionedData[sectionFieldId] || []).map(
               (s) => {
                 const { currency, id, ...rest } = s;
@@ -378,10 +378,10 @@ export function useReadinessForm(sections: SectionData[]) {
           } else {
             let val =
               formData[`${currentSection}-${sectionQuestions.indexOf(q)}`];
-            if (val && typeof val === 'object' && 'amount' in val) {
+            if (val && typeof val === "object" && "amount" in val) {
               val = { ...val, amount: Number(val.amount) };
             }
-            if (typeof val === 'string' && q.type === 'number') {
+            if (typeof val === "string" && q.type === "number") {
               val = Number(val);
             }
             payload[q.name] = val;
@@ -416,23 +416,23 @@ export function useReadinessForm(sections: SectionData[]) {
         if (q.name && !(q.name in payload)) payload[q.name] = undefined;
       }
       // Mock API call
-      console.log('Submitting section payload:', payload);
+      console.log("Submitting section payload:", payload);
       // Call the correct endpoint based on section
       let mutationPromise: Promise<any> | undefined;
       switch (currentSectionData.name) {
-        case 'Financial Data':
+        case "Financial Data":
           mutationPromise = updateSmeFinancialAssessment.mutateAsync(payload);
           break;
-        case 'Business Information':
+        case "Business Information":
           mutationPromise = updateSmeBusinessAssessment.mutateAsync(payload);
           break;
-        case 'Operational Data':
+        case "Operational Data":
           mutationPromise = updateSmeOperationalAssessment.mutateAsync(payload);
           break;
-        case 'Market Information':
+        case "Market Information":
           mutationPromise = updateSmeMarketAssessment.mutateAsync(payload);
           break;
-        case 'Compliance & Trade Readiness':
+        case "Compliance & Trade Readiness":
           mutationPromise = updateSmeComplianceAssessment.mutateAsync(payload);
           break;
         default:
@@ -441,16 +441,16 @@ export function useReadinessForm(sections: SectionData[]) {
       if (mutationPromise) {
         mutationPromise
           .then((res) => {
-            console.log('API response:', res);
+            console.log("API response:", res);
             // Only move to next step after successful mutation
             if (
               currentSection === sections.length - 1 &&
               currentQuestion === totalQuestions - 1
             ) {
-              toast.success('Assessment Completed Successfully');
-              console.log('last section reached', pathName);
-              if (pathName?.includes('onboarding')) {
-                router.push('/sme');
+              toast.success("Assessment Completed Successfully");
+              console.log("last section reached", pathName);
+              if (pathName?.includes("onboarding")) {
+                router.push("/sme");
               } else {
                 window && window?.location?.reload();
               }
@@ -460,13 +460,13 @@ export function useReadinessForm(sections: SectionData[]) {
             }
           })
           .catch((err) => {
-            console.log('API error:', err);
+            console.log("API error:", err);
             const errMsg =
               err?.error?.issues && err?.error?.issues?.length > 0
                 ? err?.error?.issues
                     ?.map((iss: any) => iss?.message)
-                    ?.join(', ')
-                : err?.error?.error ?? err?.error?.message ?? '';
+                    ?.join(", ")
+                : err?.error?.error ?? err?.error?.message ?? "";
             toast.error(errMsg);
           });
         return; // Prevent moving forward until mutation resolves
@@ -489,11 +489,25 @@ export function useReadinessForm(sections: SectionData[]) {
       setCurrentQuestion(sections[currentSection - 1].totalQuestions - 1);
     }
   }
+  function handleSkip() {
+    // if (currentQuestion > 0) {
+    //   setCurrentQuestion(currentQuestion + 1);
+    // } else if (currentSection > 1) {
+    //   setCurrentSection(currentSection + 1);
+    //   setCurrentQuestion(sections[currentSection + 1]?.totalQuestions + 1);
+    // }
+    if (currentQuestion < totalQuestions - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else if (currentSection < sections.length - 1) {
+      setCurrentSection(currentSection + 1);
+      setCurrentQuestion(0);
+    }
+  }
 
   function getSectionStatus(sectionIndex: number) {
-    if (sectionIndex < currentSection) return 'completed';
-    if (sectionIndex === currentSection) return 'active';
-    return 'upcoming';
+    if (sectionIndex < currentSection) return "completed";
+    if (sectionIndex === currentSection) return "active";
+    return "upcoming";
   }
 
   function handleCurrencyAmountChange(amount: string) {
@@ -503,7 +517,7 @@ export function useReadinessForm(sections: SectionData[]) {
       [fieldId]: {
         ...prev[fieldId],
         amount,
-        currency: prev[fieldId]?.currency || 'NGN',
+        currency: prev[fieldId]?.currency || "NGN",
       },
     }));
     const error = validateField(currentQuestionData.id, amount);
@@ -519,7 +533,7 @@ export function useReadinessForm(sections: SectionData[]) {
       ...prev,
       [fieldId]: {
         ...prev[fieldId],
-        amount: prev[fieldId]?.amount || '',
+        amount: prev[fieldId]?.amount || "",
         currency,
       },
     }));
@@ -544,6 +558,7 @@ export function useReadinessForm(sections: SectionData[]) {
     addSection,
     removeSection,
     handleNext,
+    handleSkip,
     handleBack,
     getSectionStatus,
     handleCurrencyAmountChange,
