@@ -39,6 +39,12 @@ export type investorOrg = {
   countryHeadquarters: "";
   website: "";
 };
+export type developmentOrg = {
+  organizationName: "";
+  companyEmail: "";
+  countryHeadquarters: "";
+  website?: "";
+};
 
 export type AuthState = {
   createdAt: string;

@@ -68,6 +68,7 @@ const SupportPage = () => {
         file: files,
         description,
         category,
+       
       })
       .then(() => {
         toast.success("Ticket submitted successfully");

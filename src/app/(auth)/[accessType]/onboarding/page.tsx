@@ -50,6 +50,10 @@ const Page = () => {
     submit: () => void;
     isLoading: boolean;
   }>(null);
+  const developmentOrganisationRef = useRef<{
+    submit: () => void;
+    isLoading: boolean;
+  }>(null);
 
   const [loading, setLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -76,9 +80,9 @@ const Page = () => {
       } else if (step === 2) {
         valid = (await smeBusinessInfoFormRef.current?.submit()) ?? false;
       }
-    } else if (role === "organisation") {
-      if (step === 3) {
-        valid = (await investorOrganisationRef.current?.submit()) ?? false;
+    } else if (role === "developmentorg") {
+      if (step === 1) {
+        valid = (await developmentOrganisationRef.current?.submit()) ?? false;
       }
     }
     if (!valid) {
@@ -103,7 +107,7 @@ const Page = () => {
       { id: 2, label: "Investment Preference" },
       { id: 3, label: "Organisation Profile" },
     ],
-    organisation: [{ id: 1, label: "" }],
+    developmentorg: [{ id: 1, label: "" }],
   };
 
   const roleFormMap = {
@@ -152,14 +156,25 @@ const Page = () => {
         )}
       </>
     ),
-    organisation: (
+    developmentorg: (
       <>
-        {authState?.profileCompletionStep === 1 && <DevelopmentOrganisation />}
+        {authState?.profileCompletionStep === 1 && (
+          <DevelopmentOrganisation
+            ref={developmentOrganisationRef}
+            setLoading={setLoading}
+            onFinish={() => setButtonLoading(false)}
+            onSuccess={() => setShowSuccessDialog(true)}
+          />
+        )}
       </>
     ),
   };
 
-  console.log(authState?.role);
+  console.log("Role:", authState?.role);
+  console.log("Role lowercase:", authState?.role?.toLowerCase());
+  console.log("Profile completion step:", authState?.profileCompletionStep);
+  console.log("Available steps:", steps);
+  console.log("Available forms:", Object.keys(roleFormMap));
   const getPrimaryButtonLabel = () => {
     const role = authState?.role?.toLowerCase();
     const step = authState?.profileCompletionStep;
@@ -169,14 +184,14 @@ const Page = () => {
     if (role === "investor") {
       return step === 3 ? "Submit" : "Next";
     }
-    if (role === "organisation") {
+    if (role === "developmentorg") {
       return step === 1 ? "Submit" : "Next";
     }
     return "Next";
   };
 
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [showReadiness, setShowReadiness] = useState(true);
+  const [showReadiness, setShowReadiness] = useState(false);
   const dashboardUrl =
     routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
       ?.root;
@@ -248,19 +263,19 @@ const Page = () => {
             <div className="gap-2 flex flex-col">
               <img
                 src={
-                  authState?.role?.toLowerCase() === "organisation"
+                  authState?.role?.toLowerCase() === "developmentorg"
                     ? "/icons/pendingCheck.svg"
                     : "/icons/successCheck.svg"
                 }
               />
               <div
                 className={`${
-                  authState?.role?.toLowerCase() === "organisation"
+                  authState?.role?.toLowerCase() === "developmentorg"
                     ? "text-[#D3931C]"
                     : "text-green"
                 }`}
               >
-                {authState?.role?.toLowerCase() === "organisation"
+                {authState?.role?.toLowerCase() === "developmentorg"
                   ? "Pending Verification"
                   : "Success!"}
               </div>
