@@ -13,7 +13,7 @@ interface Props {
   onClick?: () => void;
 }
 function LearningCard({ header, text, image, href, index, onClick }: Props) {
-  
+
   return (
     <motion.div
       initial="hidden"

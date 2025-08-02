@@ -2,6 +2,7 @@
 
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import Button from "@/components/ui/Button";
 import { ReusableTable } from "@/components/ui/table";
@@ -14,25 +15,13 @@ import {
 import { File, Pen, Trash2 } from "lucide-react";
 type Props = {};
 
-const documents = [
-  {
-    name: "CAC Registration.pdf",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
-  {
-    name: "Pitch Deck.pptx",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
-  {
-    name: "Financial Statement.pdf",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
+const documents: any[] = [
+  // {
+  //   name: "CAC Registration.pdf",
+  //   size: "200 KB",
+  //   date: "Jan 4, 2022",
+  //   status: "Completed",
+  // },
 ];
 
 const columns = [
@@ -87,17 +76,17 @@ function page({}: Props) {
     if (!readinessData?.data?.currentScore?.scores) {
       return [
         {
-          value: 80,
+          value: 0,
           label: "Strong foundation in place",
           caption: "Foundational",
         },
         {
-          value: 60,
+          value: 0,
           label: "Moderate financial stability",
           caption: "Financial Health",
         },
         {
-          value: 45,
+          value: 0,
           label: "Significant gaps in compliance",
           caption: "Compliance",
         },
@@ -147,7 +136,7 @@ function page({}: Props) {
     <div className="w-full h-full gap-6 flex flex-col">
       <div className="flex lg:flex-row gap-4 flex-col">
         <div className="lg:w-[25%] h-auto w-full ">
-          <ReadinessScoreCard 
+          <ReadinessScoreCard
             readinessData={readinessData?.data?.currentScore}
             isLoading={isLoading}
             scoreValue={0} // fallback value
@@ -171,7 +160,7 @@ function page({}: Props) {
           </DashboardCardLayout>
         </div>
       </div>
-      
+
       {/* Recommendations Section */}
       {/* {readinessData?.data?.currentScore?.recommendations && (
         <div className="mt-6">
@@ -182,8 +171,8 @@ function page({}: Props) {
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold text-base">{recommendation.title}</h3>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      recommendation.priority === 'high' 
-                        ? 'bg-red-100 text-red-800' 
+                      recommendation.priority === 'high'
+                        ? 'bg-red-100 text-red-800'
                         : recommendation.priority === 'medium'
                         ? 'bg-yellow-100 text-yellow-800'
                         : 'bg-green-100 text-green-800'
@@ -213,20 +202,31 @@ function page({}: Props) {
       )} */}
 
       <DashboardCardLayout>
-        <div className=" flex justify-between items-center ">
-          <div className="flex items-center gap-2">
-            <p className="font-bold text-base flex gap-2 items-center text-[#18181B]">
-              Documents
-              <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-                {documents.length}
-              </span>
-            </p>
+        <div className="myb-4">
+          <div className=" flex justify-between items-center ">
+            <div className="flex items-center gap-2">
+              <p className="font-bold text-base flex gap-2 items-center text-[#18181B]">
+                Documents
+                <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
+                  {documents.length}
+                </span>
+              </p>
+            </div>
+            <Button variant="primary">
+              Upload{" "}
+              <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
+            </Button>
           </div>
-          <Button variant="primary">
-            Upload <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
-          </Button>
+          {documents?.length > 0 ? (
+            <ReusableTable columns={columns} data={documents} />
+          ) : (
+            <EmptyBox
+              caption="No Documents Yet!"
+              caption2="You have not uploaded any documents yet."
+              showButton={false}
+            />
+          )}
         </div>
-        <ReusableTable columns={columns} data={documents} />
       </DashboardCardLayout>
     </div>
   );

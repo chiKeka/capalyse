@@ -49,6 +49,10 @@ function page({}: Props) {
         );
         localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
         console.log({ user });
+        if (!user?.emailVerified) {
+          router.push(`/verify?email=${user?.email}`);
+          return;
+        }
         if (user?.role === "ADMIN") {
           router.push(`/admin`);
           return;

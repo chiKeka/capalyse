@@ -89,7 +89,7 @@ export default function Team({}: Props) {
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="grid w-full lg:grid-cols-3 lg:max-w-[80%] gap-2 grid-cols-1 mb-4"
+            className="grid w-full lg:grid-cols-3 gap-2 grid-cols-1 mb-4"
           >
             <Input
               {...register(`teamMembers.${index}.name` as const, {
@@ -154,7 +154,7 @@ export default function Team({}: Props) {
           </div>
         ))}
 
-        <div className="flex text-green font-bold text-sm lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+        <div className="flex text-green font-bold text-sm lg:max-w-[87%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
           <Button
             type="button"
             variant="secondary"
@@ -165,7 +165,7 @@ export default function Team({}: Props) {
           </Button>
         </div>
 
-        <div className="flex lg:max-w-[82%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+        <div className="flex lg:max-w-[87%] mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
           <Button
             variant="primary"
             size="medium"

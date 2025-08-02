@@ -3,26 +3,7 @@ import { ReusableTable } from "@/components/ui/table";
 import { File, Pen, Trash2 } from "lucide-react";
 
 type Props = {};
-const documents = [
-  {
-    name: "CAC Registration.pdf",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
-  {
-    name: "Pitch Deck.pptx",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
-  {
-    name: "Financial Statement.pdf",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
-  },
-];
+const documents: any[] = [];
 
 const columns = [
   {

@@ -1,16 +1,16 @@
-'use client';
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import LearningCard from '@/components/sections/dashboardCards/learningCard';
-import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
-import Programs from '@/components/sections/dashboardCards/programs';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
-import { useGetCurrentProfile } from '@/hooks/useProfileManagement';
-import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
-import { useGetReadinessScore } from '@/hooks/useReadiness';
-import { useParams, useRouter } from 'next/navigation';
+"use client";
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import LearningCard from "@/components/sections/dashboardCards/learningCard";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
+import Programs from "@/components/sections/dashboardCards/programs";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
+import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { useGetReadinessScore } from "@/hooks/useReadiness";
+import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
+import { useParams, useRouter } from "next/navigation";
 
 export default function SmeDashBoard() {
   const params = useParams();
@@ -23,18 +23,8 @@ export default function SmeDashBoard() {
   const { data: readinessScore, isLoading: isReadinessLoading } =
     useGetReadinessScore();
 
-  const learningCards = [
-    {
-      id: '1',
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    },
-    {
-      id: '1',
-      href: '/',
-      header: 'Trading Across Africa: How AfCFTA Is Changing the Game',
-    },
-  ];
+  const learningCards: any[] = [];
+  const programs: any[] = [];
   // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
   //   (x: string) => x
   // );
@@ -47,12 +37,12 @@ export default function SmeDashBoard() {
   );
 
   const label =
-    nextSectionName !== undefined ? `Finish ${nextSectionName}` : 'Completed';
+    nextSectionName !== undefined ? `Finish ${nextSectionName}` : "Completed";
 
   const renderFinanceStatus = () => {
     const values = Object.values(sectionCompletion);
 
-    if (values.length === 0) return '';
+    if (values.length === 0) return "";
 
     const allTrue = values.every((v) => v === true);
     const allFalse = values.every((v) => v === false);
@@ -63,34 +53,28 @@ export default function SmeDashBoard() {
   };
   const checklist = [
     {
-      icon: '/icons/profile.svg',
-      label: 'Complete profile',
+      icon: "/icons/profile.svg",
+      label: "Complete profile",
       status: user?.completionPercentage || undefined,
     },
     {
-      icon: '/icons/presentation.svg',
-      label: 'Start Readiness Assessment',
+      icon: "/icons/presentation.svg",
+      label: "Start Readiness Assessment",
       status: assessmentsProgress?.overallCompletionPercentage || undefined,
     },
     {
-      icon: '/icons/money_out.svg',
+      icon: "/icons/money_out.svg",
       label: label,
       status: renderFinanceStatus() || undefined,
     },
     {
-      icon: '/icons/status_up.svg',
-      label: 'Explore investor matches',
+      icon: "/icons/status_up.svg",
+      label: "Explore investor matches",
       status: undefined,
     },
   ];
 
-  const suggestedConnections = [
-    { id: 1, icon: '/icons/user1.svg', name: 'Suggested Connection 1' },
-    { id: 2, icon: '/icons/user2.svg', name: 'Suggested Connection 2' },
-    { id: 3, icon: '/icons/user3.svg', name: 'Suggested Connection 3' },
-    { id: 4, icon: '/icons/user4.svg', name: 'Suggested Connection 4' },
-    { id: 5, icon: '/icons/user5.svg', name: 'Suggested Connection 5' },
-  ];
+  const suggestedConnections: any[] = [];
   const router = useRouter();
 
   return (
@@ -102,9 +86,9 @@ export default function SmeDashBoard() {
         showProgress={true}
         showButton={true}
         buttonProps={{
-          className: 'max-w-max !border-black-50 !text-black-400',
-          variant: 'secondary',
-          iconPosition: 'right',
+          className: "max-w-max !border-black-50 !text-black-400",
+          variant: "secondary",
+          iconPosition: "right",
         }}
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
@@ -132,7 +116,7 @@ export default function SmeDashBoard() {
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
           <DashboardCardLayout
-            icon={'/images/bulb.svg'}
+            icon={"/images/bulb.svg"}
             caption="Quick Tip"
             height="h-full"
           >
@@ -142,7 +126,7 @@ export default function SmeDashBoard() {
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
-            icon={'/icons/warning.svg'}
+            icon={"/icons/warning.svg"}
             caption="Compliance Flag"
             height="h-full"
           >
@@ -158,42 +142,48 @@ export default function SmeDashBoard() {
             linkName="See all Resources"
           >
             <div className="flex gap-4 my-8 flex-col lg:flex-row items-start ">
-              {learningCards.map((card, idx) => (
-                <LearningCard
-                  // onClick={router.push(
-                  //   `/${params.accessType}/learning/${card?.id}`
-                  // )}
-                  href={card.href}
-                  header={card.header}
-                  key={idx}
+              {learningCards?.length === 0 ? (
+                <EmptyBox
+                  caption="No Learning Courses Yet!"
+                  caption2="You have not enrolled in any courses yet."
+                  showButton={false}
                 />
-              ))}
+              ) : (
+                learningCards?.map((card, idx) => (
+                  <LearningCard
+                    href={card?.href}
+                    header={card?.header}
+                    key={idx}
+                  />
+                ))
+              )}
             </div>
           </DashboardCardLayout>
         </div>
         <div>
-          <DashboardCardLayout height="h-full" caption="Matched Investors">
-            <EmptyBox
-              caption2={
-                assessmentsProgress?.overallCompletionPercentage > 0 &&
-                assessmentsProgress?.overallCompletionPercentage < 100
-                  ? `Your about ${
-                      assessmentsProgress?.overallCompletionPercentage ?? 0
-                    }% done with your Investment readiness assement, click the button below to continue`
-                  : assessmentsProgress?.overallCompletionPercentage === 100
-                  ? 'Assessment Complete awaiting investor matches'
-                  : ''
-              }
-              buttonText={
-                assessmentsProgress?.overallCompletionPercentage > 0
-                  ? 'Complete Assessment'
-                  : 'Start Assessment'
-              }
-              showButton={
-                assessmentsProgress?.overallCompletionPercentage &&
-                assessmentsProgress?.overallCompletionPercentage < 100
-              }
-            />
+          <DashboardCardLayout height="h-full " caption="Matched Investors">
+            <div className="mb-2">
+              <EmptyBox
+                caption2={
+                  assessmentsProgress?.overallCompletionPercentage >= 0 &&
+                  assessmentsProgress?.overallCompletionPercentage < 100
+                    ? `Your about ${
+                        assessmentsProgress?.overallCompletionPercentage ?? 0
+                      }% done with your Investment readiness assement, click the button below to continue`
+                    : assessmentsProgress?.overallCompletionPercentage === 100
+                    ? "Assessment Complete awaiting investor matches"
+                    : ""
+                }
+                buttonText={
+                  assessmentsProgress?.overallCompletionPercentage > 0
+                    ? "Complete Assessment"
+                    : "Start Assessment"
+                }
+                showButton={
+                  assessmentsProgress?.overallCompletionPercentage < 100
+                }
+              />
+            </div>
           </DashboardCardLayout>
         </div>
       </div>
@@ -205,21 +195,39 @@ export default function SmeDashBoard() {
             caption="Suggested Connections"
           >
             <div className="flex my-8 flex-col gap-3">
-              {suggestedConnections.map((item) => (
-                <SuggestedConnection
-                  key={item.id}
-                  icon={item.icon}
-                  name={item.name}
+              {suggestedConnections?.length > 0 ? (
+                suggestedConnections.map((item) => (
+                  <SuggestedConnection
+                    key={item.id}
+                    icon={item.icon}
+                    name={item.name}
+                  />
+                ))
+              ) : (
+                <EmptyBox
+                  caption="No Suggested Connections Yet!"
+                  caption2="You have not been matched with any investors yet."
+                  showButton={false}
                 />
-              ))}
+              )}
             </div>
           </DashboardCardLayout>
         </div>
         <div className="flex-1 ">
           <DashboardCardLayout height="h-full" caption="Develolopment Programs">
-            <div className="my-8">
-              <Programs />
-            </div>
+            {programs?.length > 0 ? (
+              programs?.map((program) => (
+                <div className="my-8">
+                  <Programs />
+                </div>
+              ))
+            ) : (
+              <EmptyBox
+                caption="No Development Programs Yet!"
+                caption2="You have not enrolled in any development programs yet."
+                showButton={false}
+              />
+            )}
           </DashboardCardLayout>
         </div>
       </div>
