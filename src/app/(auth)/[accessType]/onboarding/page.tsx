@@ -250,7 +250,7 @@ const Page = () => {
           <Button
             variant="primary"
             onClick={handleNext}
-            state={buttonLoading || loading ? "loading" : undefined}
+            state={loading ? "loading" : undefined}
           >
             {getPrimaryButtonLabel()}
           </Button>

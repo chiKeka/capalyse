@@ -3,11 +3,13 @@ import Input from "@/components/ui/Inputs";
 import { Input as FileInput } from "@/components/ui/input";
 import { CountrySelect } from "react-country-state-city";
 
+import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
 import { useAuth } from "@/hooks/useAuth";
 import { authAtom } from "@/lib/atoms/atoms";
 import { handleImageUpload } from "@/lib/uitils/fns";
 import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
 import { useAtomValue } from "jotai";
+import { useRouter } from "next/navigation";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -52,6 +54,7 @@ const DevelopmentOrganisation = forwardRef<
   const [operationalLicences, setOperationalLicences] = useState<
     supportAttachment[]
   >([]);
+  const [showModal, setShowModal] = useState(true);
   const handleCertificateFileUpload = async (e: any) => {
     if (e) setFileUploadLoading1(true);
     const file = e.target?.files[0];
@@ -67,7 +70,9 @@ const DevelopmentOrganisation = forwardRef<
       setFileUploadLoading1(false);
     });
   };
-
+  const router = useRouter();
+  const authState: any = useAtomValue(authAtom);
+  const role = authState?.role?.toLowerCase();
   const handleOperationalLicenseFileUpload = async (e: any) => {
     if (e) setFileUploadLoading2(true);
     const file = e.target?.files[0];
@@ -111,6 +116,7 @@ const DevelopmentOrganisation = forwardRef<
           };
           // Add your form submission logic here
           await dev_org.mutateAsync(formDataWithFiles).then(() => {
+            setShowModal(true);
             onSuccess?.();
             resolve(true);
           });
@@ -288,6 +294,20 @@ const DevelopmentOrganisation = forwardRef<
           Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
         </p>
       </div>
+      <StatusChangeModal
+        description="We're reviewing your details. You'll get an email once verification is complete."
+        handleAction={() => {
+          router.push(`/${role}/signin`);
+          setShowModal(false);
+        }}
+        handleCancel={() => {
+          router.push(`/${role}/signin`);
+          setShowModal(false);
+        }}
+        title="Link sent!!"
+        routename="A password reset link has been sent to your inbox"
+        showModal={showModal}
+      />
     </div>
   );
 });

@@ -197,7 +197,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <SelectItem value="Idea">Idea</SelectItem>
               <SelectItem value="Startup">Startup</SelectItem>
               <SelectItem value="Growth">Growth</SelectItem>
-              <SelectItem value="Growth">Mature</SelectItem>
+              <SelectItem value="Mature">Mature</SelectItem>
             </SelectContent>
           </Select>
           {errors.businessStage && (
@@ -219,6 +219,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <SelectItem value="Ict">Information</SelectItem>
               <SelectItem value="Telcom">Tel Communication</SelectItem>
               <SelectItem value="Agro">Agriculture</SelectItem>
+              <SelectItem value="Others">Others</SelectItem>
             </SelectContent>
           </Select>
           {errors.industry && (

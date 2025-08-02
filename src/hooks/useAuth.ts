@@ -75,7 +75,11 @@ export const useAuth = () => {
       );
     },
   });
-  const verify_email = useMutation({
+  const verify_email = useMutation<
+    VerifyResponse,
+    Error,
+    { email: string; otp: string }
+  >({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
         ApiEndPoints.Auth_Activity("verify-email"),
@@ -83,15 +87,21 @@ export const useAuth = () => {
       );
     },
   });
-  const forgot_password = useMutation({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("forgot-password"),
-        cred
-      );
-    },
-  });
-  const reset_password = useMutation({
+  const forgot_password = useMutation<VerifyResponse, Error, { email: string }>(
+    {
+      mutationFn: async (cred): Promise<VerifyResponse> => {
+        return unauthenticatedAxios.post(
+          ApiEndPoints.Auth_Activity("forgot-password"),
+          cred
+        );
+      },
+    }
+  );
+  const reset_password = useMutation<
+    VerifyResponse,
+    Error,
+    { new_password: string; confirm_password: string }
+  >({
     mutationFn: async (cred): Promise<VerifyResponse> => {
       return unauthenticatedAxios.post(
         ApiEndPoints.Auth_Activity("reset-password"),

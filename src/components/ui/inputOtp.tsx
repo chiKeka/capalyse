@@ -1,23 +1,25 @@
-import { redirect } from "next/navigation";
 import { unstable_OneTimePasswordField as OneTimePasswordField } from "radix-ui";
 import * as React from "react";
 
-export function Verify({ validCode }: { validCode: string }) {
+export function Verify({
+  validCode,
+  onValueChange,
+}: {
+  validCode: string;
+  onValueChange?: (value: string) => void;
+}) {
   const [value, setValue] = React.useState("");
   const PASSWORD_LENGTH = 6;
-  function handleSubmit() {
-    if (value === validCode) {
-      redirect("/authenticated");
-    } else {
-      window.alert("Invalid code");
-    }
-  }
+
+  const handleValueChange = (newValue: string) => {
+    setValue(newValue);
+    onValueChange?.(newValue);
+  };
+
   return (
     <OneTimePasswordField.Root
-      autoSubmit
       value={value}
-      onAutoSubmit={handleSubmit}
-      onValueChange={setValue}
+      onValueChange={handleValueChange}
       className="flex gap-2 justify-between w-full mx-auto mt-10"
     >
       {Array.from({ length: PASSWORD_LENGTH }, (_, i) => (
