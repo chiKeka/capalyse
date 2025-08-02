@@ -11,14 +11,14 @@ import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 interface OTPForm {
   otp: string;
 }
 
-const VerifyPage = () => {
+const VerifyPageContent = () => {
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(59 * 60); // 59 minutes in seconds
   const [canResend, setCanResend] = useState(false);
@@ -182,6 +182,14 @@ const VerifyPage = () => {
         </div>
       </form>
     </AuthLayout>
+  );
+};
+
+const VerifyPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyPageContent />
+    </Suspense>
   );
 };
 
