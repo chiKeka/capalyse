@@ -87,6 +87,18 @@ export const useAuth = () => {
       );
     },
   });
+   const resend_otp = useMutation<
+     VerifyResponse,
+     Error,
+     { email: string}
+   >({
+     mutationFn: async (cred): Promise<VerifyResponse> => {
+       return unauthenticatedAxios.post(
+         ApiEndPoints.Auth_Activity("resend-otp"),
+         cred
+       );
+     },
+   });
   const forgot_password = useMutation<VerifyResponse, Error, { email: string }>(
     {
       mutationFn: async (cred): Promise<VerifyResponse> => {
@@ -185,6 +197,8 @@ export const useAuth = () => {
   const next_step_reg = useMutation({
     mutationFn: () => api.get(ApiEndPoints.Register_Activity("next-step")),
   });
+
+
   return {
     logninMutation,
     registerMutation,
@@ -194,6 +208,7 @@ export const useAuth = () => {
     reset_password,
     signOutMutation,
     verify_email,
+    resend_otp,
     personal_information,
     smes_bussiness_info,
     dev_org,

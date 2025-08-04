@@ -7,13 +7,12 @@ import { authAtom } from "@/lib/atoms/atoms";
 import { routes } from "@/lib/routes";
 import { getKeyByValue } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
-import { useSetAtom } from "jotai";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
 interface OTPForm {
   otp: string;
 }
@@ -27,7 +26,7 @@ const VerifyPageContent = () => {
   const email = searchParams.get("email") || "";
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
-  const param = useParams();
+
   // Start countdown when component mounts
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,28 +51,20 @@ const VerifyPageContent = () => {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<OTPForm>();
-
+  const userAuthDetails: any = useAtomValue(authAtom);
   const [otpValue, setOtpValue] = useState("");
-
+  const rootRoute = getKeyByValue(UserType, userAuthDetails?.role);
   const onSubmit = (data: OTPForm) => {
     console.log({ data });
     verify_email
       .mutateAsync({ email, otp: data.otp })
       .then((res) => {
-        const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
-        setAuth(user);
-        Cookies.set("access_token", token);
-        Cookies.set("refresh_token", newRefreshToken);
-        Cookies.set(
-          "token_exp",
-          Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
-        );
-        localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
-        const rootRoute = getKeyByValue(UserType, user?.role);
-        if (user.profileCompletionStep === 1) {
-          router.push(`/${param?.accessType}/onboarding`);
+        if (userAuthDetails?.profileCompletionStep === 1) {
+          router.push(`/${rootRoute}/onboarding`);
         } else {
-          router.push(routes?.[rootRoute as keyof typeof routes]?.root);
+          router.push(
+            routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+          );
         }
       })
       .catch((err) => {

@@ -18,7 +18,7 @@ import { toast } from "sonner";
 type Props = {};
 
 function page({}: Props) {
-  const { logninMutation } = useAuth();
+  const { logninMutation, resend_otp } = useAuth();
   const [form, setForm] = useState({ email: "", password: "", role: "SME" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
@@ -49,7 +49,9 @@ function page({}: Props) {
         );
         localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
         console.log({ user });
+
         if (!user?.emailVerified) {
+          resend_otp.mutateAsync({ email: form?.email });
           router.push(`/verify?email=${user?.email}`);
           return;
         }

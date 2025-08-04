@@ -10,8 +10,9 @@ import { handleImageUpload } from "@/lib/uitils/fns";
 import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
 import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface Props {
   setLoading: (loading: boolean) => void;
@@ -54,7 +55,7 @@ const DevelopmentOrganisation = forwardRef<
   const [operationalLicences, setOperationalLicences] = useState<
     supportAttachment[]
   >([]);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const handleCertificateFileUpload = async (e: any) => {
     if (e) setFileUploadLoading1(true);
     const file = e.target?.files[0];
@@ -70,6 +71,9 @@ const DevelopmentOrganisation = forwardRef<
       setFileUploadLoading1(false);
     });
   };
+  useEffect(() => {
+    setLoading(dev_org?.isPending);
+  }, [dev_org?.isPending, setLoading]);
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
   const role = authState?.role?.toLowerCase();
@@ -99,14 +103,14 @@ const DevelopmentOrganisation = forwardRef<
             ...data,
             documents: [
               ...certificateFiles.map((file) => ({
-                type: "certificateOfIncorporation",
+                type: "Certificate",
                 fileName: file.fileName,
                 fileUrl: file.fileUrl,
                 fileSize: file.fileSize,
                 mimeType: file.mimeType,
               })),
               ...operationalLicences.map((file) => ({
-                type: "operationalLicense",
+                type: "License",
                 fileName: file.fileName,
                 fileUrl: file.fileUrl,
                 fileSize: file.fileSize,
@@ -115,11 +119,18 @@ const DevelopmentOrganisation = forwardRef<
             ],
           };
           // Add your form submission logic here
-          await dev_org.mutateAsync(formDataWithFiles).then(() => {
-            setShowModal(true);
-            onSuccess?.();
-            resolve(true);
-          });
+          await dev_org
+            .mutateAsync(formDataWithFiles)
+            .then(() => {
+              setShowModal(true);
+              onSuccess?.();
+              resolve(true);
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error(err?.message);
+              resolve(false);
+            });
         })();
       });
     },
@@ -297,11 +308,12 @@ const DevelopmentOrganisation = forwardRef<
       <StatusChangeModal
         description="We're reviewing your details. You'll get an email once verification is complete."
         handleAction={() => {
-          router.push(`/${role}/signin`);
+          router.push(`/${role}/dashbaord`);
           setShowModal(false);
         }}
+        modalType="warning"
         handleCancel={() => {
-          router.push(`/${role}/signin`);
+          router.push(`/${role}/dashbaord`);
           setShowModal(false);
         }}
         title="Link sent!!"

@@ -52,9 +52,9 @@ const StatusChangeModal = ({
   };
 
   const icon = {
-    success: <img src="icons/successCheck.svg" className="w-20 h-20 " />,
+    success: <img src="/icons/successCheck.svg" className="w-20 h-20 " />,
     error: <XCircle className="w-20 h-20 text-red-500" />,
-    warning: <img src="icons/pending.svg" className="w-20 h-20" />,
+    warning: <img src="/icons/pending.svg" className="w-20 h-20" />,
     info: <Info className="w-20 h-20 text-blue-500" />,
   };
   return (
@@ -70,10 +70,22 @@ const StatusChangeModal = ({
         </div>
         <div className="mb-2 w-full flex flex-col items-center justify-center mx-auto">
           <p className="mb-4">{icon[modalType || "success"]}</p>
-          <p className="text-green font-bold text-xl text-center font-bolg mb-2">
+          <p
+            className={`font-bold text-xl text-center font-bolg mb-2 ${
+              modalType === "success"
+                ? "text-green"
+                : modalType === "error"
+                ? "text-red-500"
+                : modalType === "warning"
+                ? "text-[#D3931C]"
+                : modalType === "info"
+                ? "text-blue-500"
+                : "text-green"
+            }`}
+          >
             {title}
           </p>
-          <p className="text-gray-700">{description}</p>
+          <p className="text-gray-700 text-center">{description}</p>
         </div>
 
         {action && (

@@ -8,11 +8,12 @@ import { authAtom } from "@/lib/atoms/atoms";
 import { validateAuthForm } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
 export default function SignupPage() {
   const param = useParams();
   const { registerMutation } = useAuth();
@@ -41,6 +42,17 @@ export default function SignupPage() {
         role: UserType[param?.accessType as keyof typeof UserType],
       })
       .then((res) => {
+        const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
+        setAuth(user);
+        console.log({ user });
+        Cookies.set("access_token", token);
+        Cookies.set("refresh_token", newRefreshToken);
+        Cookies.set(
+          "token_exp",
+          Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
+        );
+        localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
+        // const rootRoute = getKeyByValue(UserType, user?.role);
         router.push(`/verify?email=${form.email}`);
       })
       .catch((err) => {
