@@ -143,6 +143,16 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
             label="Website"
             placeholder="wwww.us.com"
             {...register("website", {
+              setValueAs: (v) => {
+                if (!v) return v;
+                const value = String(v).trim();
+                return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+              },
+              pattern: {
+                value:
+                  /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
+                message: "Please enter a valid URL",
+              },
               required: "website is required",
             })}
             type="text"

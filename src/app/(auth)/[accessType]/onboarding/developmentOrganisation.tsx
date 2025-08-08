@@ -9,6 +9,7 @@ import { authAtom } from "@/lib/atoms/atoms";
 import { handleImageUpload } from "@/lib/uitils/fns";
 import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
 import { useAtomValue } from "jotai";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -104,17 +105,11 @@ const DevelopmentOrganisation = forwardRef<
             documents: [
               ...certificateFiles.map((file) => ({
                 type: "Certificate",
-                fileName: file.fileName,
-                fileUrl: file.fileUrl,
-                fileSize: file.fileSize,
-                mimeType: file.mimeType,
+                document: file.fileUrl,
               })),
               ...operationalLicences.map((file) => ({
                 type: "License",
-                fileName: file.fileName,
-                fileUrl: file.fileUrl,
-                fileSize: file.fileSize,
-                mimeType: file.mimeType,
+                document: file.fileUrl,
               })),
             ],
           };
@@ -212,6 +207,11 @@ const DevelopmentOrganisation = forwardRef<
           placeholder="Input your website link"
           type="text"
           {...register("website", {
+            setValueAs: (v) => {
+              if (!v) return v;
+              const value = String(v).trim();
+              return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+            },
             pattern: {
               value:
                 /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
@@ -237,12 +237,16 @@ const DevelopmentOrganisation = forwardRef<
           )}
         </div>
         <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
-          <span className="flex items-center gap-2 text-gray-700">
-            <span className="flex items-center justify-center">
-              <CIcons.uploadIcon />
+          {fileUploadLoading1 ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <span className="flex items-center gap-2 text-gray-700">
+              <span className="flex items-center justify-center">
+                <CIcons.uploadIcon />
+              </span>
+              Upload Document
             </span>
-            Upload Document
-          </span>
+          )}
           <span className="text-gray-500 text-xl">+</span>
           <FileInput
             disabled={fileUploadLoading1}
@@ -277,12 +281,16 @@ const DevelopmentOrganisation = forwardRef<
           )}
         </div>
         <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
-          <span className="flex items-center gap-2 text-gray-700">
-            <span className="flex items-center justify-center">
-              <CIcons.uploadIcon />
+          {fileUploadLoading2 ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <span className="flex items-center gap-2 text-gray-700">
+              <span className="flex items-center justify-center">
+                <CIcons.uploadIcon />
+              </span>
+              Upload Document
             </span>
-            Upload Document
-          </span>
+          )}
           <span className="text-gray-500 text-xl">+</span>
           <FileInput
             disabled={fileUploadLoading2}

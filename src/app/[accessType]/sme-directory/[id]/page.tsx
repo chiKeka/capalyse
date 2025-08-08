@@ -1,51 +1,53 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CategoryBreakdown from '@/components/sections/dashboardCards/categoryBreakdown';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
+import IconCards from "@/components/sections/dashboardCards/iconCards";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-} from '@/components/ui/breadcrumb';
-import { Card } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
-import { ReusableTable } from '@/components/ui/table';
-import { ChevronRight, File } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import Button from '@/components/ui/Button';
-import { statusBadge } from '@/components/ui/statusBar';
-import Image from 'next/image';
-import React from 'react';
-import IconCards from '@/components/sections/dashboardCards/iconCards';
-import { useGetReadinessScore } from '@/hooks/useReadiness';
+} from "@/components/ui/breadcrumb";
+import Button from "@/components/ui/Button";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import { useGetSmeById } from "@/hooks/useAdmin";
+import { useGetReadinessScore } from "@/hooks/useReadiness";
+import { ChevronRight, File } from "lucide-react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import React from "react";
 
 type Props = {};
 
 const documents = [
   {
-    name: 'CAC Registration.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "CAC Registration.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    name: 'Pitch Deck.pptx',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "Pitch Deck.pptx",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    name: 'Financial Statement.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    name: "Financial Statement.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
 ];
 
 const columns = [
   {
-    header: 'File name',
+    header: "File name",
     accessor: (row: (typeof documents)[0]) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -59,9 +61,9 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Date uploaded', accessor: 'date' },
+  { header: "Date uploaded", accessor: "date" },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: (typeof documents)[0]) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -69,7 +71,7 @@ const columns = [
     ),
   },
   {
-    header: '',
+    header: "",
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
         <button className="text-success-100 font-medium border-none">
@@ -77,58 +79,26 @@ const columns = [
         </button>
       </div>
     ),
-    className: 'text-right',
-  },
-];
-const overviewCards = [
-  {
-    id: 1,
-    icon: CIcons.walletMoney,
-    label: 'Revenue',
-    amount: 0,
-    currency: 'NGN',
-    percentage: 152000,
-    direction: 'up',
-  },
-  {
-    id: 2,
-    icon: CIcons.profile2,
-    label: 'Team Size',
-    amount: 10,
+    className: "text-right",
   },
 ];
 
 const businessProfile = {
-  name: 'GreenPack Solutions Ltd',
-  logo: '/icons/sportify.svg',
-  industry: 'Packaging',
-  country: 'Nigeria',
-  status: 'Connected',
+  name: "GreenPack Solutions Ltd",
+  logo: "/icons/sportify.svg",
+  industry: "Packaging",
+  country: "Nigeria",
+  status: "Connected",
 };
 
-const certificateImage = '/images/certificate-sample.png'; // Use your actual certificate image path
+const certificateImage = "/images/certificate-sample.png"; // Use your actual certificate image path
 
 export default function SMEDirectoryPage({}: Props) {
   // Fetch readiness score data for the SME
-  const { data: readinessData, isLoading: isReadinessLoading } = useGetReadinessScore();
+  const { data: readinessData, isLoading: isReadinessLoading } =
+    useGetReadinessScore();
 
-  const checklist = [
-    {
-      value: 80,
-      label: 'Strong foundation in place',
-      caption: 'Foundational',
-    },
-    {
-      value: 60,
-      label: 'Moderate financial stability',
-      caption: 'Financial Health',
-    },
-    {
-      value: 45,
-      label: 'Significant gaps in compliance',
-      caption: 'Compliance',
-    },
-  ];
+
 
   const [open, setOpen] = React.useState(false);
   const [selectedDoc, setSelectedDoc] = React.useState<
@@ -139,7 +109,46 @@ export default function SMEDirectoryPage({}: Props) {
     setSelectedDoc(doc);
     setOpen(true);
   }
+  const { id } = useParams();
 
+  const { data: smeData, isLoading: isSmeLoading } = useGetSmeById(
+    id as string
+  );
+  console.log({ smeData });
+  const overviewCards = [
+    {
+      id: 1,
+      icon: CIcons.walletMoney,
+      label: "Revenue",
+      amount: 0,
+      currency: "NGN",
+      percentage: 152000,
+      direction: "up",
+    },
+    {
+      id: 2,
+      icon: CIcons.profile2,
+      label: "Team Size",
+      amount: smeData?.teamMembers?.length || 0,
+    },
+  ];
+    const checklist = [
+      {
+        value: 80,
+        label: "Strong foundation in place",
+        caption: "Foundational",
+      },
+      {
+        value: 60,
+        label: "Moderate financial stability",
+        caption: "Financial Health",
+      },
+      {
+        value: 45,
+        label: "Significant gaps in compliance",
+        caption: "Compliance",
+      },
+    ];
   return (
     <div className="w-full h-full gap-6 flex flex-col">
       <div>
@@ -167,11 +176,11 @@ export default function SMEDirectoryPage({}: Props) {
         />
         <div className="flex flex-col gap-0">
           <span className="text-2xl font-bold text-black">
-            {businessProfile.name}
+            {smeData?.businessName}
           </span>
           <span className="text-gray-500 text-sm">
-            {businessProfile.industry} <span className="mx-2">•</span>{' '}
-            {businessProfile.country}
+            {businessProfile.industry} <span className="mx-2">•</span>{" "}
+            {smeData?.countryOfOperation?.join(", ") || "Not specified"}
           </span>
           <div className="mt-2">{statusBadge(businessProfile.status)}</div>
         </div>
@@ -183,10 +192,10 @@ export default function SMEDirectoryPage({}: Props) {
           ))}
         </div>
         <div className=" h-auto w-full ">
-          <ReadinessScoreCard 
-            readinessData={readinessData?.data?.currentScore}
+          <ReadinessScoreCard
+            // readinessData={smeData?.readinessScore}
             isLoading={isReadinessLoading}
-            scoreValue={0} // fallback value
+            scoreValue={smeData?.readinessScore} // fallback value
           />
         </div>
 
@@ -220,7 +229,7 @@ export default function SMEDirectoryPage({}: Props) {
         </div>
         <ReusableTable
           columns={columns.map((col) =>
-            col.header === ''
+            col.header === ""
               ? {
                   ...col,
                   accessor: (row: (typeof documents)[0]) => (
