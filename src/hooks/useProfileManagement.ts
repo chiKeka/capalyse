@@ -23,7 +23,7 @@ export const useGetProfileCompletionStatus = () => {
 export const useUpdatePersonalInfo = () => {
   return useMutation({
     mutationFn: async (cred): Promise<any> => {
-      api.post(ApiEndPoints.Profile_Info, cred);
+      api.put(ApiEndPoints.Profile_Info, cred);
     },
   });
 };
