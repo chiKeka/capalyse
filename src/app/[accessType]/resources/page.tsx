@@ -1,6 +1,7 @@
 "use client";
 
 import { SearchForm } from "@/components/search-form";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import ResourceCard from "@/components/sections/dashboardCards/ResourceCard";
 import { Card } from "@/components/ui/card";
 import { CIcons } from "@/components/ui/CIcons";
@@ -56,7 +57,21 @@ const learningTracks: LearningTrack[] = [
 export default function ResourcesPage() {
   const router = useRouter();
   const params = useParams();
- 
+  const { data: resources } = useGetResources();
+  console.log(resources);
+
+  // Group resources by category
+  const resourcesByCategory =
+    resources?.categories?.reduce((acc: any, category: any) => {
+      const categoryResources =
+        resources?.resources?.filter(
+          (resource: any) => resource.category === category.name
+        ) || [];
+
+      acc[category.name] = categoryResources;
+      return acc;
+    }, {}) || {};
+
   return (
     <div className="space-y-8">
       {/* Filter Section */}
@@ -80,33 +95,46 @@ export default function ResourcesPage() {
         </div>
       </div>
 
-      {/* Learning Tracks Section */}
-      <Card className="px-[1.375rem] py-5">
-        <h3 className="text-lg font-semibold mb-6">Learning Tracks</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {learningTracks.map((track) => (
-            <ResourceCard key={track.id} {...track} />
-          ))}
-        </div>
-      </Card>
+      {/* Dynamic Category Sections */}
+      {!resources?.categories || resources.categories.length === 0 ? (
+        <Card className="px-[1.375rem] py-5">
+          <EmptyBox
+            caption="No Resources Available"
+            caption2="There are currently no learning resources available. Check back later for new content."
+            showButton={false}
+          />
+        </Card>
+      ) : (
+        resources.categories.map((category: any) => {
+          const categoryResources = resourcesByCategory[category.name] || [];
 
-      <Card className="px-[1.375rem] py-5">
-        <h3 className="text-lg font-semibold mb-6">Sector Spotlight</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {learningTracks.map((track) => (
-            <ResourceCard key={track.id} {...track} />
-          ))}
-        </div>
-      </Card>
-
-      <Card className="px-[1.375rem] py-5">
-        <h3 className="text-lg font-semibold mb-6">Case Studies</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {learningTracks.map((track) => (
-            <ResourceCard key={track.id} {...track} />
-          ))}
-        </div>
-      </Card>
+          return (
+            <Card key={category.id} className="px-[1.375rem] py-5">
+              <h3 className="text-lg font-semibold mb-6">{category.name}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {categoryResources.length > 0 ? (
+                  categoryResources.map((resource: any) => (
+                    <ResourceCard
+                      key={resource.id}
+                      id={resource.id}
+                      title={resource.title}
+                      category={resource.category}
+                      image={resource.image || "/images/resource.png"}
+                      progress={resource.progress || 0}
+                    />
+                  ))
+                ) : (
+                  <EmptyBox
+                    caption={`No ${category.name} Resources`}
+                    caption2={`No resources available in the ${category.name} category yet.`}
+                    showButton={false}
+                  />
+                )}
+              </div>
+            </Card>
+          );
+        })
+      )}
     </div>
   );
 }

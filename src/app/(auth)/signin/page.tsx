@@ -1,25 +1,25 @@
-'use client';
-import AuthLayout from '@/components/layout/auth';
-import GetStarted from '@/components/layout/GetStarted';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import PasswordChecker from '@/components/ui/passwordChecker';
-import { useAuth } from '@/hooks/useAuth';
-import { authAtom } from '@/lib/atoms/atoms';
-import { routes } from '@/lib/routes';
-import { getKeyByValue, validateAuthForm } from '@/lib/uitils/fns';
-import { UserType } from '@/lib/utils';
-import { useSetAtom } from 'jotai';
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+"use client";
+import AuthLayout from "@/components/layout/auth";
+import GetStarted from "@/components/layout/GetStarted";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import PasswordChecker from "@/components/ui/passwordChecker";
+import { useAuth } from "@/hooks/useAuth";
+import { authAtom } from "@/lib/atoms/atoms";
+import { routes } from "@/lib/routes";
+import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
+import { UserType } from "@/lib/utils";
+import { useSetAtom } from "jotai";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "sonner";
 type Props = {};
 
 function page({}: Props) {
-  const { logninMutation } = useAuth();
-  const [form, setForm] = useState({ email: '', password: '', role: 'SME' });
+  const { logninMutation, resend_otp } = useAuth();
+  const [form, setForm] = useState({ email: "", password: "", role: "SME" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
@@ -41,15 +41,21 @@ function page({}: Props) {
       .then((res) => {
         const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
         setAuth(user);
-        Cookies.set('access_token', token);
-        Cookies.set('refresh_token', newRefreshToken);
+        Cookies.set("access_token", token);
+        Cookies.set("refresh_token", newRefreshToken);
         Cookies.set(
-          'token_exp',
+          "token_exp",
           Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
         );
-        localStorage.setItem('onBoardignData', JSON.stringify(res?.data));
+        localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
         console.log({ user });
-        if (user?.role === 'ADMIN') {
+
+        if (!user?.emailVerified) {
+          resend_otp.mutateAsync({ email: form?.email });
+          router.push(`/verify?email=${user?.email}`);
+          return;
+        }
+        if (user?.role === "ADMIN") {
           router.push(`/admin`);
           return;
         }
@@ -101,13 +107,25 @@ function page({}: Props) {
               {errors.password}
             </div>
           )}
+
+          <div className="mb-12">
+            Forgot password?{" "}
+            <Button
+              onClick={() => router.push("/forgot_password")}
+              variant="tertiary"
+              size="small"
+              className="text-green hover:bg-transparent"
+            >
+              Reset password
+            </Button>
+          </div>
           <Button
             disabled={logninMutation?.isPending}
             type="submit"
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={logninMutation?.isPending ? 'loading' : 'default'}
+            state={logninMutation?.isPending ? "loading" : "default"}
           >
             Sign in
           </Button>

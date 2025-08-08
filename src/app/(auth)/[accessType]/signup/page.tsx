@@ -5,8 +5,7 @@ import Input from "@/components/ui/Inputs";
 import PasswordChecker from "@/components/ui/passwordChecker";
 import { useAuth } from "@/hooks/useAuth";
 import { authAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
-import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
+import { validateAuthForm } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
@@ -15,7 +14,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
 export default function SignupPage() {
   const param = useParams();
   const { registerMutation } = useAuth();
@@ -46,6 +44,7 @@ export default function SignupPage() {
       .then((res) => {
         const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
         setAuth(user);
+        console.log({ user });
         Cookies.set("access_token", token);
         Cookies.set("refresh_token", newRefreshToken);
         Cookies.set(
@@ -53,12 +52,8 @@ export default function SignupPage() {
           Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
         );
         localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
-        const rootRoute = getKeyByValue(UserType, user?.role);
-        if (user.profileCompletionStep === 1) {
-          router.push(`/${param?.accessType}/onboarding`);
-        } else {
-          router.push(routes?.[rootRoute as keyof typeof routes]?.root);
-        }
+        // const rootRoute = getKeyByValue(UserType, user?.role);
+        router.push(`/verify?email=${form.email}`);
       })
       .catch((err) => {
         console.log({ err });

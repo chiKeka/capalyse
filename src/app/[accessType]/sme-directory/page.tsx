@@ -1,24 +1,25 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { ReusableTable } from '@/components/ui/table';
-import { SearchForm } from '@/components/search-form';
+import { SearchForm } from "@/components/search-form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import Link from 'next/link';
-import { smes } from '@/lib/uitils/contentData';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { useSmeDirectory } from "@/hooks/useDirectories";
+import { smes } from "@/lib/uitils/contentData";
+import Image from "next/image";
+import Link from "next/link";
 
 // Example data
 
 const columns = [
   {
-    header: 'Name',
-    accessor: (row: (typeof smes)[0]) => (
+    header: "Name",
+    accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row.avatar ? (
           <Image
@@ -29,30 +30,34 @@ const columns = [
             className="rounded-full"
           />
         ) : null}
-        <span className="font-medium text-sm">{row.name}</span>
+        <span className="font-medium text-sm">
+          {row?.firstName + " " + row?.lastName}
+        </span>
       </div>
     ),
   },
-  { header: 'Industry', accessor: 'industry' },
-  { header: 'Country', accessor: 'country' },
-  { header: 'Readiness Score', accessor: 'readiness' },
-  { header: 'Revenue', accessor: 'revenue' },
-  { header: 'Team Size', accessor: 'teamSize' },
+  { header: "Industry", accessor: "industry" },
+  { header: "Country", accessor: "countryOfResidence" },
+  { header: "Readiness Score", accessor: "readinessScore" },
+  { header: "Revenue", accessor: "revenue" },
+  { header: "Team Size", accessor: (row: any) => row.teamMembers.length },
   {
-    header: 'Action',
-    accessor: (row: (typeof smes)[0]) => (
+    header: "Action",
+    accessor: (row: any) => (
       <Link
-        href={`/investor/sme-directory/${row.id}`}
+        href={`/investor/sme-directory/${row?._id}`}
         className="text-green font-medium hover:underline"
       >
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];
 
 const SMEDirectoryPage = () => {
+  const { data: smesd, isLoading } = useSmeDirectory();
+  // console.log({ smesd });
   return (
     <div>
       {/* Filter Section */}
@@ -89,7 +94,7 @@ const SMEDirectoryPage = () => {
       </div>
       <ReusableTable
         columns={columns}
-        data={smes}
+        data={smesd?.data}
         totalPages={Math.ceil(smes.length / 4)}
       />
     </div>

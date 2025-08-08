@@ -1,12 +1,16 @@
 import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
+import { notificationAtom } from "@/lib/atoms/atoms";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 
 export const useGetNotifications = () => {
+  const setNotification = useSetAtom(notificationAtom);
   return useQuery({
     queryKey: ["sme_assessment"],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.Notification);
+      setNotification(resp?.data.data.filter((n: any) => !n.read).length);
       return resp.data.data;
     },
   });

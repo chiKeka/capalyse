@@ -1,22 +1,22 @@
-import api from '@/api/axios';
-import { ApiEndPoints } from '@/api/endpoints';
+import api from "@/api/axios";
+import { ApiEndPoints } from "@/api/endpoints";
+import { messagesAtom } from "@/lib/atoms/atoms";
 import {
-  Conversation,
+  ChatConversation,
+  ChatConversationsResponse,
+  ChatMessage,
+  ChatMessagesResponse,
   ConversationFilters,
   CreateConversationRequest,
   EditMessageRequest,
-  Message,
   MessageFilters,
   PaginationMeta,
   SendMessageRequest,
   createConversationRequest,
   validateConversationRequest,
-  ChatConversationsResponse,
-  ChatMessage,
-  ChatMessagesResponse,
-  ChatConversation,
-} from '@/lib/uitils/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+} from "@/lib/uitils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
 
 // Updated API response types to match backend structure
 
@@ -31,15 +31,22 @@ export interface ApiResponse<T> {
  * Hook for fetching all conversations for the current user
  */
 export const useGetConversations = (filters?: ConversationFilters) => {
-  const queryParams = filters ? {
-    ...(filters.limit && { limit: filters.limit.toString() }),
-    ...(filters.page && { page: filters.page.toString() }),
-  } : undefined;
+  const setMessagesCount = useSetAtom(messagesAtom);
+  const queryParams = filters
+    ? {
+        ...(filters.limit && { limit: filters.limit.toString() }),
+        ...(filters.page && { page: filters.page.toString() }),
+      }
+    : undefined;
 
   const result = useQuery<ChatConversationsResponse>({
-    queryKey: ['conversations', filters],
+    queryKey: ["conversations", filters],
     queryFn: async () => {
-      const response = await api.get(ApiEndPoints.Messages_Conversations, { params: queryParams });
+      const response = await api.get(ApiEndPoints.Messages_Conversations, {
+        params: queryParams,
+      });
+      // console.log(response?.data.data)
+      setMessagesCount(response?.data.data.filter((n: any) => !n.read).length);
       return response.data;
     },
   });
@@ -58,7 +65,7 @@ export const useGetConversations = (filters?: ConversationFilters) => {
  */
 export const useGetConversation = (conversationId: string) => {
   return useQuery<ApiResponse<ChatConversation>>({
-    queryKey: ['conversation', conversationId],
+    queryKey: ["conversation", conversationId],
     queryFn: () => api.get(ApiEndPoints.Single_Conversation(conversationId)),
     enabled: !!conversationId,
   });
@@ -71,17 +78,22 @@ export const useGetConversationMessages = (
   conversationId: string,
   filters?: MessageFilters
 ) => {
-  const queryParams = filters ? {
-    ...(filters.limit && { limit: filters.limit.toString() }),
-    ...(filters.page && { page: filters.page.toString() }),
-  } : undefined;
+  const queryParams = filters
+    ? {
+        ...(filters.limit && { limit: filters.limit.toString() }),
+        ...(filters.page && { page: filters.page.toString() }),
+      }
+    : undefined;
 
   const result = useQuery<ChatMessagesResponse>({
-    queryKey: ['conversation-messages', conversationId, filters],
+    queryKey: ["conversation-messages", conversationId, filters],
     queryFn: async () => {
-      const response = await api.get(ApiEndPoints.Conversation_Messages(conversationId), {
-        params: queryParams,
-      });
+      const response = await api.get(
+        ApiEndPoints.Conversation_Messages(conversationId),
+        {
+          params: queryParams,
+        }
+      );
       return response.data;
     },
     enabled: !!conversationId,
@@ -110,11 +122,10 @@ export const useMessages = () => {
     Error,
     CreateConversationRequest
   >({
-    mutationFn: (data) =>
-      api.post(ApiEndPoints.Messages_Conversations, data),
+    mutationFn: (data) => api.post(ApiEndPoints.Messages_Conversations, data),
     onSuccess: () => {
       // Invalidate conversations list to refetch
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 
@@ -130,13 +141,13 @@ export const useMessages = () => {
     onSuccess: (response, variables) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
-        queryKey: ['conversation-messages', variables.conversationId],
+        queryKey: ["conversation-messages", variables.conversationId],
       });
       // Invalidate conversations list to update last message
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate specific conversation
       queryClient.invalidateQueries({
-        queryKey: ['conversation', variables.conversationId],
+        queryKey: ["conversation", variables.conversationId],
       });
     },
   });
@@ -155,7 +166,7 @@ export const useMessages = () => {
       const message = response.data;
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
-        queryKey: ['conversation-messages', message.conversationId],
+        queryKey: ["conversation-messages", message.conversationId],
       });
     },
   });
@@ -169,11 +180,13 @@ export const useMessages = () => {
     { messageId: string; conversationId: string }
   >({
     mutationFn: ({ messageId }) =>
-      api.patch(ApiEndPoints.Edit_Message(messageId), { deletedAt: new Date().toISOString() }),
+      api.patch(ApiEndPoints.Edit_Message(messageId), {
+        deletedAt: new Date().toISOString(),
+      }),
     onSuccess: (response, variables) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
-        queryKey: ['conversation-messages', variables.conversationId],
+        queryKey: ["conversation-messages", variables.conversationId],
       });
     },
   });
@@ -191,13 +204,13 @@ export const useMessages = () => {
     onSuccess: (response, variables) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
-        queryKey: ['conversation-messages', variables.conversationId],
+        queryKey: ["conversation-messages", variables.conversationId],
       });
       // Invalidate conversations list to update unread count
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate specific conversation
       queryClient.invalidateQueries({
-        queryKey: ['conversation', variables.conversationId],
+        queryKey: ["conversation", variables.conversationId],
       });
     },
   });
@@ -215,13 +228,13 @@ export const useMessages = () => {
     onSuccess: (response, conversationId) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
-        queryKey: ['conversation-messages', conversationId],
+        queryKey: ["conversation-messages", conversationId],
       });
       // Invalidate conversations list to update unread count
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate specific conversation
       queryClient.invalidateQueries({
-        queryKey: ['conversation', conversationId],
+        queryKey: ["conversation", conversationId],
       });
     },
   });
@@ -238,10 +251,10 @@ export const useMessages = () => {
       api.patch(ApiEndPoints.Block_Conversation(conversationId)),
     onSuccess: (response, conversationId) => {
       // Invalidate conversations list
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate specific conversation
       queryClient.invalidateQueries({
-        queryKey: ['conversation', conversationId],
+        queryKey: ["conversation", conversationId],
       });
     },
   });
@@ -258,10 +271,10 @@ export const useMessages = () => {
       api.patch(ApiEndPoints.Unblock_Conversation(conversationId)),
     onSuccess: (response, conversationId) => {
       // Invalidate conversations list
-      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
       // Invalidate specific conversation
       queryClient.invalidateQueries({
-        queryKey: ['conversation', conversationId],
+        queryKey: ["conversation", conversationId],
       });
     },
   });
@@ -280,11 +293,11 @@ export const useMessages = () => {
 
 /**
  * Helper hook for creating conversations with validation
- * 
+ *
  * @example
  * ```tsx
  * const { createConversation, isLoading } = useCreateConversation();
- * 
+ *
  * // Create a direct message
  * const startDirectMessage = async (otherUserId: string) => {
  *   try {
@@ -294,7 +307,7 @@ export const useMessages = () => {
  *     // Handle validation or API errors
  *   }
  * };
- * 
+ *
  * // Create a group conversation
  * const startGroupChat = async (memberIds: string[], groupName: string) => {
  *   try {
@@ -311,7 +324,7 @@ export const useMessages = () => {
  */
 export const useCreateConversation = () => {
   const { createConversation } = useMessages();
-  
+
   const createConversationWithValidation = (
     participants: string[],
     options?: {
@@ -323,17 +336,17 @@ export const useCreateConversation = () => {
   ) => {
     const request = createConversationRequest(participants, options);
     const validationErrors = validateConversationRequest(request);
-    
+
     if (validationErrors.length > 0) {
-      return Promise.reject(new Error(validationErrors.join(', ')));
+      return Promise.reject(new Error(validationErrors.join(", ")));
     }
-    
+
     return createConversation.mutateAsync(request);
   };
-  
+
   return {
     createConversation: createConversationWithValidation,
     isLoading: createConversation.isPending,
     error: createConversation.error,
   };
-}; 
+};

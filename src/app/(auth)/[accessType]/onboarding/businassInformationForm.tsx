@@ -197,7 +197,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <SelectItem value="Idea">Idea</SelectItem>
               <SelectItem value="Startup">Startup</SelectItem>
               <SelectItem value="Growth">Growth</SelectItem>
-              <SelectItem value="Growth">Mature</SelectItem>
+              <SelectItem value="Mature">Mature</SelectItem>
             </SelectContent>
           </Select>
           {errors.businessStage && (
@@ -219,6 +219,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <SelectItem value="Ict">Information</SelectItem>
               <SelectItem value="Telcom">Tel Communication</SelectItem>
               <SelectItem value="Agro">Agriculture</SelectItem>
+              <SelectItem value="Others">Others</SelectItem>
             </SelectContent>
           </Select>
           {errors.industry && (
@@ -235,6 +236,11 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             placeholder="Input your website link"
             type="text"
             {...register("website", {
+              setValueAs: (v) => {
+                if (!v) return v;
+                const value = String(v).trim();
+                return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+              },
               pattern: {
                 value:
                   /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,

@@ -1,104 +1,24 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { ReusableTable } from '@/components/ui/table';
-import { SearchForm } from '@/components/search-form';
+import { SearchForm } from "@/components/search-form";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { CIcons } from '@/components/ui/CIcons';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import Image from "next/image";
 
 // Example data
-const smes = [
-  {
-    id: 1,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Packaging',
-    country: 'Nigeria',
-    readiness: '75%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 2,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Nigeria',
-    readiness: '75%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 3,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Kenya',
-    readiness: '75%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 4,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'HealthTech',
-    country: 'Nigeria',
-    readiness: '30%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 5,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Uganda',
-    readiness: '20%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 6,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Nigeria',
-    readiness: '10%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 7,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'HealthTech',
-    country: 'Cameroon',
-    readiness: '90%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Niger',
-    readiness: '68%',
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 8,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Nigeria',
-    readiness: '74%',
-    date: 'Jan 4, 2022',
-  },
-];
+const smes: any[] = [];
 
 const columns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: (typeof smes)[0]) => (
       <div className="flex items-center gap-2">
         {row.avatar ? (
@@ -114,13 +34,13 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Industry', accessor: 'industry' },
-  { header: 'Country', accessor: 'country' },
-  { header: 'Readiness Score', accessor: 'readiness' },
-  { header: 'Last Viewed', accessor: 'date' },
+  { header: "Industry", accessor: "industry" },
+  { header: "Country", accessor: "country" },
+  { header: "Readiness Score", accessor: "readiness" },
+  { header: "Last Viewed", accessor: "date" },
 
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: (typeof smes)[0]) => (
       <div className="flex flex-row gap-3">
         <CIcons.message />
@@ -131,6 +51,9 @@ const columns = [
 ];
 
 const SMEDirectoryPage = () => {
+  const { data: watchlist } = useWatchlist();
+  console.log({ watchlist });
+  // const smes = watchlist?.map((item) => item.target);
   return (
     <div>
       {/* Filter Section */}

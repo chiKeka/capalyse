@@ -1,14 +1,14 @@
 import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
 import { CreateSupportForm } from "@/lib/uitils/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetSupport = () => {
   return useQuery({
     queryKey: ["sme_Support"],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.SupportTicket);
-      return resp?.data
+      return resp?.data;
     },
   });
 };
@@ -33,9 +33,15 @@ export const useGetTicketMessage = (id: string) => {
 };
 
 export const useSupports = () => {
+  const queryClient = useQueryClient();
   const createSupport = useMutation({
     mutationFn: async (cred: CreateSupportForm): Promise<any> => {
       return api.post(ApiEndPoints.SupportTicket, cred);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sme_Support"] });
+      queryClient.invalidateQueries({ queryKey: ["sme_single_support"] });
+      queryClient.invalidateQueries({ queryKey: ["sme_ticket_messages"] });
     },
   });
 

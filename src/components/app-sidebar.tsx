@@ -61,7 +61,7 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: 'Resources & Learning',
         url: routes.sme.learning,
         icon: CIcons.learning,
-        badge: '32',
+        // badge: '32',
       },
       {
         title: 'Pan-African Compliance Hub',
@@ -104,7 +104,7 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: 'Resources & Insights',
         url: routes.investor.resources,
         icon: CIcons.learning,
-        badge: '12',
+        // badge: '12',
       },
       {
         title: 'Support',
