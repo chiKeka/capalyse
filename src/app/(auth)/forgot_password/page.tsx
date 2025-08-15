@@ -2,10 +2,7 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { useAuth } from "@/hooks/useAuth";
-import { authAtom } from "@/lib/atoms/atoms";
-import { useAtomValue } from "jotai";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,28 +14,35 @@ interface ForgotPasswordForm {
 }
 
 const ForgotPasswordPage = () => {
-  const { forgot_password } = useAuth();
-  const [showModal, setShowModal] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
+    formState: { errors },
   } = useForm<ForgotPasswordForm>();
-
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (data: ForgotPasswordForm) => {
-    forgot_password.mutate(data, {
-      onSuccess: (res) => {
-        setShowModal(true);
-      },
-      onError: (error) => {
-        toast.error("Failed to send reset link. Please try again.");
-      },
-    });
+    authClient.emailOtp.sendVerificationOtp(
+      { ...data, type: "forget-password" },
+      {
+        onRequest: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(false);
+          toast.success("Reset token sent to your email");
+          router.push(`/verify?reset_email=${data.email}`);
+        },
+        onError: (error) => {
+          setIsLoading(false);
+          toast.error("Failed to send reset link. Please try again.");
+        },
+      }
+    );
   };
   const router = useRouter();
-  const authState: any = useAtomValue(authAtom);
-  const role = authState?.role?.toLowerCase();
+
   return (
     <AuthLayout
       sub_caption="No Worries! Input the email associated with your password to reset your password"
@@ -75,10 +79,10 @@ const ForgotPasswordPage = () => {
           variant="primary"
           className="font-bold w-full"
           type="submit"
-          disabled={isSubmitting}
-          state={isSubmitting ? "loading" : "default"}
+          disabled={isLoading}
+          state={isLoading ? "loading" : "default"}
         >
-          {isSubmitting ? "Sending Link..." : "Get link"}
+          {isLoading ? "Sending Link..." : "Get link"}
         </Button>
 
         <div className="flex flex-col items-center justify-center my-6">
@@ -90,21 +94,6 @@ const ForgotPasswordPage = () => {
           </Link>
         </div>
       </form>
-      <StatusChangeModal
-        timer={true}
-        modalType="success"
-        description="A password reset link has been sent to your inbox"
-        handleAction={() => {
-          setShowModal(false);
-        }}
-        handleCancel={() => {
-          router.push(`/signin`);
-          setShowModal(false);
-        }}
-        title="Link sent!!"
-        routename="Next"
-        showModal={showModal}
-      />
     </AuthLayout>
   );
 };

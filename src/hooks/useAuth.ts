@@ -1,11 +1,7 @@
-import api, { unauthenticatedAxios } from "@/api/axios";
+import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
 import { authAtom } from "@/lib/atoms/atoms";
-import {
-  PersonalInfoInputs,
-  RegisterCredentials,
-  SMEsBusinessInfo,
-} from "@/lib/uitils/types";
+import { PersonalInfoInputs, SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSetAtom } from "jotai";
 import Cookies from "js-cookie";
@@ -33,107 +29,107 @@ export const useAuth = () => {
   const setAuth = useSetAtom(authAtom);
   const queryClient = useQueryClient();
 
-  const logninMutation = useMutation<
-    VerifyResponse,
-    Error,
-    RegisterCredentials
-  >({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("login"),
-        cred
-      );
-    },
-  });
+  // const logninMutation = useMutation<
+  //   VerifyResponse,
+  //   Error,
+  //   RegisterCredentials
+  // >({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("login"),
+  //       cred
+  //     );
+  //   },
+  // });
 
-  const registerMutation = useMutation<
-    VerifyResponse,
-    Error,
-    RegisterCredentials
-  >({
-    mutationFn: async (cred) => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Register_Activity("initiate"),
-        cred
-      );
-    },
-  });
-  const googleSigninMutation = useMutation({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("google"),
-        cred
-      );
-    },
-  });
+  // const registerMutation = useMutation<
+  //   VerifyResponse,
+  //   Error,
+  //   RegisterCredentials
+  // >({
+  //   mutationFn: async (cred) => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Register_Activity("initiate"),
+  //       cred
+  //     );
+  //   },
+  // });
+  // const googleSigninMutation = useMutation({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("google"),
+  //       cred
+  //     );
+  //   },
+  // });
 
-  const refresh_token = useMutation({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("refresh"),
-        cred
-      );
-    },
-  });
-  const verify_email = useMutation<
-    VerifyResponse,
-    Error,
-    { email: string; otp: string }
-  >({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("verify-email"),
-        cred
-      );
-    },
-  });
-   const resend_otp = useMutation<
-     VerifyResponse,
-     Error,
-     { email: string}
-   >({
-     mutationFn: async (cred): Promise<VerifyResponse> => {
-       return unauthenticatedAxios.post(
-         ApiEndPoints.Auth_Activity("resend-otp"),
-         cred
-       );
-     },
-   });
-  const forgot_password = useMutation<VerifyResponse, Error, { email: string }>(
-    {
-      mutationFn: async (cred): Promise<VerifyResponse> => {
-        return unauthenticatedAxios.post(
-          ApiEndPoints.Auth_Activity("forgot-password"),
-          cred
-        );
-      },
-    }
-  );
-  const reset_password = useMutation<
-    VerifyResponse,
-    Error,
-    { new_password: string; confirm_password: string }
-  >({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("reset-password"),
-        cred
-      );
-    },
-  });
-  const change_password = useMutation({
-    mutationFn: async (cred): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(
-        ApiEndPoints.Auth_Activity("change-password"),
-        cred
-      );
-    },
-  });
-  const generate_token = useMutation({
-    mutationFn: async (): Promise<VerifyResponse> => {
-      return unauthenticatedAxios.post(ApiEndPoints.Auth_Activity("token"));
-    },
-  });
+  // const refresh_token = useMutation({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("refresh"),
+  //       cred
+  //     );
+  //   },
+  // });
+  // const verify_email = useMutation<
+  //   VerifyResponse,
+  //   Error,
+  //   { email: string; otp: string }
+  // >({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("verify-email"),
+  //       cred
+  //     );
+  //   },
+  // });
+  //  const resend_otp = useMutation<
+  //    VerifyResponse,
+  //    Error,
+  //    { email: string}
+  //  >({
+  //    mutationFn: async (cred): Promise<VerifyResponse> => {
+  //      return unauthenticatedAxios.post(
+  //        ApiEndPoints.Auth_Activity("resend-otp"),
+  //        cred
+  //      );
+  //    },
+  //  });
+  // const forgot_password = useMutation<VerifyResponse, Error, { email: string }>(
+  //   {
+  //     mutationFn: async (cred): Promise<VerifyResponse> => {
+  //       return unauthenticatedAxios.post(
+  //         ApiEndPoints.Auth_Activity("forgot-password"),
+  //         cred
+  //       );
+  //     },
+  //   }
+  // );
+  // const reset_password = useMutation<
+  //   VerifyResponse,
+  //   Error,
+  //   { new_password: string; confirm_password: string }
+  // >({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("reset-password"),
+  //       cred
+  //     );
+  //   },
+  // });
+  // const change_password = useMutation({
+  //   mutationFn: async (cred): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(
+  //       ApiEndPoints.Auth_Activity("change-password"),
+  //       cred
+  //     );
+  //   },
+  // });
+  // const generate_token = useMutation({
+  //   mutationFn: async (): Promise<VerifyResponse> => {
+  //     return unauthenticatedAxios.post(ApiEndPoints.Auth_Activity("token"));
+  //   },
+  // });
 
   const signOutMutation = useMutation({
     mutationFn: async () => {
@@ -198,24 +194,23 @@ export const useAuth = () => {
     mutationFn: () => api.get(ApiEndPoints.Register_Activity("next-step")),
   });
 
-
   return {
-    logninMutation,
-    registerMutation,
-    refresh_token,
-    googleSigninMutation,
-    forgot_password,
-    reset_password,
-    signOutMutation,
-    verify_email,
-    resend_otp,
+    // logninMutation,
+    // registerMutation,
+    // refresh_token,
+    // googleSigninMutation,
+    // forgot_password,
+    // reset_password,
+    // signOutMutation,
+    // verify_email,
+    // resend_otp,
     personal_information,
     smes_bussiness_info,
     dev_org,
     investor_investment_info,
     next_step_reg,
     investor_org_info,
-    generate_token,
-    change_password,
+    // generate_token,
+    // change_password,
   };
 };

@@ -3,19 +3,22 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import { useAuth } from "@/hooks/useAuth";
+import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface ResetPasswordForm {
+  confirm_password?: string;
   new_password: string;
-  confirm_password: string;
+  email: string;
+  otp: string;
 }
 
 const ResetPasswordPage = () => {
-  const { reset_password } = useAuth();
   const router = useRouter();
   const {
     register,
@@ -24,18 +27,35 @@ const ResetPasswordPage = () => {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<ResetPasswordForm>();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const newPassword = watch("new_password");
-
+  const resetPassword = localStorage.getItem("reset_password");
+  const { email, otp } = JSON.parse(resetPassword || "{}");
   const onSubmit = async (data: ResetPasswordForm) => {
-    reset_password.mutate(data, {
-      onSuccess: (res) => {
-        router.push("/signin");
-      },
-      onError: (err) => {
-        toast.error(err.message || "Failed to reset password");
-      },
-    });
+    if (data?.confirm_password !== data?.new_password) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    authClient.emailOtp.resetPassword(
+      { email, otp, password: data.new_password },
+      {
+        onRequest: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log({ ctx });
+          setShowModal(true);
+          setIsLoading(false);
+        },
+        onError: (ctx) => {
+          console.log({ ctx });
+          toast.error(ctx.error.message || "Failed to reset password");
+          setIsLoading(false);
+        },
+      }
+    );
   };
 
   return (
@@ -114,6 +134,21 @@ const ResetPasswordPage = () => {
           </Link>
         </div>
       </form>
+      <StatusChangeModal
+        modalType="success"
+        description="Password reset successful"
+        handleAction={() => {
+          setShowModal(true);
+        }}
+        handleCancel={() => {
+          router.push(`/signin`);
+          setShowModal(false);
+        }}
+        timer={false}
+        title="Password reset successful"
+        routename="Next"
+        showModal={showModal}
+      />
     </AuthLayout>
   );
 };

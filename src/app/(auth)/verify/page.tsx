@@ -2,9 +2,8 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import { Verify } from "@/components/ui/inputOtp";
-import { useAuth } from "@/hooks/useAuth";
 import { authAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
+import { authClient } from "@/lib/auth-client";
 import { getKeyByValue } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -21,9 +20,9 @@ const VerifyPageContent = () => {
   const [isResending, setIsResending] = useState(false);
   const [countdown, setCountdown] = useState(59 * 60); // 59 minutes in seconds
   const [canResend, setCanResend] = useState(false);
-  const { verify_email } = useAuth();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
+  const resetEmail = searchParams.get("reset_email");
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
 
@@ -51,26 +50,57 @@ const VerifyPageContent = () => {
     formState: { errors, isSubmitting },
     setError,
   } = useForm<OTPForm>();
+  const [isLoading, setIsLoading] = useState(false);
   const userAuthDetails: any = useAtomValue(authAtom);
   const [otpValue, setOtpValue] = useState("");
   const rootRoute = getKeyByValue(UserType, userAuthDetails?.role);
   const onSubmit = (data: OTPForm) => {
-    console.log({ data });
-    verify_email
-      .mutateAsync({ email, otp: data.otp })
-      .then((res) => {
-        if (userAuthDetails?.profileCompletionStep === 1) {
-          router.push(`/${rootRoute}/onboarding`);
-        } else {
-          router.push(
-            routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-          );
-        }
-      })
-      .catch((err) => {
-        console.log({ err });
-        toast.error(err.error || "Invalid OTP and email");
-      });
+    if (resetEmail) {
+      console.log({ ...data, resetEmail });
+      localStorage.setItem(
+        "reset_password",
+        JSON.stringify({ ...data, email: resetEmail })
+      );
+      router.push(`/reset_password`);
+      return;
+    }
+
+    authClient.emailOtp.verifyEmail(
+      {
+        otp: data.otp,
+        email: email,
+      },
+      {
+        onRequest: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(false);
+          toast.success("Email verified successfully");
+        },
+        onError: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(false);
+          toast.error(ctx.error.message);
+        },
+      }
+    );
+    // .then((res) => {
+    //   console.log({ res });
+    //   // if (res?.user?.profileCompletionStep! === 1) {
+    //   //   router.push(`/${rootRoute}/onboarding`);
+    //   // } else {
+    //   //   router.push(
+    //   //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+    //   //   );
+    //   // }
+    // })
+    // .catch((err) => {
+    //   console.log({ err });
+    //   toast.error(err.error || "Invalid OTP and email");
+    // });
   };
   const handleResend = async () => {
     if (!canResend) return;
@@ -145,10 +175,11 @@ const VerifyPageContent = () => {
           <Button
             className="w-full"
             variant="primary"
+            state={isLoading ? "loading" : "default"}
             type="submit"
-            disabled={verify_email.isPending || otpValue.length !== 6}
+            disabled={isLoading || otpValue.length !== 6}
           >
-            {verify_email.isPending ? "Verifying..." : "Next"}
+            {isLoading ? "Verifying..." : "Next"}
           </Button>
         </div>
 
