@@ -5,7 +5,6 @@ import { Verify } from "@/components/ui/inputOtp";
 import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient, useSession } from "@/lib/auth-client";
-import { routes } from "@/lib/routes";
 import { getKeyByValue } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
@@ -57,6 +56,10 @@ const VerifyPageContent = () => {
   const { data: profileNextStep } = useGetProfileNextStep();
   const sessionData = useSession();
   const rootRoute = getKeyByValue(UserType, sessionData?.data?.user?.roles!);
+  // const isCompletedStep =
+  //   (onboardingSteps.find(
+  //     (step) => step.role === sessionData?.data?.user?.roles!
+  //   )?.steps?.length || 0) >= (profileNextStep?.completedSteps?.length || 0);
 
   const onSubmit = (data: OTPForm) => {
     if (resetEmail) {
@@ -84,14 +87,16 @@ const VerifyPageContent = () => {
           setIsLoading(false);
           toast.success("Email verified successfully");
 
-          // console.log({ profileNextStep });
-          if (profileNextStep?.completedSteps.length <= 2) {
-            router.push(`/${rootRoute}/onboarding`);
-          } else {
-            router.push(
-              routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-            );
-          }
+          setAuth(sessionData?.data?.user as any);
+          router.push(`/${rootRoute}/onboarding`);
+
+          // if (isCompletedStep) {
+          //   router.push(`/${rootRoute}/onboarding`);
+          // } else {
+          //   router.push(
+          //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+          //   );
+          // }
         },
         onError: (ctx) => {
           console.log({ ctx });
@@ -100,37 +105,15 @@ const VerifyPageContent = () => {
         },
       }
     );
-    // .then((res) => {
-    //   console.log({ res });
-    //   // if (res?.user?.profileCompletionStep! === 1) {
-    //   //   router.push(`/${rootRoute}/onboarding`);
-    //   // } else {
-    //   //   router.push(
-    //   //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-    //   //   );
-    //   // }
-    // })
-    // .catch((err) => {
-    //   console.log({ err });
-    //   toast.error(err.error || "Invalid OTP and email");
-    // });
   };
   const handleResend = async () => {
     if (!canResend) return;
-
     setIsResending(true);
     try {
-      // Add your resend OTP logic here
       console.log("Resending OTP...");
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Reset countdown to 59 minutes
       setCountdown(59 * 60);
       setCanResend(false);
-
-      // Start countdown
       const timer = setInterval(() => {
         setCountdown((prev) => {
           if (prev <= 1) {
@@ -147,7 +130,6 @@ const VerifyPageContent = () => {
       setIsResending(false);
     }
   };
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -155,7 +137,6 @@ const VerifyPageContent = () => {
       .toString()
       .padStart(2, "0")}`;
   };
-
   return (
     <AuthLayout
       google_signtures={false}

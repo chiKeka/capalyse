@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/sidebar";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -54,18 +54,13 @@ export function NavUser({
   const param = useParams();
   const { isMobile } = useSidebar();
   const [loading, setLoading] = useState(false);
+  const setAuth = useSetAtom(authAtom);
   const auth: any = useAtomValue(authAtom);
   const router = useRouter();
   const handleLogout = () => {
-    authClient.signOut(undefined, {
-      onRequest: () => {
-        setLoading(true);
-      },
-      onSuccess: () => {
-        setShowLogout(false);
-        setLoading(false);
-        router.push("/signin");
-      },
+    authClient.signOut().then(() => {
+      setAuth(null);
+      router.push("/signin");
     });
   };
   const renderUserDetails = useCallback(() => {
@@ -73,7 +68,7 @@ export function NavUser({
       return (
         <>
           <span className="truncate font-medium">{`${auth?.firstName || ""} ${
-            auth?.lastName || ""
+            auth?.name || ""
           }`}</span>
           <span className="truncate text-xs">{auth?.email}</span>
         </>

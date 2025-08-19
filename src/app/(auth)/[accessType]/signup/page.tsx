@@ -49,17 +49,14 @@ export default function SignupPage() {
 
       {
         onRequest: (ctx) => {
-          console.log({ ctx });
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
-          console.log({ ctx });
           setIsLoading(false);
           router.push(`/verify?email=${form.email}`);
           toast.success("Email sent successfully");
         },
         onError: (ctx) => {
-          // display the error message
           setIsLoading(false);
           toast.error(ctx.error.message);
         },

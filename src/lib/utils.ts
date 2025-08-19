@@ -13,14 +13,14 @@ export const UserType = {
 
 export const onboardingSteps = [
   {
-    role: "SME",
+    role: "sme",
     steps: [
       { id: 1, label: "personal-info" },
       { id: 2, label: "sme-business-info" },
     ],
   },
   {
-    role: "Investor",
+    role: "investor",
     steps: [
       { id: 1, label: "personal-info" },
       { id: 2, label: "investor-investment-info" },
@@ -28,7 +28,7 @@ export const onboardingSteps = [
     ],
   },
   {
-    role: "DevelopmentOrg",
+    role: "developmentorg",
     steps: [{ id: 1, label: "dev-org-info" }],
   },
 ];

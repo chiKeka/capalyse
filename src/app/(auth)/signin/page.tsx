@@ -6,10 +6,10 @@ import Input from "@/components/ui/Inputs";
 import PasswordChecker from "@/components/ui/passwordChecker";
 import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { routes } from "@/lib/routes";
 import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
-import { UserType } from "@/lib/utils";
+import { onboardingSteps, UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -30,6 +30,11 @@ function page({}: Props) {
   };
   const [isLoading, setIsLoading] = useState(false);
   const { data: profileNextStep } = useGetProfileNextStep();
+  const sessionData = useSession();
+  const isCompletedStep =
+    (onboardingSteps.find(
+      (step) => step.role === sessionData?.data?.user?.roles!
+    )?.steps?.length || 0) >= (profileNextStep?.completedSteps?.length || 0);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
@@ -66,7 +71,7 @@ function page({}: Props) {
 
             const rootRoute = getKeyByValue(UserType, data?.user?.roles);
             if (rootRoute) {
-              if (profileNextStep?.completedSteps.length <= 2) {
+              if (isCompletedStep) {
                 router.push(`/${rootRoute}/onboarding`);
               } else {
                 router.push(

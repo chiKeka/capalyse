@@ -137,12 +137,11 @@ export const apiRoutes = {
    */
   auth: {
     registerInitiate: "/auth/register/initiate",
-    registerPersonalInfo: "/auth/register/personal-info",
-    registerSmeBusinessInfo: "/auth/register/sme-business-info",
-    registerInvestorInvestmentInfo: "/auth/register/investor-investment-info",
-    registerInvestorOrganizationInfo:
-      "/auth/register/investor-organization-info",
-    registerDevOrgInfo: "/auth/register/dev-org-info",
+    updatePersonalInfo: "/profile/personal-info",
+    updateSmeBusinessInfo: "/profile/sme/business-info",
+    updateInvestorInvestmentInfo: "/profile/investor/investment-info",
+    updateInvestorOrganizationInfo: "/profile/investor/organization-info",
+    updateDevOrgInfo: "/profile/dev-org/organization-info",
     getRegisterNextStep: "/auth/register/next-step",
     login: "/auth/login",
     logout: "/auth/logout",

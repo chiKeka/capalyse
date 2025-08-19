@@ -47,16 +47,18 @@ export type developmentOrg = {
 };
 
 export type AuthState = {
-  createdAt: string;
-  email: string;
-  emailVerified: boolean;
-  firstName: string;
-  id: string;
-  lastName: string;
-  profileCompletionStep: number;
-  role: string;
-  status: string;
-  updatedAt: string;
+  createdAt?: string;
+  email?: string;
+  emailVerified?: boolean;
+  firstName?: string;
+  id?: string;
+  lastName?: string;
+  role?: string;
+  status?: string;
+  updatedAt?: string;
+  name?: string;
+  image?: string | null | undefined;
+  roles?: string;
 };
 
 // Messaging and conversation types (matching backend interfaces)
