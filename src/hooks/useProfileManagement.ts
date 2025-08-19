@@ -8,11 +8,22 @@ export const useGetCurrentProfile = () => {
     queryFn: async () => {
       const response = await api.get(ApiEndPoints.Profile);
 
-      const user = response?.data?.data?.user;
+      const user = response?.data
       return user;
     },
   });
 };
+
+export const useGetProfileNextStep = () => {
+  return useQuery({
+    queryKey: ["profile_next_step"],
+    queryFn: async () => {
+      const response = await api.get(ApiEndPoints.Profile_Next_Step);
+      return response?.data
+    },
+  });
+};
+
 export const useGetProfileCompletionStatus = () => {
   return useQuery({
     queryKey: ["current_profile_status"],

@@ -10,10 +10,11 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { routes } from "@/lib/routes";
 import { getKeyByValue } from "@/lib/uitils/fns";
-import { UserType } from "@/lib/utils";
+import { onboardingSteps, UserType } from "@/lib/utils";
 import { useAtom, useAtomValue } from "jotai";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
   const [onboardSteps] = useAtom(onboardingStepAtom);
-
+  const { data: profileNextStep } = useGetProfileNextStep();
   const personalInfoFormRef = useRef<{
     submit: () => void;
     isLoading: boolean;
@@ -60,28 +61,28 @@ const Page = () => {
   const isFirstStep = onboardSteps === 1;
   const isSecond = onboardSteps === 2;
   const isThirdStep = onboardSteps === 3;
-
+  console.log(profileNextStep);
   const handleNext = async () => {
     setButtonLoading(true);
     const role = authState?.role?.toLowerCase();
     const step = authState?.profileCompletionStep;
     let valid = true;
     if (role === "investor") {
-      if (step === 1) {
+      if (step === onboardingSteps[1].steps[0].label) {
         valid = (await personalInfoFormRef.current?.submit()) ?? false;
-      } else if (step === 2) {
+      } else if (step === onboardingSteps[1].steps[1].label) {
         valid = (await investmentPreferenceRef.current?.submit()) ?? false;
-      } else if (step === 3) {
+      } else if (step === onboardingSteps[1].steps[2].label) {
         valid = (await investorOrganisationRef.current?.submit()) ?? false;
       }
     } else if (role === "sme") {
-      if (step === 1) {
+      if (step === onboardingSteps[0].steps[0].label) {
         valid = (await personalInfoFormRef.current?.submit()) ?? false;
-      } else if (step === 2) {
+      } else if (step === onboardingSteps[0].steps[1].label) {
         valid = (await smeBusinessInfoFormRef.current?.submit()) ?? false;
       }
     } else if (role === "developmentorg") {
-      if (step === 1) {
+      if (step === onboardingSteps[2].steps[0].label) {
         valid = (await developmentOrganisationRef.current?.submit()) ?? false;
       }
     }

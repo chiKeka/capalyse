@@ -38,7 +38,8 @@ export const ApiEndPoints = {
   Single_Files: (id: string) => `/files/{id}`,
 
   // profile management
-  Profile: "/me",
+  Profile: "/profile/me",
+  Profile_Next_Step: "/profile/next-step",
   Profile_Completion: "/me/profile-completion",
   Profile_Info: "/me/personal-info",
 
@@ -187,7 +188,8 @@ export const apiRoutes = {
     updateBusinessInfoAssessment: "/smes/me/assessment/business-info",
 
     // Public SME Directory & Interaction
-    directory: "/smes/directory",
+    directory: "/directory/smes",
+    directory_search: (smeId: string) => `/directory/smes/${smeId}`,
     search: "/smes/search",
     getProfileById: (id: string) => `/smes/${id}/profile`,
     contact: (id: string) => `/smes/${id}/contact`,

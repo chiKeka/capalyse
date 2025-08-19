@@ -4,6 +4,7 @@ import GetStarted from "@/components/layout/GetStarted";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import PasswordChecker from "@/components/ui/passwordChecker";
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
 import { routes } from "@/lib/routes";
@@ -28,6 +29,7 @@ function page({}: Props) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const [isLoading, setIsLoading] = useState(false);
+  const { data: profileNextStep } = useGetProfileNextStep();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
@@ -63,15 +65,13 @@ function page({}: Props) {
             }
 
             const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-            console.log({ rootRoute });
             if (rootRoute) {
-              if (data?.user?.profileCompletionStep <= 2) {
+              if (profileNextStep?.completedSteps.length <= 2) {
                 router.push(`/${rootRoute}/onboarding`);
               } else {
                 router.push(
-                  routes?.[
-                    data?.user?.roles?.toLowerCase() as keyof typeof routes
-                  ]?.root
+                  routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
+                    ?.root
                 );
               }
             }

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/hooks/useAuth';
-import { AppSidebar } from '../app-sidebar';
-import { SiteHeader } from '../site-header';
-import { SidebarInset, SidebarProvider } from '../ui/sidebar';
-import { useAtomValue } from 'jotai';
-import { authAtom } from '@/lib/atoms/atoms';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { UserType } from '@/lib/utils';
-import { getKeyByValue } from '@/lib/uitils/fns';
-import { Loader2Icon } from 'lucide-react';
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient } from "@/lib/auth-client";
+import { getKeyByValue } from "@/lib/uitils/fns";
+import { UserType } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+import { Loader2Icon } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { AppSidebar } from "../app-sidebar";
+import { SiteHeader } from "../site-header";
+import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 
 const AuthenticatedLayout = ({
   children,
@@ -23,22 +23,29 @@ const AuthenticatedLayout = ({
   const router = useRouter();
   const params = useParams();
   const [loading, setLoading] = useState(true);
-  const { signOutMutation } = useAuth();
   const auth: any = useAtomValue(authAtom);
   const checkAccess = () => {
-    const rootRoute = getKeyByValue(UserType, auth?.role);
+    const rootRoute = getKeyByValue(UserType, auth?.roles);
+    console.log({ auth, rootRoute, params });
     if (
-      auth?.role === 'ADMIN' &&
+      auth?.role === "ADMIN" &&
       params.accessType &&
-      params.accessType !== 'admin'
+      params.accessType !== "admin"
     ) {
-      router.push('/admin');
+      router.push("/admin");
       setLoading(false);
     }
-    if (auth?.role !== 'ADMIN' && rootRoute !== params.accessType) {
-      toast.error('You are not authorized to access this page');
-      signOutMutation.mutateAsync().finally(() => {
-        setLoading(false);
+    if (auth?.role !== "ADMIN" && rootRoute !== params.accessType) {
+      toast.error("You are not authorized to access this page");
+      authClient.signOut(undefined, {
+        onSuccess: () => {
+          setLoading(false);
+          router.push("/signin");
+        },
+        onError: (ctx) => {
+          console.log({ ctx });
+          setLoading(false);
+        },
       });
     } else {
       setLoading(false);
@@ -47,7 +54,7 @@ const AuthenticatedLayout = ({
   useEffect(() => {
     checkAccess();
   }, [auth]);
-  return loading || signOutMutation.isPending ? (
+  return loading ? (
     <div className="h-screen flex items-center justify-center">
       <Loader2Icon className="animate-spin w-28 h-28" />
     </div>

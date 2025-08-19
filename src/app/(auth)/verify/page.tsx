@@ -2,11 +2,13 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import { Verify } from "@/components/ui/inputOtp";
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
+import { routes } from "@/lib/routes";
 import { getKeyByValue } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -18,7 +20,7 @@ interface OTPForm {
 
 const VerifyPageContent = () => {
   const [isResending, setIsResending] = useState(false);
-  const [countdown, setCountdown] = useState(59 * 60); // 59 minutes in seconds
+  const [countdown, setCountdown] = useState(10 * 60); // 9 minutes in seconds
   const [canResend, setCanResend] = useState(false);
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -51,9 +53,11 @@ const VerifyPageContent = () => {
     setError,
   } = useForm<OTPForm>();
   const [isLoading, setIsLoading] = useState(false);
-  const userAuthDetails: any = useAtomValue(authAtom);
   const [otpValue, setOtpValue] = useState("");
-  const rootRoute = getKeyByValue(UserType, userAuthDetails?.role);
+  const { data: profileNextStep } = useGetProfileNextStep();
+  const sessionData = useSession();
+  const rootRoute = getKeyByValue(UserType, sessionData?.data?.user?.roles!);
+
   const onSubmit = (data: OTPForm) => {
     if (resetEmail) {
       console.log({ ...data, resetEmail });
@@ -75,10 +79,19 @@ const VerifyPageContent = () => {
           console.log({ ctx });
           setIsLoading(true);
         },
-        onSuccess: (ctx) => {
+        onSuccess: async (ctx) => {
           console.log({ ctx });
           setIsLoading(false);
           toast.success("Email verified successfully");
+
+          // console.log({ profileNextStep });
+          if (profileNextStep?.completedSteps.length <= 2) {
+            router.push(`/${rootRoute}/onboarding`);
+          } else {
+            router.push(
+              routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+            );
+          }
         },
         onError: (ctx) => {
           console.log({ ctx });

@@ -46,6 +46,7 @@ const ResetPasswordPage = () => {
         },
         onSuccess: (ctx) => {
           console.log({ ctx });
+          localStorage.removeItem("reset_password");
           setShowModal(true);
           setIsLoading(false);
         },

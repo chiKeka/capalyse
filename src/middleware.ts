@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname === "/verify-email-otp" ||
       request.nextUrl.pathname === "/verify-email-otp-resend")
   ) {
-    return NextResponse.redirect(new URL("/:accessType/:path*", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
@@ -30,6 +30,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // App routes
-    "/:accessType/:path*",
+    "/",
   ],
 };

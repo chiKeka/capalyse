@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ArrowRightIcon,
@@ -7,8 +7,9 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -16,8 +17,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,20 +26,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import Button from './ui/Button';
-import { useAtomValue } from 'jotai';
-import { authAtom } from '@/lib/atoms/atoms';
+} from "@/components/ui/sidebar";
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient } from "@/lib/auth-client";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import Button from "./ui/Button";
 
 export function NavUser({
   user,
@@ -53,17 +53,27 @@ export function NavUser({
   const [showLogout, setShowLogout] = useState(false);
   const param = useParams();
   const { isMobile } = useSidebar();
-  const { signOutMutation } = useAuth();
+  const [loading, setLoading] = useState(false);
   const auth: any = useAtomValue(authAtom);
+  const router = useRouter();
   const handleLogout = () => {
-    signOutMutation.mutate();
+    authClient.signOut(undefined, {
+      onRequest: () => {
+        setLoading(true);
+      },
+      onSuccess: () => {
+        setShowLogout(false);
+        setLoading(false);
+        router.push("/signin");
+      },
+    });
   };
   const renderUserDetails = useCallback(() => {
     if (auth) {
       return (
         <>
-          <span className="truncate font-medium">{`${auth?.firstName || ''} ${
-            auth?.lastName || ''
+          <span className="truncate font-medium">{`${auth?.firstName || ""} ${
+            auth?.lastName || ""
           }`}</span>
           <span className="truncate text-xs">{auth?.email}</span>
         </>
@@ -93,7 +103,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
+            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
@@ -158,7 +168,7 @@ export function NavUser({
               size="small"
               className="bg-red-600 hover:bg-red-700"
               onClick={handleLogout}
-              state={signOutMutation.isPending ? 'loading' : 'default'}
+              state={loading ? "loading" : "default"}
             >
               Log out
             </Button>
