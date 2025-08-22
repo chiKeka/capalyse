@@ -7,7 +7,7 @@ import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overvie
 import Programs from "@/components/sections/dashboardCards/programs";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
 import { useParams, useRouter } from "next/navigation";
@@ -16,9 +16,9 @@ export default function SmeDashBoard() {
   const params = useParams();
 
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
-  const ProfileDetails = useGetCurrentProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-
+  console.log(user);
   // Fetch readiness score data
   const { data: readinessScore, isLoading: isReadinessLoading } =
     useGetReadinessScore();
@@ -82,7 +82,7 @@ export default function SmeDashBoard() {
       <OverviewHeaderCard
         value={user?.completionPercentage}
         link={`/${params.accessType}/profile`}
-        user={{ name: user?.firstName }}
+        user={{ name: user?.personalInfo?.firstName }}
         showProgress={true}
         showButton={true}
         buttonProps={{

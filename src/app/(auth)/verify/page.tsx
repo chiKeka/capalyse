@@ -2,7 +2,6 @@
 import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import { Verify } from "@/components/ui/inputOtp";
-import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient, useSession } from "@/lib/auth-client";
 import { getKeyByValue } from "@/lib/uitils/fns";
@@ -26,8 +25,9 @@ const VerifyPageContent = () => {
   const resetEmail = searchParams.get("reset_email");
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
+  const sessionData = useSession();
+  const rootRoute = getKeyByValue(UserType, sessionData?.data?.user?.roles!);
 
-  // Start countdown when component mounts
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -53,13 +53,6 @@ const VerifyPageContent = () => {
   } = useForm<OTPForm>();
   const [isLoading, setIsLoading] = useState(false);
   const [otpValue, setOtpValue] = useState("");
-  const { data: profileNextStep } = useGetProfileNextStep();
-  const sessionData = useSession();
-  const rootRoute = getKeyByValue(UserType, sessionData?.data?.user?.roles!);
-  // const isCompletedStep =
-  //   (onboardingSteps.find(
-  //     (step) => step.role === sessionData?.data?.user?.roles!
-  //   )?.steps?.length || 0) >= (profileNextStep?.completedSteps?.length || 0);
 
   const onSubmit = (data: OTPForm) => {
     if (resetEmail) {
@@ -86,17 +79,8 @@ const VerifyPageContent = () => {
           console.log({ ctx });
           setIsLoading(false);
           toast.success("Email verified successfully");
-
           setAuth(sessionData?.data?.user as any);
-          router.push(`/${rootRoute}/onboarding`);
-
-          // if (isCompletedStep) {
-          //   router.push(`/${rootRoute}/onboarding`);
-          // } else {
-          //   router.push(
-          //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-          //   );
-          // }
+          if (rootRoute) router.push(`/${rootRoute}/onboarding`);
         },
         onError: (ctx) => {
           console.log({ ctx });

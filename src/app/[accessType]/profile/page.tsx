@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/ui/Button";
 import StraightBar from "@/components/ui/straightBar";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useState } from "react";
 import Document from "./document";
 import Info from "./info";
@@ -65,7 +65,7 @@ const tabOptions = [
 export default function page({}: Props) {
   const [formState, setFormState] = useState("personal");
   const activeTab = tabOptions.find((tab) => tab.key === formState);
-  const ProfileDetails = useGetCurrentProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
 
   return (

@@ -4,7 +4,7 @@ import { Input as FileInput } from "@/components/ui/input";
 import { CountrySelect } from "react-country-state-city";
 
 import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { useAuth } from "@/hooks/useAuth";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { handleImageUpload } from "@/lib/uitils/fns";
 import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
@@ -26,7 +26,7 @@ const DevelopmentOrganisation = forwardRef<
   Props
 >(({ setLoading, onFinish, onSuccess }, ref) => {
   const auth: any = useAtomValue(authAtom);
-  const { dev_org } = useAuth();
+  const { dev_org } = updateProfile();
   const {
     register,
     handleSubmit,
@@ -112,6 +112,8 @@ const DevelopmentOrganisation = forwardRef<
                 document: file.fileUrl,
               })),
             ],
+            focusAreas: [""],
+            operatingRegions: [""],
           };
           // Add your form submission logic here
           await dev_org

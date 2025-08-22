@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const UserType = {
-  development: "DevelopmentOrg",
+  development: "Development_org",
   sme: "SME",
   investor: "Investor",
 };
@@ -28,7 +28,7 @@ export const onboardingSteps = [
     ],
   },
   {
-    role: "developmentorg",
+    role: "development_org",
     steps: [{ id: 1, label: "dev-org-info" }],
   },
 ];

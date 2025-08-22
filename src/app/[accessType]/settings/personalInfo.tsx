@@ -1,9 +1,6 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import { useUpdatePersonalInfo } from "@/hooks/useProfileManagement";
-import { useState } from "react";
-import { CountrySelect } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -12,7 +9,6 @@ interface PersonalInfoData {
   lastName: string;
   phoneNumber: string;
   email: string;
-  countryOfResidence: string;
 }
 
 type Props = {};
@@ -21,39 +17,29 @@ function PersonalInfo({}: Props) {
   const {
     register,
     handleSubmit,
-    setValue,
-    getValues,
-    formState: { errors, isSubmitting },
-    reset,
+    formState: { errors },
   } = useForm<PersonalInfoData>({
     defaultValues: {
       firstName: "",
       lastName: "",
       phoneNumber: "",
       email: "",
-      countryOfResidence: "",
     },
   });
 
-  const [selectedCountryId, setSelectedCountryId] = useState("");
-  const [selectedCountryName, setSelectedCountryName] = useState("");
-  const [selectedStateName, setSelectedStateName] = useState("");
-  const {
-    mutateAsync: updatePersonalInfo,
-    isPending,
-    isSuccess,
-  } = useUpdatePersonalInfo();
+  const { personal_information } = updateProfile();
 
   const onSubmit = async (data: PersonalInfoData) => {
-    updatePersonalInfo(data as any)
-      .then((res) => {
+    personal_information.mutate(data as any, {
+      onSuccess: () => {
         toast.success("Profile updated successfully");
-      })
-      .catch((err) => {
+      },
+      onError: (error) => {
         toast.error(
-          err?.message || "Failed to update profile. Please try again."
+          error?.message || "Failed to update profile. Please try again."
         );
-      });
+      },
+    });
   };
 
   return (
@@ -141,46 +127,14 @@ function PersonalInfo({}: Props) {
           </span>
         )}
 
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Country Of Residence
-          </label>
-          <CountrySelect
-            value={selectedCountryName}
-            autoComplete="new-country"
-            inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
-            onChange={(country: any) => {
-              console.log({ country });
-              if (
-                country &&
-                typeof country === "object" &&
-                "id" in country &&
-                "name" in country
-              ) {
-                setSelectedCountryName(country.name); // for display
-                setValue("countryOfResidence", country.name); // for form
-              }
-            }}
-            defaultValue={getValues()?.countryOfResidence as any}
-            onTextChange={(_txt) =>
-              setValue("countryOfResidence", _txt.target.value)
-            }
-          />
-          {errors.countryOfResidence && (
-            <span className="col-span-2 text-[10px] border-none  text-red-500">
-              {errors.countryOfResidence.message}
-            </span>
-          )}
-        </div>
-
         <Button
           variant="primary"
           size="medium"
           className="w-full my-4"
           type="submit"
-          disabled={isSubmitting}
+          disabled={personal_information.isPending}
         >
-          {isSubmitting ? "Updating..." : "Submit"}
+          {personal_information.isPending ? "Updating..." : "Submit"}
         </Button>
         <div className="py-3 px-5 my-6 rounded-[40px] items-center gap-2 w-full bg-[#F4FFFC] inline-flex font-normal text-xs text-[#062039]">
           <img src={"/icons/circle_warning.svg"} /> PS: Changes made to your
@@ -190,11 +144,11 @@ function PersonalInfo({}: Props) {
       <hr className="h-[1px] bg-[] " />
       <div className="md:px-6 px-2 mt-12 max-w-150">
         <Button
-          disabled={isPending}
+          disabled={personal_information.isPending}
           variant="secondary"
           size="medium"
           className="w-full"
-          state={isPending ? "loading" : "default"}
+          state={personal_information.isPending ? "loading" : "default"}
         >
           Delete Account
         </Button>

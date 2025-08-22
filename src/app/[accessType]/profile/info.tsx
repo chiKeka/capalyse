@@ -14,9 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
-import { useSmeProfile } from "@/hooks/useSmeProfile";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useEffect, useState } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
@@ -25,9 +24,9 @@ import { toast } from "sonner";
 type Props = {};
 
 export default function Info({}: Props) {
-  const ProfileDetails = useGetCurrentProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  const { smes_bussiness_info } = useAuth();
+  const { smes_bussiness_info } = updateProfile();
   console.log(user);
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
     user?.countryOfOperation || []
@@ -42,15 +41,15 @@ export default function Info({}: Props) {
     formState: { errors },
   } = useForm<SMEsBusinessInfo>({
     defaultValues: {
-      businessName: "",
-      registrationNumber: "",
-      countryOfOperation: selectedCountry,
-      businessStage: "",
-      industry: "",
-      website: "",
+      businessName: user?.businessName || "",
+      registrationNumber: user?.registrationNumber || "",
+      countryOfOperation: user?.countryOfOperation || [],
+      businessStage: user?.businessStage || "",
+      industry: user?.industry || "",
+      website: user?.website || "",
     },
   });
-  const { updateSmeBusinessInfo } = useSmeProfile();
+
   useEffect(() => {
     if (user) {
       setSelectedCountry(user?.countryOfOperation || []);
@@ -67,7 +66,7 @@ export default function Info({}: Props) {
   }, [user, reset]);
 
   const onSubmit = (data: any) => {
-    updateSmeBusinessInfo
+    smes_bussiness_info
       .mutateAsync(data)
       .then((res) => {
         toast.success("Profile data updated successfully");
@@ -190,7 +189,7 @@ export default function Info({}: Props) {
           profile will be subject to verification
         </div>
         <Button
-          state={updateSmeBusinessInfo.isPending ? "loading" : undefined}
+          state={smes_bussiness_info.isPending ? "loading" : undefined}
           type="submit"
           onClick={handleSubmit(onSubmit)}
           variant="primary"

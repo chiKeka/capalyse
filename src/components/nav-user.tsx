@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/sidebar";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -57,9 +58,11 @@ export function NavUser({
   const setAuth = useSetAtom(authAtom);
   const auth: any = useAtomValue(authAtom);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const handleLogout = () => {
     authClient.signOut().then(() => {
       setAuth(null);
+      queryClient.clear();
       router.push("/signin");
     });
   };

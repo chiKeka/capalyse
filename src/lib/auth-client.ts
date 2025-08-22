@@ -39,6 +39,7 @@ export const {
   getAccessToken,
   verifyEmail,
   sendVerificationEmail,
+  emailOtp,
 } = authClient;
 // export type Session = typeof authClient.$Infer.Session;
 // export type Session = typeof authClient.$Infer.Session;

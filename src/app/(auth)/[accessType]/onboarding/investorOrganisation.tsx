@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { investorOrg } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -31,7 +31,7 @@ type InvestmentPreferenceormProps = {
 
 const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
   (props, ref) => {
-    const { investor_org_info } = useAuth();
+    const { investor_org_info } = updateProfile();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
     const {

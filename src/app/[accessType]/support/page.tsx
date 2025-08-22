@@ -26,8 +26,7 @@ import { toast } from "sonner";
 const SupportPage = () => {
   const { createSupport } = useSupports();
 
-  const { data } = useGetSupport();
-  const supportTicket: any = data?.data;
+  const { data: supportTicket } = useGetSupport();
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [files, setFiles] = useState<supportAttachment[]>([]);
   const {

@@ -7,7 +7,7 @@ import {
   MultiSelectValue,
 } from "@/components/ui/multi-select";
 
-import { useAuth } from "@/hooks/useAuth";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { InvestmentPreferenceInfo } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -42,7 +42,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
     const [selectedBusinessStages, setSelectedBusinessStages] = useState<
       string[]
     >([]);
-    const { investor_investment_info } = useAuth();
+    const { investor_investment_info } = updateProfile();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
     const {

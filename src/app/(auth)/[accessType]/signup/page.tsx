@@ -44,6 +44,7 @@ export default function SignupPage() {
       {
         ...form,
         name: form.name || form.email.split("@")[0],
+        roles: form.roles,
         profileCompletionStep: 0,
       },
 

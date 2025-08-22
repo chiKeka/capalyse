@@ -34,7 +34,8 @@ const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
   // const [onboardSteps] = useAtom(onboardingStepAtom);
-  const { data: profileNextStep } = useGetProfileNextStep();
+  const { data: profileNextStep, refetch: refetchProfileNextStep } =
+    useGetProfileNextStep();
   const personalInfoFormRef = useRef<{
     submit: () => void;
     isLoading: boolean;
@@ -57,18 +58,22 @@ const Page = () => {
   }>(null);
 
   const [loading, setLoading] = useState(false);
-  const [buttonLoading, setButtonLoading] = useState(false);
+
   const isCompletedStep =
     (onboardingSteps.find((step) => step.role === authState?.roles)?.steps
       ?.length || 0) >= (profileNextStep?.completedSteps?.length || 0);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showReadiness, setShowReadiness] = useState(false);
+  useEffect(() => {
+    refetchProfileNextStep();
+  }, [loading]);
 
-  console.log(authState);
   const handleNext = async () => {
-    setButtonLoading(true);
+    setLoading(true);
     const role = authState?.roles?.toLowerCase();
     const step = profileNextStep?.currentStep;
     let valid = true;
-    if (role === "investor") {
+    if (role.toLowerCase() === "investor") {
       if (step === onboardingSteps[1].steps[0].label) {
         valid = personalInfoFormRef.current?.submit()!;
       } else if (step === onboardingSteps[1].steps[1].label) {
@@ -76,45 +81,22 @@ const Page = () => {
       } else if (step === onboardingSteps[1].steps[2].label) {
         valid = investorOrganisationRef.current?.submit()!;
       }
-    } else if (role === "sme") {
+    } else if (role.toLowerCase() === "sme") {
       if (step === onboardingSteps[0].steps[0].label) {
         valid = personalInfoFormRef.current?.submit()!;
       } else if (step === onboardingSteps[0].steps[1].label) {
         valid = smeBusinessInfoFormRef.current?.submit()!;
       }
-    } else if (role === "developmentorg") {
+    } else if (role.toLowerCase() === "development_org") {
       if (step === onboardingSteps[2].steps[0].label) {
         valid = developmentOrganisationRef.current?.submit()!;
       }
     }
     if (!valid) {
-      setButtonLoading(false);
+      setLoading(false);
       return;
     }
   };
-
-  useEffect(() => {
-    setButtonLoading(false);
-    setLoading(false);
-  }, [profileNextStep]);
-
-  useEffect(() => {
-    if (profileNextStep && !loading && !buttonLoading) {
-      const currentRoleSteps = onboardingSteps.find(
-        (step) => step.role === authState?.roles
-      )?.steps;
-
-      if (currentRoleSteps) {
-        const currentStepIndex = currentRoleSteps.findIndex(
-          (step) => step.label === profileNextStep
-        );
-
-        if (currentStepIndex < currentRoleSteps.length - 1) {
-          console.log("Auto-advancing to next step:", profileNextStep);
-        }
-      }
-    }
-  }, [profileNextStep, loading, buttonLoading, authState?.roles]);
 
   const roleFormMap = {
     sme: (
@@ -123,52 +105,52 @@ const Page = () => {
           <PersonalInformationForm
             ref={personalInfoFormRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
           />
         )}
         {profileNextStep?.currentStep === onboardingSteps[0].steps[1].label && (
           <BusinassInformationForm
             ref={smeBusinessInfoFormRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
             onSuccess={() => setShowSuccessDialog(true)}
           />
         )}
       </>
     ),
-    investor: (
+      investor: (
       <>
         {profileNextStep?.currentStep === onboardingSteps[1].steps[0].label && (
           <PersonalInformationForm
             ref={personalInfoFormRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
           />
         )}
         {profileNextStep?.currentStep === onboardingSteps[1].steps[1].label && (
           <InvestmentPreference
             ref={investmentPreferenceRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
           />
         )}
         {profileNextStep?.currentStep === onboardingSteps[1].steps[2].label && (
           <InvestorOrganisation
             ref={investorOrganisationRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
             onSuccess={() => setShowSuccessDialog(true)}
           />
         )}
       </>
     ),
-    developmentorg: (
+    development: (
       <>
         {profileNextStep?.currentStep === onboardingSteps[2].steps[0].label && (
           <DevelopmentOrganisation
             ref={developmentOrganisationRef}
             setLoading={setLoading}
-            onFinish={() => setButtonLoading(false)}
+            onFinish={() => setLoading(false)}
             onSuccess={() => setShowSuccessDialog(true)}
           />
         )}
@@ -185,16 +167,14 @@ const Page = () => {
     if (role === "investor") {
       return step === onboardingSteps[1].steps[2].label ? "Submit" : "Next";
     }
-    if (role === "developmentorg") {
+    if (role === "development_org") {
       return step === onboardingSteps[2].steps[0].label ? "Submit" : "Next";
     }
     return "Next";
   };
 
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [showReadiness, setShowReadiness] = useState(false);
   const dashboardUrl =
-    routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]
+    routes?.[getKeyByValue(UserType, authState?.roles) as keyof typeof routes]
       ?.root;
 
   return (
@@ -233,7 +213,11 @@ const Page = () => {
       </div>
 
       <div className="w-full">
-        <div className="grid md:grid-cols-2 w-full gap-4 mt-4">
+        <div
+          className={`grid ${
+            !profileNextStep?.isCompleted && "md:grid-cols-2"
+          }  w-full gap-4 mt-4`}
+        >
           <Button
             variant="secondary"
             onClick={() =>
@@ -251,13 +235,16 @@ const Page = () => {
           >
             {isCompletedStep ? "Skip to Dashboard" : "Back"}
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleNext}
-            state={loading ? "loading" : undefined}
-          >
-            {getPrimaryButtonLabel()}
-          </Button>
+
+          {!profileNextStep?.isCompleted && (
+            <Button
+              variant="primary"
+              onClick={handleNext}
+              state={loading ? "loading" : undefined}
+            >
+              {getPrimaryButtonLabel()}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -267,19 +254,19 @@ const Page = () => {
             <div className="gap-2 flex flex-col">
               <img
                 src={
-                  authState?.role?.toLowerCase() === "developmentorg"
+                  authState?.role?.toLowerCase() === "development_org"
                     ? "/icons/pendingCheck.svg"
                     : "/icons/successCheck.svg"
                 }
               />
               <div
                 className={`${
-                  authState?.role?.toLowerCase() === "developmentorg"
+                  authState?.role?.toLowerCase() === "development_org"
                     ? "text-[#D3931C]"
                     : "text-green"
                 }`}
               >
-                {authState?.role?.toLowerCase() === "developmentorg"
+                {authState?.role?.toLowerCase() === "development_org"
                   ? "Pending Verification"
                   : "Success!"}
               </div>

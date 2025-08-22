@@ -2,17 +2,6 @@ import api from "@/api/axios";
 import { ApiEndPoints } from "@/api/endpoints";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-export const useGetCurrentProfile = () => {
-  return useQuery({
-    queryKey: ["current_profile"],
-    queryFn: async () => {
-      const response = await api.get(ApiEndPoints.Profile);
-
-      const user = response?.data
-      return user;
-    },
-  });
-};
 
 export const useGetProfileNextStep = () => {
   return useQuery({

@@ -80,11 +80,11 @@ export const ApiEndPoints = {
   Mark_as_Read: (id?: string) => `notifications/${id}/read`,
 
   //support
-  SupportTicket: "/tickets",
-  TicketsActions: (ticketId: string) => `/tickets/${ticketId}`,
-  TicketMessage: (ticketId: string) => `tickets/${ticketId}/messages`,
+  SupportTicket: "/support/tickets",
+  TicketsActions: (ticketId: string) => `/support/tickets/${ticketId}`,
+  TicketMessage: (ticketId: string) => `/support/tickets//${ticketId}/messages`,
   TicketMessagesAction: (ticketId: string, messageId: string) =>
-    `/tickets/${ticketId}/messages/${messageId}`,
+    `/support/tickets/${ticketId}/messages/${messageId}`,
 
   // messaging and conversations
 
@@ -137,12 +137,7 @@ export const apiRoutes = {
    */
   auth: {
     registerInitiate: "/auth/register/initiate",
-    updatePersonalInfo: "/profile/personal-info",
-    updateSmeBusinessInfo: "/profile/sme/business-info",
-    updateInvestorInvestmentInfo: "/profile/investor/investment-info",
-    updateInvestorOrganizationInfo: "/profile/investor/organization-info",
-    updateDevOrgInfo: "/profile/dev-org/organization-info",
-    getRegisterNextStep: "/auth/register/next-step",
+
     login: "/auth/login",
     logout: "/auth/logout",
     google: "/auth/google",
@@ -158,11 +153,6 @@ export const apiRoutes = {
   /**
    * Endpoints for managing the current user's profile.
    */
-  profile: {
-    get: "/me",
-    updatePersonalInfo: "/me/personal-info",
-    getCompletion: "/me/profile-completion",
-  },
 
   /**
    * SME-specific profile, assessment, and directory endpoints.
@@ -315,4 +305,27 @@ export const apiRoutes = {
     getAllTickets: "/admin/tickets",
     assignTicket: (ticketId: string) => `/admin/tickets/${ticketId}/assign`,
   },
+};
+
+export const readinessRoutes = {
+  getReadinessScore: "/assessments/sme/assessment/score",
+};
+
+export const matchingRoutes = {
+  investorMatches: "/investor/me/matches",
+  smesMatches: "/sme/me/matches",
+};
+
+export const profileRoutes = {
+  get: "/profile/me",
+  profileById: (id: string) => `/profile/user/${id}`,
+  getCompletion: "/me/profile-completion",
+  updatePersonalInfo: "/profile/personal-info",
+  updateSmeBusinessInfo: "/profile/sme/business-info",
+  updateInvestorInvestmentInfo: "/profile/investor/investment-info",
+  updateInvestorOrganizationInfo: "/profile/investor/organization-info",
+  updateDevOrgInfo: "/profile/dev-org/organization-info",
+  getRegisterNextStep: "/profile/next-step",
+  addTeamMember: "/profile/sme/team",
+  deleteTeamMember: (memberId: string) => `/profile/sme/team/${memberId}`,
 };

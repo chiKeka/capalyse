@@ -9,8 +9,8 @@ export type PersonalInfoInputs = {
   lastName: string;
   phoneNumber: string;
   email: string;
-  countryOfResidence: string;
-  stateOfResidence: string;
+  countryOfResidence?: string;
+  stateOfResidence?: string;
 };
 
 export type SMEsBusinessInfo = {

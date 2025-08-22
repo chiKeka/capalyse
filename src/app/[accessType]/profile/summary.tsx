@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useSmeProfile } from "@/hooks/useSmeProfile";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +16,7 @@ type SummaryFormData = {
 
 export default function Summary({}: Props) {
   const { updateSmeBusinessDetails } = useSmeProfile();
-  const ProfileDetails = useGetCurrentProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
   const {
     register,
