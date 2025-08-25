@@ -23,35 +23,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const disputeHistory = [
-  {
-    ticket: "15235GT",
-    issue: "Upload Issue",
-    status: "unresolved",
-    date: "03 August 2023",
-    time: "09:17pm",
-  },
-  {
-    ticket: "15235GT",
-    issue: "Upload Issue",
-    status: "inProgress",
-    date: "03 August 2023",
-    time: "09:17pm",
-  },
-  {
-    ticket: "15235GT",
-    issue: "Upload Issue",
-    status: "resolved",
-    date: "03 August 2023",
-    time: "09:17pm",
-  },
-];
-
 const SupportPage = () => {
   const { createSupport } = useSupports();
 
-  const { data } = useGetSupport();
-  const supportTicket = data?.data;
+  const { data: supportTicket } = useGetSupport();
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [files, setFiles] = useState<supportAttachment[]>([]);
   const {
@@ -218,8 +193,8 @@ const SupportPage = () => {
                     <CIcons.messageMinus />
                     <div>
                       <p className="text-sm">
-                        <strong>Ticket No:</strong>{" "}
-                        <span>{item?.id.slice(0, -8)}</span>
+                        <strong>Ticket No:</strong>
+                        <span>{item?.id.slice(0, -8) + "..."}</span>
                       </p>
                       <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>

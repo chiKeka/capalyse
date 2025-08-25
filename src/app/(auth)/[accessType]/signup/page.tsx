@@ -3,26 +3,28 @@ import AuthLayout from "@/components/layout/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import PasswordChecker from "@/components/ui/passwordChecker";
-import { useAuth } from "@/hooks/useAuth";
 import { authAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
-import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
+import { authClient } from "@/lib/auth-client";
+import { validateAuthForm } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
-
 export default function SignupPage() {
   const param = useParams();
-  const { registerMutation } = useAuth();
-  const [form, setForm] = useState({ email: "", password: "", role: "SME" });
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
+  const [form, setForm] = useState({
+    email: "",
+    name: "",
+    password: "",
+    roles: UserType[param?.accessType as keyof typeof UserType],
+  });
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    name?: string;
+  }>({});
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
   const handleChange = (
@@ -30,7 +32,7 @@ export default function SignupPage() {
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
@@ -38,38 +40,47 @@ export default function SignupPage() {
 
     if (Object.keys(validationErrors).length > 0) return;
 
-    registerMutation
-      .mutateAsync({
+    authClient.signUp.email(
+      {
         ...form,
-        role: UserType[param?.accessType as keyof typeof UserType],
-      })
-      .then((res) => {
-        const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
-        setAuth(user);
-        Cookies.set("access_token", token);
-        Cookies.set("refresh_token", newRefreshToken);
-        Cookies.set(
-          "token_exp",
-          Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
-        );
-        localStorage.setItem("onBoardignData", JSON.stringify(res?.data));
-        const rootRoute = getKeyByValue(UserType, user?.role);
-        if (user.profileCompletionStep === 1) {
-          router.push(`/${param?.accessType}/onboarding`);
-        } else {
-          router.push(routes?.[rootRoute as keyof typeof routes]?.root);
-        }
-      })
-      .catch((err) => {
-        console.log({ err });
-        toast.error(err.error);
-      });
+        name: form.name || form.email.split("@")[0],
+        roles: form.roles,
+        profileCompletionStep: 0,
+      },
+
+      {
+        onRequest: (ctx) => {
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          setIsLoading(false);
+          router.push(`/verify?email=${form.email}`);
+          toast.success("Email sent successfully");
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          toast.error(ctx.error.message);
+        },
+      }
+    );
   };
 
   return (
     <>
       <AuthLayout google_signtures={true} title="Create your account">
         <form onSubmit={handleSubmit} className="w-full">
+          <Input
+            name="name"
+            onChange={handleChange}
+            type="text"
+            label="Enter Name"
+            className="h-[43px]"
+            placeholder="Enter Name"
+            value={form.name}
+          />
+          {errors.email && (
+            <div className="text-red-500 text-xs mt-1">{errors.name}</div>
+          )}
           <Input
             name="email"
             onChange={handleChange}
@@ -99,12 +110,12 @@ export default function SignupPage() {
             </div>
           )}
           <Button
-            disabled={registerMutation?.isPending}
+            disabled={isLoading}
             type="submit"
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={registerMutation?.isPending ? "loading" : "default"}
+            state={isLoading ? "loading" : "default"}
           >
             Create Account
           </Button>

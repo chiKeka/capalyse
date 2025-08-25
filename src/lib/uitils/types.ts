@@ -9,8 +9,8 @@ export type PersonalInfoInputs = {
   lastName: string;
   phoneNumber: string;
   email: string;
-  countryOfResidence: string;
-  stateOfResidence: string;
+  countryOfResidence?: string;
+  stateOfResidence?: string;
 };
 
 export type SMEsBusinessInfo = {
@@ -39,18 +39,26 @@ export type investorOrg = {
   countryHeadquarters: "";
   website: "";
 };
+export type developmentOrg = {
+  organizationName: "";
+  companyEmail: "";
+  countryHeadquarters: "";
+  website?: "";
+};
 
 export type AuthState = {
-  createdAt: string;
-  email: string;
-  emailVerified: boolean;
-  firstName: string;
-  id: string;
-  lastName: string;
-  profileCompletionStep: number;
-  role: string;
-  status: string;
-  updatedAt: string;
+  createdAt?: string;
+  email?: string;
+  emailVerified?: boolean;
+  firstName?: string;
+  id?: string;
+  lastName?: string;
+  role?: string;
+  status?: string;
+  updatedAt?: string;
+  name?: string;
+  image?: string | null | undefined;
+  roles?: string;
 };
 
 // Messaging and conversation types (matching backend interfaces)

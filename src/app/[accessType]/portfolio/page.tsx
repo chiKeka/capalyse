@@ -1,126 +1,27 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { formatCurrency } from '@/lib/uitils/fns';
-import Image from 'next/image';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { formatCurrency } from "@/lib/uitils/fns";
+import Image from "next/image";
 
 type Props = {};
 
 // Example data
-const smes = [
-  {
-    id: 1,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Packaging',
-    country: 'Nigeria',
-    readiness: '75%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 2,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Nigeria',
-    readiness: '75%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 3,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Kenya',
-    readiness: '75%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 4,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'HealthTech',
-    country: 'Nigeria',
-    readiness: '30%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 5,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Uganda',
-    readiness: '20%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 6,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Nigeria',
-    readiness: '10%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 7,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'HealthTech',
-    country: 'Cameroon',
-    readiness: '90%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Retail',
-    country: 'Niger',
-    readiness: '68%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-  {
-    id: 8,
-    name: 'Business Name',
-    avatar: '/images/humanAvater.svg',
-    industry: 'Agriculture',
-    country: 'Nigeria',
-    readiness: '74%',
-    revenue: '₦100,000.00',
-    teamSize: 10,
-    date: 'Jan 4, 2022',
-  },
-];
+const smes: any[] = [];
 const columns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: (typeof smes)[0]) => (
       <div className="flex items-center gap-2">
         {row.avatar ? (
@@ -136,37 +37,37 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Industry', accessor: 'industry' },
-  { header: 'Country', accessor: 'country' },
-  { header: 'Readiness Score', accessor: 'readiness' },
-  { header: 'Revenue', accessor: 'revenue' },
-  { header: 'Team Size', accessor: 'teamSize' },
+  { header: "Industry", accessor: "industry" },
+  { header: "Country", accessor: "country" },
+  { header: "Readiness Score", accessor: "readiness" },
+  { header: "Revenue", accessor: "revenue" },
+  { header: "Team Size", accessor: "teamSize" },
   {
-    header: 'Last Update',
-    accessor: 'date',
+    header: "Last Update",
+    accessor: "date",
   },
 ];
 const overviewCards = [
   {
     id: 1,
     icon: CIcons.walletMoney,
-    label: 'Total Amount Invested',
-    amount: 15200000,
-    currency: 'NGN',
-    percentage: 20,
-    direction: 'up',
+    label: "Total Amount Invested",
+    amount: 0,
+    currency: "NGN",
+    percentage: 0,
+    direction: "up",
   },
   {
     id: 3,
     icon: CIcons.stickyNote,
-    label: 'Total Investments',
-    amount: 152,
+    label: "Total Investments",
+    amount: 0,
   },
   {
     id: 2,
     icon: CIcons.profile2,
-    label: 'Active Investment',
-    amount: 8,
+    label: "Active Investment",
+    amount: 0,
   },
 ];
 function page({}: Props) {
@@ -185,7 +86,7 @@ function page({}: Props) {
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
-                    (card.direction === 'up' ? (
+                    (card.direction === "up" ? (
                       <span className="text-sm text-success-100 font-bold">
                         {card.percentage}%
                       </span>

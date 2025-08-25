@@ -34,6 +34,7 @@ const AssessmentReadiness = ({
     addSection,
     removeSection,
     handleNext,
+    handleSkip,
     handleBack,
     getSectionStatus,
     handleCurrencyAmountChange,
@@ -53,12 +54,12 @@ const AssessmentReadiness = ({
     const error = errors[fieldId];
 
     // Dynamic keys from question config
-    const categoryKey = currentQuestionData.categoryKey || 'category';
-    const amountKey = currentQuestionData.amountKey || 'amount';
-    const dueDateKey = currentQuestionData.categoryDueDateKey;
+    const categoryKey = currentQuestionData?.categoryKey || 'category';
+    const amountKey = currentQuestionData?.amountKey || 'amount';
+    const dueDateKey = currentQuestionData?.categoryDueDateKey;
 
     // Initialize with at least 2 sections if none exist
-    if (currentSections.length === 0) {
+    if (currentSections?.length === 0) {
       const initialSections: Section[] = [
         {
           id: 1,
@@ -84,8 +85,8 @@ const AssessmentReadiness = ({
 
     return (
       <div className="space-y-4">
-        {currentSections.map((section, index) => (
-          <div key={section.id} className="grid grid-cols-2 gap-4">
+        {currentSections?.map((section, index) => (
+          <div key={section?.id} className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
                 {categoryKey}
@@ -94,7 +95,7 @@ const AssessmentReadiness = ({
                 type="text"
                 value={section[categoryKey] || ''}
                 onChange={(e) =>
-                  handleSectionChange(section.id, categoryKey, e.target.value)
+                  handleSectionChange(section?.id, categoryKey, e.target.value)
                 }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder={`Enter ${categoryKey}`}
@@ -109,15 +110,15 @@ const AssessmentReadiness = ({
                   type="number"
                   value={section[amountKey] || ''}
                   onChange={(e) =>
-                    handleSectionChange(section.id, amountKey, e.target.value)
+                    handleSectionChange(section?.id, amountKey, e.target.value)
                   }
                   className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder={`Enter ${amountKey}`}
                 />
                 <select
-                  value={section.currency}
+                  value={section?.currency}
                   onChange={(e) =>
-                    handleSectionChange(section.id, 'currency', e.target.value)
+                    handleSectionChange(section?.id, 'currency', e.target.value)
                   }
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-none text-sm font-medium text-gray-600 focus:outline-none cursor-pointer"
                 >
@@ -127,10 +128,10 @@ const AssessmentReadiness = ({
                   <option value="GBP">GBP</option>
                 </select>
               </div>
-              {currentSections.length > 2 && (
+              {currentSections?.length > 2 && (
                 <button
                   type="button"
-                  onClick={() => removeSection(section.id)}
+                  onClick={() => removeSection(section?.id)}
                   className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
                 >
                   <Trash2 size={12} />
@@ -146,7 +147,7 @@ const AssessmentReadiness = ({
                   type="date"
                   value={section[dueDateKey] || ''}
                   onChange={(e) =>
-                    handleSectionChange(section.id, dueDateKey, e.target.value)
+                    handleSectionChange(section?.id, dueDateKey, e.target.value)
                   }
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder={`Enter ${dueDateKey}`}
@@ -175,11 +176,11 @@ const AssessmentReadiness = ({
     const value = formData[fieldId] || '';
     const error = errors[fieldId];
 
-    if (currentQuestionData.hasSections) {
+    if (currentQuestionData?.hasSections) {
       return renderSectionedInput();
     }
 
-    if (currentQuestionData.id === 'trade_involvement') {
+    if (currentQuestionData?.id === 'trade_involvement') {
       const fieldId = `${currentSection}-${currentQuestion}`;
       const selectedRegions = formData[fieldId] || [];
       const error = errors[fieldId];
@@ -187,8 +188,8 @@ const AssessmentReadiness = ({
       function handleRegionToggle(region: string) {
         setFormData((prev) => {
           const prevRegions = prev[fieldId] || [];
-          const newRegions = prevRegions.includes(region)
-            ? prevRegions.filter((r: string) => r !== region)
+          const newRegions = prevRegions?.includes(region)
+            ? prevRegions?.filter((r: string) => r !== region)
             : [...prevRegions, region];
           return {
             ...prev,
@@ -202,7 +203,7 @@ const AssessmentReadiness = ({
           <div>
             <div className="mb-2 font-medium">Select any that apply:</div>
             <div className="flex gap-3 flex-wrap">
-              {currentQuestionData.options?.map((region) => (
+              {currentQuestionData?.options?.map((region) => (
                 <button
                   key={region}
                   type="button"
@@ -224,11 +225,11 @@ const AssessmentReadiness = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {currentQuestionData.uploads?.map((upload: any) => (
-              <div key={upload.key}>
+            {currentQuestionData?.uploads?.map((upload: any) => (
+              <div key={upload?.key}>
                 <div className="mb-2 font-medium flex items-center gap-2">
-                  Upload {upload.label}
-                  {uploading[upload.key] && (
+                  Upload {upload?.label}
+                  {uploading[upload?.key] && (
                     <span className="ml-2 text-xs text-gray-500 animate-pulse">
                       Uploading...
                     </span>
@@ -249,7 +250,7 @@ const AssessmentReadiness = ({
                     onChange={async (e) => {
                       const file = e.target.files ? e.target.files[0] : null;
                       if (!file) return;
-                      await handleFileUpload(file, upload.key);
+                      await handleFileUpload(file, upload?.key);
                     }}
                   />
                 </label>
@@ -257,10 +258,10 @@ const AssessmentReadiness = ({
                 {(() => {
                   const uploadArr =
                     formData[
-                      `${currentSection}-${currentQuestion}-uploads-${upload.key}`
+                      `${currentSection}-${currentQuestion}-uploads-${upload?.key}`
                     ];
-                  if (Array.isArray(uploadArr) && uploadArr.length > 0) {
-                    const fileObj = uploadArr[uploadArr.length - 1];
+                  if (Array.isArray(uploadArr) && uploadArr?.length > 0) {
+                    const fileObj = uploadArr[uploadArr?.length - 1];
                     if (fileObj?.display_name) {
                       return (
                         <div className="text-xs text-green-700 mt-2">
@@ -271,14 +272,14 @@ const AssessmentReadiness = ({
                       // fallback to url if display_name is not present
                       return (
                         <div className="text-xs text-green-700 mt-2">
-                          Uploaded: {fileObj.url.split('/').pop()}
+                          Uploaded: {fileObj?.url?.split('/').pop()}
                         </div>
                       );
                     }
                   }
                   return null;
                 })()}
-                <p className="text-xs text-gray-400 mt-2">{upload.formats}</p>
+                <p className="text-xs text-gray-400 mt-2">{upload?.formats}</p>
               </div>
             ))}
           </div>
@@ -287,7 +288,7 @@ const AssessmentReadiness = ({
     }
 
     // --- Two-column layout for isTwoColumn questions ---
-    if (currentQuestionData.isTwoColumn) {
+    if (currentQuestionData?.isTwoColumn) {
       const fieldId = `${currentSection}-${currentQuestion}`;
       const value = formData[fieldId] || { col1: '', col2: '' };
       const error = errors[fieldId];
@@ -309,16 +310,16 @@ const AssessmentReadiness = ({
               htmlFor={`${fieldId}-col1`}
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              {currentQuestionData.col1Label || 'Full-time'}
+              {currentQuestionData?.col1Label || 'Full-time'}
             </label>
             <input
               id={`${fieldId}-col1`}
               type="number"
-              value={value.col1 || ''}
+              value={value?.col1 || ''}
               onChange={(e) => handleColChange('col1', e.target.value)}
               placeholder="eg. 2"
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              aria-label={currentQuestionData.col1Label || 'Full-time'}
+              aria-label={currentQuestionData?.col1Label || 'Full-time'}
             />
           </div>
           <div>
@@ -326,16 +327,16 @@ const AssessmentReadiness = ({
               htmlFor={`${fieldId}-col2`}
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              {currentQuestionData.col2Label || 'Part-time'}
+              {currentQuestionData?.col2Label || 'Part-time'}
             </label>
             <input
               id={`${fieldId}-col2`}
               type="number"
-              value={value.col2 || ''}
+              value={value?.col2 || ''}
               onChange={(e) => handleColChange('col2', e.target.value)}
               placeholder="eg. 2"
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              aria-label={currentQuestionData.col2Label || 'Part-time'}
+              aria-label={currentQuestionData?.col2Label || 'Part-time'}
             />
           </div>
           {error && (
@@ -345,7 +346,7 @@ const AssessmentReadiness = ({
       );
     }
 
-    switch (currentQuestionData.type) {
+    switch (currentQuestionData?.type) {
       case 'select':
         return (
           <div className="space-y-2">
@@ -357,7 +358,7 @@ const AssessmentReadiness = ({
               }`}
             >
               <option value="">Select an option</option>
-              {currentQuestionData.options?.map((option) => (
+              {currentQuestionData?.options?.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
@@ -373,7 +374,7 @@ const AssessmentReadiness = ({
             <textarea
               value={value}
               onChange={(e) => handleInputChange(e.target.value)}
-              placeholder={currentQuestionData.placeholder || ''}
+              placeholder={currentQuestionData?.placeholder || ''}
               className={`w-full p-3 border rounded-lg h-32 resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${
                 error ? 'border-red-500' : 'border-gray-300'
               }`}
@@ -385,7 +386,7 @@ const AssessmentReadiness = ({
       case 'radio':
         return (
           <div className="space-y-3">
-            {currentQuestionData.options?.map((option) => (
+            {currentQuestionData?.options?.map((option) => (
               <label
                 key={option}
                 className="flex items-center space-x-3 cursor-pointer"
@@ -412,7 +413,7 @@ const AssessmentReadiness = ({
             <div className="relative">
               <input
                 type="number"
-                placeholder={currentQuestionData.placeholder || ''}
+                placeholder={currentQuestionData?.placeholder || ''}
                 value={amountValue}
                 onChange={(e) => handleCurrencyAmountChange(e.target.value)}
                 className={`w-full p-3 border rounded-lg focus:ring-0 focus:ring-green-500 focus:border-transparent ${
@@ -424,13 +425,13 @@ const AssessmentReadiness = ({
                 onChange={(e) => handleCurrencyTypeChange(e.target.value)}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 border-none text-sm font-medium text-gray-600 focus:outline-none cursor-pointer border-4 border-transparent bg-bg py-1"
               >
-                {currentQuestionData.options &&
-                  currentQuestionData.options?.map((option) => (
+                {currentQuestionData?.options &&
+                  currentQuestionData?.options?.map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
                   ))}
-                {!currentQuestionData.options && (
+                {!currentQuestionData?.options && (
                   <>
                     <option value="NGN">NGN</option>
                     <option value="USD">USD</option>
@@ -449,7 +450,7 @@ const AssessmentReadiness = ({
         return (
           <div className="space-y-2">
             <input
-              type={currentQuestionData.type === 'number' ? 'number' : 'text'}
+              type={currentQuestionData?.type === 'number' ? 'number' : 'text'}
               value={value}
               onChange={(e) => handleInputChange(e.target.value)}
               className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
@@ -468,10 +469,10 @@ const AssessmentReadiness = ({
     if (uploadKey) setUploading((prev) => ({ ...prev, [uploadKey]: true }));
     await handleImageUpload(file, (res: any) => {
       const fieldId = `${currentSection}-${currentQuestion}`;
-      const uploadName = currentQuestionData.uploadName;
+      const uploadName = currentQuestionData?.uploadName;
       // For trade_involvement (multi-upload)
       if (
-        (currentQuestionData.id === 'trade_involvement' &&
+        (currentQuestionData?.id === 'trade_involvement' &&
           uploadKey === 'export_license') ||
         uploadKey === 'regional_permit' ||
         uploadKey === 'trade_certifications'
@@ -481,7 +482,7 @@ const AssessmentReadiness = ({
             prev[`${currentSection}-${currentQuestion}-uploads-${uploadKey}`] ||
             [];
           // Remove any previous upload for this key
-          const filtered = prevUploads.filter((u: any) => u?.key !== uploadKey);
+          const filtered = prevUploads?.filter((u: any) => u?.key !== uploadKey);
           return {
             ...prev,
             [`${currentSection}-${currentQuestion}-uploads-${uploadKey}`]: [
@@ -528,7 +529,7 @@ const AssessmentReadiness = ({
                 Step {currentSection + 1} of 5
               </div>
               <h2 className="text-center text-green md:hidden">
-                {currentSectionData.name}
+                {currentSectionData?.name}
               </h2>
               <div className="flex justify-end md:ml-auto">
                 <button
@@ -550,16 +551,16 @@ const AssessmentReadiness = ({
                 />
 
                 <h1 className="text-2xl font-semibold text-gray-800 mb-8">
-                  {currentQuestion + 1}. {currentQuestionData.title}
+                  {currentQuestion + 1}. {currentQuestionData?.title}
                 </h1>
 
                 <div className="space-y-6">
                   {renderInput()}
 
-                  {currentQuestionData.hasUpload && (
+                  {currentQuestionData?.hasUpload && (
                     <div className="mb-4">
                       <p className="text-sm text-gray-700 mb-2">
-                        {currentQuestionData.uploadText}
+                        {currentQuestionData?.uploadText}
                       </p>
                       <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
                         <span className="flex items-center gap-2 text-gray-700">
@@ -567,7 +568,7 @@ const AssessmentReadiness = ({
                             <CIcons.uploadIcon />
                           </span>
                           {uploading[
-                            currentQuestionData.uploadName as string
+                            currentQuestionData?.uploadName as string
                           ] ? (
                             <span className="ml-2 text-xs text-gray-500 animate-pulse">
                               Uploading...
@@ -586,14 +587,14 @@ const AssessmentReadiness = ({
                             if (!file) return;
                             await handleFileUpload(
                               file,
-                              currentQuestionData.uploadName
+                              currentQuestionData?.uploadName
                             );
                           }}
                         />
                       </label>
                       {/* Show uploaded file name if present */}
                       {(() => {
-                        const uploadName = currentQuestionData.uploadName;
+                        const uploadName = currentQuestionData?.uploadName;
                         const fileNames =
                           formData[
                             `${currentSection}-${currentQuestion}-uploads-filename`
@@ -612,7 +613,7 @@ const AssessmentReadiness = ({
                         return null;
                       })()}
                       <p className="text-xs text-gray-400 mt-2">
-                        {currentQuestionData.uploadFormats}
+                        {currentQuestionData?.uploadFormats}
                       </p>
                     </div>
                   )}
@@ -624,6 +625,7 @@ const AssessmentReadiness = ({
                   currentQuestion={currentQuestion}
                   handleBack={handleBack}
                   handleNext={handleNext}
+                  handleSkip={handleSkip}
                   totalQuestions={totalQuestions}
                   sections={sections}
                   loading={

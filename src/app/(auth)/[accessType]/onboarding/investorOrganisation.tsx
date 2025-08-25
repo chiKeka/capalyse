@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { investorOrg } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -31,7 +31,7 @@ type InvestmentPreferenceormProps = {
 
 const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
   (props, ref) => {
-    const { investor_org_info } = useAuth();
+    const { investor_org_info } = updateProfile();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
     const {
@@ -143,6 +143,16 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
             label="Website"
             placeholder="wwww.us.com"
             {...register("website", {
+              setValueAs: (v) => {
+                if (!v) return v;
+                const value = String(v).trim();
+                return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+              },
+              pattern: {
+                value:
+                  /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
+                message: "Please enter a valid URL",
+              },
               required: "website is required",
             })}
             type="text"

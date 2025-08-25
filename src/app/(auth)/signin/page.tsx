@@ -1,25 +1,23 @@
-'use client';
-import AuthLayout from '@/components/layout/auth';
-import GetStarted from '@/components/layout/GetStarted';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import PasswordChecker from '@/components/ui/passwordChecker';
-import { useAuth } from '@/hooks/useAuth';
-import { authAtom } from '@/lib/atoms/atoms';
-import { routes } from '@/lib/routes';
-import { getKeyByValue, validateAuthForm } from '@/lib/uitils/fns';
-import { UserType } from '@/lib/utils';
-import { useSetAtom } from 'jotai';
-import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+"use client";
+import AuthLayout from "@/components/layout/auth";
+import GetStarted from "@/components/layout/GetStarted";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import PasswordChecker from "@/components/ui/passwordChecker";
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient, useSession } from "@/lib/auth-client";
+import { routes } from "@/lib/routes";
+import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
+import { onboardingSteps, UserType } from "@/lib/utils";
+import { useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "sonner";
 type Props = {};
 
 function page({}: Props) {
-  const { logninMutation } = useAuth();
-  const [form, setForm] = useState({ email: '', password: '', role: 'SME' });
+  const [form, setForm] = useState({ email: "", password: "", role: "SME" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
@@ -30,43 +28,98 @@ function page({}: Props) {
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: profileNextStep } = useGetProfileNextStep();
+  // console.log(profileNextStep);
+  const sessionData = useSession();
+  const isCompletedStep =
+    profileNextStep?.completedSteps?.length! <
+    onboardingSteps.find(
+      (step) => step.role === sessionData?.data?.user?.roles!
+    )?.steps?.length!;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) return;
-    logninMutation
-      .mutateAsync(form)
-      .then((res) => {
-        const { token, refreshToken: newRefreshToken, user } = res?.data?.data;
-        setAuth(user);
-        Cookies.set('access_token', token);
-        Cookies.set('refresh_token', newRefreshToken);
-        Cookies.set(
-          'token_exp',
-          Math.floor(Date.now() / 1000) + jwtDecode(token)?.exp!.toString()
-        );
-        localStorage.setItem('onBoardignData', JSON.stringify(res?.data));
-        console.log({ user });
-        if (user?.role === 'ADMIN') {
-          router.push(`/admin`);
-          return;
-        }
+    await authClient.signIn.email(
+      {
+        email: form.email,
+        password: form.password,
+      },
 
-        const rootRoute = getKeyByValue(UserType, user?.role);
-        console.log({ rootRoute });
-        if (rootRoute) {
-          if (user.profileCompletionStep <= 2) {
-            router.push(`/${rootRoute}/onboarding`);
-          } else {
-            router.push(
-              routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
-            );
-          }
-        }
-      })
-      .catch((err) => toast.error(err?.error));
+      {
+        onRequest: (ctx) => {
+          setIsLoading(true);
+        },
+        onSuccess: (ctx) => {
+          console.log({ ctx });
+          authClient.getSession().then((ctx) => {
+            const { data } = ctx;
+            console.log(data);
+            setAuth(data?.user as any);
+            if (!data?.user?.emailVerified) {
+              authClient.emailOtp.sendVerificationOtp({
+                email: form?.email,
+                type: "email-verification",
+              });
+              router.push(`/verify?email=${data?.user?.email}`);
+              return;
+            }
+            if (data?.user?.roles === "ADMIN") {
+              router.push(`/admin`);
+              return;
+            }
+
+            const rootRoute = getKeyByValue(UserType, data?.user?.roles);
+            if (rootRoute) {
+              if (isCompletedStep) {
+                router.push(`/${rootRoute}/onboarding`);
+              } else {
+                router.push(
+                  routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
+                    ?.root
+                );
+              }
+            }
+          });
+          setIsLoading(false);
+          toast.success("Sign in successful");
+        },
+        onError: (ctx) => {
+          console.log({ ctx });
+          setIsLoading(false);
+          toast.error(ctx.error.message);
+        },
+      }
+    );
+    // .then((res) => {
+    //   console.log({ res });
+
+    // if (!res?.emailVerified) {
+    //   resend_otp.mutateAsync({ email: form?.email });
+    //   router.push(`/verify?email=${user?.email}`);
+    //   return;
+    // }
+    //   // if (user?.role === "ADMIN") {
+    //   //   router.push(`/admin`);
+    //   //   return;
+    //   // }
+
+    //   // const rootRoute = getKeyByValue(UserType, user?.role);
+    //   // console.log({ rootRoute });
+    //   // if (rootRoute) {
+    //   //   if (user.profileCompletionStep <= 2) {
+    //   //     router.push(`/${rootRoute}/onboarding`);
+    //   //   } else {
+    //   //     router.push(
+    //   //       routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
+    //   //     );
+    //   //   }
+    //   // }
+    // })
+    // .catch((err) => toast.error(err?.error));
   };
 
   return (
@@ -101,13 +154,25 @@ function page({}: Props) {
               {errors.password}
             </div>
           )}
+
+          <div className="mb-12">
+            Forgot password?{" "}
+            <Button
+              onClick={() => router.push("/forgot_password")}
+              variant="tertiary"
+              size="small"
+              className="text-green hover:bg-transparent"
+            >
+              Reset password
+            </Button>
+          </div>
           <Button
-            disabled={logninMutation?.isPending}
+            disabled={isLoading}
             type="submit"
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={logninMutation?.isPending ? 'loading' : 'default'}
+            state={isLoading ? "loading" : "default"}
           >
             Sign in
           </Button>
