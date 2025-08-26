@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Input from "@/components/ui/Inputs";
-import { updateProfile } from "@/hooks/useUpdateProfile";
-import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { PersonalInfoInputs } from "@/lib/uitils/types";
-import { useAtomValue, useSetAtom } from "jotai";
+import Input from '@/components/ui/Inputs';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { PersonalInfoInputs } from '@/lib/uitils/types';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   Dispatch,
   forwardRef,
@@ -12,11 +12,11 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import { CountrySelect, StateSelect } from "react-country-state-city";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from 'react';
+import { CountrySelect, StateSelect } from 'react-country-state-city';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 type PersonalInformationFormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
@@ -26,6 +26,8 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
     const auth: any = useAtomValue(authAtom);
     const { personal_information } = updateProfile();
     const setStep = useSetAtom(onboardingStepAtom);
+    console.log({ auth });
+    const names = auth?.name?.split?.(' ');
     const {
       register,
       handleSubmit,
@@ -34,9 +36,9 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       formState: { errors },
     } = useForm<PersonalInfoInputs>({
       defaultValues: {
-        firstName: "",
-        lastName: "",
-        email: auth?.email ?? "",
+        firstName: names?.[0] ?? '',
+        lastName: names?.[names?.length - 1] ?? '',
+        email: auth?.email ?? '',
       },
     });
 
@@ -72,9 +74,9 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
         .catch((err) => toast.error(err?.message));
     };
 
-    const [selectedCountryId, setSelectedCountryId] = useState("");
-    const [selectedCountryName, setSelectedCountryName] = useState("");
-    const [selectedStateName, setSelectedStateName] = useState("");
+    const [selectedCountryId, setSelectedCountryId] = useState('');
+    const [selectedCountryName, setSelectedCountryName] = useState('');
+    const [selectedStateName, setSelectedStateName] = useState('');
 
     return (
       <form
@@ -85,7 +87,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
           <Input
             label="First Name*"
             placeholder="Jane"
-            {...register("firstName", { required: "First name is required" })}
+            {...register('firstName', { required: 'First name is required' })}
             type="text"
             name="firstName"
           />
@@ -99,7 +101,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
           <Input
             label="Last Name*"
             placeholder="Earnest"
-            {...register("lastName", { required: "Last name is required" })}
+            {...register('lastName', { required: 'Last name is required' })}
             type="text"
             name="lastName"
           />
@@ -113,8 +115,8 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
           <Input
             label="Phone Number*"
             placeholder="(+234) 8164763794"
-            {...register("phoneNumber", {
-              required: "Phone Number is required",
+            {...register('phoneNumber', {
+              required: 'Phone Number is required',
             })}
             type="phone"
             name="phoneNumber"
@@ -129,7 +131,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
           <Input
             label="Email Address*"
             placeholder="Janeearnest@gmail.com"
-            {...register("email", { required: "Email is required" })}
+            {...register('email', { required: 'Email is required' })}
             type="email"
             name="email"
             readOnly={true}
@@ -152,20 +154,20 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
               console.log({ country });
               if (
                 country &&
-                typeof country === "object" &&
-                "id" in country &&
-                "name" in country
+                typeof country === 'object' &&
+                'id' in country &&
+                'name' in country
               ) {
                 setSelectedCountryId(country.id); // for StateSelect
                 setSelectedCountryName(country.name); // for display
-                setValue("countryOfResidence", country.name); // for form
-                setSelectedStateName("");
-                setValue("stateOfResidence", "");
+                setValue('countryOfResidence', country.name); // for form
+                setSelectedStateName('');
+                setValue('stateOfResidence', '');
               }
             }}
             defaultValue={getValues()?.countryOfResidence as any}
             onTextChange={(_txt) =>
-              setValue("countryOfResidence", _txt.target.value)
+              setValue('countryOfResidence', _txt.target.value)
             }
           />
           {errors.countryOfResidence && (
@@ -185,9 +187,9 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
             value={selectedStateName}
             inputClassName="w-full px-4 py-2 focus:!border-none focus:!ring-0 !border-none"
             onChange={(state: any) => {
-              if (state && typeof state === "object" && "name" in state) {
+              if (state && typeof state === 'object' && 'name' in state) {
                 setSelectedStateName(state.name);
-                setValue("stateOfResidence", state.name);
+                setValue('stateOfResidence', state.name);
               }
             }}
           />
