@@ -2,7 +2,6 @@ import Button from '@/components/ui/Button';
 import CircularScoreBar from '@/components/ui/CircularScoreBar';
 import { ReadinessScoreData } from '@/lib/uitils/types';
 import AssessmentReadiness from '../AssessmentReadiness';
-// import AssessmentReadiness from '../ReadinessAssessment';
 import { useState } from 'react';
 
 type Props = {

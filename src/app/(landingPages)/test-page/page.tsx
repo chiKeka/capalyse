@@ -1,7 +1,6 @@
 'use client';
 
 import AssessmentReadiness from '@/components/sections/AssessmentReadiness';
-// import AssessmentReadiness from '@/components/sections/ReadinessAssessment';
 import Button from '@/components/ui/Button';
 import { useState } from 'react';
 

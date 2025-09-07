@@ -1,7 +1,6 @@
 'use client';
 
 import AuthLayout from '@/components/layout/auth';
-// import AssessmentReadiness from "@/components/sections/ReadinessAssessment";
 import Button from '@/components/ui/Button';
 import {
   Dialog,
