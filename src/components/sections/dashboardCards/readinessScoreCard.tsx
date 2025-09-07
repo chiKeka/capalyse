@@ -1,7 +1,8 @@
 import Button from '@/components/ui/Button';
 import CircularScoreBar from '@/components/ui/CircularScoreBar';
 import { ReadinessScoreData } from '@/lib/uitils/types';
-import AssessmentReadiness from '../ReadinessAssessment';
+import AssessmentReadiness from '../AssessmentReadiness';
+// import AssessmentReadiness from '../ReadinessAssessment';
 import { useState } from 'react';
 
 type Props = {
@@ -22,10 +23,10 @@ function ReadinessScoreCard({
   extraContent,
 }: Props) {
   const [open, setOpen] = useState(false);
-  
+
   // Use readinessData overall score if available, otherwise fall back to scoreValue
   const displayScore = readinessData?.scores?.overall ?? scoreValue ?? 0;
-  
+
   return (
     <div className="border-1 p-[3%] border-[#E8E8E8] flex flex-col rounded-md lg:min-w-[276px] w-full min-h-[356px]">
       <p className="font-bold text-base">{textContent}</p>
@@ -38,11 +39,15 @@ function ReadinessScoreCard({
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
               </div>
             ) : (
-              <CircularScoreBar value={displayScore} size={180} strokeWidth={10} />
+              <CircularScoreBar
+                value={displayScore}
+                size={180}
+                strokeWidth={10}
+              />
             )}
           </div>
         )}
-        
+
         {/* {readinessData && (
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
@@ -53,7 +58,7 @@ function ReadinessScoreCard({
             </p>
           </div>
         )} */}
-        
+
         {showAssessment && (
           <>
             <div className="w-full flex items-center justify-center mt-auto">

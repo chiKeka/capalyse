@@ -1,16 +1,16 @@
-"use client";
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import LearningCard from "@/components/sections/dashboardCards/learningCard";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import Programs from "@/components/sections/dashboardCards/programs";
-import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
-import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
-import { useGetReadinessScore } from "@/hooks/useReadiness";
-import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
-import { useParams, useRouter } from "next/navigation";
+'use client';
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import LearningCard from '@/components/sections/dashboardCards/learningCard';
+import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
+import Programs from '@/components/sections/dashboardCards/programs';
+import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
+import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
+import { getCurrentProfile } from '@/hooks/useUpdateProfile';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
+import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
+import { useParams, useRouter } from 'next/navigation';
 
 export default function SmeDashBoard() {
   const params = useParams();
@@ -22,7 +22,7 @@ export default function SmeDashBoard() {
   // Fetch readiness score data
   const { data: readinessScore, isLoading: isReadinessLoading } =
     useGetReadinessScore();
-
+  console.log({ assessmentsProgress });
   const learningCards: any[] = [];
   const programs: any[] = [];
   // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
@@ -37,12 +37,12 @@ export default function SmeDashBoard() {
   );
 
   const label =
-    nextSectionName !== undefined ? `Finish ${nextSectionName}` : "Completed";
+    nextSectionName !== undefined ? `Finish ${nextSectionName}` : 'Completed';
 
   const renderFinanceStatus = () => {
     const values = Object.values(sectionCompletion);
 
-    if (values.length === 0) return "";
+    if (values.length === 0) return '';
 
     const allTrue = values.every((v) => v === true);
     const allFalse = values.every((v) => v === false);
@@ -53,23 +53,23 @@ export default function SmeDashBoard() {
   };
   const checklist = [
     {
-      icon: "/icons/profile.svg",
-      label: "Complete profile",
+      icon: '/icons/profile.svg',
+      label: 'Complete profile',
       status: user?.completionPercentage || undefined,
     },
     {
-      icon: "/icons/presentation.svg",
-      label: "Start Readiness Assessment",
+      icon: '/icons/presentation.svg',
+      label: 'Start Readiness Assessment',
       status: assessmentsProgress?.overallCompletionPercentage || undefined,
     },
     {
-      icon: "/icons/money_out.svg",
+      icon: '/icons/money_out.svg',
       label: label,
       status: renderFinanceStatus() || undefined,
     },
     {
-      icon: "/icons/status_up.svg",
-      label: "Explore investor matches",
+      icon: '/icons/status_up.svg',
+      label: 'Explore investor matches',
       status: undefined,
     },
   ];
@@ -86,9 +86,9 @@ export default function SmeDashBoard() {
         showProgress={true}
         showButton={true}
         buttonProps={{
-          className: "max-w-max !border-black-50 !text-black-400",
-          variant: "secondary",
-          iconPosition: "right",
+          className: 'max-w-max !border-black-50 !text-black-400',
+          variant: 'secondary',
+          iconPosition: 'right',
         }}
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
@@ -116,7 +116,7 @@ export default function SmeDashBoard() {
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
           <DashboardCardLayout
-            icon={"/images/bulb.svg"}
+            icon={'/images/bulb.svg'}
             caption="Quick Tip"
             height="h-full"
           >
@@ -126,7 +126,7 @@ export default function SmeDashBoard() {
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
-            icon={"/icons/warning.svg"}
+            icon={'/icons/warning.svg'}
             caption="Compliance Flag"
             height="h-full"
           >
@@ -165,23 +165,21 @@ export default function SmeDashBoard() {
             <div className="mb-2">
               <EmptyBox
                 caption2={
-                  assessmentsProgress?.overallCompletionPercentage >= 0 &&
-                  assessmentsProgress?.overallCompletionPercentage < 100
+                  assessmentsProgress?.completionPercentage >= 0 &&
+                  assessmentsProgress?.completionPercentage < 100
                     ? `Your about ${
-                        assessmentsProgress?.overallCompletionPercentage ?? 0
+                        assessmentsProgress?.completionPercentage ?? 0
                       }% done with your Investment readiness assement, click the button below to continue`
-                    : assessmentsProgress?.overallCompletionPercentage === 100
-                    ? "Assessment Complete awaiting investor matches"
-                    : ""
+                    : assessmentsProgress?.isComplete
+                    ? 'Assessment Complete awaiting investor matches'
+                    : ''
                 }
                 buttonText={
-                  assessmentsProgress?.overallCompletionPercentage > 0
-                    ? "Complete Assessment"
-                    : "Start Assessment"
+                  assessmentsProgress?.completionPercentage > 0
+                    ? 'Complete Assessment'
+                    : 'Start Assessment'
                 }
-                showButton={
-                  assessmentsProgress?.overallCompletionPercentage < 100
-                }
+                showButton={assessmentsProgress?.completionPercentage < 100}
               />
             </div>
           </DashboardCardLayout>

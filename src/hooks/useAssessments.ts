@@ -2,7 +2,7 @@ import api from '@/api/axios';
 import { ApiEndPoints } from '@/api/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export const useSmeAssessmentMutations = () => {
+export const useAssessmentMutations = () => {
   const updateSmeFinancialAssessment = useMutation({
     mutationFn: async (data: Record<string, any>): Promise<any> => {
       return api.post(ApiEndPoints.SMEs_Assessments('financial'), data);
@@ -55,8 +55,10 @@ export const useGetSmeAssesmentsProgress = (enabled?: boolean) => {
     queryKey: ['sme_assessment_progress'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.SMEs_Assessments('status'));
-      return resp.data;
+      return resp.data.data;
     },
     enabled,
   });
 };
+
+// export const useGetS

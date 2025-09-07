@@ -1,6 +1,7 @@
 import Button from '@/components/ui/Button';
 import { useState } from 'react';
-import AssessmentReadiness from '../ReadinessAssessment';
+import AssessmentReadiness from '../AssessmentReadiness';
+// import AssessmentReadiness from '../ReadinessAssessment';
 
 type Props = {
   caption?: string;
