@@ -14,17 +14,16 @@ import { ReusableTable } from "@/components/ui/table";
 import { useSmeMatches } from "@/hooks/useInvesmentInterest";
 import Image from "next/image";
 import { useState } from "react";
-type Props = {};
 
 // Example data
 const investors: any = [];
 
 // Table columns
 
-function InvestorsPage({}: Props) {
+function InvestorsPage() {
   const [open, setOpen] = useState(false);
   const { data: user, isLoading, error } = useSmeMatches();
-  console.log({ user });
+
   const columns = [
     {
       header: "Name",
@@ -68,7 +67,7 @@ function InvestorsPage({}: Props) {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Investor Matches
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {user?.data?.length}
+              {user?.items?.length}
             </span>
           </p>
         </div>
@@ -97,7 +96,7 @@ function InvestorsPage({}: Props) {
         </div>
       </div>
 
-      <ReusableTable columns={columns} data={user?.data} />
+      <ReusableTable columns={columns} data={user?.items} />
       <ProfileSheet open={open} onOpenChange={setOpen} />
     </div>
   );
