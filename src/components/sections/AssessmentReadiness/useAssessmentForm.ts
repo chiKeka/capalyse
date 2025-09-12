@@ -40,7 +40,6 @@ export function useAssessmentForm(
   const { useGetDocuments } = useDocument();
   const { data: myResponses } = useGetMyResponses();
   const { data: documents } = useGetDocuments();
-  console.log({ myResponses, documents });
 
   // Get categories
   const { data: categoryData, isLoading: categoriesLoading } =
@@ -80,7 +79,6 @@ export function useAssessmentForm(
       };
     });
   }, [categoryData, questionsQueries, categories]);
-  console.log({ categories, sections });
   // Current section and question data
   const currentSectionData = useMemo(
     () => sections[currentSection],
@@ -92,12 +90,6 @@ export function useAssessmentForm(
   );
   const totalQuestions = useMemo(() => {
     const total = currentSectionData?.questions?.length || 0;
-    console.log('Calculating totalQuestions:', {
-      currentSection,
-      currentSectionData: currentSectionData?.name,
-      questionsLength: currentSectionData?.questions?.length,
-      total,
-    });
     return total;
   }, [currentSectionData, currentSection]);
 
@@ -303,7 +295,6 @@ export function useAssessmentForm(
   useEffect(() => {
     if (!myResponses || !sections.length || hasPrefilled.current) return;
 
-    console.log('Prefilling form with responses:', myResponses);
     const newFormData: Record<string, any> = {};
     const newSectionedData: Record<string, Section[]> = {};
 
@@ -352,22 +343,12 @@ export function useAssessmentForm(
 
                 case 'file':
                   // Create comprehensive document objects with all available data from API
-                  console.log(
-                    'Processing file answer:',
-                    answer,
-                    'Available documents:',
-                    documents
-                  );
+
                   const documentObjects =
                     answer.documentIds?.map((docId: string) => {
                       // Find the document in the documents list to get all available data
                       const document = documents?.find(
                         (doc) => doc._id === docId
-                      );
-
-                      console.log(
-                        `Looking for document ${docId}, found:`,
-                        document
                       );
 
                       if (document) {
@@ -382,7 +363,6 @@ export function useAssessmentForm(
                           updatedAt: document.updatedAt,
                           userId: document.userId,
                         };
-                        console.log('Created document object:', docObject);
                         return docObject;
                       } else {
                         // Fallback if document not found in API
@@ -396,10 +376,7 @@ export function useAssessmentForm(
                           updatedAt: new Date().toISOString(),
                           userId: auth?.id || '',
                         };
-                        console.log(
-                          'Created fallback document object:',
-                          fallbackObject
-                        );
+
                         return fallbackObject;
                       }
                     }) || [];
@@ -428,9 +405,6 @@ export function useAssessmentForm(
       });
     });
 
-    // Update form data and sectioned data
-    console.log('Prefilled form data:', newFormData);
-    console.log('Prefilled sectioned data:', newSectionedData);
     setFormData(newFormData);
     setSectionedData(newSectionedData);
     hasPrefilled.current = true;
@@ -521,7 +495,6 @@ export function useAssessmentForm(
     const fieldId = `${currentSection}-${currentQuestion}`;
     const value = formData[fieldId] || {};
     const question = currentQuestionData;
-    console.log({ value, question, fieldId });
     // Check if question is required and validate each answer type
     if (question?.required && question?.answerType) {
       const answerTypes = Array.isArray(question.answerType)
@@ -533,10 +506,6 @@ export function useAssessmentForm(
       answerTypes.forEach((answerType, index) => {
         if (answerType.required) {
           const fieldValue = value[index];
-          console.log(
-            `Validating ${answerType.type} at index ${index}:`,
-            fieldValue
-          );
 
           if (
             !fieldValue ||
@@ -559,10 +528,6 @@ export function useAssessmentForm(
               `Validation failed for ${answerType.type} at index ${index}`
             );
             hasError = true;
-          } else {
-            console.log(
-              `Validation passed for ${answerType.type} at index ${index}`
-            );
           }
         }
       });
@@ -598,25 +563,15 @@ export function useAssessmentForm(
 
           answerTypes.forEach((answerType, index) => {
             const fieldValue = value[index];
-            console.log({
-              answerType,
-              index,
-              value,
-              fieldValue,
-            });
+
             if (fieldValue) {
               let answerValue: any;
               let documentIds: string[] = [];
-              console.log({ fieldValue });
               switch (answerType.type) {
                 case 'money':
                   answerValue = fieldValue.value;
                   break;
                 case 'file':
-                  console.log(
-                    'Processing file submission, fieldValue:',
-                    fieldValue
-                  );
                   // Handle both prefilled data structure and new submissions
                   if (
                     fieldValue.documentIds &&
@@ -625,32 +580,14 @@ export function useAssessmentForm(
                     // Prefilled data structure: use documentIds array
                     documentIds = fieldValue.documentIds;
                     answerValue = fieldValue.documentIds[0]; // Use first document ID as primary value
-                    console.log(
-                      'Using documentIds array:',
-                      documentIds,
-                      'answerValue:',
-                      answerValue
-                    );
                   } else if (fieldValue.documentId) {
                     // Legacy structure: single documentId
                     documentIds = [fieldValue.documentId];
                     answerValue = fieldValue.documentId;
-                    console.log(
-                      'Using single documentId:',
-                      documentIds,
-                      'answerValue:',
-                      answerValue
-                    );
                   } else if (fieldValue.filename) {
                     // Another legacy structure: filename as document ID
                     documentIds = [fieldValue.filename];
                     answerValue = fieldValue.filename;
-                    console.log(
-                      'Using filename as documentId:',
-                      documentIds,
-                      'answerValue:',
-                      answerValue
-                    );
                   } else if (
                     fieldValue.value &&
                     Array.isArray(fieldValue.value)
@@ -658,22 +595,10 @@ export function useAssessmentForm(
                     // Prefilled document objects structure
                     documentIds = fieldValue.value.map((doc: any) => doc.id);
                     answerValue = documentIds[0] || '';
-                    console.log(
-                      'Using document objects array:',
-                      documentIds,
-                      'answerValue:',
-                      answerValue
-                    );
                   } else {
                     // Fallback
                     answerValue = fieldValue.value || '';
                     documentIds = [];
-                    console.log(
-                      'Using fallback:',
-                      answerValue,
-                      'documentIds:',
-                      documentIds
-                    );
                   }
                   break;
                 case 'items':
@@ -690,7 +615,6 @@ export function useAssessmentForm(
                   break;
               }
 
-              console.log({ answerValue, documentIds, fieldValue });
               answers.push({
                 type: answerType.type,
                 value: answerValue,
@@ -743,7 +667,6 @@ export function useAssessmentForm(
     sections.length,
     submitMutation,
   ]);
-  console.log({ currentSection, currentQuestion, totalQuestions, sections });
 
   const handleBack = useCallback(() => {
     if (currentQuestion > 0) {
@@ -756,7 +679,6 @@ export function useAssessmentForm(
   }, [currentSection, currentQuestion, sections]);
 
   const handleSkip = useCallback(() => {
-    console.log({ currentQuestion, totalQuestions, sections });
     if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else if (currentSection < sections.length - 1) {
@@ -764,7 +686,6 @@ export function useAssessmentForm(
       setCurrentQuestion(0);
     } else {
       // Assessment complete
-      console.log('Assessment completed!');
       if (pathname?.includes('onboarding')) {
         router.push('/sme');
         setIsOpen(false);
@@ -774,7 +695,6 @@ export function useAssessmentForm(
       }
     }
   }, [currentQuestion, totalQuestions, currentSection, sections.length]);
-  console.log({ totalQuestions });
 
   // Section change handler
   const handleSectionChangeDirect = useCallback((sectionIndex: number) => {
