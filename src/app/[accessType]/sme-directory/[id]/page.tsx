@@ -15,7 +15,8 @@ import { CIcons } from "@/components/ui/CIcons";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
-import { useGetSmeById } from "@/hooks/useAdmin";
+import { useGetSmeById } from "@/hooks/useDirectories";
+
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { ChevronRight, File } from "lucide-react";
 import Image from "next/image";
@@ -98,8 +99,6 @@ export default function SMEDirectoryPage({}: Props) {
   const { data: readinessData, isLoading: isReadinessLoading } =
     useGetReadinessScore();
 
-
-
   const [open, setOpen] = React.useState(false);
   const [selectedDoc, setSelectedDoc] = React.useState<
     (typeof documents)[0] | null
@@ -132,23 +131,23 @@ export default function SMEDirectoryPage({}: Props) {
       amount: smeData?.teamMembers?.length || 0,
     },
   ];
-    const checklist = [
-      {
-        value: 80,
-        label: "Strong foundation in place",
-        caption: "Foundational",
-      },
-      {
-        value: 60,
-        label: "Moderate financial stability",
-        caption: "Financial Health",
-      },
-      {
-        value: 45,
-        label: "Significant gaps in compliance",
-        caption: "Compliance",
-      },
-    ];
+  const checklist = [
+    {
+      value: 80,
+      label: "Strong foundation in place",
+      caption: "Foundational",
+    },
+    {
+      value: 60,
+      label: "Moderate financial stability",
+      caption: "Financial Health",
+    },
+    {
+      value: 45,
+      label: "Significant gaps in compliance",
+      caption: "Compliance",
+    },
+  ];
   return (
     <div className="w-full h-full gap-6 flex flex-col">
       <div>

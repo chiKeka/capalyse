@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/select";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
-import { useSmeMatches } from "@/hooks/useInvesmentInterest";
+import { useSmeMatches } from "@/hooks/useDirectories";
+
 import Image from "next/image";
 import { useState } from "react";
 
@@ -22,8 +23,15 @@ const investors: any = [];
 
 function InvestorsPage() {
   const [open, setOpen] = useState(false);
-  const { data: user, isLoading, error } = useSmeMatches();
-
+  const {
+    data: user,
+    isLoading,
+    error,
+  } = useSmeMatches({
+    page: 1,
+    limit: 20,
+  });
+  console.log(user);
   const columns = [
     {
       header: "Name",

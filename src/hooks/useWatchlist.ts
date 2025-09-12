@@ -1,5 +1,5 @@
 import api from "@/api/axios";
-import { ApiEndPoints } from "@/api/endpoints";
+import { ApiEndPoints, matchingRoutes } from "@/api/endpoints";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface WatchlistItem {
@@ -11,7 +11,7 @@ interface WatchlistItem {
 }
 
 interface AddToWatchlistData {
-  targetId: string;
+  smeId: string;
   targetType: "sme" | "investor";
 }
 
@@ -36,8 +36,11 @@ export const useAddToWatchlist = () => {
 
   return useMutation({
     mutationFn: async (data: AddToWatchlistData) => {
-      const response = await api.post(ApiEndPoints.Watchlist, data);
-      return response.data.data as WatchlistItem;
+      const response = await api.post(
+        matchingRoutes.watchList(data.smeId),
+        data
+      );
+      return response.data;
     },
     onSuccess: () => {
       // Invalidate and refetch watchlist
@@ -53,10 +56,8 @@ export const useRemoveFromWatchlist = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (targetId: string) => {
-      const response = await api.delete(
-        ApiEndPoints.Delete_Watchlist(targetId)
-      );
+    mutationFn: async (smeId: string) => {
+      const response = await api.delete(matchingRoutes.watchList(smeId));
       return response.data;
     },
     onSuccess: () => {
@@ -69,12 +70,11 @@ export const useRemoveFromWatchlist = () => {
 /**
  * Hook to check if a specific item is in watchlist
  */
-export const useIsInWatchlist = (targetId: string) => {
+export const useIsInWatchlist = (smeId: string) => {
   const { data: watchlist } = useWatchlist();
 
   return {
-    isInWatchlist:
-      watchlist?.some((item) => item.targetId === targetId) ?? false,
-    watchlistItem: watchlist?.find((item) => item.targetId === targetId),
+    isInWatchlist: watchlist?.some((item) => item.targetId === smeId) ?? false,
+    watchlistItem: watchlist?.find((item) => item.targetId === smeId),
   };
 };

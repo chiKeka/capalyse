@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import { ReusableTable } from "@/components/ui/table";
 import { useSmeDirectory } from "@/hooks/useDirectories";
-import { smes } from "@/lib/uitils/contentData";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -30,22 +29,20 @@ const columns = [
             className="rounded-full"
           />
         ) : null}
-        <span className="font-medium text-sm">
-          {row?.firstName + " " + row?.lastName}
-        </span>
+        <span className="font-medium text-sm">{row?.name}</span>
       </div>
     ),
   },
   { header: "Industry", accessor: "industry" },
-  { header: "Country", accessor: "countryOfResidence" },
+  { header: "Country", accessor: "location" },
   { header: "Readiness Score", accessor: "readinessScore" },
   { header: "Revenue", accessor: "revenue" },
-  { header: "Team Size", accessor: (row: any) => row.teamMembers.length },
+  { header: "Team Size", accessor: (row: any) => row.teamMembers?.length },
   {
     header: "Action",
     accessor: (row: any) => (
       <Link
-        href={`/investor/sme-directory/${row?._id}`}
+        href={`/investor/sme-directory/${row?.userId}`}
         className="text-green font-medium hover:underline"
       >
         View Profile
@@ -56,7 +53,8 @@ const columns = [
 ];
 
 const SMEDirectoryPage = () => {
-  const { data: smesd, isLoading } = useSmeDirectory();
+  const { data: smes, isLoading } = useSmeDirectory();
+  console.log(smes);
   // console.log({ smesd });
   return (
     <div>
@@ -66,7 +64,7 @@ const SMEDirectoryPage = () => {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Investment Ready Businesses
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {smes.length}
+              {smes?.items?.length}
             </span>
           </p>
         </div>
@@ -94,8 +92,8 @@ const SMEDirectoryPage = () => {
       </div>
       <ReusableTable
         columns={columns}
-        data={smesd?.data}
-        totalPages={Math.ceil(smes.length / 4)}
+        data={smes?.items}
+        totalPages={Math.ceil(smes?.items?.length / 4)}
       />
     </div>
   );

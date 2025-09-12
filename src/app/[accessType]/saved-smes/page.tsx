@@ -14,6 +14,14 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import Image from "next/image";
 
 // Example data
+
+
+const SMEDirectoryPage = () => {
+  const { data: watchlist } = useWatchlist();
+   console.log({ watchlist });
+
+
+
 const smes: any[] = [];
 
 const columns = [
@@ -50,10 +58,6 @@ const columns = [
   },
 ];
 
-const SMEDirectoryPage = () => {
-  const { data: watchlist } = useWatchlist();
-  console.log({ watchlist });
-  // const smes = watchlist?.map((item) => item.target);
   return (
     <div>
       {/* Filter Section */}
