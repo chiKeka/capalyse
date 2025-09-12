@@ -1,16 +1,20 @@
-import { Search } from 'lucide-react';
+import { Search } from "lucide-react";
 
-import { Label } from '@/components/ui/label';
-import { SidebarInput } from '@/components/ui/sidebar';
-import { cn } from '@/lib/uitils';
+import { Label } from "@/components/ui/label";
+import { SidebarInput } from "@/components/ui/sidebar";
+import { cn } from "@/lib/uitils";
 
 export function SearchForm({
   inputClassName,
   iconWrapperClassName,
+  value,
+  onChange,
   ...props
-}: React.ComponentProps<'form'> & {
+}: React.ComponentProps<"form"> & {
   inputClassName?: string;
   iconWrapperClassName?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
     <form {...props}>
@@ -21,11 +25,13 @@ export function SearchForm({
         <SidebarInput
           id="search"
           placeholder="Type to search..."
-          className={cn('min-h-8 pl-7', inputClassName)}
+          value={value}
+          onChange={onChange}
+          className={cn("min-h-8 pl-7", inputClassName)}
         />
         <div
           className={cn(
-            'absolute size-4 h-full w-7 top-0 rounded-l-md',
+            "absolute size-4 h-full w-7 top-0 rounded-l-md",
             iconWrapperClassName
           )}
         >

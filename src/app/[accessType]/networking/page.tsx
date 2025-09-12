@@ -4,7 +4,7 @@ import { CIcons } from "@/components/ui/CIcons";
 import { NetworkProfileSheet } from "@/components/ui/profileSheet";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
-import { useNetworking } from "@/hooks/networking";
+import { useSmeDirectory } from "@/hooks/useDirectories";
 import Image from "next/image";
 import { useState } from "react";
 interface NetworkingProfile {
@@ -19,8 +19,8 @@ interface NetworkingProfile {
 }
 
 function NetworkingPage() {
-  const { data } = useNetworking();
-  const networking = data?.data;
+  const { data } = useSmeDirectory();
+  const networking = data?.items;
   const [selectedProfile, setSelectedProfile] =
     useState<NetworkingProfile | null>(null);
 
@@ -28,7 +28,7 @@ function NetworkingPage() {
     console.log(profile);
     setSelectedProfile(profile);
   };
-
+  console.log({ networking });
   const handleCloseSheet = () => {
     setSelectedProfile(null);
   };
