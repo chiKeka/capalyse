@@ -13,53 +13,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGetResources } from "@/hooks/useResources";
-import { useParams, useRouter } from "next/navigation";
-
-interface LearningTrack {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  progress: number;
-}
-
-const learningTracks: LearningTrack[] = [
-  {
-    id: "1",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Business Strategy",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "2",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Financial Management",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "3",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Legal & Compliance",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "4",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Fundraising & Pitching",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-];
+import { useRouter } from "next/navigation";
 
 export default function ResourcesPage() {
   const router = useRouter();
-  const params = useParams();
-  const { data: resources } = useGetResources();
-  console.log(resources);
 
+  const { data: resources } = useGetResources({
+    page: 1,
+    limit: 10,
+    status: "",
+    sortBy: "",
+    sortOrder: "asc",
+    categoryId: "",
+    type: "",
+    difficulty: "",
+  });
+  console.log(resources);
   // Group resources by category
   const resourcesByCategory =
     resources?.categories?.reduce((acc: any, category: any) => {

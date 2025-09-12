@@ -1,6 +1,7 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -14,10 +15,13 @@ interface PersonalInfoData {
 type Props = {};
 
 function PersonalInfo({}: Props) {
+  const { data: details } = getCurrentProfile();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    reset,
   } = useForm<PersonalInfoData>({
     defaultValues: {
       firstName: "",
@@ -27,6 +31,19 @@ function PersonalInfo({}: Props) {
     },
   });
 
+  // Update form values when data is loaded
+  useEffect(() => {
+    if (details?.personalInfo) {
+      reset({
+        firstName: details.personalInfo.firstName || "",
+        lastName: details.personalInfo.lastName || "",
+        phoneNumber: details.personalInfo.phoneNumber || "",
+        email: details.personalInfo.email || "",
+      });
+    }
+  }, [details, reset]);
+
+ 
   const { personal_information } = updateProfile();
 
   const onSubmit = async (data: PersonalInfoData) => {

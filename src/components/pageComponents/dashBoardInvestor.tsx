@@ -2,6 +2,10 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import {
+  ProfileData,
+  useGetInvestorsAnalytics,
+} from "@/hooks/useProfileManagement";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { useGetResources } from "@/hooks/useResources";
 import { routes } from "@/lib/routes";
@@ -12,29 +16,6 @@ import ResourceCard from "../sections/dashboardCards/ResourceCard";
 import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
 
-const overviewCards = [
-  {
-    id: 1,
-    icon: CIcons.walletMoney,
-    label: "Total Amount Invested",
-    amount: 0,
-    currency: "NGN",
-    percentage: 0,
-    direction: "up",
-  },
-  {
-    id: 2,
-    icon: CIcons.profile2,
-    label: "Total Verified SMEs",
-    amount: 0,
-  },
-  {
-    id: 3,
-    icon: CIcons.profile2,
-    label: "Active SMEs",
-    amount: 0,
-  },
-];
 export default function InvestorDashBoard() {
   const router = useRouter();
   const params = useParams();
@@ -42,13 +23,38 @@ export default function InvestorDashBoard() {
   // Fetch readiness score data
   const { data: readinessData, isLoading: isReadinessLoading } =
     useGetReadinessScore();
-
+  const { data: user } = ProfileData();
+  const { data: investorsAnalytics } = useGetInvestorsAnalytics();
+  console.log(investorsAnalytics);
+  const overviewCards = [
+    {
+      id: 1,
+      icon: CIcons.walletMoney,
+      label: "Total Amount Invested",
+      amount: investorsAnalytics?.totalAmountInvested ?? 0,
+      currency: "NGN",
+      percentage: 0,
+      direction: "up",
+    },
+    {
+      id: 2,
+      icon: CIcons.profile2,
+      label: "Total Verified SMEs",
+      amount: investorsAnalytics?.totalPlatformSMEs ?? 0,
+    },
+    {
+      id: 3,
+      icon: CIcons.profile2,
+      label: "Active SMEs",
+      amount: investorsAnalytics?.activeSMEs ?? 0,
+    },
+  ];
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
         value={30}
         link={routes.investor.smeDirectory}
-        user={{ name: "Paul" }}
+        user={{ name: user?.personalInfo?.lastName }}
         textContent="Here's a snapshot of active SMEs, matches, and opportunities."
         showButton={true}
         buttonText="View SMEs"

@@ -14,8 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useEffect, useState } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
@@ -24,8 +23,7 @@ import { toast } from "sonner";
 type Props = {};
 
 export default function Info({}: Props) {
-  const ProfileDetails = getCurrentProfile();
-  const { data: user, isLoading, error } = ProfileDetails;
+  const { data: user, isLoading, error } = getCurrentProfile();
   const { smes_bussiness_info } = updateProfile();
   console.log(user);
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
@@ -41,26 +39,25 @@ export default function Info({}: Props) {
     formState: { errors },
   } = useForm<SMEsBusinessInfo>({
     defaultValues: {
-      businessName: user?.businessName || "",
-      registrationNumber: user?.registrationNumber || "",
-      countryOfOperation: user?.countryOfOperation || [],
-      businessStage: user?.businessStage || "",
-      industry: user?.industry || "",
-      website: user?.website || "",
+      businessName: "",
+      registrationNumber: "",
+      countryOfOperation: [],
+      businessStage: "",
+      industry: "",
+      website: "",
     },
   });
 
   useEffect(() => {
     if (user) {
       setSelectedCountry(user?.countryOfOperation || []);
-
       reset({
-        businessName: user?.businessName || "",
-        registrationNumber: user?.registrationNumber || "",
-        countryOfOperation: user?.countryOfOperation || [],
-        businessStage: user?.businessStage || "",
-        industry: user?.industry || "",
-        website: user?.website || "",
+        businessName: user?.investorInvestmentInfo?.businessName || "",
+        registrationNumber: user?.investorInvestmentInfo?.registrationNumber || "",
+        countryOfOperation: user?.investorInvestmentInfo?.countryOfOperation || [],
+        businessStage: user?.investorInvestmentInfo?.businessStage || "",
+        industry: user?.investorInvestmentInfo?.industry || "",
+        website: user?.investorInvestmentInfo?.website || "",
       });
     }
   }, [user, reset]);

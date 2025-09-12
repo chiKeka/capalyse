@@ -1,6 +1,5 @@
-'use client';
+"use client";
 
-import { Card } from '@/components/ui/card';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,69 +7,40 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { useParams } from 'next/navigation';
-import Image from 'next/image';
+} from "@/components/ui/breadcrumb";
+import { Card } from "@/components/ui/card";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 
 const courseData = {
-  title: 'Trading Across Africa: How AfCFTA is Changing the Game',
+  title: "Trading Across Africa: How AfCFTA is Changing the Game",
   instructor: {
-    name: 'Dr. Emily Carter',
-    avatar: '/avatars/01.png',
+    name: "Dr. Emily Carter",
+    avatar: "/avatars/01.png",
   },
-  image: '/images/resource.png',
+  image: "/images/resource.png",
   modules: [
     {
-      title: 'Module 1: Introduction to AfCFTA',
+      title: "Module 1: Introduction to AfCFTA",
       lessons: [
-        { title: 'What is AfCFTA?', duration: '12:34', isCompleted: true },
+        { title: "What is AfCFTA?", duration: "12:34", isCompleted: true },
         {
-          title: 'Key Objectives and Benefits',
-          duration: '15:20',
+          title: "Key Objectives and Benefits",
+          duration: "15:20",
           isCompleted: true,
         },
         {
-          title: 'The Role of SMEs in AfCFTA',
-          duration: '10:05',
+          title: "The Role of SMEs in AfCFTA",
+          duration: "10:05",
           isCompleted: false,
           isCurrent: true,
         },
       ],
     },
-    {
-      title: 'Module 2: Navigating the Legal Landscape',
-      lessons: [
-        {
-          title: 'Understanding Rules of Origin',
-          duration: '22:10',
-          isCompleted: false,
-        },
-        {
-          title: 'Tariff Concessions and Trade Barriers',
-          duration: '18:45',
-          isCompleted: false,
-        },
-      ],
-    },
-    {
-      title: 'Module 3: Financial and Operational Readiness',
-      lessons: [
-        {
-          title: 'Cross-Border Payments and FinTech',
-          duration: '14:55',
-          isCompleted: false,
-        },
-        {
-          title: 'Logistics and Supply Chain Management',
-          duration: '20:30',
-          isCompleted: false,
-        },
-      ],
-    },
   ],
   resources: [
-    { title: 'AfCFTA Official Agreement', type: 'PDF' },
-    { title: 'Rules of Origin Manual', type: 'PDF' },
+    { title: "AfCFTA Official Agreement", type: "PDF" },
+    { title: "Rules of Origin Manual", type: "PDF" },
   ],
 };
 
@@ -113,7 +83,7 @@ export default function SingleCoursePage() {
             {courseData.title}
           </h1>
           <div className="text-center flex items-center gap-2 justify-center">
-            <span>May 19, 2025</span>{' '}
+            <span>May 19, 2025</span>{" "}
             <span className="inline-block h-1 w-1 rounded-full bg-black my-auto"></span>
             <span>6 minutes read</span>
           </div>

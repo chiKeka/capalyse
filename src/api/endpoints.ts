@@ -321,7 +321,9 @@ export const resourceRoutes = {
 
 export const directoryRoutes = {
   smes: "/directory/smes",
-  publicSmes: (smeId: string) => `/directory/smes/${smeId}`,
+  publicSmes: (smeId: string) => `directory/smes/${smeId}`,
+  getInvestorMatches: "/investor/me/matches",
+  smeMatches: "sme/me/matches",
 };
 
 export const programsRoutes = {
@@ -348,6 +350,7 @@ export const readinessRoutes = {
 export const matchingRoutes = {
   investorMatches: "/investor/me/matches",
   smesMatches: "/sme/me/matches",
+  watchList: (smeId: string) => `/investor/smes/${smeId}/watchlist`,
 };
 
 export const profileRoutes = {
@@ -362,4 +365,8 @@ export const profileRoutes = {
   getRegisterNextStep: "/profile/next-step",
   addTeamMember: "/profile/sme/team",
   deleteTeamMember: (memberId: string) => `/profile/sme/team/${memberId}`,
+};
+
+export const investorsAnalytics = {
+  getInvestorsAnalytics: "/investor/me/analytics",
 };
