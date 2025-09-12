@@ -309,6 +309,20 @@ export function useAssessment() {
   };
 
   /**
+   * Get all responses for loggedin SME
+   */
+  const useGetMyResponses = (enabled = true) => {
+    return useQuery({
+      queryKey: assessmentQueryKeys.responses('me'),
+      queryFn: async (): Promise<AssessmentResponse[]> => {
+        const response = await api.get(assessmentEndpoints.getResponses('me'));
+        return response.data;
+      },
+      enabled,
+    });
+  };
+
+  /**
    * Get latest score for an SME
    */
   const useGetScore = (id: string, enabled = true) => {
@@ -442,8 +456,14 @@ export function useAssessment() {
           queryKey: assessmentQueryKeys.responses(data.smeId),
         });
         queryClient.invalidateQueries({
+          queryKey: assessmentQueryKeys.responses('me'),
+        });
+        queryClient.invalidateQueries({
           queryKey: assessmentQueryKeys.smeStatus(),
         });
+      },
+      onError: (error) => {
+        console.log({ error });
       },
     });
   };
@@ -628,6 +648,7 @@ export function useAssessment() {
     useGetSmeRecommendations,
     useGetSmeStatus,
     useGetAnalytics,
+    useGetMyResponses,
 
     // Mutations
     useSubmitResponse,

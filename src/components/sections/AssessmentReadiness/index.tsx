@@ -47,7 +47,7 @@ const AssessmentReadiness = ({
     handleSkip,
     getSectionStatus,
     submitMutation,
-  } = useAssessmentForm(categories);
+  } = useAssessmentForm(categories, setIsOpen);
 
   // Show loading state
   if (isLoading) {

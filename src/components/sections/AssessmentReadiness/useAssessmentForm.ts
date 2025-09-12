@@ -1,12 +1,15 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import {
   useAssessment,
   AssessmentCategory,
   AssessmentQuestion,
   AssessmentAnswer,
 } from '@/hooks/useAssessment';
+import { useDocument } from '@/hooks/useDocument';
 import { useAtomValue } from 'jotai';
 import { authAtom } from '@/lib/atoms/atoms';
+import { usePathname, useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export interface SectionData {
   name: string;
@@ -20,10 +23,24 @@ export interface Section {
   [key: string]: any;
 }
 
-export function useAssessmentForm(categories: AssessmentCategory[]) {
+export function useAssessmentForm(
+  categories: AssessmentCategory[],
+  setIsOpen: (x: boolean) => void
+) {
   const auth: any = useAtomValue(authAtom);
-  const { useGetCategories, useGetQuestionsByCategory, useSubmitResponse } =
-    useAssessment();
+  const pathname = usePathname();
+  const router = useRouter();
+  const {
+    useGetCategories,
+    useGetQuestionsByCategory,
+    useSubmitResponse,
+    useGetMyResponses,
+  } = useAssessment();
+
+  const { useGetDocuments } = useDocument();
+  const { data: myResponses } = useGetMyResponses();
+  const { data: documents } = useGetDocuments();
+  console.log({ myResponses, documents });
 
   // Get categories
   const { data: categoryData, isLoading: categoriesLoading } =
@@ -45,6 +62,7 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
   const [sectionedData, setSectionedData] = useState<Record<string, Section[]>>(
     {}
   );
+  const hasPrefilled = useRef(false);
 
   // Build sections data from API
   const sections: SectionData[] = useMemo(() => {
@@ -62,11 +80,26 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
       };
     });
   }, [categoryData, questionsQueries, categories]);
-
+  console.log({ categories, sections });
   // Current section and question data
-  const currentSectionData = sections[currentSection];
-  const currentQuestionData = currentSectionData?.questions[currentQuestion];
-  const totalQuestions = currentSectionData?.totalQuestions || 0;
+  const currentSectionData = useMemo(
+    () => sections[currentSection],
+    [currentSection, sections]
+  );
+  const currentQuestionData = useMemo(
+    () => currentSectionData?.questions[currentQuestion],
+    [currentQuestion, currentSectionData]
+  );
+  const totalQuestions = useMemo(() => {
+    const total = currentSectionData?.questions?.length || 0;
+    console.log('Calculating totalQuestions:', {
+      currentSection,
+      currentSectionData: currentSectionData?.name,
+      questionsLength: currentSectionData?.questions?.length,
+      total,
+    });
+    return total;
+  }, [currentSectionData, currentSection]);
 
   // Loading states
   const isLoading =
@@ -266,6 +299,143 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
     initializeSectionedData();
   }, [initializeSectionedData]);
 
+  // Prefill form data from existing responses
+  useEffect(() => {
+    if (!myResponses || !sections.length || hasPrefilled.current) return;
+
+    console.log('Prefilling form with responses:', myResponses);
+    const newFormData: Record<string, any> = {};
+    const newSectionedData: Record<string, Section[]> = {};
+
+    // Create a map of questionId to response for quick lookup
+    const responseMap = new Map();
+    myResponses.forEach((response) => {
+      responseMap.set(response.questionId, response);
+    });
+
+    // Iterate through all sections and questions to prefill data
+    sections.forEach((section, sectionIndex) => {
+      section.questions.forEach((question, questionIndex) => {
+        const fieldId = `${sectionIndex}-${questionIndex}`;
+        const response = responseMap.get(question.id);
+
+        if (response && response.answers) {
+          const answers: any = {};
+
+          response.answers.forEach(
+            (answer: AssessmentAnswer, answerIndex: number) => {
+              switch (answer.type) {
+                case 'money':
+                  answers[answerIndex] = {
+                    type: 'money',
+                    value: answer.value,
+                  };
+                  break;
+
+                case 'items':
+                  answers[answerIndex] = {
+                    type: 'items',
+                    value: answer.value,
+                  };
+
+                  // Also populate sectionedData for items
+                  const sectionKey = `${fieldId}-${answerIndex}`;
+                  const items = answer.value as any[];
+                  const sections = items.map((item, index) => ({
+                    id: index + 1,
+                    name: item.name || '',
+                    amount: item.amount?.amount?.toString() || '',
+                    currency: item.amount?.currency || 'NGN',
+                  }));
+                  newSectionedData[sectionKey] = sections;
+                  break;
+
+                case 'file':
+                  // Create comprehensive document objects with all available data from API
+                  console.log(
+                    'Processing file answer:',
+                    answer,
+                    'Available documents:',
+                    documents
+                  );
+                  const documentObjects =
+                    answer.documentIds?.map((docId: string) => {
+                      // Find the document in the documents list to get all available data
+                      const document = documents?.find(
+                        (doc) => doc._id === docId
+                      );
+
+                      console.log(
+                        `Looking for document ${docId}, found:`,
+                        document
+                      );
+
+                      if (document) {
+                        // Return comprehensive document object with all API data
+                        const docObject = {
+                          id: docId,
+                          name: document.originalName,
+                          filename: document.fileName,
+                          mimeType: document.mimeType,
+                          size: document.size,
+                          uploadedAt: document.uploadedAt,
+                          updatedAt: document.updatedAt,
+                          userId: document.userId,
+                        };
+                        console.log('Created document object:', docObject);
+                        return docObject;
+                      } else {
+                        // Fallback if document not found in API
+                        const fallbackObject = {
+                          id: docId,
+                          name: `Document ${docId}`,
+                          filename: `document_${docId}`,
+                          mimeType: 'application/octet-stream',
+                          size: 0,
+                          uploadedAt: new Date().toISOString(),
+                          updatedAt: new Date().toISOString(),
+                          userId: auth?.id || '',
+                        };
+                        console.log(
+                          'Created fallback document object:',
+                          fallbackObject
+                        );
+                        return fallbackObject;
+                      }
+                    }) || [];
+
+                  answers[answerIndex] = {
+                    type: 'file',
+                    value: documentObjects,
+                    documentIds: answer.documentIds,
+                    // Also include the original answer value for backward compatibility
+                    originalValue: answer.value,
+                  };
+                  break;
+
+                default:
+                  answers[answerIndex] = {
+                    type: answer.type,
+                    value: answer.value,
+                  };
+                  break;
+              }
+            }
+          );
+
+          newFormData[fieldId] = answers;
+        }
+      });
+    });
+
+    // Update form data and sectioned data
+    console.log('Prefilled form data:', newFormData);
+    console.log('Prefilled sectioned data:', newSectionedData);
+    setFormData(newFormData);
+    setSectionedData(newSectionedData);
+    hasPrefilled.current = true;
+  }, [myResponses, sections.length, documents]);
+
   // Remove section for multi-section inputs
   const removeSection = useCallback(
     (sectionId: number) => {
@@ -363,12 +533,20 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
       answerTypes.forEach((answerType, index) => {
         if (answerType.required) {
           const fieldValue = value[index];
+          console.log(
+            `Validating ${answerType.type} at index ${index}:`,
+            fieldValue
+          );
 
           if (
             !fieldValue ||
             (answerType.type === 'money' &&
               (!fieldValue.value?.amount || fieldValue.value.amount === 0)) ||
-            (answerType.type === 'file' && !fieldValue?.value) ||
+            (answerType.type === 'file' &&
+              !fieldValue?.value &&
+              !fieldValue?.documentIds &&
+              !fieldValue?.documentId &&
+              !fieldValue?.filename) ||
             (answerType.type === 'items' &&
               (!sectionedData[`${fieldId}-${index}`] ||
                 sectionedData[`${fieldId}-${index}`].length === 0)) ||
@@ -377,17 +555,27 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
               answerType.type !== 'items' &&
               !fieldValue?.value)
           ) {
+            console.log(
+              `Validation failed for ${answerType.type} at index ${index}`
+            );
             hasError = true;
+          } else {
+            console.log(
+              `Validation passed for ${answerType.type} at index ${index}`
+            );
           }
         }
       });
 
       if (hasError) {
+        console.log('Validation failed, setting error for field:', fieldId);
         setErrors((prev) => ({
           ...prev,
           [fieldId]: 'Please fill in all required fields',
         }));
         return;
+      } else {
+        console.log('Validation passed for field:', fieldId);
       }
     }
 
@@ -409,24 +597,83 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
             : [question.answerType];
 
           answerTypes.forEach((answerType, index) => {
+            const fieldValue = value[index];
             console.log({
               answerType,
               index,
               value,
+              fieldValue,
             });
-            const fieldValue = value[index];
             if (fieldValue) {
               let answerValue: any;
               let documentIds: string[] = [];
-
+              console.log({ fieldValue });
               switch (answerType.type) {
                 case 'money':
                   answerValue = fieldValue.value;
                   break;
                 case 'file':
-                  answerValue = fieldValue.value; // This is the document ID
-                  if (fieldValue.documentId) {
+                  console.log(
+                    'Processing file submission, fieldValue:',
+                    fieldValue
+                  );
+                  // Handle both prefilled data structure and new submissions
+                  if (
+                    fieldValue.documentIds &&
+                    fieldValue.documentIds.length > 0
+                  ) {
+                    // Prefilled data structure: use documentIds array
+                    documentIds = fieldValue.documentIds;
+                    answerValue = fieldValue.documentIds[0]; // Use first document ID as primary value
+                    console.log(
+                      'Using documentIds array:',
+                      documentIds,
+                      'answerValue:',
+                      answerValue
+                    );
+                  } else if (fieldValue.documentId) {
+                    // Legacy structure: single documentId
                     documentIds = [fieldValue.documentId];
+                    answerValue = fieldValue.documentId;
+                    console.log(
+                      'Using single documentId:',
+                      documentIds,
+                      'answerValue:',
+                      answerValue
+                    );
+                  } else if (fieldValue.filename) {
+                    // Another legacy structure: filename as document ID
+                    documentIds = [fieldValue.filename];
+                    answerValue = fieldValue.filename;
+                    console.log(
+                      'Using filename as documentId:',
+                      documentIds,
+                      'answerValue:',
+                      answerValue
+                    );
+                  } else if (
+                    fieldValue.value &&
+                    Array.isArray(fieldValue.value)
+                  ) {
+                    // Prefilled document objects structure
+                    documentIds = fieldValue.value.map((doc: any) => doc.id);
+                    answerValue = documentIds[0] || '';
+                    console.log(
+                      'Using document objects array:',
+                      documentIds,
+                      'answerValue:',
+                      answerValue
+                    );
+                  } else {
+                    // Fallback
+                    answerValue = fieldValue.value || '';
+                    documentIds = [];
+                    console.log(
+                      'Using fallback:',
+                      answerValue,
+                      'documentIds:',
+                      documentIds
+                    );
                   }
                   break;
                 case 'items':
@@ -443,6 +690,7 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
                   break;
               }
 
+              console.log({ answerValue, documentIds, fieldValue });
               answers.push({
                 type: answerType.type,
                 value: answerValue,
@@ -477,7 +725,13 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
       setCurrentQuestion(0);
     } else {
       // Assessment complete
-      console.log('Assessment completed!');
+      if (pathname?.includes('onboarding')) {
+        router.push('/sme');
+        setIsOpen(false);
+      } else {
+        toast.success('Assessment Completed Successfully');
+        setIsOpen(false);
+      }
     }
   }, [
     currentSection,
@@ -489,6 +743,7 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
     sections.length,
     submitMutation,
   ]);
+  console.log({ currentSection, currentQuestion, totalQuestions, sections });
 
   const handleBack = useCallback(() => {
     if (currentQuestion > 0) {
@@ -501,6 +756,7 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
   }, [currentSection, currentQuestion, sections]);
 
   const handleSkip = useCallback(() => {
+    console.log({ currentQuestion, totalQuestions, sections });
     if (currentQuestion < totalQuestions - 1) {
       setCurrentQuestion((prev) => prev + 1);
     } else if (currentSection < sections.length - 1) {
@@ -509,8 +765,16 @@ export function useAssessmentForm(categories: AssessmentCategory[]) {
     } else {
       // Assessment complete
       console.log('Assessment completed!');
+      if (pathname?.includes('onboarding')) {
+        router.push('/sme');
+        setIsOpen(false);
+      } else {
+        toast.success('Assessment Completed Successfully!');
+        setIsOpen(false);
+      }
     }
-  }, []);
+  }, [currentQuestion, totalQuestions, currentSection, sections.length]);
+  console.log({ totalQuestions });
 
   // Section change handler
   const handleSectionChangeDirect = useCallback((sectionIndex: number) => {
