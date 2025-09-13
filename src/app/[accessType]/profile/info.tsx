@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
 import { SMEsBusinessInfo } from '@/lib/uitils/types';
+import { africanCountries } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import 'react-country-state-city/dist/react-country-state-city.css';
 import { useForm } from 'react-hook-form';
@@ -137,13 +138,14 @@ export default function Info({}: Props) {
                 selectedItems={selectedCountry}
                 onRemoveItem={handleRemoveCountry}
               >
-                <MultiSelectValue placeholder="Select business stage" />
+                <MultiSelectValue placeholder="Select country of operation" />
               </MultiSelectTrigger>
               <MultiSelectContent>
-                <MultiSelectItem value="Nigeria">Nigeria</MultiSelectItem>
-                <MultiSelectItem value="USA">United States</MultiSelectItem>
-                <MultiSelectItem value="Canada">Canada</MultiSelectItem>
-                <MultiSelectItem value="Australlia">Australlia</MultiSelectItem>
+                {africanCountries.map((country) => (
+                  <MultiSelectItem key={country} value={country}>
+                    {country}
+                  </MultiSelectItem>
+                ))}
               </MultiSelectContent>
             </MultiSelect>
             {errors.businessStage && (

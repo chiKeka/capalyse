@@ -152,6 +152,19 @@ export const apiRoutes = {
   },
 
   /**
+   * Compliance endpoints.
+   */
+  compliance: {
+    getCases: '/compliance/cases',
+    getCase: (id: string) => `/compliance/cases/${id}`,
+    createCase: '/compliance/cases',
+    documentLink: (id: string) => `/compliance/cases/${id}/documents/link`,
+    compute: (id: string) => `/compliance/cases/${id}/compute`,
+    refresh: (id: string) => `/compliance/cases/${id}/requirements/refresh`,
+    chat: (id: string) => `/compliance/cases/${id}/chat`,
+  },
+
+  /**
    * Endpoints for managing the current user's profile.
    */
 
