@@ -1,68 +1,81 @@
-"use client";
+'use client';
 
-import Button from "@/components/ui/Button";
-import { CIcons } from "@/components/ui/CIcons";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Button from '@/components/ui/Button';
+import { CIcons } from '@/components/ui/CIcons';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { useGetSupport, useSupports } from "@/hooks/useSupport";
-import { handleImageUpload } from "@/lib/uitils/fns";
-import { CreateSupportForm, supportAttachment } from "@/lib/uitils/types";
-import { Loader } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import useDocument from '@/hooks/useDocument';
+import { useGetSupport, useSupports } from '@/hooks/useSupport';
+import { CreateSupportForm } from '@/lib/uitils/types';
+import { Loader } from 'lucide-react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
 
   const { data: supportTicket } = useGetSupport();
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
-  const [files, setFiles] = useState<supportAttachment[]>([]);
+  const [files, setFiles] = useState<any[]>([]);
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<CreateSupportForm>();
-
-  const onSubmit = ({ category, description }: CreateSupportForm) => {
+  const { useUploadDocument } = useDocument();
+  const uploadDocument = useUploadDocument();
+  const onSubmit = ({ subject, description }: CreateSupportForm) => {
     createSupport
       .mutateAsync({
-        subject: category,
-        file: files,
+        subject,
+        images: files?.map((file) => file.fileUrl),
         description,
-        category,
       })
       .then(() => {
-        toast.success("Ticket submitted successfully");
+        toast.success('Ticket submitted successfully');
+        reset();
       });
   };
   const handleFileUpload = async (e: any) => {
-    if (e) setFileUploadLoading(true);
     const file = e.target.files[0];
-    const fileUrl = await handleImageUpload(file, (res: any) => {
-      console.log({ res });
-      setFiles([
+    if (file) {
+      uploadDocument.mutateAsync(
         {
-          fileName: res?.original_filename,
-          fileUrl: res?.secure_url,
-          fileSize: res?.bytes,
-          mimeType: res?.format,
+          file: e.target.files[0],
+          fileName: file.name,
+          category: 'support',
         },
-      ]);
-      setFileUploadLoading(false);
-    });
+        {
+          onSuccess: (res) => {
+            setFiles([
+              {
+                fileName: res?.originalName,
+                fileUrl: `${process.env.NEXT_PUBLIC_API_URL}/documents/${res?._id}/download`,
+                fileSize: res?.size,
+                mimeType: res?.mimeType,
+              },
+            ]);
+          },
+          onError(error: any) {
+            toast.error(error?.response?.data?.message);
+          },
+        }
+      );
+    }
   };
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
@@ -85,7 +98,7 @@ const SupportPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select onValueChange={(val) => setValue("category", val)}>
+                <Select onValueChange={(val) => setValue('subject', val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -102,9 +115,9 @@ const SupportPage = () => {
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
-                {errors.category && (
+                {errors.subject && (
                   <span className="col-span-2 text-[10px] text-red-500">
-                    {errors.category.message}
+                    {errors.subject.message}
                   </span>
                 )}
               </div>
@@ -112,8 +125,8 @@ const SupportPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="description">Detailed Description</Label>
                 <Textarea
-                  {...register("description", {
-                    required: "business Registration number is required",
+                  {...register('description', {
+                    required: 'business Registration number is required',
                   })}
                   id="description"
                   placeholder="Enter Message"
@@ -171,7 +184,7 @@ const SupportPage = () => {
               <Button
                 type="submit"
                 disabled={createSupport.isPending || fileUploadLoading}
-                state={createSupport.isPending ? "loading" : undefined}
+                state={createSupport.isPending ? 'loading' : undefined}
                 size="big"
                 className="w-full"
               >
@@ -194,7 +207,7 @@ const SupportPage = () => {
                     <div>
                       <p className="text-sm">
                         <strong>Ticket No:</strong>
-                        <span>{item?.id.slice(0, -8) + "..."}</span>
+                        <span>{item?.id.slice(0, -8) + '...'}</span>
                       </p>
                       <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>
@@ -203,14 +216,14 @@ const SupportPage = () => {
                     <Badge
                       variant={
                         item.status as
-                          | "resolved"
-                          | "in_progress"
-                          | "open"
-                          | "closed"
+                          | 'resolved'
+                          | 'in_progress'
+                          | 'open'
+                          | 'closed'
                       }
                       className="capitalize mb-2"
                     >
-                      {item.status.replace(/([A-Z])/g, " $1")}
+                      {item.status.replace(/([A-Z])/g, ' $1')}
                     </Badge>
                     <p className="text-xs text-gray-500">
                       {item.date} {item.time}

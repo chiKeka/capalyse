@@ -1,20 +1,21 @@
-"use client";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
-import { ProfileSheet } from "@/components/ui/profileSheet";
+'use client';
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
+import { ProfileSheet } from '@/components/ui/profileSheet';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { useSmeMatches } from "@/hooks/useDirectories";
+} from '@/components/ui/select';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import { useSmeMatches } from '@/hooks/useDirectories';
+import { Loader2Icon } from 'lucide-react';
 
-import Image from "next/image";
-import { useState } from "react";
+import Image from 'next/image';
+import { useState } from 'react';
 
 // Example data
 const investors: any = [];
@@ -23,18 +24,14 @@ const investors: any = [];
 
 function InvestorsPage() {
   const [open, setOpen] = useState(false);
-  const {
-    data: user,
-    isLoading,
-    error,
-  } = useSmeMatches({
+  const { data: user, isLoading } = useSmeMatches({
     page: 1,
     limit: 20,
   });
-  console.log(user);
+
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
           <Image
@@ -48,14 +45,14 @@ function InvestorsPage() {
         </div>
       ),
     },
-    { header: "Investor Type", accessor: "type" },
-    { header: "Investment Focus", accessor: "focus" },
+    { header: 'Investor Type', accessor: 'type' },
+    { header: 'Investment Focus', accessor: 'focus' },
     {
-      header: "Status",
+      header: 'Status',
       accessor: (row: any) => statusBadge(row.status),
     },
     {
-      header: "Action",
+      header: 'Action',
       accessor: () => (
         <button
           className="text-green font-medium hover:underline"
@@ -64,9 +61,10 @@ function InvestorsPage() {
           View Profile
         </button>
       ),
-      className: "text-green",
+      className: 'text-green',
     },
   ];
+
   return (
     <div>
       {/* Filter Section */}
@@ -99,12 +97,18 @@ function InvestorsPage() {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
+            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
           </Button>
         </div>
       </div>
 
-      <ReusableTable columns={columns} data={user?.items} />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-full">
+          <Loader2Icon className="w-12 h-12 animate-spin" />
+        </div>
+      ) : (
+        <ReusableTable columns={columns} data={user?.items} />
+      )}
       <ProfileSheet open={open} onOpenChange={setOpen} />
     </div>
   );

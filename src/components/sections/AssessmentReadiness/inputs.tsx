@@ -49,7 +49,11 @@ export function Inputs({
     setUploading((prev) => ({ ...prev, [uploadKey]: true }));
 
     try {
-      const uploadedDocument = await uploadMutation.mutateAsync(file);
+      const uploadedDocument = await uploadMutation.mutateAsync({
+        file,
+        fileName: file.name,
+        category: 'assessment',
+      });
 
       const currentValue = formData[fieldId] || {};
       const newValue = {

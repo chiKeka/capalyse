@@ -10,7 +10,8 @@ import SuggestedConnection from '@/components/sections/dashboardCards/suggestedC
 import { getCurrentProfile } from '@/hooks/useUpdateProfile';
 import { useGetReadinessScore } from '@/hooks/useReadiness';
 import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useSmeMatches } from '@/hooks/useDirectories';
 
 export default function SmeDashBoard() {
   const params = useParams();
@@ -18,11 +19,9 @@ export default function SmeDashBoard() {
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
   const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  console.log(user);
   // Fetch readiness score data
   const { data: readinessScore, isLoading: isReadinessLoading } =
     useGetReadinessScore();
-  console.log({ assessmentsProgress });
   const learningCards: any[] = [];
   const programs: any[] = [];
   // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
@@ -35,52 +34,43 @@ export default function SmeDashBoard() {
   const nextSectionName = completedSections.find(
     (section: string) => sectionCompletion[section] !== true
   );
+  const { data: investorMatches } = useSmeMatches({
+    page: 1,
+    limit: 1,
+  });
 
-  const label =
-    nextSectionName !== undefined ? `Finish ${nextSectionName}` : 'Completed';
-
-  const renderFinanceStatus = () => {
-    const values = Object.values(sectionCompletion);
-
-    if (values.length === 0) return '';
-
-    const allTrue = values.every((v) => v === true);
-    const allFalse = values.every((v) => v === false);
-
-    if (allTrue) return 100;
-    if (allFalse) return 50;
-    return undefined;
-  };
   const checklist = [
     {
       icon: '/icons/profile.svg',
       label: 'Complete profile',
-      status: user?.completionPercentage || undefined,
+      status:
+        (user?.completedSteps?.length / user?.totalSteps) * 100 || undefined,
     },
     {
       icon: '/icons/presentation.svg',
       label: 'Start Readiness Assessment',
-      status: assessmentsProgress?.overallCompletionPercentage || undefined,
+      status: assessmentsProgress?.completionPercentage || undefined,
     },
     {
       icon: '/icons/money_out.svg',
-      label: label,
-      status: renderFinanceStatus() || undefined,
+      label: 'Finish financial section',
+      status: sectionCompletion?.financial || undefined,
     },
     {
       icon: '/icons/status_up.svg',
       label: 'Explore investor matches',
-      status: undefined,
+      status: investorMatches?.total > 0 ? 100 : 0,
     },
   ];
 
   const suggestedConnections: any[] = [];
-  const router = useRouter();
 
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
-        value={user?.completionPercentage}
+        value={Math.round(
+          (user?.completedSteps?.length / user?.totalSteps) * 100
+        )}
         link={`/${params.accessType}/profile`}
         user={{ name: user?.personalInfo?.firstName }}
         showProgress={true}
@@ -91,16 +81,21 @@ export default function SmeDashBoard() {
           iconPosition: 'right',
         }}
       />
-      <div className="flex flex-col gap-6 md:flex-wrap lg:flex-row ">
-        <div className="lg:w-[25%] h-auto w-full ">
+      <div className="flex flex-col gap-6 md:flex-wrap lg:grid lg:grid-cols-2 xl:grid-cols-[1fr_2fr_1fr] ">
+        <div className="h-auto w-full ">
           <ReadinessScoreCard
-            readinessData={readinessScore?.data?.currentScore}
+            readinessData={readinessScore}
             isLoading={isReadinessLoading}
-            scoreValue={0} // fallback value
+            scoreValue={readinessScore?.overallScore?.percentage ?? 0} // fallback value
+            showAssessment={
+              readinessScore?.overallScore?.percentage
+                ? readinessScore?.overallScore?.percentage < 100
+                : true
+            }
           />
         </div>
 
-        <div className="lg:w-[45%] w-full">
+        <div className="w-full">
           <DashboardCardLayout caption="Checklist Progress">
             <div className="flex my-8 flex-col gap-3">
               {checklist.map((item, idx) => (
@@ -114,7 +109,7 @@ export default function SmeDashBoard() {
             </div>
           </DashboardCardLayout>
         </div>
-        <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col lg:w-[25%]">
+        <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col">
           <DashboardCardLayout
             icon={'/images/bulb.svg'}
             caption="Quick Tip"
@@ -134,8 +129,8 @@ export default function SmeDashBoard() {
           </DashboardCardLayout>
         </div>
       </div>
-      <div className="flex flex-col w-full gap-4 lg:flex-row">
-        <div className="flex lg:flex-row md:flex-wrap flex-col w-full lg:w-[70%]">
+      <div className="flex flex-col w-full gap-4 lg:grid lg:grid-cols-[3fr_2fr]">
+        <div className="flex lg:flex-row md:flex-wrap flex-col w-full">
           <DashboardCardLayout
             caption="Learning Hub"
             link={`/${params.accessType}/learning`}
@@ -185,8 +180,8 @@ export default function SmeDashBoard() {
           </DashboardCardLayout>
         </div>
       </div>
-      <div className="flex w-full lg:flex-row flex-col gap-4">
-        <div className="lg:w-[35%] w-full flex">
+      <div className="flex w-full lg:grid lg:grid-cols-[2fr_3fr] flex-col gap-4">
+        <div className=" w-full flex">
           <DashboardCardLayout
             link={`/${params.accessType}/networking`}
             linkName="See all"

@@ -7,24 +7,24 @@ type Props = {
 function CheckListProgressCard({ img, caption, status }: Props) {
   const renderStatus = () => {
     const numStatus = Number(status);
-    if (numStatus === 100) return "Completed";
-    if (numStatus <= 99) return "In Progress";
-    return "Not Started";
+    if (numStatus === 100) return 'Completed';
+    if (numStatus > 0 && numStatus <= 99) return 'In Progress';
+    return 'Not Started';
   };
 
   const getStatusBgClass = () => {
     const status = renderStatus();
-    if (status === "Completed") return "bg-[#DCFCE7] text-[#14532D]";
-    if (status === "In Progress") return "bg-[#FEF9C3] text-[#713F12]";
-    if (status === "Not Started") return "bg-[#E8E8E8] text-[#A0A4A8]";
-    return "";
+    if (status === 'Completed') return 'bg-[#DCFCE7] text-[#14532D]';
+    if (status === 'In Progress') return 'bg-[#FEF9C3] text-[#713F12]';
+    if (status === 'Not Started') return 'bg-[#E8E8E8] text-[#A0A4A8]';
+    return '';
   };
   const getIconBgClass = () => {
     const status = renderStatus();
-    if (status === "Completed") return "bg-[#22C55E] ";
-    if (status === "In Progress") return "bg-[#FACC15]";
-    if (status === "Not Started") return "bg-[#A0A4A8]";
-    return "";
+    if (status === 'Completed') return 'bg-[#22C55E] ';
+    if (status === 'In Progress') return 'bg-[#FACC15]';
+    if (status === 'Not Started') return 'bg-[#A0A4A8]';
+    return '';
   };
   return (
     <div className="border-0.5 shadow-sm  border-[#E8E8E8] shadow-gray-500 w-full  h-[52px] py-2 px-4 rounded-[4px] justify-between flex items-center ">

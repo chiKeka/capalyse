@@ -22,8 +22,11 @@ function EmptyBox({
   console.log({ progress });
   const [open, setOpen] = useState(false);
   return (
-    <div className="items-center mx-auto  my-8 lg:max-w-[437px] w-full md:w-[437px] h-full flex flex-col gap-4 justify-center">
-      <img src="/icons/emptyBox.svg" className={`h-[78px]  w-[78px] ${spinner ? 'animate-spin' : ''}`}/>
+    <div className="items-center mx-auto  my-8 lg:max-w-[437px] w-full h-full flex flex-col gap-4 justify-center">
+      <img
+        src="/icons/emptyBox.svg"
+        className={`h-[78px]  w-[78px] ${spinner ? 'animate-spin' : ''}`}
+      />
 
       <p className="text-base font-bold text-[#282828] text-center">
         {caption}

@@ -1,10 +1,10 @@
-import api from "@/api/axios";
-import { profileRoutes } from "@/api/endpoints";
-import { authAtom } from "@/lib/atoms/atoms";
-import { PersonalInfoInputs, SMEsBusinessInfo } from "@/lib/uitils/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import api from '@/api/axios';
+import { profileRoutes } from '@/api/endpoints';
+import { authAtom } from '@/lib/atoms/atoms';
+import { PersonalInfoInputs, SMEsBusinessInfo } from '@/lib/uitils/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 
 export interface VerifyResponse {
   data: {
@@ -16,16 +16,16 @@ export interface VerifyResponse {
   };
 }
 
-    // export const useGetCurrentUser = () => {
-    //   return useQuery({
-    //     queryKey: ["current_user"],
-    //     queryFn: () => api.get(ApiEndPoints.Auth_Activity("me")),
-    //   });
-    // };
+// export const useGetCurrentUser = () => {
+//   return useQuery({
+//     queryKey: ["current_user"],
+//     queryFn: () => api.get(ApiEndPoints.Auth_Activity("me")),
+//   });
+// };
 
 export const getCurrentProfile = () => {
   return useQuery({
-    queryKey: ["current_profile"],
+    queryKey: ['current_profile'],
     queryFn: async () => {
       const response = await api.get(profileRoutes.get);
 
@@ -39,10 +39,13 @@ export const updateProfile = () => {
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
   const queryClient = useQueryClient();
-  
+
   const personal_information = useMutation({
     mutationFn: async (cred: Partial<PersonalInfoInputs>): Promise<any> => {
       return api.put(profileRoutes.updatePersonalInfo, cred);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
     },
   });
 
@@ -55,6 +58,9 @@ export const updateProfile = () => {
     mutationFn: (cred: SMEsBusinessInfo): Promise<any> => {
       return api.put(profileRoutes.updateSmeBusinessInfo, cred);
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+    },
   });
   const investor_investment_info = useMutation({
     mutationFn: (cred): Promise<any> => {
@@ -66,19 +72,28 @@ export const updateProfile = () => {
       return api.put(profileRoutes.updateInvestorOrganizationInfo, cred);
     },
   });
+
+  const update_business_summary = useMutation({
+    mutationFn: (cred) => {
+      return api.put(profileRoutes.updateBusinessSummary, cred);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+    },
+  });
+
   const next_step_reg = useMutation({
     mutationFn: () => api.get(profileRoutes.getRegisterNextStep),
   });
 
-
-   const updateTeamMemeber = useMutation({
-     mutationFn: async (cred): Promise<any> => {
-       return api.put(profileRoutes.addTeamMember, cred);
-     },
-     onSuccess: () => {
-       queryClient.invalidateQueries({ queryKey: ["current_profile"] });
-     },
-   });
+  const updateTeamMemeber = useMutation({
+    mutationFn: async (cred): Promise<any> => {
+      return api.put(profileRoutes.addTeamMember, cred);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+    },
+  });
 
   return {
     personal_information,
@@ -88,5 +103,6 @@ export const updateProfile = () => {
     next_step_reg,
     investor_org_info,
     updateTeamMemeber,
+    update_business_summary,
   };
 };

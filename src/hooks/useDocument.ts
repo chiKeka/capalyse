@@ -6,6 +6,7 @@ import api from '@/api/axios';
 // ============================================================================
 
 export interface Document {
+  category: string;
   _id: string;
   userId: string;
   originalName: string;
@@ -59,7 +60,8 @@ const documentEndpoints = {
 
 export const documentQueryKeys = {
   all: ['documents'] as const,
-  lists: () => [...documentQueryKeys.all, 'list'] as const,
+  lists: (category?: string) =>
+    [...documentQueryKeys.all, 'list', { category }] as const,
   list: (filters: string) =>
     [...documentQueryKeys.lists(), { filters }] as const,
   details: () => [...documentQueryKeys.all, 'detail'] as const,
@@ -151,6 +153,27 @@ export function useDocument() {
   };
 
   /**
+   * Get all documents for the current user by category
+   */
+  const useGetDocumentsByCategory = (category?: string, enabled = true) => {
+    return useQuery({
+      queryKey: documentQueryKeys.lists(category),
+      queryFn: async (): Promise<Document[]> => {
+        const response = await api.get<DocumentListResponse>(
+          documentEndpoints.getAll,
+          {
+            params: {
+              category,
+            },
+          }
+        );
+        return response.data.data;
+      },
+      enabled,
+    });
+  };
+
+  /**
    * Get a specific document by ID
    */
   const useGetDocument = (id: string, enabled = true) => {
@@ -179,9 +202,21 @@ export function useDocument() {
    */
   const useUploadDocument = () => {
     return useMutation({
-      mutationFn: async (file: File): Promise<Document> => {
+      mutationFn: async ({
+        file,
+        fileName,
+        category,
+      }: {
+        file: File;
+        fileName: string;
+        category?: string;
+      }): Promise<Document> => {
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('fileName', fileName);
+        if (category) {
+          formData.append('category', category);
+        }
 
         const response = await api.post<DocumentUploadResponse>(
           documentEndpoints.upload,
@@ -224,10 +259,19 @@ export function useDocument() {
    */
   const useUploadMultipleDocuments = () => {
     return useMutation({
-      mutationFn: async (files: File[]): Promise<Document[]> => {
+      mutationFn: async ({
+        files,
+        category,
+      }: {
+        files: File[];
+        category?: string;
+      }): Promise<Document[]> => {
         const uploadPromises = files.map(async (file) => {
           const formData = new FormData();
           formData.append('file', file);
+          if (category) {
+            formData.append('category', category);
+          }
 
           const response = await api.post<DocumentUploadResponse>(
             documentEndpoints.upload,
@@ -244,10 +288,10 @@ export function useDocument() {
 
         return Promise.all(uploadPromises);
       },
-      onSuccess: (data) => {
+      onSuccess: (data, variables) => {
         // Invalidate documents list
         queryClient.invalidateQueries({
-          queryKey: documentQueryKeys.lists(),
+          queryKey: documentQueryKeys.lists(variables?.category),
         });
 
         // Add new documents to the cache
@@ -273,10 +317,6 @@ export function useDocument() {
         const response = await api.delete<DocumentDeleteResponse>(
           documentEndpoints.delete(id)
         );
-        return response.data;
-      },
-      onSuccess: (data, id) => {
-        // Remove from documents list cache
         queryClient.setQueryData<Document[]>(
           documentQueryKeys.lists(),
           (oldData) => {
@@ -289,6 +329,10 @@ export function useDocument() {
         queryClient.removeQueries({
           queryKey: documentQueryKeys.detail(id),
         });
+        return response.data;
+      },
+      onSuccess: (data, id) => {
+        // Remove from documents list cache
       },
       onError: (error) => {
         console.error('Document deletion failed:', error);
@@ -422,6 +466,7 @@ export function useDocument() {
     // Queries
     useGetDocuments,
     useGetDocument,
+    useGetDocumentsByCategory,
 
     // Basic mutations
     useUploadDocument,

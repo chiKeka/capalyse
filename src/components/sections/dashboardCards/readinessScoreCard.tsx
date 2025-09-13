@@ -1,12 +1,12 @@
 import Button from '@/components/ui/Button';
 import CircularScoreBar from '@/components/ui/CircularScoreBar';
-import { ReadinessScoreData } from '@/lib/uitils/types';
+import { ReadinessScoreResponse } from '@/lib/uitils/types';
 import AssessmentReadiness from '../AssessmentReadiness';
 import { useState } from 'react';
 
 type Props = {
   scoreValue?: number;
-  readinessData?: ReadinessScoreData;
+  readinessData?: ReadinessScoreResponse;
   isLoading?: boolean;
   showAssessment?: boolean;
   textContent?: string;
@@ -22,15 +22,17 @@ function ReadinessScoreCard({
   extraContent,
 }: Props) {
   const [open, setOpen] = useState(false);
+  console.log({ readinessData });
 
   // Use readinessData overall score if available, otherwise fall back to scoreValue
-  const displayScore = readinessData?.scores?.overall ?? scoreValue ?? 0;
+  const displayScore =
+    readinessData?.overallScore?.percentage ?? scoreValue ?? 0;
 
   return (
     <div className="border-1 p-[3%] border-[#E8E8E8] flex flex-col rounded-md lg:min-w-[276px] w-full min-h-[356px]">
       <p className="font-bold text-base">{textContent}</p>
 
-      <div className="flex flex-col h-full justify-center items-center">
+      <div className="flex flex-col h-full justify-center items-center flex-1">
         {extraContent || (
           <div className="w-full items-center justify-center flex">
             {isLoading ? (

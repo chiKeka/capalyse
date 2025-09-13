@@ -18,7 +18,7 @@ interface OTPForm {
 
 const VerifyPageContent = () => {
   const [isResending, setIsResending] = useState(false);
-  const [countdown, setCountdown] = useState(10 * 60); // 9 minutes in seconds
+  const [countdown, setCountdown] = useState(1 * 60); // 9 minutes in seconds
   const [canResend, setCanResend] = useState(false);
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
@@ -97,7 +97,22 @@ const VerifyPageContent = () => {
     setIsResending(true);
     try {
       console.log('Resending OTP...');
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email,
+        type: 'email-verification',
+        fetchOptions: {
+          onSuccess: (ctx) => {
+            console.log({ ctx });
+            setIsResending(false);
+            toast.success('OTP sent successfully');
+          },
+          onError: (ctx) => {
+            console.log({ ctx });
+            setIsResending(false);
+            toast.error(ctx.error.message);
+          },
+        },
+      });
       setCountdown(59 * 60);
       setCanResend(false);
       const timer = setInterval(() => {
@@ -169,7 +184,7 @@ const VerifyPageContent = () => {
           <button
             type="button"
             onClick={handleResend}
-            disabled={!canResend || isResending}
+            // disabled={!canResend || isResending}
             className={`font-bold ${
               canResend && !isResending
                 ? 'text-green cursor-pointer'

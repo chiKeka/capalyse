@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import Button from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CIcons } from "@/components/ui/CIcons";
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import Button from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/card';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import { formatCurrency } from "@/lib/uitils/fns";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import { formatCurrency } from '@/lib/uitils/fns';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -23,9 +23,9 @@ import {
   PointElement,
   Title,
   Tooltip,
-} from "chart.js";
-import { File, Pen, Trash2 } from "lucide-react";
-import { Line } from "react-chartjs-2";
+} from 'chart.js';
+import { File, Pen, Trash2 } from 'lucide-react';
+import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -40,41 +40,41 @@ ChartJS.register(
 type Props = {};
 const documents: any[] = [
   {
-    name: "CAC Registration.pdf",
-    size: "200 KB",
-    date: "Jan 4, 2022",
-    status: "Completed",
+    name: 'CAC Registration.pdf',
+    size: '200 KB',
+    date: 'Jan 4, 2022',
+    status: 'Completed',
   },
 ];
 
 const overviewCards = [
   {
     id: 1,
-    label: "Revenue",
+    label: 'Revenue',
     amount: 1200000,
-    currency: "NGN",
+    currency: 'NGN',
     percentage: 5,
-    direction: "up",
+    direction: 'up',
     icon: CIcons.chars,
     icon2: CIcons.bars,
   },
   {
     id: 1,
-    label: "Expenses",
+    label: 'Expenses',
     amount: 700000,
-    currency: "NGN",
+    currency: 'NGN',
     percentage: 5,
-    direction: "up",
+    direction: 'up',
     icon: CIcons.chars,
     icon2: CIcons.bars,
   },
   {
     id: 1,
-    label: "Debt",
+    label: 'Debt',
     amount: 200000,
-    currency: "NGN",
+    currency: 'NGN',
     percentage: 5,
-    direction: "up",
+    direction: 'up',
     icon: CIcons.chars,
     icon2: CIcons.bars,
   },
@@ -85,18 +85,18 @@ const DATA_COUNT = 7;
 const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 };
 
 const labels = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 const chartData = {
   labels: labels,
@@ -104,8 +104,8 @@ const chartData = {
     {
       //   label: "Revenue",
       data: [0, 200, 50, 600, 10, 80, 1200, 70, 0, 16, 1200, 500],
-      borderColor: "#047857",
-      backgroundColor: "rgba(4, 120, 87, 0.1)",
+      borderColor: '#047857',
+      backgroundColor: 'rgba(4, 120, 87, 0.1)',
       tension: 0.4,
       fill: true,
     },
@@ -113,7 +113,7 @@ const chartData = {
 };
 
 const chartConfig = {
-  type: "line" as const,
+  type: 'line' as const,
   data: chartData,
   options: {
     responsive: true,
@@ -121,12 +121,12 @@ const chartConfig = {
       y: {
         beginAtZero: true,
         grid: {
-          color: "rgba(0, 0, 0, 0.1)",
+          color: 'rgba(0, 0, 0, 0.1)',
         },
       },
       x: {
         grid: {
-          color: "rgba(0, 0, 0, 0.1)",
+          color: 'rgba(0, 0, 0, 0.1)',
         },
       },
     },
@@ -135,7 +135,7 @@ const chartConfig = {
 
 const columns = [
   {
-    header: "File name",
+    header: 'File name',
     accessor: (row: (typeof documents)[0]) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -149,9 +149,9 @@ const columns = [
       </div>
     ),
   },
-  { header: "Date uploaded", accessor: "date" },
+  { header: 'Date uploaded', accessor: 'date' },
   {
-    header: "Status",
+    header: 'Status',
     accessor: (row: (typeof documents)[0]) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -159,7 +159,7 @@ const columns = [
     ),
   },
   {
-    header: "",
+    header: '',
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
         <button className="text-gray-400 hover:text-red-600">
@@ -170,13 +170,13 @@ const columns = [
         </button>
       </div>
     ),
-    className: "text-right",
+    className: 'text-right',
   },
 ];
 function FinancePage({}: Props) {
   return (
-    <div className="flex mx-auto  flex-col gap-6">
-      <div className="mt-8 flex items-center justify-between">
+    <div className="flex mx-auto  flex-col gap-6 overflow-hidden w-full">
+      <div className="mt-8 flex items-center justify-between w-full">
         <div className=" items-center  gap-2">
           <p className="font-bold text-2xl">SME Financial Dashboard</p>
           <p className="text-sm text-[#282828]">
@@ -184,68 +184,69 @@ function FinancePage({}: Props) {
           </p>
         </div>
         <Button variant="primary">
-          Update Records{" "}
+          Update Records{' '}
           <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
         </Button>
       </div>
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+          {overviewCards.map((card) => (
+            <Card key={card.id} className="min-h-[155px] shadow-none">
+              <CardContent className="flex flex-col gap-2 justify-between h-full py-4">
+                <div className="flex items-center gap-2 justify-between">
+                  <div className="flex flex-row gap-2 w-fit items-center rounded-full bg-[#FFFFFF]/50 text-green p-2">
+                    {card.icon2()}
+                    <span className="font-medium text-base text-[#7A7A9D]">
+                      {card.label}
+                    </span>
+                  </div>
+                  <Select>
+                    <SelectTrigger className="w-fit rounded-lg">
+                      <SelectValue placeholder="Days" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">30 days</SelectItem>
+                      <SelectItem value="2">60 days</SelectItem>
+                      <SelectItem value="3">90 days</SelectItem>
+                      <SelectItem value="4">120 days</SelectItem>
+                      <SelectItem value="5">150 days</SelectItem>
+                      <SelectItem value="6">180 days</SelectItem>
+                      <SelectItem value="7">210 days</SelectItem>
+                      <SelectItem value="8">240 days</SelectItem>
+                      <SelectItem value="9">270 days</SelectItem>
+                      <SelectItem value="10">300 days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-6">
-        {overviewCards.map((card) => (
-          <Card key={card.id} className="min-h-[155px] shadow-none">
-            <CardContent className="flex  flex-col gap-2 justify-between h-full py-4">
-              <div className="flex items-center gap-2 justify-between">
-                <div className="text-2xl glex flex-row gap-2  w-fit flex items-center rounded-full bg-[#FFFFFF]/50 text-green p-2">
-                  {card.icon2()}
-                  <span className="font-medium text-base text-[#7A7A9D]">
-                    {card.label}
+                <div className="flex flex-col gap-2 mt-auto">
+                  <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">
+                    {card.currency
+                      ? formatCurrency(card.amount, 0, 0, card.currency)
+                      : card.amount}
                   </span>
-                </div>
-                <Select>
-                  <SelectTrigger className="w-fit rounded-lg">
-                    <SelectValue placeholder="Days" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">30 days</SelectItem>
-                    <SelectItem value="2">60 days</SelectItem>
-                    <SelectItem value="3">90 days</SelectItem>
-                    <SelectItem value="4">120 days</SelectItem>
-                    <SelectItem value="5">150 days</SelectItem>
-                    <SelectItem value="6">180 days</SelectItem>
-                    <SelectItem value="7">210 days</SelectItem>
-                    <SelectItem value="8">240 days</SelectItem>
-                    <SelectItem value="9">270 days</SelectItem>
-                    <SelectItem value="10">300 days</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
-              <div className="flex flex-col  gap-2 mt-auto">
-                <span className="text-5xl font-bold">
-                  {card.currency
-                    ? formatCurrency(card.amount, 0, 0, card.currency)
-                    : card.amount}
-                </span>
-
-                <div className="text-2xl flex items-center w-fit flex-row gap-1 rounded-full bg-[#F4FFFC] text-green p-2">
-                  {card?.percentage !== undefined &&
-                    (card.direction === "up" ? (
-                      <span className="text-sm text-success-100 font-bold">
-                        {card.percentage}%
-                      </span>
-                    ) : (
-                      <span className="text-sm text-red font-bold">
-                        {card.percentage && card.percentage < 0
-                          ? card.percentage
-                          : 0}
-                        %
-                      </span>
-                    ))}
-                  {card.icon()}
+                  <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] text-green p-2">
+                    {card?.percentage !== undefined &&
+                      (card.direction === 'up' ? (
+                        <span className="text-sm text-success-100 font-bold">
+                          {card.percentage}%
+                        </span>
+                      ) : (
+                        <span className="text-sm text-red font-bold">
+                          {card.percentage && card.percentage < 0
+                            ? card.percentage
+                            : 0}
+                          %
+                        </span>
+                      ))}
+                    {card.icon()}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -288,15 +289,15 @@ function FinancePage({}: Props) {
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: "Revenue ",
+                      text: 'Revenue ',
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: "#374151",
+                      color: '#374151',
                     },
                     grid: {
-                      color: "rgba(0, 0, 0, 0.1)",
+                      color: 'rgba(0, 0, 0, 0.1)',
                       tickBorderDash: [8, 8],
                       display: true,
                     },
@@ -309,12 +310,12 @@ function FinancePage({}: Props) {
                   x: {
                     title: {
                       display: true,
-                      text: "Months",
+                      text: 'Months',
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: "#374151",
+                      color: '#374151',
                     },
                     grid: {
                       display: false,
