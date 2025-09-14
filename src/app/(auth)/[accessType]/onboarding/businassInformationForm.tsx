@@ -16,7 +16,7 @@ import {
 import { updateProfile } from '@/hooks/useUpdateProfile';
 import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
 import { SMEsBusinessInfo } from '@/lib/uitils/types';
-import { africanCountries } from '@/lib/utils';
+import { useAfricanCountries } from '@/hooks/useComplianceCatalogs';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import {
@@ -49,6 +49,8 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
       formState: { errors },
     } = useForm<SMEsBusinessInfo>();
     const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
+    const { data: countries = [], isLoading: countriesLoading } = useAfricanCountries();
+    
     useEffect(() => {
       props.setLoading(smes_bussiness_info.isPending);
     }, [smes_bussiness_info.isPending, props]);
@@ -170,9 +172,9 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <MultiSelectValue placeholder="Select business stage" />
             </MultiSelectTrigger>
             <MultiSelectContent>
-              {africanCountries.map((country) => (
-                <MultiSelectItem key={country} value={country}>
-                  {country}
+              {countries.map((c) => (
+                <MultiSelectItem key={c.code} value={c.name}>
+                  {c.name}
                 </MultiSelectItem>
               ))}
             </MultiSelectContent>

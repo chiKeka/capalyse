@@ -162,6 +162,12 @@ export const apiRoutes = {
     compute: (id: string) => `/compliance/cases/${id}/compute`,
     refresh: (id: string) => `/compliance/cases/${id}/requirements/refresh`,
     chat: (id: string) => `/compliance/cases/${id}/chat`,
+    // Catalog
+    catalog: {
+      africanCountries: '/compliance/catalog/african-countries',
+      productCategories: '/compliance/catalog/product-categories',
+      unions: '/compliance/catalog/unions',
+    },
   },
 
   /**

@@ -20,7 +20,7 @@ import {
 } from '@/hooks/useCompliance';
 import { useDocument } from '@/hooks/useDocument';
 import { complianceAttachment } from '@/lib/uitils/types';
-import { africanCountries } from '@/lib/utils';
+import { useAfricanCountries, useProductCategories } from '@/hooks/useComplianceCatalogs';
 import { Loader } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -34,6 +34,17 @@ function CompliancePage() {
   console.log({ complianceCases });
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
+  // Catalog data
+  const {
+    data: countries = [],
+    isLoading: countriesLoading,
+    isError: countriesError,
+  } = useAfricanCountries();
+  const {
+    data: categories = [],
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = useProductCategories();
   const {
     register,
     handleSubmit,
@@ -106,17 +117,20 @@ function CompliancePage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Select Country</Label>
-                <Select onValueChange={(val) => setValue('country', val)}>
+                <Select
+                  onValueChange={(val) => setValue('country', val)}
+                  disabled={countriesLoading || (!!countriesError && countries.length === 0)}
+                >
                   <SelectTrigger id="reason">
                     <SelectValue
-                      placeholder="Select Reason"
+                      placeholder={countriesLoading ? 'Loading countries...' : countriesError ? 'Failed to load countries' : 'Select Country'}
                       className="placeholder:text-[#D1D1D1]"
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {africanCountries.map((country) => (
-                      <SelectItem key={country} value={country}>
-                        {country}
+                    {countries.map((c) => (
+                      <SelectItem key={c.code} value={c.name}>
+                        {c.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -131,16 +145,20 @@ function CompliancePage() {
                 <Label htmlFor="reason">Select Product Category</Label>
                 <Select
                   onValueChange={(val) => setValue('productCategory', val)}
+                  disabled={categoriesLoading || (!!categoriesError && categories.length === 0)}
                 >
                   <SelectTrigger id="reason">
                     <SelectValue
-                      placeholder="Select Reason"
+                      placeholder={categoriesLoading ? 'Loading categories...' : categoriesError ? 'Failed to load categories' : 'Select Category'}
                       className="placeholder:text-[#D1D1D1]"
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="stock">Stock</SelectItem>
-                    <SelectItem value="goods">Goods</SelectItem>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.productCategory && (

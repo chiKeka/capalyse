@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
 import { SMEsBusinessInfo } from '@/lib/uitils/types';
-import { africanCountries } from '@/lib/utils';
+import { useAfricanCountries } from '@/hooks/useComplianceCatalogs';
 import { useEffect, useState } from 'react';
 import 'react-country-state-city/dist/react-country-state-city.css';
 import { useForm } from 'react-hook-form';
@@ -30,6 +30,7 @@ export default function Info({}: Props) {
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
     user?.countryOfOperation || []
   );
+  const { data: countries = [], isLoading: countriesLoading } = useAfricanCountries();
 
   const {
     register,
@@ -141,9 +142,9 @@ export default function Info({}: Props) {
                 <MultiSelectValue placeholder="Select country of operation" />
               </MultiSelectTrigger>
               <MultiSelectContent>
-                {africanCountries.map((country) => (
-                  <MultiSelectItem key={country} value={country}>
-                    {country}
+                {countries.map((c) => (
+                  <MultiSelectItem key={c.code} value={c.name}>
+                    {c.name}
                   </MultiSelectItem>
                 ))}
               </MultiSelectContent>
