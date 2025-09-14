@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import {
   Sheet,
@@ -15,6 +15,8 @@ import { CIcons } from "./CIcons";
 import { CurrencyAmountInput } from "./Inputs";
 import useDocument from "@/hooks/useDocument";
 import { Loader } from "lucide-react";
+import { useCreateFinancials, useDefaultCurrency } from "@/hooks/useFinancials";
+import { toast } from "sonner";
 
 interface UpdateFinancialRecordsSheetProps {
   open: boolean;
@@ -31,6 +33,18 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
   const [files, setFiles] = useState<any[]>([]);
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
+  const { data: defaultCurrency = "NGN" } = useDefaultCurrency();
+  const createFinancials = useCreateFinancials();
+
+  // keep currency synced to user's default
+  useEffect(() => {
+    const setCurrencyAll = (cur: string) => {
+      setRevenue((s) => ({ ...s, currency: cur }));
+      setExpenses((s) => ({ ...s, currency: cur }));
+      setDebt((s) => ({ ...s, currency: cur }));
+    };
+    setCurrencyAll(defaultCurrency);
+  }, [defaultCurrency]);
 
   const handleFileUpload = async (e: any) => {
     const file = e.target.files?.[0];
@@ -46,6 +60,7 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
         onSuccess: (res) => {
           setFiles([
             {
+              id: res?._id,
               fileName: res?.originalName,
               fileUrl: `${process.env.NEXT_PUBLIC_API_URL}/documents/${res?._id}/download`,
               fileSize: res?.size,
@@ -59,6 +74,25 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
         },
       }
     );
+  };
+
+  const onSubmit = async () => {
+    const payload = {
+      revenue: { amount: Number(revenue.amount || 0), currency: defaultCurrency },
+      expense: { amount: Number(expenses.amount || 0), currency: defaultCurrency },
+      debt: { amount: Number(debt.amount || 0), currency: defaultCurrency },
+      backingDocs: files?.map((f) => f.id).filter(Boolean),
+      startDate: date || new Date().toISOString().slice(0, 10),
+      endDate: date || new Date().toISOString().slice(0, 10),
+    };
+
+    try {
+      await createFinancials.mutateAsync(payload);
+      toast.success("Financial records updated");
+      onOpenChange(false);
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to update financial records");
+    }
   };
 
   return (
@@ -95,6 +129,7 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
                 currency={revenue.currency}
                 onAmountChange={(val) => setRevenue((s) => ({ ...s, amount: val as number | "" }))}
                 onCurrencyChange={(cur) => setRevenue((s) => ({ ...s, currency: cur }))}
+                currencyDisabled
               />
             </div>
 
@@ -106,6 +141,7 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
                 currency={expenses.currency}
                 onAmountChange={(val) => setExpenses((s) => ({ ...s, amount: val as number | "" }))}
                 onCurrencyChange={(cur) => setExpenses((s) => ({ ...s, currency: cur }))}
+                currencyDisabled
               />
             </div>
 
@@ -117,6 +153,7 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
                 currency={debt.currency}
                 onAmountChange={(val) => setDebt((s) => ({ ...s, amount: val as number | "" }))}
                 onCurrencyChange={(cur) => setDebt((s) => ({ ...s, currency: cur }))}
+                currencyDisabled
               />
             </div>
 
@@ -158,7 +195,7 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
           </form>
         </div>
         <div className="border-t px-6 py-4">
-          <Button className="w-full" variant="primary" onClick={() => onOpenChange(false)}>
+          <Button className="w-full" variant="primary" onClick={onSubmit} state={createFinancials.isPending ? 'loading' : undefined} disabled={createFinancials.isPending}>
             Update
           </Button>
         </div>

@@ -26,8 +26,9 @@ import {
 } from 'chart.js';
 import { File, Pen, Trash2 } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { UpdateFinancialRecordsSheet } from '@/components/ui/update-financial-records-sheet';
+import { useFinancialGrowth, useFinancialSummary } from '@/hooks/useFinancials';
 
 ChartJS.register(
   CategoryScale,
@@ -49,38 +50,6 @@ const documents: any[] = [
   },
 ];
 
-const overviewCards = [
-  {
-    id: 1,
-    label: 'Revenue',
-    amount: 1200000,
-    currency: 'NGN',
-    percentage: 5,
-    direction: 'up',
-    icon: CIcons.chars,
-    icon2: CIcons.bars,
-  },
-  {
-    id: 1,
-    label: 'Expenses',
-    amount: 700000,
-    currency: 'NGN',
-    percentage: 5,
-    direction: 'up',
-    icon: CIcons.chars,
-    icon2: CIcons.bars,
-  },
-  {
-    id: 1,
-    label: 'Debt',
-    amount: 200000,
-    currency: 'NGN',
-    percentage: 5,
-    direction: 'up',
-    icon: CIcons.chars,
-    icon2: CIcons.bars,
-  },
-];
 
 // Chart.js configuration
 const DATA_COUNT = 7;
@@ -100,23 +69,10 @@ const labels = [
   'November',
   'December',
 ];
-const chartData = {
-  labels: labels,
-  datasets: [
-    {
-      //   label: "Revenue",
-      data: [0, 200, 50, 600, 10, 80, 1200, 70, 0, 16, 1200, 500],
-      borderColor: '#047857',
-      backgroundColor: 'rgba(4, 120, 87, 0.1)',
-      tension: 0.4,
-      fill: true,
-    },
-  ],
-};
 
 const chartConfig = {
   type: 'line' as const,
-  data: chartData,
+  data: [],
   options: {
     responsive: true,
     scales: {
@@ -177,6 +133,108 @@ const columns = [
 ];
 function FinancePage({}: Props) {
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [summaryMonths, setSummaryMonths] = useState<1 | 12>(1);
+  const [growthMonths, setGrowthMonths] = useState<1 | 12>(12);
+
+  const now = new Date();
+  const to = now.toISOString().slice(0, 10);
+
+  const calcFrom = (months: number) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - months);
+    return d.toISOString().slice(0, 10);
+  };
+
+  const summaryFrom = calcFrom(summaryMonths);
+  const growthFrom = calcFrom(growthMonths);
+
+  const { data: summary } = useFinancialSummary({ from: summaryFrom, to });
+  const { data: growth } = useFinancialGrowth({ from: growthFrom, to });
+
+  type OverviewCard = {
+    id: number;
+    label: 'Revenue' | 'Expenses' | 'Debt';
+    amount: number;
+    currency: string;
+    percentage?: number | null;
+    direction: 'up' | 'down';
+    icon: any;
+    icon2: any;
+  };
+
+  const overviewCards: OverviewCard[] = useMemo(() => {
+    const overall = summary?.overall || {};
+    const latest = Array.isArray(summary?.data) && summary?.data?.length
+      ? summary?.data[summary?.data.length - 1]
+      : undefined;
+    const revPct = latest?.totals?.revenue?.pctChange ?? null;
+    const expPct = latest?.totals?.expense?.pctChange ?? null;
+    const debtPct = latest?.totals?.debt?.pctChange ?? null;
+
+    return [
+      {
+        id: 1,
+        label: 'Revenue',
+        amount: overall?.revenue?.amount ?? 0,
+        currency: overall?.revenue?.currency ?? 'NGN',
+        percentage: typeof revPct === 'number' ? revPct : undefined,
+        direction: typeof revPct === 'number' && revPct < 0 ? 'down' : 'up',
+        icon: CIcons.chars,
+        icon2: CIcons.bars,
+      },
+      {
+        id: 2,
+        label: 'Expenses',
+        amount: overall?.expense?.amount ?? 0,
+        currency: overall?.expense?.currency ?? 'NGN',
+        percentage: typeof expPct === 'number' ? expPct : undefined,
+        direction: typeof expPct === 'number' && expPct < 0 ? 'down' : 'up',
+        icon: CIcons.chars,
+        icon2: CIcons.bars,
+      },
+      {
+        id: 3,
+        label: 'Debt',
+        amount: overall?.debt?.amount ?? 0,
+        currency: overall?.debt?.currency ?? 'NGN',
+        percentage: typeof debtPct === 'number' ? debtPct : undefined,
+        direction: typeof debtPct === 'number' && debtPct < 0 ? 'down' : 'up',
+        icon: CIcons.chars,
+        icon2: CIcons.bars,
+      },
+    ];
+  }, [summary]);
+
+  const growthData = useMemo(() => {
+    const arr = Array.isArray(growth) ? growth : [];
+    if (!arr.length)
+      return {
+        labels: [],
+        datasets: [
+          {
+            data: [],
+            borderColor: '#047857',
+            backgroundColor: 'rgba(4, 120, 87, 0.1)',
+            tension: 0.4,
+            fill: true,
+          },
+        ],
+      };
+    const lbs = arr.map((g) => g.month);
+    const dataPoints = arr.map((g) => g?.revenue?.amount ?? 0);
+    return {
+      labels: lbs,
+      datasets: [
+        {
+          data: dataPoints,
+          borderColor: '#047857',
+          backgroundColor: 'rgba(4, 120, 87, 0.1)',
+          tension: 0.4,
+          fill: true,
+        },
+      ],
+    };
+  }, [growth]);
   return (
     <div className="flex mx-auto  flex-col gap-6 overflow-hidden w-full">
       <div className="mt-8 flex items-center justify-between w-full">
@@ -193,7 +251,7 @@ function FinancePage({}: Props) {
       </div>
       <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {overviewCards.map((card) => (
+          {overviewCards.map((card: OverviewCard) => (
             <Card key={card.id} className="min-h-[155px] shadow-none">
               <CardContent className="flex flex-col gap-2 justify-between h-full py-4">
                 <div className="flex items-center gap-2 justify-between">
@@ -203,21 +261,13 @@ function FinancePage({}: Props) {
                       {card.label}
                     </span>
                   </div>
-                  <Select>
+                  <Select value={String(summaryMonths)} onValueChange={(v) => setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}>
                     <SelectTrigger className="w-fit rounded-lg">
-                      <SelectValue placeholder="Days" />
+                      <SelectValue placeholder="Range" defaultValue={String(summaryMonths)} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">30 days</SelectItem>
-                      <SelectItem value="2">60 days</SelectItem>
-                      <SelectItem value="3">90 days</SelectItem>
-                      <SelectItem value="4">120 days</SelectItem>
-                      <SelectItem value="5">150 days</SelectItem>
-                      <SelectItem value="6">180 days</SelectItem>
-                      <SelectItem value="7">210 days</SelectItem>
-                      <SelectItem value="8">240 days</SelectItem>
-                      <SelectItem value="9">270 days</SelectItem>
-                      <SelectItem value="10">300 days</SelectItem>
+                      <SelectItem value="1">Last month</SelectItem>
+                      <SelectItem value="12">Last year</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -263,15 +313,13 @@ function FinancePage({}: Props) {
                 Track SME growth and performance
               </p>
             </div>
-            <Select>
+            <Select value={String(growthMonths)} onValueChange={(v) => setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}>
               <SelectTrigger className="w-full sm:w-fit rounded-lg">
-                <SelectValue placeholder="Last 12 months" />
+                <SelectValue placeholder="Range" defaultValue={String(growthMonths)} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">Last 3 months</SelectItem>
-                <SelectItem value="2">Last 6 months</SelectItem>
-                <SelectItem value="3">Last 7 months</SelectItem>
-                <SelectItem value="4">Last 12 months</SelectItem>
+                <SelectItem value="1">Last month</SelectItem>
+                <SelectItem value="12">Last year</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -331,7 +379,7 @@ function FinancePage({}: Props) {
                   },
                 },
               }}
-              data={chartData}
+              data={growthData}
               className="w-full h-full"
             />
           </div>

@@ -167,6 +167,7 @@ export const apiRoutes = {
       africanCountries: '/compliance/catalog/african-countries',
       productCategories: '/compliance/catalog/product-categories',
       unions: '/compliance/catalog/unions',
+      africanCurrencies: '/compliance/catalog/african-currencies',
     },
   },
 
@@ -324,6 +325,22 @@ export const apiRoutes = {
     // Support Administration
     getAllTickets: '/admin/tickets',
     assignTicket: (ticketId: string) => `/admin/tickets/${ticketId}/assign`,
+  },
+
+  /**
+   * Financials and analytics endpoints.
+   */
+  financials: {
+    create: '/financials',
+    summary: '/financials/analytics/summary',
+    growth: '/financials/analytics/growth',
+  },
+
+  /**
+   * Profile endpoints additions
+   */
+  profile: {
+    currency: '/profile/currency',
   },
 };
 
