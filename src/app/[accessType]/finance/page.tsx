@@ -26,6 +26,8 @@ import {
 } from 'chart.js';
 import { File, Pen, Trash2 } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
+import { useState } from 'react';
+import { UpdateFinancialRecordsSheet } from '@/components/ui/update-financial-records-sheet';
 
 ChartJS.register(
   CategoryScale,
@@ -174,6 +176,7 @@ const columns = [
   },
 ];
 function FinancePage({}: Props) {
+  const [openUpdate, setOpenUpdate] = useState(false);
   return (
     <div className="flex mx-auto  flex-col gap-6 overflow-hidden w-full">
       <div className="mt-8 flex items-center justify-between w-full">
@@ -183,7 +186,7 @@ function FinancePage({}: Props) {
             Last Updated: 20th August, 2025
           </p>
         </div>
-        <Button variant="primary">
+        <Button variant="primary" onClick={() => setOpenUpdate(true)}>
           Update Records{' '}
           <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
         </Button>
@@ -377,6 +380,7 @@ function FinancePage({}: Props) {
           )}
         </div>
       </DashboardCardLayout>
+      <UpdateFinancialRecordsSheet open={openUpdate} onOpenChange={setOpenUpdate} />
     </div>
   );
 }

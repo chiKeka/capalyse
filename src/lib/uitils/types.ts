@@ -20,6 +20,11 @@ export type SMEsBusinessInfo = {
   businessStage: string;
   industry: string;
   website: string;
+  socials: {
+    socialMedia: string;
+    url: string;
+  }[];
+  logo: string;
 };
 
 export type InvestmentPreferenceInfo = {
