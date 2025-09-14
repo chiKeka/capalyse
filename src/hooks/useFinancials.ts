@@ -25,6 +25,7 @@ const keys = {
   financials: ['financials'] as const,
   summary: () => [...keys.financials, 'summary'] as const,
   growth: () => [...keys.financials, 'growth'] as const,
+  documents: () => [...keys.financials, 'financial-documents'] as const,
   currency: ['profile', 'currency'] as const,
 };
 
@@ -100,3 +101,39 @@ export function useCreateFinancials() {
 }
 
 export const financialQueryKeys = keys;
+
+// ----------------------------------------------------------------------------
+// Financial Documents
+// ----------------------------------------------------------------------------
+
+export interface FinancialDocument {
+  userId: string;
+  originalName: string;
+  fileName: string;
+  mimeType: string;
+  category: string;
+  size: number;
+  uploadedAt: string;
+  updatedAt: string;
+}
+
+export interface FinancialDocumentsResponse {
+  data: FinancialDocument[];
+  page: number;
+  limit: number;
+  total: number;
+}
+
+export function useFinancialDocuments(params?: { page?: number; limit?: number }, enabled = true) {
+  return useQuery({
+    queryKey: [...keys.documents(), params?.page ?? 1, params?.limit ?? 10],
+    queryFn: async (): Promise<FinancialDocumentsResponse> => {
+      const res = await api.get(apiRoutes.financials.documents.me, {
+        params: { page: params?.page, limit: params?.limit },
+      });
+      return res?.data as FinancialDocumentsResponse;
+    },
+    enabled,
+    retry: 1,
+  });
+}

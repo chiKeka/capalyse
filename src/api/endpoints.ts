@@ -334,6 +334,9 @@ export const apiRoutes = {
     create: '/financials',
     summary: '/financials/analytics/summary',
     growth: '/financials/analytics/growth',
+    documents: {
+      me: '/financials/documents/me',
+    },
   },
 
   /**

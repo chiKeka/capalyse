@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
 import { formatCurrency } from '@/lib/uitils/fns';
+import { format as formatDate } from 'date-fns';
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -28,7 +29,8 @@ import { File, Pen, Trash2 } from 'lucide-react';
 import { Line } from 'react-chartjs-2';
 import { useMemo, useState } from 'react';
 import { UpdateFinancialRecordsSheet } from '@/components/ui/update-financial-records-sheet';
-import { useFinancialGrowth, useFinancialSummary } from '@/hooks/useFinancials';
+import { useFinancialDocuments, useFinancialGrowth, useFinancialSummary } from '@/hooks/useFinancials';
+import { formatFileSize } from '@/hooks/useDocument';
 
 ChartJS.register(
   CategoryScale,
@@ -41,14 +43,12 @@ ChartJS.register(
 );
 
 type Props = {};
-const documents: any[] = [
-  {
-    name: 'CAC Registration.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
-  },
-];
+type DocumentRow = {
+  name: string;
+  size: string;
+  date: string;
+  status: string;
+};
 
 
 // Chart.js configuration
@@ -94,7 +94,7 @@ const chartConfig = {
 const columns = [
   {
     header: 'File name',
-    accessor: (row: (typeof documents)[0]) => (
+    accessor: (row: DocumentRow) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
           <File className="text-green w-5 h-5" />
@@ -110,7 +110,7 @@ const columns = [
   { header: 'Date uploaded', accessor: 'date' },
   {
     header: 'Status',
-    accessor: (row: (typeof documents)[0]) => (
+    accessor: (row: DocumentRow) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
       </span>
@@ -150,6 +150,7 @@ function FinancePage({}: Props) {
 
   const { data: summary } = useFinancialSummary({ from: summaryFrom, to });
   const { data: growth } = useFinancialGrowth({ from: growthFrom, to });
+  const { data: docsData, isLoading: docsLoading, error: docsError, refetch: refetchDocs } = useFinancialDocuments({ page: 1, limit: 10 });
 
   type OverviewCard = {
     id: number;
@@ -235,6 +236,17 @@ function FinancePage({}: Props) {
       ],
     };
   }, [growth]);
+
+  const documentRows: DocumentRow[] = useMemo(() => {
+    const list = docsData?.data ?? [];
+    return list.map((d) => ({
+      name: d.originalName || d.fileName,
+      size: formatFileSize(d.size || 0),
+      date: d.uploadedAt ? formatDate(new Date(d.uploadedAt), 'LLL d, yyyy') : '',
+      status: 'Completed',
+    }));
+  }, [docsData]);
+  const documentsCount = docsData?.total ?? documentRows.length;
   return (
     <div className="flex mx-auto  flex-col gap-6 overflow-hidden w-full">
       <div className="mt-8 flex items-center justify-between w-full">
@@ -393,7 +405,7 @@ function FinancePage({}: Props) {
               <p className="font-bold text-base flex gap-2 items-center text-[#18181B]">
                 Documents
                 <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-                  {documents.length}
+                  {documentsCount}
                 </span>
               </p>
             </div>
@@ -417,8 +429,16 @@ function FinancePage({}: Props) {
               </SelectContent>
             </Select>
           </div>
-          {documents?.length > 0 ? (
-            <ReusableTable columns={columns} data={documents} />
+          {docsLoading ? (
+            <div className="flex items-center justify-center py-10 text-muted-foreground text-sm">Loading documents…</div>
+          ) : docsError ? (
+            <EmptyBox
+              caption="Failed to load documents"
+              caption2={(docsError as any)?.message ?? "Please try again."}
+              showButton={false}
+            />
+          ) : documentRows?.length > 0 ? (
+            <ReusableTable columns={columns} data={documentRows} />
           ) : (
             <EmptyBox
               caption="No Documents Yet!"
