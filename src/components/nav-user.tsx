@@ -2,11 +2,12 @@
 
 import {
   ArrowRightIcon,
-  BadgeCheck,
+  // BadgeCheck,
   Bell,
-  CreditCard,
+  // CreditCard,
   LogOut,
-  Sparkles,
+  Settings,
+  // Sparkles,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -41,6 +42,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import Button from "./ui/Button";
+import { NotificationSheet } from "./ui/notification-sheet";
+import { useGetNotifications } from "@/hooks/useNotification";
 
 export function NavUser({
   user,
@@ -55,10 +58,13 @@ export function NavUser({
   const param = useParams();
   const { isMobile } = useSidebar();
   const [loading, setLoading] = useState(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
   const setAuth = useSetAtom(authAtom);
   const auth: any = useAtomValue(authAtom);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const Notifications = useGetNotifications();
+  const { data: notifications } = Notifications;
   const handleLogout = () => {
     authClient.signOut().then(() => {
       setAuth(null);
@@ -117,23 +123,20 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            </DropdownMenuGroup> 
+            <DropdownMenuSeparator /> */}
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                <Link href={`/${param?.accessType}/profile`}>Account</Link>
+                <Settings className="mr-2 h-4 w-4" />
+                <Link href={`/${param?.accessType}/settings`}>Settings</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem></DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setOpenNotifications(true)}>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
@@ -145,6 +148,11 @@ export function NavUser({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <NotificationSheet
+          open={openNotifications}
+          onOpenChange={setOpenNotifications}
+          notifications={notifications}
+        />
       </SidebarMenuItem>
       <Dialog open={showLogout} onOpenChange={setShowLogout}>
         <DialogContent className="sm:!max-w-[425px]" hideIcon>

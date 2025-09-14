@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
@@ -206,11 +206,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
     navMain: navs[isAdmin ? "admin" : (type as keyof typeof navs)] || [],
     navSecondary: [
       {
-        title: "Settings",
+        title: "Account",
         url: isAdmin
-          ? routes.admin.settings
-          : routes[type as keyof typeof routes]?.settings || "",
-        icon: Settings,
+          ? routes.admin.profile
+          : routes[type as keyof typeof routes]?.profile || "",
+        icon: BadgeCheck,
       },
     ],
   };
