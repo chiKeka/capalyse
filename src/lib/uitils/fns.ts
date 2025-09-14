@@ -8,7 +8,7 @@ export function formatCurrency(
   maxFD = 2,
   currency: string
 ) {
-  return new Intl.NumberFormat("en-NG", {
+  return new Intl.NumberFormat("en", {
     style: "currency",
     currency: currency ?? "NGN",
     maximumFractionDigits: maxFD,

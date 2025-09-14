@@ -17,6 +17,9 @@ import useDocument from "@/hooks/useDocument";
 import { Loader } from "lucide-react";
 import { useCreateFinancials, useDefaultCurrency } from "@/hooks/useFinancials";
 import { toast } from "sonner";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { Calendar } from "./calendar";
+import { format } from "date-fns";
 
 interface UpdateFinancialRecordsSheetProps {
   open: boolean;
@@ -24,7 +27,9 @@ interface UpdateFinancialRecordsSheetProps {
 }
 
 export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinancialRecordsSheetProps) {
-  const [date, setDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [range, setRange] = useState<{ from?: Date; to?: Date }>({});
   const [revenue, setRevenue] = useState<{ amount: number | ""; currency: string }>({ amount: "", currency: "NGN" });
   const [expenses, setExpenses] = useState<{ amount: number | ""; currency: string }>({ amount: "", currency: "NGN" });
   const [debt, setDebt] = useState<{ amount: number | ""; currency: string }>({ amount: "", currency: "NGN" });
@@ -77,13 +82,17 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
   };
 
   const onSubmit = async () => {
+    if (!startDate || !endDate) {
+      toast.error("Please select a start and end date");
+      return;
+    }
     const payload = {
       revenue: { amount: Number(revenue.amount || 0), currency: defaultCurrency },
       expense: { amount: Number(expenses.amount || 0), currency: defaultCurrency },
       debt: { amount: Number(debt.amount || 0), currency: defaultCurrency },
-      backingDocs: files?.map((f) => f.id).filter(Boolean),
-      startDate: date || new Date().toISOString().slice(0, 10),
-      endDate: date || new Date().toISOString().slice(0, 10),
+      backingDocs: files?.map((f: any) => f.id).filter(Boolean),
+      startDate,
+      endDate,
     };
 
     try {
@@ -106,19 +115,37 @@ export function UpdateFinancialRecordsSheet({ open, onOpenChange }: UpdateFinanc
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <form className="flex flex-col gap-5">
-            {/* Date */}
+            {/* Date Range */}
             <div className="flex flex-col gap-2">
-              <Label htmlFor="finance-date" className="text-sm font-medium text-foreground">Select Date</Label>
-              <div className="relative">
-                <Input
-                  id="finance-date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="h-11"
-                />
-                <img src="/icons/calendar.svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-70 pointer-events-none" />
-              </div>
+              <Label className="text-sm font-medium text-foreground">Select Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="relative inline-flex items-center w-full h-11 rounded-md border bg-background px-3 pl-10 text-left text-sm hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    aria-label="Select date range"
+                  >
+                    <img src="/icons/calendar.svg" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-70 pointer-events-none" />
+                    <span className="text-foreground/80">
+                      {range.from && range.to
+                        ? `${format(range.from, 'PPP')} - ${format(range.to, 'PPP')}`
+                        : "Select Date"}
+                    </span>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[18rem]" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={range as any}
+                    onSelect={(val: any) => {
+                      setRange(val || {});
+                      setStartDate(val?.from ? format(val.from as Date, 'yyyy-MM-dd') : '');
+                      setEndDate(val?.to ? format(val.to as Date, 'yyyy-MM-dd') : '');
+                    }}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             {/* Revenue */}
