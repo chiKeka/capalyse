@@ -1,14 +1,15 @@
-'use client';
-import Button from '@/components/ui/Button';
-import StraightBar from '@/components/ui/straightBar';
-import { getCurrentProfile } from '@/hooks/useUpdateProfile';
-import { useState } from 'react';
-import Document from './document';
-import Info from './info';
-import Summary from './summary';
-import Team from './team';
-import { useAtomValue } from 'jotai';
-import { authAtom } from '@/lib/atoms/atoms';
+"use client";
+import Button from "@/components/ui/Button";
+import StraightBar from "@/components/ui/straightBar";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { authAtom } from "@/lib/atoms/atoms";
+import { useAtomValue } from "jotai";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Document from "./document";
+import Info from "./info";
+import Summary from "./summary";
+import Team from "./team";
 
 type Props = {};
 interface SettingsTabProps {
@@ -28,7 +29,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
     <div
       onClick={onClick}
       className={`flex items-center cursor-pointer ${
-        isActive ? 'text-green border-green' : 'text-[#8A8A8A] border-[#EAEAEA]'
+        isActive ? "text-green border-green" : "text-[#8A8A8A] border-[#EAEAEA]"
       } border-b-1 p-2 gap-2`}
     >
       <img className="w-4 h-4 lg:w-5 lg:h-5" src={icon} alt={`${label} icon`} />
@@ -41,33 +42,34 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
 
 const tabOptions = [
   {
-    key: 'personal',
-    label: 'Business Info',
-    icon: '/icons/briefcaselight.svg',
+    key: "personal",
+    label: "Business Info",
+    icon: "/icons/briefcaselight.svg",
     component: <Info />,
   },
   {
-    key: 'summary',
-    label: 'Business Summary',
-    icon: '/icons/briefcasetick.svg',
+    key: "summary",
+    label: "Business Summary",
+    icon: "/icons/briefcasetick.svg",
     component: <Summary />,
   },
   {
-    key: 'team',
-    label: 'Team',
-    icon: '/icons/team.svg',
+    key: "team",
+    label: "Team",
+    icon: "/icons/team.svg",
     component: <Team />,
   },
   {
-    key: 'document',
-    label: 'Documents',
-    icon: '/icons/document.svg',
+    key: "document",
+    label: "Documents",
+    icon: "/icons/document.svg",
     component: <Document />,
   },
 ];
 export default function page({}: Props) {
-  const [formState, setFormState] = useState('personal');
+  const [formState, setFormState] = useState("personal");
   const auth: any = useAtomValue(authAtom);
+  const router = useRouter();
   const activeTab = tabOptions.find((tab) => tab.key === formState);
   const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
@@ -79,13 +81,13 @@ export default function page({}: Props) {
         <div className="flex gap-2 items-center">
           <img
             className="rounded-full w-14 h-14"
-            src={'/images/userLogo.svg'}
+            src={"/images/userLogo.svg"}
           />
           <div className="gsp-4 flex flex-col">
             <p className=" text-base font-bold ">
               {auth?.name ??
-                `${user?.personalInfo?.firstName ?? ''} ${
-                  user?.personalInfo?.lastName ?? ''
+                `${user?.personalInfo?.firstName ?? ""} ${
+                  user?.personalInfo?.lastName ?? ""
                 }`}
             </p>
             <p className="text-xs font-normal">
@@ -107,7 +109,11 @@ export default function page({}: Props) {
 
             <StraightBar value={user?.completionPercentage} />
           </div>
-          <Button className="" variant="secondary">
+          <Button
+            onClick={() => router.push(`/overview/${auth?.id}`)}
+            className=""
+            variant="secondary"
+          >
             Preview public profile
           </Button>
         </div>

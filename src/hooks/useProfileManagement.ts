@@ -1,5 +1,9 @@
 import api from "@/api/axios";
-import { ApiEndPoints, investorsAnalytics } from "@/api/endpoints";
+import {
+  ApiEndPoints,
+  investorsAnalytics,
+  profileRoutes,
+} from "@/api/endpoints";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetProfileNextStep = () => {
@@ -43,5 +47,16 @@ export const useGetInvestorsAnalytics = () => {
       const response = await api.get(investorsAnalytics.getInvestorsAnalytics);
       return response?.data;
     },
+  });
+};
+
+export const usePublicProfile = (id: string) => {
+  return useQuery({
+    queryKey: ["public_profile"],
+    queryFn: async () => {
+      const response = await api.get(profileRoutes.publicProfile(id));
+      return response?.data;
+    },
+    enabled: !!id,
   });
 };

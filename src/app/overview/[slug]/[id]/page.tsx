@@ -1,20 +1,25 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import Button from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import { Card, CardContent } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { formatCurrency } from '@/lib/uitils/fns';
-import { format as formatDate } from 'date-fns';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { UpdateFinancialRecordsSheet } from "@/components/ui/update-financial-records-sheet";
+import { formatFileSize } from "@/hooks/useDocument";
+import {
+  useOverviewFinancialDocuments,
+  useOverviewFinancialGrowth,
+  useOverviewFinancialSummary,
+} from "@/hooks/useFinancials";
+import { formatCurrency } from "@/lib/uitils/fns";
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -24,13 +29,12 @@ import {
   PointElement,
   Title,
   Tooltip,
-} from 'chart.js';
-import { File, Pen, Trash2 } from 'lucide-react';
-import { Line } from 'react-chartjs-2';
-import { useMemo, useState } from 'react';
-import { UpdateFinancialRecordsSheet } from '@/components/ui/update-financial-records-sheet';
-import { useFinancialDocuments, useFinancialGrowth, useFinancialSummary } from '@/hooks/useFinancials';
-import { formatFileSize } from '@/hooks/useDocument';
+} from "chart.js";
+import { format as formatDate } from "date-fns";
+import { File, Pen, Trash2 } from "lucide-react";
+import { useParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { Line } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -50,28 +54,27 @@ type DocumentRow = {
   status: string;
 };
 
-
 // Chart.js configuration
 const DATA_COUNT = 7;
 const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 };
 
 const labels = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const chartConfig = {
-  type: 'line' as const,
+  type: "line" as const,
   data: [],
   options: {
     responsive: true,
@@ -79,12 +82,12 @@ const chartConfig = {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: "rgba(0, 0, 0, 0.1)",
         },
       },
       x: {
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: "rgba(0, 0, 0, 0.1)",
         },
       },
     },
@@ -93,7 +96,7 @@ const chartConfig = {
 
 const columns = [
   {
-    header: 'File name',
+    header: "File name",
     accessor: (row: DocumentRow) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -107,9 +110,9 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Date uploaded', accessor: 'date' },
+  { header: "Date uploaded", accessor: "date" },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: DocumentRow) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -117,7 +120,7 @@ const columns = [
     ),
   },
   {
-    header: '',
+    header: "",
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
         <button className="text-gray-400 hover:text-red-600">
@@ -128,10 +131,11 @@ const columns = [
         </button>
       </div>
     ),
-    className: 'text-right',
+    className: "text-right",
   },
 ];
 function FinancePage({}: Props) {
+  const { id } = useParams();
   const [openUpdate, setOpenUpdate] = useState(false);
   const [summaryMonths, setSummaryMonths] = useState<1 | 12>(1);
   const [growthMonths, setGrowthMonths] = useState<1 | 12>(12);
@@ -148,26 +152,40 @@ function FinancePage({}: Props) {
   const summaryFrom = calcFrom(summaryMonths);
   const growthFrom = calcFrom(growthMonths);
 
-  const { data: summary } = useFinancialSummary({ from: summaryFrom, to });
-  const { data: growth } = useFinancialGrowth({ from: growthFrom, to });
-  const { data: docsData, isLoading: docsLoading, error: docsError, refetch: refetchDocs } = useFinancialDocuments({ page: 1, limit: 10 });
+  const { data: summary } = useOverviewFinancialSummary(id as string, {
+    from: summaryFrom,
+    to,
+  });
+  const { data: growth } = useOverviewFinancialGrowth(id as string, {
+    from: growthFrom,
+    to,
+  });
+  const {
+    data: docsData,
+    isLoading: docsLoading,
+    error: docsError,
+    refetch: refetchDocs,
+  } = useOverviewFinancialDocuments(id as string, { page: 1, limit: 10 });
 
   type OverviewCard = {
     id: number;
-    label: 'Revenue' | 'Expenses' | 'Debt';
+    label: "Revenue" | "Expenses" | "Debt";
     amount: number;
     currency: string;
     percentage?: number | null;
-    direction: 'up' | 'down';
+    direction: "up" | "down";
     icon: any;
     icon2: any;
   };
 
+  console.log({ summary, growth, docsData });
+
   const overviewCards: OverviewCard[] = useMemo(() => {
     const overall = summary?.overall || {};
-    const latest = Array.isArray(summary?.data) && summary?.data?.length
-      ? summary?.data[summary?.data.length - 1]
-      : undefined;
+    const latest =
+      Array.isArray(summary?.data) && summary?.data?.length
+        ? summary?.data[summary?.data.length - 1]
+        : undefined;
     const revPct = latest?.totals?.revenue?.pctChange ?? null;
     const expPct = latest?.totals?.expense?.pctChange ?? null;
     const debtPct = latest?.totals?.debt?.pctChange ?? null;
@@ -175,31 +193,31 @@ function FinancePage({}: Props) {
     return [
       {
         id: 1,
-        label: 'Revenue',
+        label: "Revenue",
         amount: overall?.revenue?.amount ?? 0,
-        currency: overall?.revenue?.currency ?? 'NGN',
-        percentage: typeof revPct === 'number' ? revPct : undefined,
-        direction: typeof revPct === 'number' && revPct < 0 ? 'down' : 'up',
+        currency: overall?.revenue?.currency ?? "NGN",
+        percentage: typeof revPct === "number" ? revPct : undefined,
+        direction: typeof revPct === "number" && revPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 2,
-        label: 'Expenses',
+        label: "Expenses",
         amount: overall?.expense?.amount ?? 0,
-        currency: overall?.expense?.currency ?? 'NGN',
-        percentage: typeof expPct === 'number' ? expPct : undefined,
-        direction: typeof expPct === 'number' && expPct < 0 ? 'down' : 'up',
+        currency: overall?.expense?.currency ?? "NGN",
+        percentage: typeof expPct === "number" ? expPct : undefined,
+        direction: typeof expPct === "number" && expPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 3,
-        label: 'Debt',
+        label: "Debt",
         amount: overall?.debt?.amount ?? 0,
-        currency: overall?.debt?.currency ?? 'NGN',
-        percentage: typeof debtPct === 'number' ? debtPct : undefined,
-        direction: typeof debtPct === 'number' && debtPct < 0 ? 'down' : 'up',
+        currency: overall?.debt?.currency ?? "NGN",
+        percentage: typeof debtPct === "number" ? debtPct : undefined,
+        direction: typeof debtPct === "number" && debtPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
@@ -214,8 +232,8 @@ function FinancePage({}: Props) {
         datasets: [
           {
             data: [],
-            borderColor: '#047857',
-            backgroundColor: 'rgba(4, 120, 87, 0.1)',
+            borderColor: "#047857",
+            backgroundColor: "rgba(4, 120, 87, 0.1)",
             tension: 0.4,
             fill: true,
           },
@@ -228,8 +246,8 @@ function FinancePage({}: Props) {
       datasets: [
         {
           data: dataPoints,
-          borderColor: '#047857',
-          backgroundColor: 'rgba(4, 120, 87, 0.1)',
+          borderColor: "#047857",
+          backgroundColor: "rgba(4, 120, 87, 0.1)",
           tension: 0.4,
           fill: true,
         },
@@ -242,13 +260,16 @@ function FinancePage({}: Props) {
     return list.map((d) => ({
       name: d.originalName || d.fileName,
       size: formatFileSize(d.size || 0),
-      date: d.uploadedAt ? formatDate(new Date(d.uploadedAt), 'LLL d, yyyy') : '',
-      status: 'Completed',
+      date: d.uploadedAt
+        ? formatDate(new Date(d.uploadedAt), "LLL d, yyyy")
+        : "",
+      status: "Completed",
     }));
   }, [docsData]);
+
   const documentsCount = docsData?.total ?? documentRows.length;
   return (
-    <div className="flex mx-auto  flex-col gap-6 overflow-hidden w-full">
+    <div className="flex mx-auto max-w-7xl  flex-col gap-6 overflow-hidden w-full">
       <div className="mt-8 flex items-center justify-between w-full">
         <div className=" items-center  gap-2">
           <p className="font-bold text-2xl">SME Financial Dashboard</p>
@@ -256,10 +277,6 @@ function FinancePage({}: Props) {
             Last Updated: 20th August, 2025
           </p>
         </div>
-        <Button variant="primary" onClick={() => setOpenUpdate(true)}>
-          Update Records{' '}
-          <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
-        </Button>
       </div>
       <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
@@ -273,9 +290,17 @@ function FinancePage({}: Props) {
                       {card.label}
                     </span>
                   </div>
-                  <Select value={String(summaryMonths)} onValueChange={(v) => setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}>
+                  <Select
+                    value={String(summaryMonths)}
+                    onValueChange={(v) =>
+                      setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
+                    }
+                  >
                     <SelectTrigger className="w-fit rounded-lg">
-                      <SelectValue placeholder="Range" defaultValue={String(summaryMonths)} />
+                      <SelectValue
+                        placeholder="Range"
+                        defaultValue={String(summaryMonths)}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1">Last month</SelectItem>
@@ -293,7 +318,7 @@ function FinancePage({}: Props) {
 
                   <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
                     {card?.percentage !== undefined &&
-                      (card.direction === 'up' ? (
+                      (card.direction === "up" ? (
                         <span className="text-sm text-success-100 font-bold">
                           {card.percentage}%
                         </span>
@@ -325,9 +350,17 @@ function FinancePage({}: Props) {
                 Track SME growth and performance
               </p>
             </div>
-            <Select value={String(growthMonths)} onValueChange={(v) => setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}>
+            <Select
+              value={String(growthMonths)}
+              onValueChange={(v) =>
+                setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
+              }
+            >
               <SelectTrigger className="w-full sm:w-fit rounded-lg">
-                <SelectValue placeholder="Range" defaultValue={String(growthMonths)} />
+                <SelectValue
+                  placeholder="Range"
+                  defaultValue={String(growthMonths)}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">Last month</SelectItem>
@@ -352,15 +385,15 @@ function FinancePage({}: Props) {
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: 'Revenue ',
+                      text: "Revenue ",
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: '#374151',
+                      color: "#374151",
                     },
                     grid: {
-                      color: 'rgba(0, 0, 0, 0.1)',
+                      color: "rgba(0, 0, 0, 0.1)",
                       tickBorderDash: [8, 8],
                       display: true,
                     },
@@ -373,12 +406,12 @@ function FinancePage({}: Props) {
                   x: {
                     title: {
                       display: true,
-                      text: 'Months',
+                      text: "Months",
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: '#374151',
+                      color: "#374151",
                     },
                     grid: {
                       display: false,
@@ -430,7 +463,9 @@ function FinancePage({}: Props) {
             </Select>
           </div>
           {docsLoading ? (
-            <div className="flex items-center justify-center py-10 text-muted-foreground text-sm">Loading documents…</div>
+            <div className="flex items-center justify-center py-10 text-muted-foreground text-sm">
+              Loading documents…
+            </div>
           ) : docsError ? (
             <EmptyBox
               caption="Failed to load documents"
@@ -448,7 +483,10 @@ function FinancePage({}: Props) {
           )}
         </div>
       </DashboardCardLayout>
-      <UpdateFinancialRecordsSheet open={openUpdate} onOpenChange={setOpenUpdate} />
+      <UpdateFinancialRecordsSheet
+        open={openUpdate}
+        onOpenChange={setOpenUpdate}
+      />
     </div>
   );
 }
