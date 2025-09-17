@@ -57,7 +57,7 @@ function page({}: Props) {
           console.log({ ctx });
           authClient.getSession().then((ctx) => {
             const { data } = ctx;
-            console.log(data);
+            // console.log(data);
             setAuth(data?.user as any);
             if (!data?.user?.emailVerified) {
               authClient.emailOtp.sendVerificationOtp({
@@ -72,17 +72,17 @@ function page({}: Props) {
               return;
             }
 
-            const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-            if (rootRoute) {
-              if (isCompletedStep) {
-                router.push(`/${rootRoute}/onboarding`);
-              } else {
-                router.push(
-                  routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
-                    ?.root
-                );
-              }
-            }
+            // const rootRoute = getKeyByValue(UserType, data?.user?.roles);
+            // if (rootRoute) {
+            //   if (isCompletedStep) {
+            //     router.push(`/${rootRoute}/onboarding`);
+            //   } else {
+            //     router.push(
+            //       routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
+            //         ?.root
+            //     );
+            //   }
+            // }
           });
           setIsLoading(false);
           toast.success("Sign in successful");
