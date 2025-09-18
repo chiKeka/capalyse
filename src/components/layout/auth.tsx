@@ -44,7 +44,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     await authClient.signIn.social({
       provider: "google",
       callbackURL: `${window.location.origin}/signin`,
-      disableRedirect: true,
       fetchOptions: {
         onSuccess: (ctx) => {
           console.log({ ctx });
@@ -55,7 +54,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         },
       },
     });
-
+// https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hANcebQQvjdZvJnbY_vguiv3k6K3wjzCbf6lLpdRbI3-nekCFIkBSOB_7qKUHuGN2b9PogpzSEGzDGWB4AQf-4evOeYtMuNgd3GfBEjeXY1PGeAB9wt2LJj9EUB8UrfjZMCtBNQYzyxzXqriRfyxatRiXjxW_V2B-dXJbO4bpPESK5O1E30EAo-_FoWG2CLa0tdfOUvW9PXgD6HztX4Rq4uRhFew7wdwHf-QkQXXnpEeJy2NadYE74VNrcBkYYxPAY_lpMQRP8s10dP9H7Wn0n9aeAMi0KhnFXhcvJAsxuO5XqYmWIkNSSyG0za74lF3-2X6cGAMDMXuq86MYlkNPsS-CcAaALf0Sfhc1_PvVlghNVAyF1U27sgctw6q_VBSz5yXykX-9-m1juzljuPJVKQhCI2Hvkgh8iAKL-jRkfe1K-FAldAgAsQPgAWFoMdAmrF18mBmKK3OhgouCkx7lSW9XTTEQtNVSFcAxpOVqJqwOk_Hb4_gVlwJ8mFV7cIltwYV6l0_hfNRQ98O5-W4JL4HOHXZvl9iKtuDL-UL3NccBNRlDAQBNZTvtjobr3FcLN8kB-lbM8fYsAiuhz9bXVIUHN7-TL2h7tvShi4QBy-yZJufaHh4bY73lXQmhnQSnLHMZPUIZ59EFClTf59Y56FHapjyQhrGicITNB3_I4Pjmsu6GC7xRxWr7zIrCERTvHIOhLpWni-VsoYr1-yubytpTk4WiXLUmyBoioHo5woebKK4mjHWciMLIUJIKOH-N3hD7nFvD5auS-TfAUa9kwKu8MwlSVAFEysUtaR6kRhs-o8STZMeZ_EHn6_U8IqsrxRQCyGX3mW6eNYnEM-Q3pcQLbq1rJxyNIzJGBAygXvQCb5gkY8&flowName=GeneralOAuthFlow&as=S370931207%3A1758192269412527&client_id=238892016831-58d1i8ahh6gke6d01d1d0duaeodd22ef.apps.googleusercontent.com&rapt=AEjHL4OT5E4th2Dw0WJCn3RthJWXc4BVIlyA7Q8eEXqpB-oRkQqQpNVT6UJunhc9glz3w2TA7IWAlPUfFEt4sT0vnfu5Ld51sQ#
     // .then(async (ctx) => {
 
     //   const { data } = ctx as any;
