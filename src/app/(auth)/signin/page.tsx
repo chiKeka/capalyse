@@ -31,12 +31,12 @@ function page({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: profileNextStep } = useGetProfileNextStep();
   // console.log(profileNextStep);
-  const sessionData = useSession();
-  const isCompletedStep =
-    profileNextStep?.completedSteps?.length! <
-    onboardingSteps.find(
-      (step) => step.role === sessionData?.data?.user?.roles!
-    )?.steps?.length!;
+  // const sessionData = useSession();
+  // const isCompletedStep =
+  //   profileNextStep?.completedSteps?.length! <
+  //   onboardingSteps.find(
+  //     (step) => step.role === sessionData?.data?.user?.roles!
+  //   )?.steps?.length!;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
