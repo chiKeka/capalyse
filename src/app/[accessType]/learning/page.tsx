@@ -37,7 +37,7 @@ export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const programs = GetPrograms();
+  const programs = GetPrograms({ page: 1, limit: 10 });
   // Debounce search term to avoid too many API calls
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -266,6 +266,7 @@ export default function ResourcesPage() {
                 {program?.programs?.map((program: any) => {
                   return (
                     <Programs
+                      program={program}
                       status={program.status as "pending" | "active" | "closed"}
                       label={program.label}
                       key={program.id}

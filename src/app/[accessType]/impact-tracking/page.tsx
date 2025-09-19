@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatCurrency } from "@/lib/uitils/fns";
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -39,9 +38,8 @@ ChartJS.register(
 type Props = {};
 type OverviewCard = {
   id: number;
-  label: "Revenue" | "Expenses" | "Debt";
+  label: string;
   amount: number;
-  currency: string;
   percentage?: number;
   direction: "up" | "down";
   icon: any;
@@ -53,31 +51,30 @@ function page({}: Props) {
     return [
       {
         id: 1,
-        label: "Revenue",
+        label: "Total SMEs Funded",
         amount: 0,
-        percentage: 5,
-        currency: "NGN",
+        percentage: 0,
+
         direction: "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 2,
-        label: "Expenses",
+        label: "Male Owned SMEs",
         amount: 0,
-        percentage: -5,
-        currency: "NGN",
-        direction: "down",
+        percentage: 0,
+        direction: "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 3,
-        label: "Debt",
+        label: "Female Owned SMEs",
         amount: 0,
-        percentage: 5,
-        currency: "NGN",
-        direction: "down",
+        percentage: 0,
+
+        direction: "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
@@ -121,9 +118,7 @@ function page({}: Props) {
 
                 <div className="flex flex-col gap-2 mt-auto">
                   <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">
-                    {card.currency
-                      ? formatCurrency(card.amount, 0, 0, card.currency)
-                      : card.amount}
+                    {card.amount}
                   </span>
 
                   <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
@@ -148,10 +143,10 @@ function page({}: Props) {
           ))}
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full my-8">
         <BarChart />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 ">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 ">
         <LineChart />
         <PieChart />
       </div>

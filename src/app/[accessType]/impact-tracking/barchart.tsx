@@ -7,7 +7,6 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import faker from "faker";
 import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
@@ -21,35 +20,50 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+  scales: {
+    x: {
+      categoryPercentage: 0.8,
+      barPercentage: 0.9,
+    },
+  },
   plugins: {
     legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart",
+      display: false,
     },
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const labels: string[] = [];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: "Dataset 1",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      data: [] as number[],
+      backgroundColor: "#2E8E73",
+      borderRadius: 8,
+      borderSkipped: false,
     },
     {
-      label: "Dataset 2",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
+      data: [] as number[],
+      backgroundColor: "#ABD2C7",
+      borderRadius: 4,
+      borderSkipped: false,
     },
   ],
 };
 
 export function BarChart() {
-  return <Bar options={options} data={data} />;
+  return (
+    <div className="border rounded-lg p-4 h-full w-full">
+      <div className="flex mb-8 items-center justify-between ">
+        <div>
+          <p className="text-base lg:text-lg font-bold ">SME Funded </p>
+          <p className="text-sm font-normal ]">Track Funded SMEs over time.</p>
+        </div>
+        <div className="w-fit"></div>
+      </div>
+      <Bar height={400} width={1024} options={options} data={data} />
+    </div>
+  );
 }
