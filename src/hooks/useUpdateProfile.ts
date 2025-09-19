@@ -1,10 +1,7 @@
 import api from '@/api/axios';
 import { profileRoutes } from '@/api/endpoints';
-import { authAtom } from '@/lib/atoms/atoms';
 import { PersonalInfoInputs, SMEsBusinessInfo } from '@/lib/uitils/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSetAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
 
 export interface VerifyResponse {
   data: {
@@ -36,8 +33,6 @@ export const getCurrentProfile = () => {
 };
 
 export const updateProfile = () => {
-  const router = useRouter();
-  const setAuth = useSetAtom(authAtom);
   const queryClient = useQueryClient();
 
   const personal_information = useMutation({

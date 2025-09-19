@@ -33,6 +33,7 @@ const PersonalInformationForm = dynamic(
 const Page = () => {
   const router = useRouter();
   const authState: any = useAtomValue(authAtom);
+
   // const [onboardSteps] = useAtom(onboardingStepAtom);
   const { data: profileNextStep, refetch: refetchProfileNextStep } =
     useGetProfileNextStep();
@@ -160,6 +161,7 @@ const Page = () => {
 
   const getPrimaryButtonLabel = () => {
     const role = authState?.role?.toLowerCase();
+    console.log({ authState });
     const step = profileNextStep?.currentStep;
     if (role === 'sme') {
       return step === onboardingSteps[0].steps[1].label ? 'Submit' : 'Next';
@@ -186,7 +188,7 @@ const Page = () => {
     >
       <div className="flex w-full border-b border-[#F0F0F0] items-center justify-center mb-6 space-x-12">
         {onboardingSteps
-          .find((step) => step.role === authState?.roles)
+          ?.find((step) => step.role === authState?.roles)
           ?.steps?.map(({ id, label }: { id: number; label: string }) => (
             <div
               key={id}

@@ -1,23 +1,21 @@
-"use client";
-import AuthLayout from "@/components/layout/auth";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import PasswordChecker from "@/components/ui/passwordChecker";
-import { authAtom } from "@/lib/atoms/atoms";
-import { authClient } from "@/lib/auth-client";
-import { validateAuthForm } from "@/lib/uitils/fns";
-import { UserType } from "@/lib/utils";
-import { useSetAtom } from "jotai";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "sonner";
+'use client';
+import AuthLayout from '@/components/layout/auth';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
+import PasswordChecker from '@/components/ui/passwordChecker';
+import { authClient } from '@/lib/auth-client';
+import { validateAuthForm } from '@/lib/uitils/fns';
+import { UserType } from '@/lib/utils';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 export default function SignupPage() {
   const param = useParams();
   const [form, setForm] = useState({
-    email: "",
-    name: "",
-    password: "",
+    email: '',
+    name: '',
+    password: '',
     roles: UserType[param?.accessType as keyof typeof UserType],
   });
   const [errors, setErrors] = useState<{
@@ -25,7 +23,6 @@ export default function SignupPage() {
     password?: string;
     name?: string;
   }>({});
-  const setAuth = useSetAtom(authAtom);
   const router = useRouter();
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -43,8 +40,8 @@ export default function SignupPage() {
     authClient.signUp.email(
       {
         ...form,
-        name: form.name || form.email.split("@")[0],
-        roles: form.roles,
+        name: form.name || form.email.split('@')[0],
+        roles: form.roles?.toUpperCase(),
         profileCompletionStep: 0,
       },
 
@@ -55,7 +52,7 @@ export default function SignupPage() {
         onSuccess: (ctx) => {
           setIsLoading(false);
           router.push(`/verify?email=${form.email}`);
-          toast.success("Email sent successfully");
+          toast.success('Email sent successfully');
         },
         onError: (ctx) => {
           setIsLoading(false);
@@ -115,7 +112,7 @@ export default function SignupPage() {
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={isLoading ? "loading" : "default"}
+            state={isLoading ? 'loading' : 'default'}
           >
             Create Account
           </Button>

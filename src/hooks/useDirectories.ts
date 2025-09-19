@@ -1,10 +1,10 @@
-import api from "@/api/axios";
-import { directoryRoutes } from "@/api/endpoints";
-import { useQuery } from "@tanstack/react-query";
+import api from '@/api/axios';
+import { apiRoutes, directoryRoutes } from '@/api/endpoints';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useSmeDirectory = (enabled?: boolean) => {
   return useQuery({
-    queryKey: ["smeDirectory"],
+    queryKey: ['smeDirectory'],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.smes);
       return resp.data;
@@ -15,7 +15,7 @@ export const useSmeDirectory = (enabled?: boolean) => {
 
 export const useInvestorDirectory = (enabled?: boolean) => {
   return useQuery({
-    queryKey: ["investorDirectory"],
+    queryKey: ['investorDirectory'],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.getInvestorMatches);
       return resp.data;
@@ -26,7 +26,7 @@ export const useInvestorDirectory = (enabled?: boolean) => {
 
 export const useGetSmeById = (id: string) => {
   return useQuery({
-    queryKey: ["smeById"],
+    queryKey: ['smeById'],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.publicSmes(id));
       return resp.data;
@@ -37,10 +37,37 @@ export const useGetSmeById = (id: string) => {
 
 export const useSmeMatches = (params: any) => {
   return useQuery({
-    queryKey: ["smeMatches"],
+    queryKey: ['smeMatches'],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.smeMatches, params);
       return resp.data;
     },
   });
+};
+
+export const useSmeSaveStatus = (smeId: string) => {
+  return useQuery({
+    queryKey: ['smeSaveStatus'],
+    queryFn: async () => {
+      const resp = await api.get(apiRoutes.investors.smeSaveStatus(smeId));
+      return resp.data;
+    },
+    enabled: !!smeId,
+  });
+};
+
+export const useSmeDirectoryMutations = () => {
+  const queryClient = useQueryClient();
+  const saveSme = useMutation({
+    mutationFn: async (params: any) => {
+      const resp = await api.post(apiRoutes.investors.saveSme(params.smeId));
+      return resp.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['smeSaveStatus'] });
+    },
+  });
+  return {
+    saveSme,
+  };
 };

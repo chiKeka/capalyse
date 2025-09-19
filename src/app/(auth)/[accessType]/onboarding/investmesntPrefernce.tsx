@@ -1,17 +1,16 @@
-import { CurrencyAmountInput } from "@/components/ui/Inputs";
+import { CurrencyAmountInput } from '@/components/ui/Inputs';
 import {
   MultiSelect,
   MultiSelectContent,
   MultiSelectItem,
   MultiSelectTrigger,
   MultiSelectValue,
-} from "@/components/ui/multi-select";
+} from '@/components/ui/multi-select';
 
-import { updateProfile } from "@/hooks/useUpdateProfile";
-import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { InvestmentPreferenceInfo } from "@/lib/uitils/types";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { InvestmentPreferenceInfo } from '@/lib/uitils/types';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   Dispatch,
   forwardRef,
@@ -19,10 +18,10 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from 'react';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type Props = {};
 
@@ -33,7 +32,7 @@ type InvestmentPreferenceormProps = {
 
 const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
   (props, ref) => {
-    const [selectedCountryName, setSelectedCountryName] = useState("");
+    const [selectedCountryName, setSelectedCountryName] = useState('');
     const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
     const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
     const [selectedInvestmentTypes, setSelectedInvestmentTypes] = useState<
@@ -54,8 +53,8 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       setError,
     } = useForm<
       InvestmentPreferenceInfo & {
-        min: number | "";
-        max: number | "";
+        min: number | '';
+        max: number | '';
         currency: string;
       }
     >();
@@ -65,10 +64,10 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
     }, [investor_investment_info.isPending, props]);
 
     useEffect(() => {
-      register("investmentType", { required: "Investment type is required" });
-      register("targetRegions", { required: "Target region is required" });
-      register("targetIndustries", { required: "Target industry is required" });
-      register("businessStage", { required: "Business stage is required" });
+      register('investmentType', { required: 'Investment type is required' });
+      register('targetRegions', { required: 'Target region is required' });
+      register('targetIndustries', { required: 'Target industry is required' });
+      register('businessStage', { required: 'Business stage is required' });
     }, [register]);
 
     useImperativeHandle(ref, () => ({
@@ -80,17 +79,17 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
               if (
                 Number.isFinite(min) &&
                 Number.isFinite(max) &&
-                typeof min === "number" &&
-                typeof max === "number" &&
+                typeof min === 'number' &&
+                typeof max === 'number' &&
                 min >= max
               ) {
-                setError("min", {
-                  type: "manual",
-                  message: "Min must be less than Max",
+                setError('min', {
+                  type: 'manual',
+                  message: 'Min must be less than Max',
                 });
-                setError("max", {
-                  type: "manual",
-                  message: "Max must be greater than Min",
+                setError('max', {
+                  type: 'manual',
+                  message: 'Max must be greater than Min',
                 });
                 resolve(false);
                 return;
@@ -107,7 +106,6 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       isLoading: investor_investment_info.isPending,
     }));
     const setAuth = useSetAtom(authAtom);
-    const router = useRouter();
     const onSubmit = (data: any) => {
       const payload = {
         ...data,
@@ -121,7 +119,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
           currency,
         },
       };
-      console.log("SUBMIT PAYLOAD:", payload);
+      console.log('SUBMIT PAYLOAD:', payload);
       investor_investment_info
         .mutateAsync(payload)
         .then((res) => {
@@ -135,13 +133,13 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         ? selectedRegions.filter((item) => item !== value)
         : [...selectedRegions, value];
       setSelectedRegions(newRegions);
-      setValue("targetRegions", newRegions);
+      setValue('targetRegions', newRegions);
     };
 
     const handleRemoveRegion = (value: string) => {
       const newRegions = selectedRegions.filter((item) => item !== value);
       setSelectedRegions(newRegions);
-      setValue("targetRegions", newRegions);
+      setValue('targetRegions', newRegions);
     };
 
     const handleIndustryChange = (value: string) => {
@@ -149,13 +147,13 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         ? selectedIndustries.filter((item) => item !== value)
         : [...selectedIndustries, value];
       setSelectedIndustries(newIndustries);
-      setValue("targetIndustries", newIndustries);
+      setValue('targetIndustries', newIndustries);
     };
 
     const handleRemoveIndustry = (value: string) => {
       const newIndustries = selectedIndustries.filter((item) => item !== value);
       setSelectedIndustries(newIndustries);
-      setValue("targetIndustries", newIndustries);
+      setValue('targetIndustries', newIndustries);
     };
 
     const handleInvestmentTypeChange = (value: string) => {
@@ -163,13 +161,13 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         ? selectedInvestmentTypes.filter((item) => item !== value)
         : [...selectedInvestmentTypes, value];
       setSelectedInvestmentTypes(newTypes);
-      setValue("investmentType", newTypes);
+      setValue('investmentType', newTypes);
     };
 
     const handleRemoveInvestmentType = (value: string) => {
       const newTypes = selectedInvestmentTypes.filter((item) => item !== value);
       setSelectedInvestmentTypes(newTypes);
-      setValue("investmentType", newTypes);
+      setValue('investmentType', newTypes);
       setCurrentInvestmentType(undefined); // Reset the select value
     };
 
@@ -179,22 +177,22 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         : [...selectedBusinessStages, value];
 
       setSelectedBusinessStages(newStages);
-      setValue("businessStage", newStages);
+      setValue('businessStage', newStages);
     };
 
     const handleRemoveBusinessStage = (value: string) => {
       const newStages = selectedBusinessStages.filter((item) => item !== value);
       setSelectedBusinessStages(newStages);
-      setValue("businessStage", newStages);
+      setValue('businessStage', newStages);
     };
 
     const [currentInvestmentType, setCurrentInvestmentType] = useState<
       string | undefined
     >(undefined);
 
-    const [currency, setCurrency] = useState("USD");
-    const [min, setMin] = useState<number | "">("");
-    const [max, setMax] = useState<number | "">("");
+    const [currency, setCurrency] = useState('USD');
+    const [min, setMin] = useState<number | ''>('');
+    const [max, setMax] = useState<number | ''>('');
 
     return (
       <form className="gap-4 flex flex-col" onSubmit={handleSubmit(onSubmit)}>
