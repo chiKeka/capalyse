@@ -24,15 +24,16 @@ const AuthenticatedLayout = ({
   const params = useParams();
   const [loading, setLoading] = useState(true);
   const auth: any = useAtomValue(authAtom);
+  const authData = authClient.useSession();
   const checkAccess = () => {
     const rootRoute = getKeyByValue(UserType, auth?.roles);
-    console.log({ auth, rootRoute, params });
     if (
       auth?.roles === "ADMIN" &&
       params.accessType &&
       params.accessType !== "admin"
     ) {
       router.push("/admin");
+
       setLoading(false);
     }
     if (auth?.roles !== "ADMIN" && rootRoute !== params.accessType) {
@@ -43,7 +44,7 @@ const AuthenticatedLayout = ({
           router.push("/signin");
         },
         onError: (ctx) => {
-          console.log({ ctx });
+          toast.error(ctx.error.message);
           setLoading(false);
         },
       });
@@ -52,8 +53,15 @@ const AuthenticatedLayout = ({
     }
   };
   useEffect(() => {
+    if (!auth) {
+      router.push("/signin");
+      return;
+    }
+  }, [auth]);
+  useEffect(() => {
     checkAccess();
   }, [auth]);
+
   return loading ? (
     <div className="h-screen flex items-center justify-center">
       <Loader2Icon className="animate-spin w-28 h-28" />

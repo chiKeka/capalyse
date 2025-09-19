@@ -7,7 +7,6 @@ import {
   // CreditCard,
   LogOut,
   Settings,
-  // Sparkles,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,6 +33,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useGetNotifications } from "@/hooks/useNotification";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
@@ -41,9 +41,9 @@ import { useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 import Button from "./ui/Button";
 import { NotificationSheet } from "./ui/notification-sheet";
-import { useGetNotifications } from "@/hooks/useNotification";
 
 export function NavUser({
   user,
@@ -66,10 +66,15 @@ export function NavUser({
   const Notifications = useGetNotifications();
   const { data: notifications } = Notifications;
   const handleLogout = () => {
-    authClient.signOut().then(() => {
-      setAuth(null);
-      queryClient.clear();
-      router.push("/signin");
+    authClient.signOut(undefined, {
+      onSuccess: () => {
+        setAuth(null);
+        queryClient.clear();
+        router.push("/signin");
+      },
+      onError: (ctx) => {
+        toast.error(ctx.error.message);
+      },
     });
   };
   const renderUserDetails = useCallback(() => {
@@ -128,7 +133,7 @@ export function NavUser({
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
-            </DropdownMenuGroup> 
+            </DropdownMenuGroup>
             <DropdownMenuSeparator /> */}
             <DropdownMenuGroup>
               <DropdownMenuItem>

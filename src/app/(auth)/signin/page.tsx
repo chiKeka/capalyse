@@ -30,14 +30,12 @@ function page({}: Props) {
   };
   const [isLoading, setIsLoading] = useState(false);
   const { data: profileNextStep } = useGetProfileNextStep();
-  // console.log(profileNextStep);
-  // const sessionData = useSession();
-  // const isCompletedStep =
-  //   profileNextStep?.completedSteps?.length! <
-  //   onboardingSteps.find(
-  //     (step) => step.role === sessionData?.data?.user?.roles!
-  //   )?.steps?.length!;
-
+  const sessionData = useSession();
+  const isIncompleteStep =
+    profileNextStep?.completedSteps?.length! <
+    onboardingSteps.find(
+      (step) => step.role === sessionData?.data?.user?.roles!
+    )?.steps?.length!;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
@@ -54,10 +52,8 @@ function page({}: Props) {
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
-          console.log({ ctx });
           authClient.getSession().then((ctx) => {
             const { data } = ctx;
-            // console.log(data);
             setAuth(data?.user as any);
             if (!data?.user?.emailVerified) {
               authClient.emailOtp.sendVerificationOtp({
@@ -70,19 +66,19 @@ function page({}: Props) {
             if (data?.user?.roles === "ADMIN") {
               router.push(`/admin`);
               return;
-            }
+            } else {
+              const rootRoute = getKeyByValue(UserType, data?.user?.roles);
 
-            // const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-            // if (rootRoute) {
-            //   if (isCompletedStep) {
-            //     router.push(`/${rootRoute}/onboarding`);
-            //   } else {
-            //     router.push(
-            //       routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
-            //         ?.root
-            //     );
-            //   }
-            // }
+              if (rootRoute && isIncompleteStep) {
+                router?.push(`/${rootRoute}/onboarding`);
+              }
+              // else {
+              //   router.push(
+              //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
+              //       ?.root
+              //   );
+              // }
+            }
           });
           setIsLoading(false);
           toast.success("Sign in successful");
@@ -94,32 +90,6 @@ function page({}: Props) {
         },
       }
     );
-    // .then((res) => {
-    //   console.log({ res });
-
-    // if (!res?.emailVerified) {
-    //   resend_otp.mutateAsync({ email: form?.email });
-    //   router.push(`/verify?email=${user?.email}`);
-    //   return;
-    // }
-    //   // if (user?.role === "ADMIN") {
-    //   //   router.push(`/admin`);
-    //   //   return;
-    //   // }
-
-    //   // const rootRoute = getKeyByValue(UserType, user?.role);
-    //   // console.log({ rootRoute });
-    //   // if (rootRoute) {
-    //   //   if (user.profileCompletionStep <= 2) {
-    //   //     router.push(`/${rootRoute}/onboarding`);
-    //   //   } else {
-    //   //     router.push(
-    //   //       routes?.[user?.role?.toLowerCase() as keyof typeof routes]?.root
-    //   //     );
-    //   //   }
-    //   // }
-    // })
-    // .catch((err) => toast.error(err?.error));
   };
 
   return (

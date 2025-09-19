@@ -1,10 +1,12 @@
 import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient, useSession } from "@/lib/auth-client";
-import { onboardingSteps } from "@/lib/utils";
+import { routes } from "@/lib/routes";
+import { getKeyByValue } from "@/lib/uitils/fns";
+import { onboardingSteps, UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface AuthLayoutProps {
   title?: string;
@@ -32,6 +34,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   const [isRedirecting, setIsRedirecting] = useState(false);
   const { data: isAuth, isPending: isAuthLoading } = authClient.useSession();
 
+  const rootRoute = getKeyByValue(UserType, isAuth?.user?.roles!);
   const sessionData = useSession();
   const isIncompleteStep =
     profileNextStep?.completedSteps?.length! <
@@ -41,81 +44,64 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   const googleSignIn = async () => {
     setIsLoading(true);
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: `${window.location.origin}/signin`,
-      fetchOptions: {
-        onSuccess: (ctx) => {
-          console.log({ ctx });
-          window.open(ctx.data.url, "_blank");
-        },
-        onError: (ctx) => {
-          console.log({ ctx });
-        },
-      },
-    });
-// https://accounts.google.com/signin/oauth/id?authuser=0&part=AJi8hANcebQQvjdZvJnbY_vguiv3k6K3wjzCbf6lLpdRbI3-nekCFIkBSOB_7qKUHuGN2b9PogpzSEGzDGWB4AQf-4evOeYtMuNgd3GfBEjeXY1PGeAB9wt2LJj9EUB8UrfjZMCtBNQYzyxzXqriRfyxatRiXjxW_V2B-dXJbO4bpPESK5O1E30EAo-_FoWG2CLa0tdfOUvW9PXgD6HztX4Rq4uRhFew7wdwHf-QkQXXnpEeJy2NadYE74VNrcBkYYxPAY_lpMQRP8s10dP9H7Wn0n9aeAMi0KhnFXhcvJAsxuO5XqYmWIkNSSyG0za74lF3-2X6cGAMDMXuq86MYlkNPsS-CcAaALf0Sfhc1_PvVlghNVAyF1U27sgctw6q_VBSz5yXykX-9-m1juzljuPJVKQhCI2Hvkgh8iAKL-jRkfe1K-FAldAgAsQPgAWFoMdAmrF18mBmKK3OhgouCkx7lSW9XTTEQtNVSFcAxpOVqJqwOk_Hb4_gVlwJ8mFV7cIltwYV6l0_hfNRQ98O5-W4JL4HOHXZvl9iKtuDL-UL3NccBNRlDAQBNZTvtjobr3FcLN8kB-lbM8fYsAiuhz9bXVIUHN7-TL2h7tvShi4QBy-yZJufaHh4bY73lXQmhnQSnLHMZPUIZ59EFClTf59Y56FHapjyQhrGicITNB3_I4Pjmsu6GC7xRxWr7zIrCERTvHIOhLpWni-VsoYr1-yubytpTk4WiXLUmyBoioHo5woebKK4mjHWciMLIUJIKOH-N3hD7nFvD5auS-TfAUa9kwKu8MwlSVAFEysUtaR6kRhs-o8STZMeZ_EHn6_U8IqsrxRQCyGX3mW6eNYnEM-Q3pcQLbq1rJxyNIzJGBAygXvQCb5gkY8&flowName=GeneralOAuthFlow&as=S370931207%3A1758192269412527&client_id=238892016831-58d1i8ahh6gke6d01d1d0duaeodd22ef.apps.googleusercontent.com&rapt=AEjHL4OT5E4th2Dw0WJCn3RthJWXc4BVIlyA7Q8eEXqpB-oRkQqQpNVT6UJunhc9glz3w2TA7IWAlPUfFEt4sT0vnfu5Ld51sQ#
-    // .then(async (ctx) => {
-
-    //   const { data } = ctx as any;
-    //   await authClient.getSession().then((ctx) => {
-    //     const { data } = ctx as any;
-    //     setAuth(data?.user as any);
-    //     console.log({ ctx });
-    //   });
-    //   setAuth(data?.user as any);
-    //   setIsLoading(false);
-    //   // if (data?.user?.roles === "ADMIN") {
-    //   //   router.push(`/admin`);
-    //   //   return;
-    //   // }
-
-    //   const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-    //   // if (rootRoute) {
-    //   //   if (data?.user?.profileCompletionStep) {
-    //   //     router.push(`/${rootRoute}/onboarding`);
-    //   //   } else {
-    //   //     router.push(
-    //   //       routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-    //   //     );
-    //   //   }
-    //   // }
-    // })
-    // .catch((err) => {
-    //   console.log({ err });
-    //   setIsLoading(false);
-    // });
+    await authClient.signIn.social(
+      {
+        provider: "google",
+        callbackURL: `${window.location.origin}/signin`,
+      }
+      // {
+      //   onRequest: (ctx) => {
+      //     setIsLoading(true);
+      //   },
+      //   onSuccess: async (ctx) => {
+      //     setIsLoading(false);
+      //     // window.open(ctx.data.url, "_blank");
+      //     console.log({ ctx });
+      //     await authClient.getSession().then((ctx) => {
+      //       const { data } = ctx as any;
+      //       setAuth(data?.user as any);
+      //       if (data?.user?.roles === "ADMIN") {
+      //         router.push(`/admin`);
+      //         return;
+      //       }
+      //       const rootRoute = getKeyByValue(UserType, data?.user?.roles);
+      //       console.log({ rootRoute, isIncompleteStep });
+      //       if (rootRoute && isIncompleteStep) {
+      //         router.push(`/${rootRoute}/onboarding`);
+      //       } else {
+      //         router.push(
+      //           routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+      //         );
+      //       }
+      //     });
+      //   },
+      //   onError: (ctx) => {
+      //     console.log({ ctx });
+      //   },
+      // }
+    );
   };
 
-  // Handle redirect logic in useEffect to avoid setState during render
-  // useEffect(() => {
-  //   const shouldRedirect =
-  //     isAuth &&
-  //     !isRedirecting &&
-  //     (pathname.includes("signin") || pathname.includes("signup"));
+  useEffect(() => {
+    if (isAuth?.user && !isAuthLoading) {
+      setAuth(isAuth?.user as any);
+    } else {
+      setAuth(null);
+      return;
+    }
 
-  //   if (shouldRedirect) {
-  //     setIsRedirecting(true);
-  //     if (isAuth?.user?.roles === "ADMIN") {
-  //       router.push("/admin");
-  //     } else {
-  //       const rootRoute = getKeyByValue(UserType, isAuth?.user?.roles);
-  //       if (rootRoute) {
-  //         if (isIncompleteStep) {
-  //           router?.push(`/${rootRoute}/onboarding`);
-  //         } else {
-  //           router.push(
-  //             routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-  //           );
-  //         }
-  //       } else {
-  //         router.push("/");
-  //       }
-  //     }
-  //   }
-  // }, [isAuth, pathname, isIncompleteStep, router, isRedirecting]);
+    if (isAuth?.user?.roles === "ADMIN") {
+      router.push("/admin");
+    }
 
-  // Show loading state while checking auth or redirecting
+    if (isIncompleteStep) {
+      router?.push(`/${rootRoute}/onboarding`);
+    } else {
+      router.push(
+        routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+      );
+    }
+  }, [isAuth, isIncompleteStep, rootRoute, routes, router, isAuthLoading]);
 
   return (
     <div className="min-h-screen flex flex-col w-full items-center justify-center bg-[#EEF6F4]  px-4">
