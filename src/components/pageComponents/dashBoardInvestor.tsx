@@ -1,20 +1,20 @@
-"use client";
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+'use client';
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
 import {
   ProfileData,
   useGetInvestorsAnalytics,
-} from "@/hooks/useProfileManagement";
-import { useGetReadinessScore } from "@/hooks/useReadiness";
-import { useGetResources } from "@/hooks/useResources";
-import { routes } from "@/lib/routes";
-import { formatCurrency } from "@/lib/uitils/fns";
-import { useParams, useRouter } from "next/navigation";
-import EmptyBox from "../sections/dashboardCards/emptyBox";
-import ResourceCard from "../sections/dashboardCards/ResourceCard";
-import { Card, CardContent } from "../ui/card";
-import { CIcons } from "../ui/CIcons";
+} from '@/hooks/useProfileManagement';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
+import { useGetResources } from '@/hooks/useResources';
+import { routes } from '@/lib/routes';
+import { formatCurrency, formatInvestmentData } from '@/lib/uitils/fns';
+import { useParams, useRouter } from 'next/navigation';
+import EmptyBox from '../sections/dashboardCards/emptyBox';
+import ResourceCard from '../sections/dashboardCards/ResourceCard';
+import { Card, CardContent } from '../ui/card';
+import { CIcons } from '../ui/CIcons';
+import InvestmentOpportunitiesCard from '../InvesmentOpportunitiesCard';
 
 export default function InvestorDashBoard() {
   const router = useRouter();
@@ -25,27 +25,30 @@ export default function InvestorDashBoard() {
     useGetReadinessScore();
   const { data: user } = ProfileData();
   const { data: investorsAnalytics } = useGetInvestorsAnalytics();
-  console.log(investorsAnalytics);
+  console.log({ investorsAnalytics });
+  const investmentData = formatInvestmentData(
+    investorsAnalytics?.investmentOpportunities ?? []
+  );
   const overviewCards = [
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: "Total Amount Invested",
+      label: 'Total Amount Invested',
       amount: investorsAnalytics?.totalAmountInvested ?? 0,
-      currency: "NGN",
+      currency: 'NGN',
       percentage: 0,
-      direction: "up",
+      direction: 'up',
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: "Total Verified SMEs",
+      label: 'Total Verified SMEs',
       amount: investorsAnalytics?.totalPlatformSMEs ?? 0,
     },
     {
       id: 3,
       icon: CIcons.profile2,
-      label: "Active SMEs",
+      label: 'Active SMEs',
       amount: investorsAnalytics?.activeSMEs ?? 0,
     },
   ];
@@ -59,9 +62,9 @@ export default function InvestorDashBoard() {
         showButton={true}
         buttonText="View SMEs"
         buttonProps={{
-          className: "max-w-max",
-          variant: "primary",
-          iconPosition: "right",
+          className: 'max-w-max',
+          variant: 'primary',
+          iconPosition: 'right',
         }}
       />
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-6">
@@ -77,7 +80,7 @@ export default function InvestorDashBoard() {
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
-                    (card.direction === "up" ? (
+                    (card.direction === 'up' ? (
                       <span className="text-sm text-success-100 font-bold">
                         {card.percentage}%
                       </span>
@@ -99,10 +102,9 @@ export default function InvestorDashBoard() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6">
-        <ReadinessScoreCard
-          readinessData={readinessData?.data?.currentScore}
-          isLoading={isReadinessLoading}
-          scoreValue={0} // fallback value
+        <InvestmentOpportunitiesCard
+          caption="Investor Opportunities by Sector"
+          investmentData={investmentData}
         />
 
         <div className="flex flex-col w-full">

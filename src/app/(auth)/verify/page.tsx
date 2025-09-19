@@ -79,7 +79,8 @@ const VerifyPageContent = () => {
           setIsLoading(false);
           toast.success('Email verified successfully');
           const auth = await authClient.getSession();
-          setAuth(auth?.data?.user as any);
+          console.log({ auth });
+          setAuth(auth?.data?.user);
           const rootRoute = getKeyByValue(UserType, auth?.data?.user?.roles!);
 
           if (rootRoute) router.push(`/${rootRoute}/onboarding`);

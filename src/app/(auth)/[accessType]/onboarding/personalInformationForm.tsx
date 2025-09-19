@@ -62,7 +62,6 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       },
       isLoading: personal_information.isPending,
     }));
-    const setAuth = useSetAtom(authAtom);
 
     const onSubmit = (values: PersonalInfoInputs) => {
       const { email, ...data } = values;

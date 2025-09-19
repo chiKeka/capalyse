@@ -55,31 +55,11 @@ function page({}: Props) {
       header: 'Date uploaded',
       accessor: (row: Document) => format(row.uploadedAt, 'MMM dd, yyyy'),
     },
-    // {
-    //   header: 'Status',
-    //   accessor: (row: Document) => (
-    //     <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-    //       <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
-    //     </span>
-    //   ),
-    // },
+
     {
       header: '',
       accessor: (row: Document) => (
         <div className="flex gap-4 items-end justify-end">
-          {/* <button
-            onClick={() => handleDelete(row._id)}
-            disabled={
-              selectedDocument?._id === row._id || deleteMutation.isPending
-            }
-            className="text-gray-400 hover:text-red-600"
-          >
-            {selectedDocument?._id === row._id && deleteMutation.isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Trash2 className="w-4 h-4" />
-            )}
-          </button> */}
           <button
             disabled={
               selectedDocument?._id === row._id || downloadMutation.isPending
