@@ -4,6 +4,7 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
+import { GetPrograms } from "@/hooks/usePrograms";
 import { useState } from "react";
 
 type Props = {};
@@ -17,8 +18,19 @@ const programs = [
 const tabs = ["active", "closed"];
 
 function page({}: Props) {
+  const filterParams = {
+    page: 1,
+    limit: 10,
+    industry: undefined,
+    country: undefined,
+    stage: undefined,
+    supportType: undefined,
+    status: undefined,
+    sortBy: undefined,
+  };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
-  const filteredPrograms = programs.filter((p) =>
+  const { data: programs } = GetPrograms(filterParams);
+  const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active" ? p.status === "active" : p.status === "closed"
   );
   return (
@@ -52,15 +64,22 @@ function page({}: Props) {
           </div>
         </DashboardCardLayout>
       </div>
-      {filteredPrograms.length > 0 ? (
+      {filteredPrograms?.length > 0 ? (
         <div className="flex-1 ">
           <DashboardCardLayout
             height="h-full"
             // caption={`Recent ${currentTab} Programs`}
           >
             <div className="my-8 flex-col flex gap-2">
-              {filteredPrograms.map((program) => {
-                return <Programs status={program.status as "pending" | "active" | "closed"} label={program.label} key={program.id} />;
+              {filteredPrograms?.map((program: any) => {
+                return (
+                  <Programs
+                    program={program}
+                    status={program.status}
+                    label={program.label}
+                    key={program.id}
+                  />
+                );
               })}
             </div>
           </DashboardCardLayout>

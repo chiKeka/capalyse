@@ -2,11 +2,13 @@ import api from "@/api/axios";
 import { programsRoutes } from "@/api/endpoints";
 import { useQuery } from "@tanstack/react-query";
 
-export const GetPrograms = () => {
+export const GetPrograms = (params: any) => {
   return useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
-      const response = await api.get(programsRoutes.programs);
+      const response = await api.get(programsRoutes.programs, {
+        params: params,
+      });
       return response.data;
     },
   });
