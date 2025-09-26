@@ -49,47 +49,14 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
         provider: 'google',
         callbackURL: `${window.location.origin}/signin`,
       }
-      // {
-      //   onRequest: (ctx) => {
-      //     setIsLoading(true);
-      //   },
-      //   onSuccess: async (ctx) => {
-      //     setIsLoading(false);
-      //     // window.open(ctx.data.url, "_blank");
-      //     console.log({ ctx });
-      //     await authClient.getSession().then((ctx) => {
-      //       const { data } = ctx as any;
-      //       setAuth(data?.user as any);
-      //       if (data?.user?.roles === "ADMIN") {
-      //         router.push(`/admin`);
-      //         return;
-      //       }
-      //       const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-      //       console.log({ rootRoute, isIncompleteStep });
-      //       if (rootRoute && isIncompleteStep) {
-      //         router.push(`/${rootRoute}/onboarding`);
-      //       } else {
-      //         router.push(
-      //           routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-      //         );
-      //       }
-      //     });
-      //   },
-      //   onError: (ctx) => {
-      //     console.log({ ctx });
-      //   },
-      // }
     );
   };
 
   useEffect(() => {
-    if (isAuth?.user && !isAuthLoading) {
-      setAuth(isAuth?.user as any);
-    }
+    // if (isAuth?.user && !isAuthLoading) {
+    //   setAuth(isAuth?.user as any);
+    // }
 
-    if (isAuth?.user?.roles === 'ADMIN') {
-      router.push('/admin');
-    }
 
     if (isIncompleteStep) {
       router?.push(`/${rootRoute}/onboarding`);

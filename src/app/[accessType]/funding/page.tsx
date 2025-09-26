@@ -23,98 +23,7 @@ type Props = {};
 
 function page({}: Props) {
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
-  console.log({ devOrgAnalytics });
-  const smes = [
-    {
-      id: 1,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Packaging",
-      country: "Nigeria",
-      readiness: "75%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 2,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Retail",
-      country: "Nigeria",
-      readiness: "75%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 3,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Agriculture",
-      country: "Kenya",
-      readiness: "75%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 4,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "HealthTech",
-      country: "Nigeria",
-      readiness: "30%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 5,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Retail",
-      country: "Uganda",
-      readiness: "20%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 6,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Agriculture",
-      country: "Nigeria",
-      readiness: "10%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 7,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "HealthTech",
-      country: "Cameroon",
-      readiness: "90%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Retail",
-      country: "Niger",
-      readiness: "68%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-    {
-      id: 8,
-      name: "Business Name",
-      avatar: "/images/humanAvater.svg",
-      industry: "Agriculture",
-      country: "Nigeria",
-      readiness: "74%",
-      revenue: "₦100,000.00",
-      teamSize: 10,
-    },
-  ];
+  const smes: any = [];
   const columns = [
     {
       header: "Name",
@@ -165,13 +74,13 @@ function page({}: Props) {
       id: 3,
       icon: CIcons.stickyNote,
       label: "Total Investments",
-      amount: 152,
+      amount: 0,
     },
     {
       id: 2,
       icon: CIcons.profile2,
       label: "Active Investment",
-      amount: 8,
+      amount: 0,
     },
   ];
   return (

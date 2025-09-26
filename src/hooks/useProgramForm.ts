@@ -13,19 +13,6 @@ interface ProgramFormData {
   industryFocus: string[];
   maxParticipants: number;
   supportTypes: string[];
-  partners: {
-    name: string;
-    role: string;
-    description: string;
-    contactInfo: string;
-  }[];
-  applicationDeadline: string;
-  requirements: {
-    type: string;
-    operator: string;
-    value: string;
-    description: string;
-  }[];
 }
 
 interface UseProgramFormReturn {
@@ -47,9 +34,6 @@ const initialFormData: ProgramFormData = {
   industryFocus: [],
   maxParticipants: 1,
   supportTypes: [],
-  partners: [],
-  applicationDeadline: "",
-  requirements: [],
 };
 
 export const useProgramForm = (): UseProgramFormReturn => {

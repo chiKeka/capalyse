@@ -252,13 +252,55 @@ function page({}: Props) {
             </div>
 
             <div>
-              <Input
-                placeholder="Enter country or countries"
-                type="text"
-                name="country name"
-                label="Eligible country (You can enter more than one)"
-              />
-              <p className="font-normal text-xs">Use comma to add more.</p>
+              <Label className="text-sm font-medium text-foreground mb-2 block">
+                Eligible countries
+              </Label>
+              <div className="border rounded-lg p-2 min-h-[44px] flex flex-wrap gap-2 items-center">
+                {formData.eligibleCountries.map((country, index) => (
+                  <div
+                    key={index}
+                    className="bg-green/10 text-green px-3 py-1 rounded-full text-sm flex items-center gap-2"
+                  >
+                    <span>{country}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newCountries = formData.eligibleCountries.filter(
+                          (_, i) => i !== index
+                        );
+                        updateField("eligibleCountries", newCountries);
+                      }}
+                      className="text-green hover:text-green/70"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                <input
+                  type="text"
+                  placeholder="Type country and press Enter"
+                  className="flex-1 min-w-[200px] border-none outline-none bg-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      const value = e.currentTarget.value.trim();
+                      if (
+                        value &&
+                        !formData.eligibleCountries.includes(value)
+                      ) {
+                        updateField("eligibleCountries", [
+                          ...formData.eligibleCountries,
+                          value,
+                        ]);
+                        e.currentTarget.value = "";
+                      }
+                    }
+                  }}
+                />
+              </div>
+              <p className="font-normal text-xs mt-1">
+                Press Enter to add countries.
+              </p>
             </div>
             <div className=" w-full grid grid-cols-2 gap-4">
               <div>
@@ -282,6 +324,8 @@ function page({}: Props) {
                 label="Maximum number of participants'"
               />
             </div>
+
+            <Label className="font-bold">Types of support</Label>
             <div className="flex flex-row gap-2 flex-wrap">
               {[
                 "Resource Guides",

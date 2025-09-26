@@ -1,10 +1,10 @@
 "use client";
 
 import { authAtom } from "@/lib/atoms/atoms";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { getKeyByValue } from "@/lib/uitils/fns";
 import { UserType } from "@/lib/utils";
-import { useAtomValue } from "jotai";
+import { useSetAtom } from "jotai";
 import { Loader2Icon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -21,14 +21,16 @@ const AuthenticatedLayout = ({
   isAdmin?: boolean;
 }) => {
   const router = useRouter();
+  const { data: session, isPending } = useSession();
   const params = useParams();
   const [loading, setLoading] = useState(true);
-  const auth: any = useAtomValue(authAtom);
-  const authData = authClient.useSession();
+  const setAuth = useSetAtom(authAtom);
+
   const checkAccess = () => {
-    const rootRoute = getKeyByValue(UserType, auth?.roles);
+    const rootRoute = getKeyByValue(UserType, session?.user?.roles as string);
+
     if (
-      auth?.roles === "ADMIN" &&
+      session?.user?.roles === "ADMIN" &&
       params.accessType &&
       params.accessType !== "admin"
     ) {
@@ -36,7 +38,7 @@ const AuthenticatedLayout = ({
 
       setLoading(false);
     }
-    if (auth?.roles !== "ADMIN" && rootRoute !== params.accessType) {
+    if (session?.user?.roles !== "ADMIN" && rootRoute !== params.accessType) {
       toast.error("You are not authorized to access this page");
       authClient.signOut(undefined, {
         onSuccess: () => {
@@ -52,15 +54,16 @@ const AuthenticatedLayout = ({
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    if (!auth) {
+    if (!isPending && !session?.user) {
       router.push("/signin");
       return;
+    } else {
+      setAuth(session?.user);
+      checkAccess();
     }
-  }, [auth]);
-  useEffect(() => {
-    checkAccess();
-  }, [auth]);
+  }, [isPending, session]);
 
   return loading ? (
     <div className="h-screen flex items-center justify-center">
