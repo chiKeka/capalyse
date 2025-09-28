@@ -1,6 +1,5 @@
 import axios from "axios";
 import { toast } from "sonner";
-import { UserType, onboardingSteps } from "../utils";
 
 export function formatCurrency(
   value: number,
@@ -44,7 +43,6 @@ export function getKeyByValue(obj: any, value: string) {
   );
   return foundKey ? foundKey.toLowerCase() : undefined;
 }
-
 
 export const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
 
@@ -98,3 +96,57 @@ export function formatInvestmentData(inputArray: any[]) {
   }));
 }
 
+/**
+ * Formats a date range string to the pattern "May 1 — August 31, 2025"
+ * @param dateRange - Date range string in format "2025-09-11T00:00:00.000Z – 2025-09-18T00:00:00.000Z"
+ * @returns Formatted date range string
+ */
+export function formatDateRange(dateRange: string): string {
+  try {
+    // Try different possible separators
+    let startDateStr: string;
+    let endDateStr: string;
+
+    if (dateRange.includes(" – ")) {
+      [startDateStr, endDateStr] = dateRange.split(" – ");
+    } else if (dateRange.includes(" - ")) {
+      [startDateStr, endDateStr] = dateRange.split(" - ");
+    } else if (dateRange.includes("–")) {
+      [startDateStr, endDateStr] = dateRange.split("–");
+    } else if (dateRange.includes("-")) {
+      [startDateStr, endDateStr] = dateRange.split("-");
+    } else {
+      return dateRange;
+    }
+
+    if (!startDateStr || !endDateStr) {
+      return dateRange; // Return original if format is unexpected
+    }
+
+    const startDate = new Date(startDateStr.trim());
+    const endDate = new Date(endDateStr.trim());
+
+    // Check if dates are valid
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return dateRange; // Return original if dates are invalid
+    }
+
+    // Format the dates
+    const startFormatted = startDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+
+    const endFormatted = endDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+
+    const year = startDate.getFullYear();
+
+    return `${startFormatted} — ${endFormatted}, ${year}`;
+  } catch (error) {
+    console.error("Error formatting date range:", error);
+    return dateRange; // Return original string if there's an error
+  }
+}

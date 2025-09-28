@@ -1,7 +1,6 @@
 import api from "@/api/axios";
 import { programsRoutes } from "@/api/endpoints";
-import { useQuery } from "@tanstack/react-query";
-
+import { useMutation, useQuery } from "@tanstack/react-query";
 export const GetPrograms = (params: any) => {
   return useQuery({
     queryKey: ["programs"],
@@ -55,6 +54,51 @@ export const GetProgramApplicationById = (
         programsRoutes.applicationStatus(id, applicationId)
       );
       return response.data;
+    },
+  });
+};
+
+/// Create Program
+
+export interface Partner {
+  name: string;
+  role: string;
+  description: string;
+  contactInfo: string;
+}
+
+export interface Requirement {
+  type: string;
+  operator: string;
+  value: string;
+  description: string;
+}
+
+export interface ProgramFormData {
+  name: string;
+  description: string;
+  startDate: string;
+  endDate?: string;
+  smeStage: string[];
+  eligibleCountries: string[];
+  industryFocus: string[];
+  maxParticipants: number;
+  supportTypes: string[];
+  partners?: Partner[];
+  applicationDeadline: string;
+  requirements?: Requirement[];
+}
+
+export const createProgram = () => {
+  return useMutation({
+    mutationFn: async (data: ProgramFormData) => {
+      const response = await api.post(programsRoutes.programs, data);
+
+      if (!response.status) {
+        throw new Error("Failed to create program");
+      }
+
+      return response;
     },
   });
 };

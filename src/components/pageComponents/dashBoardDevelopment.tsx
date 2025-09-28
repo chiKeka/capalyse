@@ -27,7 +27,6 @@ export default function DevelopmentDashBoard() {
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
   const { data: programs } = GetPrograms(filterParams);
   const { data: profile } = ProfileData();
-  console.log(programs);
   const overviewCards = [
     {
       id: 3,
@@ -97,18 +96,17 @@ export default function DevelopmentDashBoard() {
         ))}
       </div>
 
-      {programs?.length > 0 ? (
+      {programs?.programs?.length > 0 ? (
         <div className="flex-1 ">
-          <DashboardCardLayout height="h-full" caption="Recent Programs">
+          <DashboardCardLayout
+            linkName="See all Programs"
+            link={`/${params.accessType}/programs`}
+            height="h-full"
+            caption="Recent Programs"
+          >
             <div className="my-8 flex-col flex gap-2">
-              {programs?.map((program: any, index: string) => {
-                return (
-                  <Programs
-                    key={index}
-                    label={program.status}
-                    program={program}
-                  />
-                );
+              {programs?.programs?.map((program: any, index: string) => {
+                return <Programs key={index} program={program} />;
               })}
             </div>
           </DashboardCardLayout>
@@ -119,6 +117,7 @@ export default function DevelopmentDashBoard() {
             <div className="w-full h-full py-24 flex items-center justify-center">
               <EmptyBox
                 buttonText="Create Program"
+                actionType="createProgram"
                 caption="No Programs Yet!"
                 caption2="You have not created any programs yet."
               />

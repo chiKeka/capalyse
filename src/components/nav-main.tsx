@@ -40,44 +40,43 @@ export function NavMain({
   const pathname = usePathname();
   const param = useParams();
   if (!hasMounted) return null;
-  console.log({ pathname, param });
+  // console.log({ pathname, param });
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="sr-only">Platform</SidebarGroupLabel>
       <SidebarMenu className="gap-4 mt-6">
-        {items.map((item, idx) => {
+        {items?.map((item, idx) => {
           // Overview is always the first item, with url exactly `/${param.accessType}`
           const isOverview =
-            idx === 0 && item.url === `/${param.accessType || "admin"}`;
+            idx === 0 && item?.url === `/${param.accessType || "admin"}`;
           let isActive;
           if (isOverview) {
-            isActive = pathname === item.url;
+            isActive = pathname === item?.url;
           } else {
             isActive =
-              pathname.startsWith(item.url) &&
-              pathname !== `/${param.accessType}` &&
+              pathname?.startsWith(item?.url) &&
+              pathname !== `/${param?.accessType}` &&
               pathname !== `/admin`;
           }
 
-          console.log({ url: item?.url, isActive, pathname });
           return (
-            <Collapsible key={item.title} asChild defaultOpen={isActive}>
+            <Collapsible key={item?.title} asChild defaultOpen={isActive}>
               <SidebarMenuItem className="!p-0">
                 {item.items?.length ? (
                   <>
                     <CollapsibleTrigger asChild>
                       <SidebarMenuButton
-                        tooltip={item.title}
+                        tooltip={item?.title}
                         isActive={isActive}
                         className="!p-4 h-auto w-full justify-between"
                       >
                         <div className="flex items-center gap-3">
                           <item.icon />
-                          <span className="text-sm">{item.title}</span>
+                          <span className="text-sm">{item?.title}</span>
                         </div>
                         {item.badge && (
                           <SidebarMenuBadge className="bg-green !text-white !p-2.5 !text-sm leading-9 h-[23px]">
-                            {item.badge}
+                            {item?.badge}
                           </SidebarMenuBadge>
                         )}
                         <ChevronRight className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-90" />
@@ -85,11 +84,11 @@ export function NavMain({
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
+                        {item?.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild>
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
+                              <Link href={subItem?.url}>
+                                <span>{subItem?.title}</span>
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -100,16 +99,16 @@ export function NavMain({
                 ) : (
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.title}
+                    tooltip={item?.title}
                     isActive={isActive}
                     className="!p-4 h-auto"
                   >
-                    <Link href={item.url}>
+                    <Link href={item?.url}>
                       <item.icon />
-                      <span className="text-sm">{item.title}</span>
+                      <span className="text-sm">{item?.title}</span>
                       {item.badge && (
                         <SidebarMenuBadge className="bg-green !text-white !p-2.5 !text-sm leading-9 h-[23px] right-4">
-                          {item.badge}
+                          {item?.badge}
                         </SidebarMenuBadge>
                       )}
                     </Link>
