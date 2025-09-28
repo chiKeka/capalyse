@@ -58,6 +58,15 @@ export const GetProgramApplicationById = (
   });
 };
 
+export const applyToProgram = (id: string) => {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await api.post(programsRoutes.applyToProgram(id));
+      return response.data;
+    },
+  });
+};
+
 /// Create Program
 
 export interface Partner {

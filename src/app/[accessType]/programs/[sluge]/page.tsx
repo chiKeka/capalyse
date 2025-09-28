@@ -3,16 +3,19 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
-import { GetProgramById } from "@/hooks/usePrograms";
+import { applyToProgram, GetProgramById } from "@/hooks/usePrograms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function page() {
   const params = useParams();
   const { data: program } = GetProgramById(params.sluge as string);
   const router = useRouter();
   const dateRange = `${program?.startDate} – ${program?.endDate}`;
-
+  const { mutateAsync: applyToPtograms } = applyToProgram(
+    params.sluge as string
+  );
 
   let bg = "#DCFCE7";
   let color = "#22C55E";
@@ -34,6 +37,16 @@ function page() {
       return "Open for Applications";
     }
   };
+  const handleApplyToProgram = () => {
+    applyToPtograms(undefined, {
+      onSuccess: () => {
+        toast.success("Program applied to successfully");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+  };
   return (
     <div>
       <div className="flex my-4 justify-between w-full">
@@ -45,7 +58,9 @@ function page() {
           <div className="flex items-center gap-2">
             <Button
               onClick={() =>
-                router.push(`/${params.accessType}/programs/${params.sluge}/applicants`)
+                router.push(
+                  `/${params.accessType}/programs/${params.sluge}/applicants`
+                )
               }
               className="text-green w-fit"
               variant="tertiary"
@@ -63,7 +78,11 @@ function page() {
         {(params?.accessType === "sme" ||
           params?.accessType === "investor") && (
           <div className="flex items-center gap-2">
-            <Button  className="text-green w-fit" variant="primary">
+            <Button
+              className="text-green w-fit"
+              variant="primary"
+              onClick={handleApplyToProgram}
+            >
               Apply Now
             </Button>
           </div>
