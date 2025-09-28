@@ -359,7 +359,8 @@ export const programsRoutes = {
   programs: "/programs",
   programCategories: "/programs/categories",
   singleProgram: (id: string) => `/programs/${id}`,
-  programAction: (action: string) => `/programs/${action}`,
+  programAction: (id: string, action: string) =>
+    `/programs/${id}/status/${action}`,
   programApplications: (id: string) => `/programs/${id}/applications`,
   devOrg_analytics: "dev-org/programs/analytics",
   listMyApplications: (id: string) => `/me/applications`,
@@ -367,11 +368,11 @@ export const programsRoutes = {
     `/programs/${id}/applications/${applicationId}`,
   applicationAnalytics: (id: string, applicationId: string) =>
     `/programs/${id}/applications/analytics`,
-  reviewApplication: (id: string, applicationId: string) =>
-    `/programs/${id}/applications/${applicationId}/review`,
   withdrawApplication: (id: string, applicationId: string) =>
     `/programs/${id}/applications/${applicationId}/withdraw`,
   applyToProgram: (id: string) => `/programs/${id}/apply`,
+  reviewApplication: (id: string, applicationId: string) =>
+    `/programs/${id}/applications/${applicationId}/review`,
 };
 
 export const readinessRoutes = {

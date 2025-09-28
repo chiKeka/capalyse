@@ -3,10 +3,25 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
-import { applyToProgram, GetProgramById } from "@/hooks/usePrograms";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  applyToProgram,
+  GetProgramById,
+  updateProgramStatus,
+} from "@/hooks/usePrograms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+const STATUS_OPTIONS = [
+  { value: "publish", label: "Publish" },
+  { value: "close", label: "Close" },
+  { value: "complete", label: "Complete" },
+  { value: "cancel", label: "Cancel" },
+] as const;
 
 function page() {
   const params = useParams();
@@ -16,31 +31,57 @@ function page() {
   const { mutateAsync: applyToPtograms } = applyToProgram(
     params.sluge as string
   );
+  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
+    params.sluge as string
+  );
 
   let bg = "#DCFCE7";
   let color = "#22C55E";
 
-  if (program?.status === "closed") {
+  if (program?.status === "close") {
     color = "#A0A4A8";
     bg = "#E8E8E8";
   } else if (program?.status === "draft") {
     color = "#FACC15";
     bg = "#FEF9C3";
+  } else if (program?.status === "published") {
+    color;
+    bg;
+  } else if (program?.status === "cancel") {
+    color = "#DC3545";
+    bg = "#E8E8E8";
+  } else if (program?.status === "completed") {
+    color = "#007BFF";
+    bg = "#E8E8E8";
   }
 
   const label = () => {
     if (program?.status === "draft") {
       return "Draft Program";
-    } else if (program?.status === "closed") {
+    } else if (program?.status === "close") {
       return "Applications Closed";
-    } else if (program?.status === "active") {
+    } else if (program?.status === "published") {
       return "Open for Applications";
+    } else if (program?.status === "cancel") {
+      return "Cancelled";
+    } else if (program?.status === "completed") {
+      return "Completed";
     }
   };
   const handleApplyToProgram = () => {
     applyToPtograms(undefined, {
       onSuccess: () => {
         toast.success("Program applied to successfully");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+  };
+  const handleStatusUpdate = (newStatus: string) => {
+    updateProgramStatusMutation(newStatus, {
+      onSuccess: () => {
+        toast.success(`Program status updated to ${newStatus}`);
       },
       onError: (error) => {
         toast.error(error.message);
@@ -109,10 +150,43 @@ function page() {
                 </div>
               </div>
               <div
-                className={`flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2 bg-[${bg}]`}
+                className="flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2"
+                style={{ backgroundColor: bg }}
               >
-                <div className={`rounded-full h-2 w-2 bg-[${color}]`} />
-                {label()}
+                <div
+                  className="rounded-full h-2 w-2 font-medium"
+                  style={{ backgroundColor: color }}
+                />
+                {(params.accessType === "investor" ||
+                  params.accessType === "sme") &&
+                  label()}
+                {(params.accessType === "development" ||
+                  params.accessType === "admin") && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="small"
+                        className="text-xs font-medium"
+                      >
+                        {label()}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-40 p-1 bg-white border border-[#E8E8E8] rounded-[8px] shadow-lg">
+                      <div className="flex flex-col">
+                        {STATUS_OPTIONS.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => handleStatusUpdate(option.value)}
+                            className="text-left px-3 py-2 text-xs font-normal text-[#0F2501] hover:bg-[#F5F5F5] rounded-[4px] transition-colors w-full first:rounded-t-[4px] last:rounded-b-[4px]"
+                          >
+                            {option.label}
+                          </button>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                )}
               </div>
             </div>
           </div>

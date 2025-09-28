@@ -29,10 +29,15 @@ function page({}: Props) {
   const { data: programs } = GetPrograms(filterParams);
   const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active"
-      ? p.status === "active" || p.status === "draft"
-      : p.status === "closed"
+      ? p.status === "published" ||
+        p.status === "draft" ||
+        p.status === "active"
+      : p.status === "closed" ||
+        p.status === "completed" ||
+        p.status === "cancelled"
   );
 
+  console.log({ filteredPrograms });
 
   return (
     <div className="flex flex-col gap-6">

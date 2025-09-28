@@ -1,6 +1,6 @@
 import api from "@/api/axios";
 import { programsRoutes } from "@/api/endpoints";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const GetPrograms = (params: any) => {
   return useQuery({
     queryKey: ["programs"],
@@ -59,14 +59,62 @@ export const GetProgramApplicationById = (
 };
 
 export const applyToProgram = (id: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
       const response = await api.post(programsRoutes.applyToProgram(id));
       return response.data;
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+      queryClient.invalidateQueries({ queryKey: ["program", id] });
+      queryClient.invalidateQueries({ queryKey: ["program-applications", id] });
+      queryClient.invalidateQueries({ queryKey: ["program-categories"] });
+    },
   });
 };
 
+export const updateProgramStatus = (id: string) => {
+  return useMutation({
+    mutationFn: async (status: string) => {
+      const response = await api.post(programsRoutes.programAction(id, status));
+      return response.data;
+    },
+  });
+};
+
+export const reviewApplication = (id: string, applicationId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      action: "accept" | "reject" | "start" | "waitlist";
+      rejectionReason?: string;
+      reviewNotes?: string;
+    }) => {
+      const response = await api.post(
+        programsRoutes.reviewApplication(id, applicationId),
+        { ...data }?.action === "reject"
+          ? {
+              action: { ...data }?.action,
+              rejectionReason: "Not interested",
+              reviewNotes: "Not interested",
+            }
+          : {
+              action: { ...data }?.action,
+              rejectionReason: { ...data }?.rejectionReason,
+              reviewNotes: { ...data }?.reviewNotes,
+            }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["program-applications", id] });
+      queryClient.invalidateQueries({
+        queryKey: ["program-application", id, applicationId],
+      });
+    },
+  });
+};
 /// Create Program
 
 export interface Partner {
@@ -99,6 +147,7 @@ export interface ProgramFormData {
 }
 
 export const createProgram = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ProgramFormData) => {
       const response = await api.post(programsRoutes.programs, data);
@@ -108,6 +157,10 @@ export const createProgram = () => {
       }
 
       return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+      queryClient.invalidateQueries({ queryKey: ["program-categories"] });
     },
   });
 };

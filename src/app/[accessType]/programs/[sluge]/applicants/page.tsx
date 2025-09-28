@@ -2,7 +2,7 @@
 
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import { SearchForm } from "@/components/search-form";
-import { CIcons } from "@/components/ui/CIcons";
+import Button from "@/components/ui/Button";
 import {
   Select,
   SelectContent,
@@ -13,7 +13,7 @@ import {
 import { ReusableTable } from "@/components/ui/table";
 import { GetProgramApplications, GetProgramById } from "@/hooks/usePrograms";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -21,14 +21,14 @@ function page({}: Props) {
   const params = useParams();
   const { data: program } = GetProgramApplications(params.sluge as string);
   const { data: programDetails } = GetProgramById(params.sluge as string);
+  const router = useRouter();
+  const applicants: any[] = program?.applications ?? [];
 
-  const smes: any[] = program?.data ?? [];
-
-  console.log({ smes });
+  console.log({ program });
   const columns = [
     {
       header: "Name",
-      accessor: (row: (typeof smes)[0]) => (
+      accessor: (row: (typeof applicants)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
             <Image
@@ -39,21 +39,51 @@ function page({}: Props) {
               className="rounded-full"
             />
           ) : null}
-          <span className="font-medium text-sm">{row.name}</span>
+          <span className="font-medium text-sm">{row.sme?.smeBusinessInfo?.businessName}</span>
         </div>
       ),
     },
-    { header: "Industry", accessor: "industry" },
-    { header: "Country", accessor: "country" },
-    { header: "Readiness Score", accessor: "readiness" },
-    { header: "Last Viewed", accessor: "date" },
+    {
+      header: "Industry",
+      accessor: (row: (typeof applicants)[0]) =>
+        row.sme?.smeBusinessInfo?.industry,
+    },
+    {
+      header: "Country",
+      accessor: (row: (typeof applicants)[0]) =>
+        row.sme?.smeBusinessInfo?.countryOfOperation?.join(", "),
+    },
+    {
+      header: "Readiness Score",
+      accessor: (row: (typeof applicants)[0]) =>
+        row.sme?.readiness?.readinessScore,
+    },
+    {
+      header: "Revenue",
+      accessor: (row: (typeof applicants)[0]) =>
+        row.sme?.smeBusinessInfo?.revenue,
+    },
+    {
+      header: "Team Size",
+      accessor: (row: (typeof applicants)[0]) =>
+        row.sme?.smeBusinessInfo?.teamSize,
+    },
 
     {
       header: "Action",
-      accessor: (row: (typeof smes)[0]) => (
+      accessor: (row: (typeof applicants)[0]) => (
         <div className="flex flex-row gap-3">
-          <CIcons.message />
-          <CIcons.delete />
+          <Button
+            onClick={() =>
+              router.push(
+                `/${params.accessType}/programs/${params.sluge}/applicants/${row.smeId}?applicationId=${row.id}`
+              )
+            }
+            variant="tertiary"
+            className="text-green"
+          >
+            View details
+          </Button>
         </div>
       ),
     },
@@ -74,7 +104,7 @@ function page({}: Props) {
             <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
               Program Applicants
               <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-                {smes.length}
+                {applicants.length}
               </span>
             </p>
           </div>
@@ -102,8 +132,8 @@ function page({}: Props) {
         </div>
         <ReusableTable
           columns={columns}
-          data={smes}
-          totalPages={Math.ceil(smes.length / 4)}
+          data={applicants}
+          totalPages={Math.ceil(applicants.length / 4)}
         />
       </DashboardCardLayout>
     </div>
