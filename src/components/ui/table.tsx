@@ -107,7 +107,7 @@ export function ReusableTable<T extends object>({
             ))}
         </tbody>
       </table>
-      {totalPages && totalPages > 1 && (
+      {totalPages && totalPages > 1 ? (
         <div className="pt-5">
           <Pagination>
             <PaginationContent>
@@ -148,7 +148,7 @@ export function ReusableTable<T extends object>({
             </PaginationContent>
           </Pagination>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

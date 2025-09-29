@@ -1,3 +1,4 @@
+import Button from '@/components/ui/Button';
 import { CurrencyAmountInput } from '@/components/ui/Inputs';
 import {
   MultiSelect,
@@ -28,6 +29,8 @@ type Props = {};
 type InvestmentPreferenceormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
+  isProfile?: boolean;
+  initialData?: any;
 };
 
 const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
@@ -49,6 +52,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       handleSubmit,
       setValue,
       watch,
+      reset,
       formState: { errors },
       setError,
     } = useForm<
@@ -58,6 +62,42 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         currency: string;
       }
     >();
+    useEffect(() => {
+      if (props?.initialData) {
+        setSelectedInvestmentTypes(
+          props?.initialData?.investorInvestmentInfo?.investmentTypes || []
+        );
+
+        setSelectedRegions(
+          props?.initialData?.investorInvestmentInfo?.targetRegions || []
+        );
+
+        setSelectedIndustries(
+          props?.initialData?.investorInvestmentInfo?.targetIndustries || []
+        );
+
+        setSelectedBusinessStages(
+          props?.initialData?.investorInvestmentInfo?.businessStages || []
+        );
+
+        setMin(
+          props?.initialData?.investorInvestmentInfo?.investmentRange?.min || ''
+        );
+        setMax(
+          props?.initialData?.investorInvestmentInfo?.investmentRange?.max || ''
+        );
+        setCurrency(
+          props?.initialData?.investorInvestmentInfo?.investmentRange
+            ?.currency || 'USD'
+        );
+        reset({
+          investmentTypes: selectedInvestmentTypes,
+          targetRegions: selectedRegions,
+          targetIndustries: selectedIndustries,
+          businessStages: selectedBusinessStages,
+        });
+      }
+    }, [props?.initialData]);
 
     useEffect(() => {
       props.setLoading(investor_investment_info.isPending);
@@ -105,6 +145,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       },
       isLoading: investor_investment_info.isPending,
     }));
+
     const setAuth = useSetAtom(authAtom);
     const onSubmit = (data: any) => {
       const payload = {
@@ -124,6 +165,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
         .mutateAsync(payload)
         .then((res) => {
           setAuth((prev: any) => ({ ...prev, ...res?.data?.data?.user }));
+          props?.onFinish?.();
         })
         .catch((err) => toast.error(err?.message));
     };
@@ -346,6 +388,15 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
             </div>
           </div>
         </div>
+        {props?.isProfile && (
+          <Button
+            type="submit"
+            state={investor_investment_info?.isPending ? 'loading' : 'default'}
+            className="w-fit ml-auto"
+          >
+            {investor_investment_info?.isPending ? 'Submitting...' : 'Submit'}
+          </Button>
+        )}
       </form>
     );
   }

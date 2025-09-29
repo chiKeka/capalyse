@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import Programs from "@/components/sections/dashboardCards/programs";
-import Button from "@/components/ui/Button";
-import { Card } from "@/components/ui/card";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import Programs from '@/components/sections/dashboardCards/programs';
+import Button from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { GetPrograms } from "@/hooks/usePrograms";
+} from '@/components/ui/select';
+import { GetPrograms } from '@/hooks/usePrograms';
 import {
   useGetResourceCategories,
   useGetResources,
-} from "@/hooks/useResources";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+} from '@/hooks/useResources';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface LearningTrack {
   id: string;
@@ -34,9 +34,9 @@ export default function ResourcesPage() {
   const params = useParams();
 
   // State for filtering
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const programs = GetPrograms({ page: 1, limit: 10 });
   // Debounce search term to avoid too many API calls
   useEffect(() => {
@@ -50,12 +50,12 @@ export default function ResourcesPage() {
   // Query parameters for the API call
   const queryParams = {
     search: debouncedSearchTerm || undefined,
-    categoryId: selectedCategory !== "all" ? selectedCategory : undefined,
+    categoryId: selectedCategory !== 'all' ? selectedCategory : undefined,
     page: 1,
     limit: 10,
-    status: "published",
-    sortBy: "createdAt",
-    sortOrder: "desc" as const,
+    status: 'published',
+    sortBy: 'createdAt',
+    sortOrder: 'desc' as const,
   };
 
   const resources = useGetResources(queryParams);
@@ -267,8 +267,8 @@ export default function ResourcesPage() {
                   return (
                     <Programs
                       program={program}
-                      status={program.status as "pending" | "active" | "closed"}
-                      label={program.label}
+                      status={program.status as 'active' | 'closed' | 'draft'}
+                      // label={program.label as any}
                       key={program.id}
                     />
                   );
@@ -284,19 +284,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: "Business Plan Template",
+    title: 'Business Plan Template',
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: "Investor Pitch Deck Guide",
+    title: 'Investor Pitch Deck Guide',
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: "Financial Model Spreadsheet",
+    title: 'Financial Model Spreadsheet',
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

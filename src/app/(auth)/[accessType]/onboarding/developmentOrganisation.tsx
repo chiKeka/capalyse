@@ -1,19 +1,19 @@
-import { CIcons } from "@/components/ui/CIcons";
-import Input from "@/components/ui/Inputs";
-import { Input as FileInput } from "@/components/ui/input";
-import { CountrySelect } from "react-country-state-city";
+import { CIcons } from '@/components/ui/CIcons';
+import Input from '@/components/ui/Inputs';
+import { Input as FileInput } from '@/components/ui/input';
+import { CountrySelect } from 'react-country-state-city';
 
-import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { updateProfile } from "@/hooks/useUpdateProfile";
-import { authAtom } from "@/lib/atoms/atoms";
-import { handleImageUpload } from "@/lib/uitils/fns";
-import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
-import { useAtomValue } from "jotai";
-import { Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import StatusChangeModal from '@/components/useManagementComponents.tsx/modals';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom } from '@/lib/atoms/atoms';
+import { handleImageUpload } from '@/lib/uitils/fns';
+import { developmentOrg } from '@/lib/uitils/types';
+import { useAtomValue } from 'jotai';
+import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface Props {
   setLoading: (loading: boolean) => void;
@@ -40,9 +40,9 @@ const DevelopmentOrganisation = forwardRef<
     },
   });
 
-  const [selectedCountryId, setSelectedCountryId] = useState("");
-  const [selectedCountryName, setSelectedCountryName] = useState("");
-  const [selectedStateName, setSelectedStateName] = useState("");
+  const [selectedCountryId, setSelectedCountryId] = useState('');
+  const [selectedCountryName, setSelectedCountryName] = useState('');
+  const [selectedStateName, setSelectedStateName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: any }>(
@@ -50,12 +50,8 @@ const DevelopmentOrganisation = forwardRef<
   );
   const [fileUploadLoading1, setFileUploadLoading1] = useState(false);
   const [fileUploadLoading2, setFileUploadLoading2] = useState(false);
-  const [certificateFiles, setCertificateFiles] = useState<supportAttachment[]>(
-    []
-  );
-  const [operationalLicences, setOperationalLicences] = useState<
-    supportAttachment[]
-  >([]);
+  const [certificateFiles, setCertificateFiles] = useState<any[]>([]);
+  const [operationalLicences, setOperationalLicences] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
   const handleCertificateFileUpload = async (e: any) => {
     if (e) setFileUploadLoading1(true);
@@ -103,17 +99,17 @@ const DevelopmentOrganisation = forwardRef<
           const formDataWithFiles = {
             ...data,
             documents: [
-              ...certificateFiles.map((file) => ({
-                type: "Certificate",
+              ...certificateFiles.map((file: any) => ({
+                type: 'Certificate',
                 document: file.fileUrl,
               })),
-              ...operationalLicences.map((file) => ({
-                type: "License",
+              ...operationalLicences.map((file: any) => ({
+                type: 'License',
                 document: file.fileUrl,
               })),
             ],
-            focusAreas: [""],
-            operatingRegions: [""],
+            focusAreas: [''],
+            operatingRegions: [''],
           };
           // Add your form submission logic here
           await dev_org
@@ -140,8 +136,8 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Organization Name*"
           placeholder="Enter organization name"
-          {...register("organizationName", {
-            required: "Organization name is required",
+          {...register('organizationName', {
+            required: 'Organization name is required',
           })}
           type="text"
           name="organizationName"
@@ -157,7 +153,7 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Enter Company Email Address*"
           placeholder="Company@gmail.com"
-          {...register("companyEmail", { required: "Email is required" })}
+          {...register('companyEmail', { required: 'Email is required' })}
           type="email"
           name="companyEmail"
           readOnly={true}
@@ -181,18 +177,18 @@ const DevelopmentOrganisation = forwardRef<
             console.log({ country });
             if (
               country &&
-              typeof country === "object" &&
-              "id" in country &&
-              "name" in country
+              typeof country === 'object' &&
+              'id' in country &&
+              'name' in country
             ) {
               setSelectedCountryId(country.id);
               setSelectedCountryName(country.name);
-              setValue("countryHeadquarters", country.name);
+              setValue('countryHeadquarters', country.name);
             }
           }}
           defaultValue={getValues()?.countryHeadquarters as any}
           onTextChange={(_txt: any) =>
-            setValue("countryHeadquarters", _txt.target.value)
+            setValue('countryHeadquarters', _txt.target.value)
           }
         />
         {errors.countryHeadquarters && (
@@ -208,7 +204,7 @@ const DevelopmentOrganisation = forwardRef<
           label="Business website (Optional)"
           placeholder="Input your website link"
           type="text"
-          {...register("website", {
+          {...register('website', {
             setValueAs: (v) => {
               if (!v) return v;
               const value = String(v).trim();
@@ -217,7 +213,7 @@ const DevelopmentOrganisation = forwardRef<
             pattern: {
               value:
                 /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-              message: "Please enter a valid URL",
+              message: 'Please enter a valid URL',
             },
           })}
         />
@@ -304,7 +300,7 @@ const DevelopmentOrganisation = forwardRef<
           />
         </label>
         {/* Show uploaded file name if present */}
-        {operationalLicences?.map((items) => {
+        {operationalLicences?.map((items: any) => {
           return (
             <div className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
               {items.fileName}
@@ -334,6 +330,6 @@ const DevelopmentOrganisation = forwardRef<
   );
 });
 
-DevelopmentOrganisation.displayName = "DevelopmentOrganisation";
+DevelopmentOrganisation.displayName = 'DevelopmentOrganisation';
 
 export default DevelopmentOrganisation;

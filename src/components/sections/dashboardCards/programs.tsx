@@ -1,26 +1,26 @@
-import Button from "@/components/ui/Button";
-import { CIcons } from "@/components/ui/CIcons";
+import Button from '@/components/ui/Button';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { updateProgramStatus, useListMyApplications } from "@/hooks/usePrograms";
-import { formatDateRange } from "@/lib/uitils/fns";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/popover';
+import { updateProgramStatus, useListMyApplications } from '@/hooks/usePrograms';
+import { formatDateRange } from '@/lib/uitils/fns';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 // Status enum
 const STATUS_OPTIONS = [
-  { value: "publish", label: "Publish" },
-  { value: "close", label: "Close" },
-  { value: "complete", label: "Complete" },
-  { value: "cancel", label: "Cancel" },
+  { value: 'publish', label: 'Publish' },
+  { value: 'close', label: 'Close' },
+  { value: 'complete', label: 'Complete' },
+  { value: 'cancel', label: 'Cancel' },
 ] as const;
 
 type Props = {
-  status?: "active" | "closed" | "draft";
+  status?: 'active' | 'closed' | 'draft';
   program: any;
   editProgram?: boolean;
   setEditProgram?: (editProgram: boolean) => void;
@@ -32,37 +32,37 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
   const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
     program.id
   );
-  let bg = "#DCFCE7";
-  let color = "#22C55E";
+  let bg = '#DCFCE7';
+  let color = '#22C55E';
 
-  if (program?.status === "close") {
-    color = "#A0A4A8";
-    bg = "#E8E8E8";
-  } else if (program?.status === "draft") {
-    color = "#FACC15";
-    bg = "#FEF9C3";
-  } else if (program?.status === "published") {
+  if (program?.status === 'close') {
+    color = '#A0A4A8';
+    bg = '#E8E8E8';
+  } else if (program?.status === 'draft') {
+    color = '#FACC15';
+    bg = '#FEF9C3';
+  } else if (program?.status === 'published') {
     color;
     bg;
-  } else if (program?.status === "cancel") {
-    color = "#DC3545";
-    bg = "#E8E8E8";
-  } else if (program?.status === "completed") {
-    color = "#007BFF";
-    bg = "#E8E8E8";
+  } else if (program?.status === 'cancel') {
+    color = '#DC3545';
+    bg = '#E8E8E8';
+  } else if (program?.status === 'completed') {
+    color = '#007BFF';
+    bg = '#E8E8E8';
   }
 
   const label = () => {
-    if (program?.status === "draft") {
-      return "Draft Program";
-    } else if (program?.status === "close") {
-      return "Applications Closed";
-    } else if (program?.status === "published") {
-      return "Open for Applications";
-    } else if (program?.status === "cancel") {
-      return "Cancelled";
-    } else if (program?.status === "completed") {
-      return "Completed";
+    if (program?.status === 'draft') {
+      return 'Draft Program';
+    } else if (program?.status === 'close') {
+      return 'Applications Closed';
+    } else if (program?.status === 'published') {
+      return 'Open for Applications';
+    } else if (program?.status === 'cancel') {
+      return 'Cancelled';
+    } else if (program?.status === 'completed') {
+      return 'Completed';
     }
   };
   const router = useRouter();
@@ -90,10 +90,10 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
           className="rounded-full h-2 w-2 font-medium"
           style={{ backgroundColor: color }}
         />
-        {(params.accessType === "investor" || params.accessType === "sme") &&
+        {(params.accessType === 'investor' || params.accessType === 'sme') &&
           label()}
-        {(params.accessType === "development" ||
-          params.accessType === "admin") && (
+        {(params.accessType === 'development' ||
+          params.accessType === 'admin') && (
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -127,8 +127,8 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
           className="max-h-4  h-auto w-auto max-w-4"
         />
         <div className="flex flex-wrap gap-2">
-          Hosted by{" "}
-          {program?.partners?.map((partner: any) => partner?.name).join(", ")}
+          Hosted by{' '}
+          {program?.partners?.map((partner: any) => partner?.name).join(', ')}
         </div>
       </div>
 
@@ -137,7 +137,7 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
       </p>
       <div className="flex flex-col lg:flex-row justify-between gap-0">
         <div className="flex flex-wrap gap-4">
-          {" "}
+          {' '}
           <div className="flex gap-2 items-center w-fit">
             <img className="w-4 h-4" src="/icons/calendar.svg" />
             <p className="text-xs font-normal text-[#0F2501]">
@@ -145,22 +145,22 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
             </p>
           </div>
           <div className="flex w-fit gap-2 items-center">
-            <img className="w-4 h-4" src="/icons/location.svg" />{" "}
+            <img className="w-4 h-4" src="/icons/location.svg" />{' '}
             <p className="text-xs font-normal text-[#0F2501]">
-              {program?.eligibleCountries?.join(", ")}
+              {program?.eligibleCountries?.join(', ')}
             </p>
           </div>
           <div className="flex gap-2 items-center w-fit">
             <img className="w-4 h-4" src="/icons/star.svg" />
             <p className="text-xs font-normal text-[#0F2501]">
-              {program?.smeStage?.join(", ")}
+              {program?.smeStage?.join(', ')}
             </p>
           </div>
         </div>
 
         <div className="w-full items-end flex justify-end ">
-          {(params.accessType === "sme" ||
-            params.accessType === "investor") && (
+          {(params.accessType === 'sme' ||
+            params.accessType === 'investor') && (
             <Button
               disabled={myApplications?.applications?.some((application: any) => application.programId === program.id)}
               onClick={() =>
@@ -173,7 +173,7 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
             </Button>
           )}
 
-          {params.accessType === "development" && (
+          {params.accessType === 'development' && (
             <div>
               <Button
                 onClick={() =>

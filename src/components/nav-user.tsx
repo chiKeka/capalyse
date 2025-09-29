@@ -41,7 +41,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
 import Button from './ui/Button';
 import { NotificationSheet } from './ui/notification-sheet';
 
@@ -73,7 +72,10 @@ export function NavUser({
         router.push('/signin');
       },
       onError: (ctx) => {
-        toast.error(ctx.error.message);
+        // toast.error(ctx.error.message);
+        setAuth(undefined);
+        queryClient.clear();
+        router.push('/signin');
       },
     });
   };

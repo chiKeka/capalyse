@@ -100,7 +100,7 @@ const businessProfile = {
   status: 'Connected',
 };
 
-export default function SMEDirectoryPage({}: Props) {
+export default function SingleSMEDirectoryPage({}: Props) {
   // Fetch readiness score data for the SME
   const { data: readinessData, isLoading: isReadinessLoading } =
     useGetReadinessScore();
