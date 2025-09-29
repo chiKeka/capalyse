@@ -1,12 +1,12 @@
-import { useGetProfileNextStep } from '@/hooks/useProfileManagement';
-import { authAtom } from '@/lib/atoms/atoms';
-import { authClient, useSession } from '@/lib/auth-client';
-import { routes } from '@/lib/routes';
-import { getKeyByValue } from '@/lib/uitils/fns';
-import { onboardingSteps, UserType } from '@/lib/utils';
-import { useSetAtom } from 'jotai';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient, useSession } from "@/lib/auth-client";
+import { routes } from "@/lib/routes";
+import { getKeyByValue } from "@/lib/uitils/fns";
+import { onboardingSteps, UserType } from "@/lib/utils";
+import { useSetAtom } from "jotai";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 interface AuthLayoutProps {
   title?: string;
@@ -22,8 +22,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   children,
   google_signtures,
   sub_caption,
-  inputFieldSize = 'max-w-md ',
-  layoutSize = 'lg:max-w-2xl',
+  inputFieldSize = "max-w-md ",
+  layoutSize = "lg:max-w-2xl",
 }) => {
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
@@ -44,57 +44,21 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
   const googleSignIn = async () => {
     setIsLoading(true);
-    await authClient.signIn.social(
-      {
-        provider: 'google',
-        callbackURL: `${window.location.origin}/signin`,
-      }
-      // {
-      //   onRequest: (ctx) => {
-      //     setIsLoading(true);
-      //   },
-      //   onSuccess: async (ctx) => {
-      //     setIsLoading(false);
-      //     // window.open(ctx.data.url, "_blank");
-      //     console.log({ ctx });
-      //     await authClient.getSession().then((ctx) => {
-      //       const { data } = ctx as any;
-      //       setAuth(data?.user as any);
-      //       if (data?.user?.roles === "ADMIN") {
-      //         router.push(`/admin`);
-      //         return;
-      //       }
-      //       const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-      //       console.log({ rootRoute, isIncompleteStep });
-      //       if (rootRoute && isIncompleteStep) {
-      //         router.push(`/${rootRoute}/onboarding`);
-      //       } else {
-      //         router.push(
-      //           routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-      //         );
-      //       }
-      //     });
-      //   },
-      //   onError: (ctx) => {
-      //     console.log({ ctx });
-      //   },
-      // }
-    );
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: `${window?.location?.origin}/signin`,
+    });
   };
 
   useEffect(() => {
-    if (isAuth?.user && !isAuthLoading) {
-      setAuth(isAuth?.user as any);
-    }
-
-    if (isAuth?.user?.roles === 'ADMIN') {
-      router.push('/admin');
-    }
+    // if (isAuth?.user && !isAuthLoading) {
+    //   setAuth(isAuth?.user as any);
+    // }
 
     if (isIncompleteStep) {
       router?.push(`/${rootRoute}/onboarding`);
     } else {
-      router.push(
+      router?.push(
         routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
       );
     }
@@ -125,9 +89,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
               className="max-w-md w-full gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center"
             >
               <img
-                src={'/icons/google.svg'}
-                className={`${isLoading ? 'animate-spin' : ''} w-4 h-4`}
-              />{' '}
+                src={"/icons/google.svg"}
+                className={`${isLoading ? "animate-spin" : ""} w-4 h-4`}
+              />{" "}
               Sign up with Google
             </button>
             <div className="flex w-full max-w-md gap-2 items-center justify-center ">

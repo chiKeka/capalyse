@@ -161,7 +161,6 @@ const Page = () => {
 
   const getPrimaryButtonLabel = () => {
     const role = authState?.role?.toLowerCase();
-    console.log({ authState });
     const step = profileNextStep?.currentStep;
     if (role === 'sme') {
       return step === onboardingSteps[0].steps[1].label ? 'Submit' : 'Next';

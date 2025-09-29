@@ -4,7 +4,7 @@ import { Check, ChevronRight, CircleCheck, Loader2Icon } from 'lucide-react';
 import React, { ButtonHTMLAttributes } from 'react';
 
 // Type definitions
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
 type ButtonSize = 'small' | 'medium' | 'big' | 'icon';
 type ButtonState = 'default' | 'hover' | 'loading' | 'disabled';
 type IconPosition = 'none' | 'left' | 'right' | 'only' | 'file' | 'chat';
@@ -97,6 +97,12 @@ const Button: React.FC<ButtonProps> = ({
       hover: 'bg-accent text-accent-foreground',
       loading: 'bg-transparent cursor-wait',
       disabled: 'bg-transparent opacity-50 cursor-not-allowed',
+    },
+    danger: {
+      default: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-200',
+      hover: 'bg-red-600 text-white focus:ring-red-500',
+      loading: 'bg-red-500 text-white cursor-wait',
+      disabled: 'bg-red-500 text-white cursor-not-allowed',
     },
   };
 

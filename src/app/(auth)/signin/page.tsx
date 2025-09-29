@@ -7,7 +7,6 @@ import PasswordChecker from "@/components/ui/passwordChecker";
 import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient, useSession } from "@/lib/auth-client";
-import { routes } from "@/lib/routes";
 import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
 import { onboardingSteps, UserType } from "@/lib/utils";
 import { useSetAtom } from "jotai";
@@ -63,7 +62,7 @@ function page({}: Props) {
               router.push(`/verify?email=${data?.user?.email}`);
               return;
             }
-            if (data?.user?.roles === "ADMIN") {
+            if (data?.user?.roles?.toLocaleUpperCase() === "ADMIN") {
               router.push(`/admin`);
               return;
             } else {

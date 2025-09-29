@@ -1,17 +1,18 @@
-'use client';
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CheckListProgressCard from '@/components/sections/dashboardCards/checkListProgressCard';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import LearningCard from '@/components/sections/dashboardCards/learningCard';
-import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
-import Programs from '@/components/sections/dashboardCards/programs';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import SuggestedConnection from '@/components/sections/dashboardCards/suggestedConnection';
-import { getCurrentProfile } from '@/hooks/useUpdateProfile';
-import { useGetReadinessScore } from '@/hooks/useReadiness';
-import { useGetSmeAssesmentsProgress } from '@/hooks/useSmeAssessments';
-import { useParams } from 'next/navigation';
-import { useSmeMatches } from '@/hooks/useDirectories';
+"use client";
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import LearningCard from "@/components/sections/dashboardCards/learningCard";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
+import Programs from "@/components/sections/dashboardCards/programs";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
+import { useSmeMatches } from "@/hooks/useDirectories";
+import { GetPrograms } from "@/hooks/usePrograms";
+import { useGetReadinessScore } from "@/hooks/useReadiness";
+import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useParams } from "next/navigation";
 
 export default function SmeDashBoard() {
   const params = useParams();
@@ -23,7 +24,8 @@ export default function SmeDashBoard() {
   const { data: readinessScore, isLoading: isReadinessLoading } =
     useGetReadinessScore();
   const learningCards: any[] = [];
-  const programs: any[] = [];
+
+  const { data: programs } = GetPrograms({ page: 1, limit: 10 });
   // const finaceProgressKey = assessmentsProgress?.ompletedSections.map(
   //   (x: string) => x
   // );
@@ -41,24 +43,24 @@ export default function SmeDashBoard() {
 
   const checklist = [
     {
-      icon: '/icons/profile.svg',
-      label: 'Complete profile',
+      icon: "/icons/profile.svg",
+      label: "Complete profile",
       status:
         (user?.completedSteps?.length / user?.totalSteps) * 100 || undefined,
     },
     {
-      icon: '/icons/presentation.svg',
-      label: 'Start Readiness Assessment',
+      icon: "/icons/presentation.svg",
+      label: "Start Readiness Assessment",
       status: assessmentsProgress?.completionPercentage || undefined,
     },
     {
-      icon: '/icons/money_out.svg',
-      label: 'Finish financial section',
+      icon: "/icons/money_out.svg",
+      label: "Finish financial section",
       status: sectionCompletion?.financial || undefined,
     },
     {
-      icon: '/icons/status_up.svg',
-      label: 'Explore investor matches',
+      icon: "/icons/status_up.svg",
+      label: "Explore investor matches",
       status: investorMatches?.total > 0 ? 100 : 0,
     },
   ];
@@ -76,9 +78,9 @@ export default function SmeDashBoard() {
         showProgress={true}
         showButton={true}
         buttonProps={{
-          className: 'max-w-max !border-black-50 !text-black-400',
-          variant: 'secondary',
-          iconPosition: 'right',
+          className: "max-w-max !border-black-50 !text-black-400",
+          variant: "secondary",
+          iconPosition: "right",
         }}
       />
       <div className="flex flex-col gap-6 md:flex-wrap lg:grid lg:grid-cols-2 xl:grid-cols-[1fr_2fr_1fr] ">
@@ -111,7 +113,7 @@ export default function SmeDashBoard() {
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col">
           <DashboardCardLayout
-            icon={'/images/bulb.svg'}
+            icon={"/images/bulb.svg"}
             caption="Quick Tip"
             height="h-full"
           >
@@ -121,7 +123,7 @@ export default function SmeDashBoard() {
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
-            icon={'/icons/warning.svg'}
+            icon={"/icons/warning.svg"}
             caption="Compliance Flag"
             height="h-full"
           >
@@ -166,13 +168,13 @@ export default function SmeDashBoard() {
                         assessmentsProgress?.completionPercentage ?? 0
                       }% done with your Investment readiness assement, click the button below to continue`
                     : assessmentsProgress?.isComplete
-                    ? 'Assessment Complete awaiting investor matches'
-                    : ''
+                    ? "Assessment Complete awaiting investor matches"
+                    : ""
                 }
                 buttonText={
                   assessmentsProgress?.completionPercentage > 0
-                    ? 'Complete Assessment'
-                    : 'Start Assessment'
+                    ? "Complete Assessment"
+                    : "Start Assessment"
                 }
                 showButton={assessmentsProgress?.completionPercentage < 100}
               />
@@ -207,13 +209,19 @@ export default function SmeDashBoard() {
           </DashboardCardLayout>
         </div>
         <div className="flex-1 ">
-          <DashboardCardLayout height="h-full" caption="Develolopment Programs">
-            {programs?.length > 0 ? (
-              programs?.map((program) => (
-                <div className="my-8">
-                  <Programs />
-                </div>
-              ))
+          <DashboardCardLayout
+            height="h-full"
+            caption="Develolopment Programs"
+            linkName="See all"
+            link={`/${params.accessType}/programs`}
+          >
+            {programs?.programs?.length > 0 ? (
+              <div className="my-8">
+                <Programs
+                  status={programs.programs[0].status}
+                  program={programs.programs[0]}
+                />
+              </div>
             ) : (
               <EmptyBox
                 caption="No Development Programs Yet!"

@@ -37,11 +37,11 @@ export const useGetSmeById = (id: string) => {
   });
 };
 
-export const useSmeMatches = (params: any) => {
+export const useSmeMatches = (params?: any) => {
   return useQuery({
     queryKey: ['smeMatches'],
     queryFn: async () => {
-      const resp = await api.get(directoryRoutes.smeMatches, params);
+      const resp = await api.get(directoryRoutes.smeMatches, params ?? {});
       return resp.data;
     },
   });

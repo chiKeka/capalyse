@@ -1,4 +1,5 @@
 import AuthenticatedLayout from "@/components/layout/AuthenticatedLayout";
+import { ProtectedDashboard } from "@/components/layout/protectedRoute";
 
 import { notFound } from "next/navigation";
 
@@ -17,5 +18,9 @@ export default async function DashboardLayout({
     notFound();
   }
 
-  return <AuthenticatedLayout>{children}</AuthenticatedLayout>;
+  return (
+    <ProtectedDashboard>
+      <AuthenticatedLayout>{children}</AuthenticatedLayout>
+    </ProtectedDashboard>
+  );
 }

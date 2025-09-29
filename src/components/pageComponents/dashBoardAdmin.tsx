@@ -1,84 +1,96 @@
-'use client';
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
-import { routes } from '@/lib/routes';
-import IconCards from '../sections/dashboardCards/iconCards';
-import { CIcons } from '../ui/CIcons';
-import { useGetAdminDashboardStats } from '@/hooks/useAdmin';
-import { useAtomValue } from 'jotai';
-import { authAtom } from '@/lib/atoms/atoms';
-import { formatInvestmentData } from '@/lib/uitils/fns';
-import { Loader2Icon } from 'lucide-react';
-import InvestmentOpportunitiesCard from '../InvesmentOpportunitiesCard';
+"use client";
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
+import {
+  useGetAdminAnalytics,
+  useGetAdminDashboardStats,
+} from "@/hooks/useAdmin";
+import { useSmeMatches } from "@/hooks/useDirectories";
+import { useGetSupport } from "@/hooks/useSupport";
+import { authAtom } from "@/lib/atoms/atoms";
+import { routes } from "@/lib/routes";
+import { formatInvestmentData } from "@/lib/uitils/fns";
+import { useAtomValue } from "jotai";
+import { Loader2Icon } from "lucide-react";
+import InvestmentOpportunitiesCard from "../InvesmentOpportunitiesCard";
+import IconCards from "../sections/dashboardCards/iconCards";
+import { CIcons } from "../ui/CIcons";
 
 export default function AdminDashBoard() {
   const auth: any = useAtomValue(authAtom);
-  const { data: adminDashboardStats, isLoading } = useGetAdminDashboardStats();
+  const { data: adminDashboardStats, isLoading = false } =
+    useGetAdminDashboardStats();
   console.log({ adminDashboardStats, auth });
-
-  const investmentData = formatInvestmentData(
-    adminDashboardStats?.investmentOpportunities ?? []
+  const { data: adminAnalytics } = useGetAdminAnalytics(
+    adminDashboardStats?.fundsDisbursed?.currency ?? "NGN"
   );
+  const { data: matches, isLoading: isLoadingSmeMatches } = useSmeMatches();
+  const investmentData = formatInvestmentData(
+    adminAnalytics?.data?.investmentOpportunities ?? []
+  );
+  const { data: supportTicket } = useGetSupport();
+
   const overviewCards = [
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: 'Funds Disbursed',
-      amount: adminDashboardStats?.fundsDisbursed?.amount ?? 0,
-      currency: adminDashboardStats?.fundsDisbursed?.currency ?? 'NGN',
+      label: "Funds Disbursed",
+      amount: adminAnalytics?.data?.investmentsRecorded?.[0]?.amount ?? 0,
+      currency:
+        adminAnalytics?.data?.investmentsRecorded?.[0]?.currency ?? "NGN",
       percentage: 152000,
-      direction: 'up',
+      direction: "up",
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: 'Pending Verifications',
-      amount: adminDashboardStats?.pendingVerifications ?? 10,
+      label: "Pending Verifications",
+      amount: adminAnalytics?.data?.pendingUserVerification ?? 10,
     },
     {
       id: 3,
       icon: CIcons.profile2,
-      label: 'Active Programs',
-      amount: adminDashboardStats?.activePrograms ?? 10,
+      label: "Active Programs",
+      amount: adminAnalytics?.data?.programs?.total ?? 10,
     },
     {
       id: 4,
       icon: CIcons.profile2,
-      label: 'Investor-SME Matches',
-      amount: adminDashboardStats?.investorMatches ?? 10,
+      label: "Investor-SME Matches",
+      amount: matches?.items?.length ?? 0,
     },
   ];
 
   const groups = [
     {
-      group: 'SMEs',
-      count: adminDashboardStats?.totalRegisteredSMEs ?? '0',
-      color: '#5CEBB4',
+      group: "SMEs",
+      count: adminAnalytics?.data?.users?.byRole?.sme ?? "0",
+      color: "#5CEBB4",
     },
     {
-      group: 'Investors',
-      count: adminDashboardStats?.totalRegisteredInvestors ?? '0',
-      color: '#A5BDFA',
+      group: "Investors",
+      count: adminAnalytics?.data?.users?.byRole?.investor ?? "0",
+      color: "#A5BDFA",
     },
     {
-      group: 'Dev Orgs',
-      count: adminDashboardStats?.totalRegisteredDevelopmentOrgs ?? '0',
-      color: '#FCA5A5',
+      group: "Dev Orgs",
+      count: adminAnalytics?.data?.users?.byRole?.development_org ?? "0",
+      color: "#FCA5A5",
     },
   ];
-
+  console.log({ adminAnalytics, matches });
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
         value={30}
         link={routes.admin.profile}
-        user={{ name: auth?.firstName }}
+        user={{ name: auth?.name }}
         textContent="Monitor overall activity, verify users, and manage performance across the ecosystem"
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <IconCards
           label="Total Registered Users"
-          amount={adminDashboardStats?.totalRegisteredUsers ?? 0}
+          amount={adminAnalytics?.data?.users?.total ?? 0}
           icon={CIcons.profile2}
           extraContent={
             isLoading ? (
@@ -119,9 +131,15 @@ export default function AdminDashBoard() {
         </div>
 
         <div className="lg:col-span-3 w-full">
-          <DashboardCardLayout caption="Support Tickets Open (0)">
+          <DashboardCardLayout
+            caption={`Support Tickets Open (${
+              supportTicket?.tickets?.filter(
+                (ticket: any) => ticket.status === "open"
+              )?.length ?? 0
+            })`}
+          >
             {isLoading ? (
-              <Loader2Icon className="animate-spin text-green w-12 h-12" />
+              <Loader2Icon className="animate-spin  mx-auto text-green w-12 h-12" />
             ) : (
               <div className="flex my-8 flex-col gap-3">
                 <div className="flex flex-col gap-4">

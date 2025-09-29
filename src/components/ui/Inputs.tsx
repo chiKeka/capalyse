@@ -57,7 +57,7 @@ const Input = React.forwardRef<
   return (
     <div className="mb-4 max-w-xl ">
       {label && (
-        <label htmlFor={name} className="block mb-1 font-normal text-[#525252]">
+        <label htmlFor={name} className="block mb-1 text-sm font-bold text-[#525252]">
           {label}
         </label>
       )}
@@ -132,8 +132,15 @@ export function CurrencyAmountInput({
           min={0}
         />
         <div className="absolute right-0 top-0 h-auto flex items-center">
-          <Select value={currency} onValueChange={onCurrencyChange} disabled={currencyDisabled}>
-            <SelectTrigger disabled={currencyDisabled} className="w-20 h-auto mt-[0.5px] min-h-9 rounded-none rounded-r-md border-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none">
+          <Select
+            value={currency}
+            onValueChange={onCurrencyChange}
+            disabled={currencyDisabled}
+          >
+            <SelectTrigger
+              disabled={currencyDisabled}
+              className="w-20 h-auto mt-[0.5px] min-h-9 rounded-none rounded-r-md border-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

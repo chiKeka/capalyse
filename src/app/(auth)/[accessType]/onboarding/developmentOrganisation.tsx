@@ -314,7 +314,7 @@ const DevelopmentOrganisation = forwardRef<
       <StatusChangeModal
         description="We're reviewing your details. You'll get an email once verification is complete."
         handleAction={() => {
-          router.push(`/${role}/dashbaord`);
+          router.push(`/${role}/dashbord`);
           setShowModal(false);
         }}
         modalType="warning"

@@ -3,45 +3,61 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
 import Programs from "@/components/sections/dashboardCards/programs";
+import { GetDevOrgAnalytics } from "@/hooks/devOrg/devOrgsAnalytics";
+import { ProfileData } from "@/hooks/useProfileManagement";
+import { GetPrograms } from "@/hooks/usePrograms";
 import { routes } from "@/lib/routes";
 import { formatCurrency } from "@/lib/uitils/fns";
 import { useParams } from "next/navigation";
 import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
 
-const overviewCards = [
-  {
-    id: 3,
-    icon: CIcons.profile2,
-    label: "Active Programs",
-    amount: 0,
-  },
-  {
-    id: 2,
-    icon: CIcons.profile2,
-    label: "SMEs Engaged",
-    amount: 0,
-  },
-  {
-    id: 1,
-    icon: CIcons.walletMoney,
-    label: "Funds Deployed",
-    amount: 0,
-    currency: "NGN",
-    percentage: 0,
-    direction: "up",
-  },
-];
-const programs = [1, 2];
 export default function DevelopmentDashBoard() {
   const params = useParams();
-
+  const filterParams = {
+    page: 1,
+    limit: 10,
+    industry: undefined,
+    country: undefined,
+    stage: undefined,
+    supportType: undefined,
+    status: undefined,
+    sortBy: undefined,
+  };
+  const { data: devOrgAnalytics } = GetDevOrgAnalytics();
+  const { data: programs } = GetPrograms(filterParams);
+  const { data: profile } = ProfileData();
+  const overviewCards = [
+    {
+      id: 3,
+      icon: CIcons.profile2,
+      label: "Active Programs",
+      amount: devOrgAnalytics?.totals?.active ?? 0,
+    },
+    {
+      id: 2,
+      icon: CIcons.profile2,
+      label: "SMEs Engaged",
+      amount: devOrgAnalytics?.applications?.accepted ?? 0,
+    },
+    {
+      id: 1,
+      icon: CIcons.walletMoney,
+      label: "Funds Deployed",
+      amount: devOrgAnalytics?.applications?.total ?? 0,
+      currency: "NGN",
+      percentage: 0,
+      direction: "up",
+    },
+  ];
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
         value={30}
         link={routes.investor.smeDirectory}
-        user={{ name: "Welcome PMC NGO 👋" }}
+        user={{
+          name: `Welcome PMC ${profile?.devOrgInfo?.organizationName}`,
+        }}
         showButton={false}
         textContent=""
       />
@@ -80,12 +96,17 @@ export default function DevelopmentDashBoard() {
         ))}
       </div>
 
-      {programs.length > 0 ? (
+      {programs?.programs?.length > 0 ? (
         <div className="flex-1 ">
-          <DashboardCardLayout height="h-full" caption="Recent Programs">
+          <DashboardCardLayout
+            linkName="See all Programs"
+            link={`/${params.accessType}/programs`}
+            height="h-full"
+            caption="Recent Programs"
+          >
             <div className="my-8 flex-col flex gap-2">
-              {programs.map(() => {
-                return <Programs />;
+              {programs?.programs?.map((program: any, index: string) => {
+                return <Programs key={index} program={program} />;
               })}
             </div>
           </DashboardCardLayout>
@@ -96,6 +117,7 @@ export default function DevelopmentDashBoard() {
             <div className="w-full h-full py-24 flex items-center justify-center">
               <EmptyBox
                 buttonText="Create Program"
+                actionType="createProgram"
                 caption="No Programs Yet!"
                 caption2="You have not created any programs yet."
               />
