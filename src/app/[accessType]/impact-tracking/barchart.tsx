@@ -1,3 +1,4 @@
+import { useImpactSummary } from "@/hooks/usePrograms";
 import {
   BarElement,
   CategoryScale,
@@ -54,6 +55,12 @@ export const data = {
 };
 
 export function BarChart() {
+  const { data:summary } = useImpactSummary({
+    from: "2024-01-01",
+    to: "2024-12-31",
+    currency: "NGN",
+  });
+  console.log(summary);
   return (
     <div className="border rounded-lg p-4 h-full w-full">
       <div className="flex mb-8 items-center justify-between ">

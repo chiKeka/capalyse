@@ -148,7 +148,7 @@ function page({}: Props) {
       </div>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 ">
         <LineChart />
-        <PieChart />
+        <PieChart  />
       </div>
     </div>
   );

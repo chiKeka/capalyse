@@ -31,11 +31,11 @@ const AuthenticatedLayout = ({
 
     if (
       session?.user?.roles === "ADMIN" &&
-      params.accessType &&
-      params.accessType !== "admin"
+      params.accessType
+      // &&
+      // params.accessType !== "admin"
     ) {
       router.push("/admin");
-
       setLoading(false);
     }
     if (session?.user?.roles !== "ADMIN" && rootRoute !== params.accessType) {

@@ -4,6 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { useImpactMonthly } from "@/hooks/usePrograms";
 import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 type Props = {};
@@ -35,6 +36,12 @@ function LineChart({}: Props) {
       datasets: [],
     };
   }, []);
+  const { data } = useImpactMonthly({
+    from: "2024-01-01",
+    to: "2024-12-31",
+    currency: "NGN",
+  });
+  console.log(data);
   return (
     <div className="w-full rounded-lg border relative p-4   h-auto">
       <div className="flex mb-8 items-center justify-between">

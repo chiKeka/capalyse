@@ -164,3 +164,75 @@ export const createProgram = () => {
     },
   });
 };
+
+// Impact Tracking Queries
+export interface ImpactQueryParams {
+  from?: string;
+  to?: string;
+  currency?: string;
+}
+
+export interface ImpactMonthlyQueryParams extends ImpactQueryParams {
+  months?: number | null;
+  includeZeros?: boolean;
+}
+
+export const useImpactSummary = (params: ImpactQueryParams) => {
+  return useQuery({
+    queryKey: ["impact-summary", params],
+    queryFn: async () => {
+      const response = await api.get(programsRoutes.impactTracking, {
+        params,
+      });
+      return response.data;
+    },
+    enabled: true,
+  });
+};
+
+export const useImpactByCountry = (params: ImpactQueryParams) => {
+  return useQuery({
+    queryKey: ["impact-by-country", params],
+    queryFn: async () => {
+      const response = await api.get(programsRoutes.impactByCountry, {
+        params,
+      });
+      return response.data;
+    },
+    enabled: true,
+  });
+};
+
+export const useListMyApplications = (params?: {
+  page: string;
+  limit: string;
+  status: string;
+}) => {
+  return useQuery({
+    queryKey: ["list-my-applications", params],
+    queryFn: async () => {
+      const response = await api.get(programsRoutes.listMyApplications, {
+        params,
+      });
+      return response.data;
+    },
+  });
+};
+
+export const useImpactMonthly = (params: ImpactMonthlyQueryParams) => {
+  const normalized = {
+    ...params,
+    months: params.months === undefined ? null : params.months,
+  };
+
+  return useQuery({
+    queryKey: ["impact-monthly", normalized],
+    queryFn: async () => {
+      const response = await api.get(programsRoutes.impact_Monthly, {
+        params: normalized,
+      });
+      return response.data;
+    },
+    enabled: true,
+  });
+};

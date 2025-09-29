@@ -39,7 +39,9 @@ function page({}: Props) {
               className="rounded-full"
             />
           ) : null}
-          <span className="font-medium text-sm">{row.sme?.smeBusinessInfo?.businessName}</span>
+          <span className="font-medium text-sm">
+            {row.sme?.smeBusinessInfo?.businessName}
+          </span>
         </div>
       ),
     },
@@ -76,7 +78,11 @@ function page({}: Props) {
           <Button
             onClick={() =>
               router.push(
-                `/${params.accessType}/programs/${params.sluge}/applicants/${row.smeId}?applicationId=${row.id}`
+                `/${params.accessType}/programs/${params.sluge}/applicants/${
+                  row.smeId
+                }?applicationId=${row.id}&status=${encodeURIComponent(
+                  row.status
+                )}`
               )
             }
             variant="tertiary"
@@ -132,6 +138,8 @@ function page({}: Props) {
         </div>
         <ReusableTable
           columns={columns}
+          noDataCaption="No applicants found"
+          noDataText="No Applicants found check back later, any new application added will be found here"
           data={applicants}
           totalPages={Math.ceil(applicants.length / 4)}
         />

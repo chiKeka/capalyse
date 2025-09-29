@@ -363,7 +363,7 @@ export const programsRoutes = {
     `/programs/${id}/status/${action}`,
   programApplications: (id: string) => `/programs/${id}/applications`,
   devOrg_analytics: "dev-org/programs/analytics",
-  listMyApplications: (id: string) => `/me/applications`,
+  listMyApplications: `/me/applications`,
   applicationStatus: (id: string, applicationId: string) =>
     `/programs/${id}/applications/${applicationId}`,
   applicationAnalytics: (id: string, applicationId: string) =>
@@ -373,6 +373,9 @@ export const programsRoutes = {
   applyToProgram: (id: string) => `/programs/${id}/apply`,
   reviewApplication: (id: string, applicationId: string) =>
     `/programs/${id}/applications/${applicationId}/review`,
+  impactTracking: "/dev-org/programs/impact/summary", // query params: from=&to=&currency=
+  impactByCountry: "/dev-org/programs/impact/by-country", // query params: from=&to=&currency=
+  impact_Monthly: "/dev-org/programs/impact/monthly", // query params: months=null&from=&to=&includeZeros=false&currency=
 };
 
 export const readinessRoutes = {
@@ -426,3 +429,32 @@ export const financialsRoutes = {
 //  Dev Org Routes
 
 // using Programs endpoints
+
+// admin routes
+
+export const adminRoutes = {
+  adminAnalytics: "/admin/analytics/overview",
+  getAdminCompliance: "/compliance/admin/cases", // query params: status=awaiting_ai|awaiting_docs|ai_compliant|admin_review|admin_certified|admin_rejected
+  approveAdminCompliance: (caseId: string, docLinkId: string) =>
+    `/compliance/admin/cases/${caseId}/documents/${docLinkId}/approve`, // post request body{notes: string}
+  rejectAdminCompliance: (caseId: string, docLinkId: string) =>
+    `/compliance/admin/cases/${caseId}/documents/${docLinkId}/reject`, // post request body{notes: string}
+  certifyAdminCompliance: (caseId: string) =>
+    `/compliance/admin/cases/${caseId}/certify`, // post request no body
+  revokeAdminCompliance: (caseId: string) =>
+    `/compliance/admin/cases/${caseId}/revoke`, // post request no body
+
+  // Assessments
+  createAssessmentQuestion: "/admin/assessments/questions", // post request
+  updateAssessmentQuestion: (questionId: string) =>
+    `/admin/assessments/questions/${questionId}`,
+  deleteAssessmentQuestion: (questionId: string) =>
+    `/admin/assessments/questions/${questionId}`,
+  getAssessmentQuestions: "/admin/assessments/questions",
+  getAssessmentQuestion: (questionId: string) =>
+    `/admin/assessments/questions/${questionId}`,
+  getAssessmentQuestionsByCategory: (category: string) =>
+    `/admin/assessments/questions/category/${category}`,
+  getAssessmentAnalytics: "/admin/assessments/analytics",
+  getAssesmentScoring: "/admin/assessments/scoring",
+};

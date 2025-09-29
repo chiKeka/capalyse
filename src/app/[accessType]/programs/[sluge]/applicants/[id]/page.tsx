@@ -17,7 +17,7 @@ import { GetProgramById, reviewApplication } from "@/hooks/usePrograms";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { File } from "lucide-react";
 import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { toast } from "sonner";
 
@@ -106,7 +106,7 @@ export default function SMEDirectoryPage({}: Props) {
   const [selectedDoc, setSelectedDoc] = React.useState<
     (typeof documents)[0] | null
   >(null);
-
+  const router = useRouter();
   function handleViewDocument(doc: (typeof documents)[0]) {
     setSelectedDoc(doc);
     setOpen(true);
@@ -188,6 +188,7 @@ export default function SMEDirectoryPage({}: Props) {
       {
         onSuccess: () => {
           toast.success("Application reviewed successfully");
+          router.back();
         },
         onError: (error) => {
           toast.error(error.message);
@@ -195,6 +196,8 @@ export default function SMEDirectoryPage({}: Props) {
       }
     );
   };
+
+  //  console.log(smeData);
   return (
     <div className="w-full h-full gap-6 flex flex-col">
       <div className="flex items-center justify-between">
@@ -203,20 +206,24 @@ export default function SMEDirectoryPage({}: Props) {
           Programs {"> "} {programDetails?.name} {"> "} Applicants {"> "}{" "}
           <p className="text-green">Applicants Details</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="danger"
-            onClick={() => handleReviewApplication("reject")}
-          >
-            Reject
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => handleReviewApplication("accept")}
-          >
-            Approve
-          </Button>
-        </div>
+
+        {(searchParams.get("status") == "draft" ||
+          searchParams.get("status") == "submitted") && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="danger"
+              onClick={() => handleReviewApplication("reject")}
+            >
+              Reject
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => handleReviewApplication("accept")}
+            >
+              Approve
+            </Button>
+          </div>
+        )}
       </div>
       {/* Business Profile Header */}
       {activeTab === "overview" ? (

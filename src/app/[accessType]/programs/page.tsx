@@ -6,7 +6,8 @@ import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
 import CreateProgram from "@/components/ui/createProgram";
 
-import { GetPrograms } from "@/hooks/usePrograms";
+import { GetPrograms, useListMyApplications } from "@/hooks/usePrograms";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 type Props = {};
@@ -15,6 +16,8 @@ const tabs = ["active", "closed"];
 
 function page({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const params = useParams();
+
   const filterParams = {
     page: 1,
     limit: 10,
@@ -27,6 +30,8 @@ function page({}: Props) {
   };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const { data: programs } = GetPrograms(filterParams);
+  const { data: myApplications } = useListMyApplications();
+  console.log({ myApplications });
   const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active"
       ? p.status === "published" ||
@@ -66,9 +71,11 @@ function page({}: Props) {
               </div>
             </div>
 
-            <Button size="small" onClick={() => setIsOpen(true)}>
-              Create New Program
-            </Button>
+            {params.accessType === "development " && (
+              <Button size="small" onClick={() => setIsOpen(true)}>
+                Create New Program
+              </Button>
+            )}
           </div>
         </DashboardCardLayout>
       </div>
