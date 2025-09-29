@@ -220,11 +220,14 @@ export const useImpactByCountry = (params: ImpactQueryParams) => {
   });
 };
 
-export const useListMyApplications = (params?: {
-  page: string;
-  limit: string;
-  status: string;
-}) => {
+export const useListMyApplications = (
+  params?: {
+    page: string;
+    limit: string;
+    status: string;
+  },
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: ["list-my-applications", params],
     queryFn: async () => {
@@ -233,6 +236,7 @@ export const useListMyApplications = (params?: {
       });
       return response.data;
     },
+    enabled,
   });
 };
 

@@ -32,7 +32,7 @@ function page({}: Props) {
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const { data: programs } = GetPrograms(filterParams);
 
- 
+
   const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active"
       ? p.status === "published" ||
@@ -43,7 +43,7 @@ function page({}: Props) {
         p.status === "cancelled"
   );
 
-  console.log({ filteredPrograms });
+  // console.log({ filteredPrograms });
 
   return (
     <div className="flex flex-col gap-6">
