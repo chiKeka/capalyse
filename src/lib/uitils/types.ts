@@ -29,9 +29,11 @@ export type SMEsBusinessInfo = {
 
 export type InvestmentPreferenceInfo = {
   investmentType: string[];
+  investmentTypes?: string[];
   targetRegions: string[];
   targetIndustries: string[];
   businessStage: string[];
+  businessStages?: string[];
   max: number;
   min: number;
   min_currency: string;
@@ -453,4 +455,4 @@ export type complianceAttachment = {
   fileSize: number;
   mimeType: string;
 };
-export type supportAttachment = string[];
+export type supportAttachment = any[];

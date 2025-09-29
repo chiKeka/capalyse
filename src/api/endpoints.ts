@@ -226,7 +226,6 @@ export const apiRoutes = {
     saveSme: (smeId: string) => `/investor/smes/${smeId}/save`,
     smeSaveStatus: (smeId: string) => `/investor/smes/${smeId}/status`,
   },
-
   /**
    * Development Organization-specific endpoints.
    */
@@ -292,6 +291,10 @@ export const apiRoutes = {
     getInterestDetails: (id: string) => `/investments/interests/${id}`,
     respondToInterest: (id: string) => `/investments/interests/${id}/respond`,
     getAnalytics: '/investments/analytics',
+    getInvestments: '/investments/mine',
+    createInvestment: '/investments',
+    updateInvestment: (id: string) => `/investments/${id}`,
+    getInvestorPortfolioSummary: '/portfolio/investor/me/summary',
   },
 
   /**

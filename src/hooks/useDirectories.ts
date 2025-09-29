@@ -2,11 +2,11 @@ import api from '@/api/axios';
 import { apiRoutes, directoryRoutes } from '@/api/endpoints';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useSmeDirectory = (enabled?: boolean) => {
+export const useSmeDirectory = (enabled?: boolean, params?: any) => {
   return useQuery({
-    queryKey: ['smeDirectory'],
+    queryKey: ['smeDirectory', { params }],
     queryFn: async () => {
-      const resp = await api.get(directoryRoutes.smes);
+      const resp = await api.get(directoryRoutes.smes, { params });
       return resp.data;
     },
     enabled: enabled !== undefined ? enabled : true,
@@ -23,12 +23,14 @@ export const useInvestorDirectory = (enabled?: boolean) => {
     enabled: enabled !== undefined ? enabled : true,
   });
 };
+export const getSingleSmeById = async (id: string) =>
+  await api.get(directoryRoutes.publicSmes(id));
 
 export const useGetSmeById = (id: string) => {
   return useQuery({
     queryKey: ['smeById'],
     queryFn: async () => {
-      const resp = await api.get(directoryRoutes.publicSmes(id));
+      const resp = await getSingleSmeById(id);
       return resp.data;
     },
     enabled: !!id,
@@ -67,7 +69,14 @@ export const useSmeDirectoryMutations = () => {
       queryClient.invalidateQueries({ queryKey: ['smeSaveStatus'] });
     },
   });
+  const getSmeByIdMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const resp = await api.get(directoryRoutes.publicSmes(id));
+      return resp.data;
+    },
+  });
   return {
     saveSme,
+    getSmeByIdMutation,
   };
 };

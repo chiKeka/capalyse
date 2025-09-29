@@ -1,0 +1,955 @@
+{
+	"info": {
+		"_postman_id": "aba113e7-8b33-4a11-8fdb-8b841ba8d557",
+		"name": "Credit Bloom Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40748630",
+		"_collection_link": "https://obana0.postman.co/workspace/Credit-Bloom~94641574-0ddf-4d72-86f3-39fdc5cdfd0c/collection/28024527-aba113e7-8b33-4a11-8fdb-8b841ba8d557?action=share&source=collection_link&creator=40748630"
+	},
+	"item": [
+		{
+			"name": "Onboard",
+			"item": [
+				{
+					"name": "SignUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"walex4me02@gmail.com\",\n  \"phone\": \"2346212345679\",\n  \"password\": \"@12345\",\n  \"user_type\": \"client\",\n  \"bvn\": \"1234test5\",\n  \"sendOtp\":true,\n  \"attributes\": {\n    \"address\": \"Tobo Okonofua Street\",\n    \"city\": \"Bwari\",\n    \"state\": \"Abuja\",\n    \"country\": \"Nigeria\",\n    \"first_name\": \"Akani\",\n    \"last_name\": \"Adewale\",\n    \"occupation\":\"Trader\",\n    \"product\":\"salary_advance\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"pm.environment.set(\"creditBloomRefreshToken\", responseData.refreshToken);",
+									"pm.environment.set(\"creditBloomToken\", responseData.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "device",
+								"value": "crome-1234",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"walex4me01@gmail.com\",\n  \"code\": \"113522\",\n  \"type\":\"email_verification\"\n  // \"type\":\"login_password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/auth/otp/verify",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"auth",
+								"otp",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignIn",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "device",
+								"value": "crome-1234",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"walex4me01@yahoo.com\",\n  \"password\":  \"@12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/auth/signin",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"pm.environment.set(\"creditBloomToken\", responseData.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "device",
+								"value": "crome-1234",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{creditBloomRefreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/auth/signin",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{creditBloomRefreshToken}}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/auth/logout",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/search?email=Abuja",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "Abuja"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/2",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/list?page=1&limit=2",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"list"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/role?limit=20&page=1",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"role"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scope",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/scope?limit=20&page=1",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"scope"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Key Val",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/detail?key=id&value=2",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"detail"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "id"
+								},
+								{
+									"key": "value",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"walex4me02@gmail.com\",\n  \"phone\": \"2346212345679\",\n  \"password\": \"@12345\",\n  \"user_type\": \"client\",\n  \"bvn\": \"1234test5\",\n  \"sendOtp\":true,\n  \"attributes\": {\n    \"address\": \"Tobo Okonofua Street\",\n    \"city\": \"Bwari\",\n    \"state\": \"Abuja\",\n    \"country\": \"Nigeria\",\n    \"first_name\": \"Akani\",\n    \"last_name\": \"Adewale\",\n    \"occupation\":\"Trader\",\n    \"product\":\"salary_advance\"\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/role",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asign Scope To Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"scope\":\"user.view\",\n  \"role\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/asignScope",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"asignScope"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Initiate Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"transfer\",\n  \"amount\": 2000,\n  \"ini_reference\": \"TEST-2025041609144-BED\",\n  \"initiator_name\": \"Credit Bloom\",\n  \"initiator_accountNumber\": \"1000000001\",\n  \"recipient_name\": \"Haj Enov\",\n  \"recipient_accountNumber\": \"30000000001\",\n  \"narration\": \"This is a test transaction2\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/posting",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"posting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Float",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"float\",\n  \"amount\": 50000,\n  \"ini_reference\": \"TEST-2025041609153-BED\",\n  \"account_number\":\"1000000004\",\n  \"narration\":\"Testing float posting\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/posting/float",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"posting",
+								"float"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reverse Transaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{creditBloomToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ref\": \"DEP-1745764648390-DYWT\",\n  \"narration\": \"Test reversal \"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/posting/reverse",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"posting",
+								"reverse"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pool And Ledger Account",
+			"item": [
+				{
+					"name": "Create Pool Or Ledger Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"account_name\": \"Salary Advance\",\n  \"currency\": \"NGN\",\n  \"type\": \"ledger\"\n  //\"type\": \"pool\",\n  //\"user_email\": creditb-bloom2025@gmail.com\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/users/wallet",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"users",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Loan",
+			"item": [
+				{
+					"name": "Loan Calculator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 1000000,\n  \"installmentsNumber\": 4,\n  \"interestRate\": 7.2,\n  \"loanTypeWithBool\": false\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/calculator",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"calculator"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Loan Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_name\": \"salary_advance\",\n  \"rate\": 10.5,\n  \"min_amount\": 20000,\n  \"max_amount\": 1000000,\n  \"min_term\": 1,\n  \"max_term\": 12,\n  \"loan_term_type\": \"monthly\",\n  \"status\": \"enabled\",\n  \"product_account\":1000000004\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/product",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loan Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 2,\n  \"customer_id\": 1,\n  \"amount\": 20000.00,\n  \"tenure\": 4,\n  \"repayment_start\": \"2025-09-19\"\n}\n// tenure is optional",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/product",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Loan Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product_id\": 2,\n  \"customer_id\": 1,\n  \"amount\": 20000.00,\n  \"tenure\": 4,\n  \"repayment_start\": \"2025-09-19\"\n}\n// tenure is optional",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/status?id=1",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"status"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Loan Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"liquidated\"\n  //\"status\": \"active\"\n  //\"status\": \"pending\"\n  //\"status\": \"disbursed\"\n  //\"status\": \"inactive\"\n  //\"status\": \"approved\"\n  //\"status\": \"rejected\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/status?id=1",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"status"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loan Disbursement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loan_id\": 1,\n  \"reference\":\"testing123\",\n  \"narration\":\"Testing\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/disburse",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"disburse"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Loan Repayment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loan_id\": 1,\n  \"amount\":5110,\n  \"reference\":\"TEST-20250926-REP\",\n  \"narration\":\"Loan repayment bank ref:1234\",\n  \"repayment_date\":\"2025-09-25\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/repayment",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"repayment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/products?page=1&limit=20",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer Active Loan",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{creditBoomBaseUrl}}/loan/eligibility?customerId=1",
+							"host": [
+								"{{creditBoomBaseUrl}}"
+							],
+							"path": [
+								"loan",
+								"eligibility"
+							],
+							"query": [
+								{
+									"key": "customerId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
