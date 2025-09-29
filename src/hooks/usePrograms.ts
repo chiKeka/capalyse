@@ -165,6 +165,23 @@ export const createProgram = () => {
   });
 };
 
+export const updateProgram = (id: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: ProgramFormData) => {
+      const response = await api.put(programsRoutes.singleProgram(id), data);
+      if (!response.status) {
+        throw new Error("Failed to update program");
+      }
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+      queryClient.invalidateQueries({ queryKey: ["program-categories"] });
+    },
+  });
+};
+
 // Impact Tracking Queries
 export interface ImpactQueryParams {
   from?: string;

@@ -6,7 +6,7 @@ import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
 import CreateProgram from "@/components/ui/createProgram";
 
-import { GetPrograms, useListMyApplications } from "@/hooks/usePrograms";
+import { GetPrograms } from "@/hooks/usePrograms";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ const tabs = ["active", "closed"];
 
 function page({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const params = useParams();
 
   const filterParams = {
@@ -30,8 +31,8 @@ function page({}: Props) {
   };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const { data: programs } = GetPrograms(filterParams);
-  const { data: myApplications } = useListMyApplications();
-  console.log({ myApplications });
+
+ 
   const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active"
       ? p.status === "published" ||
@@ -72,7 +73,13 @@ function page({}: Props) {
             </div>
 
             {params.accessType === "development " && (
-              <Button size="small" onClick={() => setIsOpen(true)}>
+              <Button
+                size="small"
+                onClick={() => {
+                  setIsOpen(true);
+                  setIsEdit(false);
+                }}
+              >
                 Create New Program
               </Button>
             )}
@@ -89,6 +96,8 @@ function page({}: Props) {
               {filteredPrograms?.map((program: any) => {
                 return (
                   <Programs
+                    editProgram={isOpen}
+                    setEditProgram={setIsEdit}
                     program={program}
                     status={program.status}
                     key={program.id}
@@ -115,7 +124,7 @@ function page({}: Props) {
           </DashboardCardLayout>
         </div>
       )}
-      <CreateProgram isOpen={isOpen} setIsOpen={setIsOpen} />
+      <CreateProgram isOpen={isOpen} setIsOpen={setIsOpen} isEdit={isEdit} />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { updateProgramStatus } from "@/hooks/usePrograms";
+import { updateProgramStatus, useListMyApplications } from "@/hooks/usePrograms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -22,10 +22,13 @@ const STATUS_OPTIONS = [
 type Props = {
   status?: "active" | "closed" | "draft";
   program: any;
+  editProgram?: boolean;
+  setEditProgram?: (editProgram: boolean) => void;
 };
 
-function Programs({ status = "active", program }: Props) {
+function Programs({ status = "active", program, editProgram, setEditProgram }: Props) {
   const [isStatusPopoverOpen, setIsStatusPopoverOpen] = useState(false);
+    const { data: myApplications } = useListMyApplications();
   const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
     program.id
   );
@@ -159,6 +162,7 @@ function Programs({ status = "active", program }: Props) {
           {(params.accessType === "sme" ||
             params.accessType === "investor") && (
             <Button
+              disabled={myApplications?.applications?.some((application: any) => application.programId === program.id)}
               onClick={() =>
                 router.push(`/${params.accessType}/programs/${program.id}`)
               }
@@ -184,9 +188,10 @@ function Programs({ status = "active", program }: Props) {
               </Button>
               <Button
                 variant="ghost"
-                onClick={() =>
-                  router.push(`/${params.accessType}/programs/${program.id}`)
-                }
+                onClick={() => {
+                  setEditProgram?.(true);
+                  // router.push(`/${params.accessType}/programs/${program.id}`)
+                }}
                 className="text-green text-sm hover:text-green"
                 size="small"
               >
