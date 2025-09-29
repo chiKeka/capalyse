@@ -162,14 +162,19 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
           {(params.accessType === 'sme' ||
             params.accessType === 'investor') && (
             <Button
-              disabled={myApplications?.applications?.some((application: any) => application.programId === program.id)}
+              // disabled={myApplications?.applications?.some((application: any) => application.programId === program.id)}
               onClick={() =>
-                router.push(`/${params.accessType}/programs/${program.id}`)
+                {if (myApplications?.applications?.some((application: any) => application.programId === program.id)) {
+                router.push(`/${params.accessType}/programs/${program.id}?view=true`)
+              } else {
+                router.push(`/${params.accessType}/programs/${program.id}?apply=true`)
               }
+
+              }}
               variant="ghost"
               className="text-sm text-green hover:text-green font-bold "
             >
-              Apply Now
+            {myApplications?.applications?.some((application: any) => application.programId === program.id) ? 'Already Applied (Click to View)' : 'Apply Now'}
             </Button>
           )}
 

@@ -15,7 +15,7 @@ import {
   updateProgramStatus,
 } from "@/hooks/usePrograms";
 import { formatDateRange } from "@/lib/uitils/fns";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 const STATUS_OPTIONS = [
@@ -27,6 +27,7 @@ const STATUS_OPTIONS = [
 
 function page() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const { data: program } = GetProgramById(params.sluge as string);
@@ -127,18 +128,19 @@ function page() {
           </div>
         )}
 
-        {(params?.accessType === "sme" ||
-          params?.accessType === "investor") && (
-          <div className="flex items-center gap-2">
-            <Button
-              className="text-green w-fit"
-              variant="primary"
-              onClick={handleApplyToProgram}
-            >
-              Apply Now
-            </Button>
-          </div>
-        )}
+        {searchParams.get("apply") === "true" &&
+          (params?.accessType === "sme" ||
+            params?.accessType === "investor") && (
+            <div className="flex items-center gap-2">
+              <Button
+                className="text-green w-fit"
+                variant="primary"
+                onClick={handleApplyToProgram}
+              >
+                Apply Now
+              </Button>
+            </div>
+          )}
       </div>
 
       <DashboardCardLayout>
@@ -245,7 +247,12 @@ function page() {
             </div>
           </div>
         </div>
-          <CreateProgram program={program} isOpen={isOpen} setIsOpen={setIsOpen} isEdit={isEdit} />
+        <CreateProgram
+          program={program}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          isEdit={isEdit}
+        />
       </DashboardCardLayout>
     </div>
   );
