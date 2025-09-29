@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import ResourceCard from "@/components/sections/dashboardCards/ResourceCard";
-import { Card } from "@/components/ui/card";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import ResourceCard from '@/components/sections/dashboardCards/ResourceCard';
+import { Card } from '@/components/ui/card';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useGetResources } from "@/hooks/useResources";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { useGetResources } from '@/hooks/useResources';
+import { useRouter } from 'next/navigation';
 
 export default function ResourcesPage() {
   const router = useRouter();
@@ -21,12 +21,12 @@ export default function ResourcesPage() {
   const { data: resources } = useGetResources({
     page: 1,
     limit: 10,
-    status: "",
-    sortBy: "",
-    sortOrder: "asc",
-    categoryId: "",
-    type: "",
-    difficulty: "",
+    status: undefined,
+    sortBy: undefined,
+    sortOrder: 'asc',
+    categoryId: undefined,
+    type: undefined,
+    difficulty: undefined,
   });
   console.log(resources);
   // Group resources by category
@@ -88,7 +88,7 @@ export default function ResourcesPage() {
                       id={resource.id}
                       title={resource.title}
                       category={resource.category}
-                      image={resource.image || "/images/resource.png"}
+                      image={resource.image || '/images/resource.png'}
                       progress={resource.progress || 0}
                     />
                   ))
@@ -111,19 +111,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: "Business Plan Template",
+    title: 'Business Plan Template',
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: "Investor Pitch Deck Guide",
+    title: 'Investor Pitch Deck Guide',
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: "Financial Model Spreadsheet",
+    title: 'Financial Model Spreadsheet',
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

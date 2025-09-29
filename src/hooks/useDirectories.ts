@@ -23,6 +23,18 @@ export const useInvestorDirectory = (enabled?: boolean) => {
     enabled: enabled !== undefined ? enabled : true,
   });
 };
+
+export const useInvestorSavedSMEs = (enabled?: boolean) => {
+  return useQuery({
+    queryKey: ['investorSavedSMEs'],
+    queryFn: async () => {
+      const resp = await api.get(directoryRoutes.getInvestorSavedSMEs);
+      return resp.data;
+    },
+    enabled: enabled !== undefined ? enabled : true,
+  });
+};
+
 export const getSingleSmeById = async (id: string) =>
   await api.get(directoryRoutes.publicSmes(id));
 

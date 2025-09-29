@@ -356,6 +356,7 @@ export const directoryRoutes = {
   publicSmes: (smeId: string) => `directory/smes/${smeId}`,
   getInvestorMatches: '/investor/me/matches',
   smeMatches: 'sme/me/matches',
+  getInvestorSavedSMEs: '/investor/me/saved-smes',
 };
 
 export const programsRoutes = {

@@ -1,6 +1,7 @@
-import api from "@/api/axios";
-import { ApiEndPoints, resourceRoutes } from "@/api/endpoints";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import api from '@/api/axios';
+import { ApiEndPoints, resourceRoutes } from '@/api/endpoints';
+import { isNil, omitBy } from 'lodash';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 interface ResourceQueryParams {
   page?: number;
@@ -11,14 +12,20 @@ interface ResourceQueryParams {
   status?: string;
   search?: string;
   sortBy?: string;
-  sortOrder?: "asc" | "desc";
+  sortOrder?: 'asc' | 'desc';
 }
 export const useGetResources = (params?: ResourceQueryParams) => {
+  const queryParams = omitBy(
+    {
+      ...params,
+    },
+    isNil
+  );
   return useQuery({
-    queryKey: ["resources", params],
+    queryKey: ['resources', queryParams],
     queryFn: async () => {
       const response = await api.get(resourceRoutes.Resources, {
-        params: params,
+        params: queryParams,
       });
 
       const user = response?.data;
@@ -30,7 +37,7 @@ export const useGetResources = (params?: ResourceQueryParams) => {
 // handles update, delete, and get a single resource
 export const useSingleResource = (id: string) => {
   return useQuery({
-    queryKey: ["current_profile"],
+    queryKey: ['current_profile'],
     queryFn: async () => {
       const response = await api.get(resourceRoutes.singleResource(id));
 
@@ -42,7 +49,7 @@ export const useSingleResource = (id: string) => {
 // handles update, delete, and get a single resource
 export const useGetResourceCategories = () => {
   return useQuery({
-    queryKey: ["current_profile"],
+    queryKey: ['current_profile'],
     queryFn: async () => {
       const response = await api.get(resourceRoutes.resourcesCategories);
 
@@ -55,7 +62,7 @@ export const useGetResourceCategories = () => {
 // handles both update, delete and get single
 export const useSingleResourceCategory = (category: string) => {
   return useQuery({
-    queryKey: ["current_profile"],
+    queryKey: ['current_profile'],
     queryFn: async () => {
       const response = await api.get(
         resourceRoutes.singleResourceCategory(category)
@@ -70,7 +77,7 @@ export const useSingleResourceCategory = (category: string) => {
 
 export const useSearchResource = (searchParamd: string) => {
   return useQuery({
-    queryKey: ["search_resources", searchParamd],
+    queryKey: ['search_resources', searchParamd],
     queryFn: async () => {
       const response = await api.get(ApiEndPoints.Search_Resources, {
         params: { search: searchParamd },
@@ -84,7 +91,7 @@ export const useSearchResource = (searchParamd: string) => {
 
 export const useGetPopularResource = () => {
   return useQuery({
-    queryKey: ["current_profile"],
+    queryKey: ['current_profile'],
     queryFn: async () => {
       const response = await api.get(ApiEndPoints.Popular_Resources);
 
