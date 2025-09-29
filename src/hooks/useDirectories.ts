@@ -59,11 +59,13 @@ export const useSmeMatches = (params?: any) => {
   });
 };
 
-export const useSmeSaveStatus = (smeId: string) => {
+export const useSmeSaveStatus = (smeId?: string) => {
   return useQuery({
     queryKey: ['smeSaveStatus'],
     queryFn: async () => {
-      const resp = await api.get(apiRoutes.investors.smeSaveStatus(smeId));
+      const resp = await api.get(
+        apiRoutes.investors.smeSaveStatus(smeId as string)
+      );
       return resp.data;
     },
     enabled: !!smeId,

@@ -13,6 +13,7 @@ import Team from './team';
 import InvestmentPreferenceWrapper from './InvestmentPreference';
 import OrganisationInforWrapper from './OrganisationInforWrapper';
 import InvestorInvestments from './InvestorInvestments';
+import OrganisationInforWrapperDevOrg from './OrganisationInforWrapperDevOrg';
 
 type Props = {};
 interface SettingsTabProps {
@@ -89,14 +90,26 @@ const investorTabOptions = [
     component: <OrganisationInforWrapper />,
   },
 ];
+const developmentTabOptions = [
+  {
+    key: 'organizational-profile',
+    label: 'Organizational Profile',
+    icon: '/icons/briefcasetick.svg',
+    component: <OrganisationInforWrapperDevOrg />,
+  },
+];
 export default function page({}: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const auth: any = useAtomValue(authAtom);
   const param = useParams();
-
+  console.log({ param });
   const tabOptions = useMemo(() => {
-    return param.accessType === 'sme' ? smeTabOptions : investorTabOptions;
+    return param.accessType === 'sme'
+      ? smeTabOptions
+      : param.accessType === 'development'
+      ? developmentTabOptions
+      : investorTabOptions;
   }, [param.accessType]);
 
   // Get tab from URL params, default to first tab if not found
