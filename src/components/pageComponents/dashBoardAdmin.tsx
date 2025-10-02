@@ -1,29 +1,24 @@
-"use client";
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import {
-  useGetAdminAnalytics,
-  useGetAdminDashboardStats,
-} from "@/hooks/useAdmin";
-import { useSmeMatches } from "@/hooks/useDirectories";
-import { useGetSupport } from "@/hooks/useSupport";
-import { authAtom } from "@/lib/atoms/atoms";
-import { routes } from "@/lib/routes";
-import { formatInvestmentData } from "@/lib/uitils/fns";
-import { useAtomValue } from "jotai";
-import { Loader2Icon } from "lucide-react";
-import InvestmentOpportunitiesCard from "../InvesmentOpportunitiesCard";
-import IconCards from "../sections/dashboardCards/iconCards";
-import { CIcons } from "../ui/CIcons";
+'use client';
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
+import { useGetAdminAnalytics } from '@/hooks/useAdmin';
+import { useSmeMatches } from '@/hooks/useDirectories';
+import { useGetSupport } from '@/hooks/useSupport';
+import { authAtom } from '@/lib/atoms/atoms';
+import { routes } from '@/lib/routes';
+import { formatInvestmentData } from '@/lib/uitils/fns';
+import { useAtomValue } from 'jotai';
+import { Loader2Icon } from 'lucide-react';
+import InvestmentOpportunitiesCard from '../InvesmentOpportunitiesCard';
+import IconCards from '../sections/dashboardCards/iconCards';
+import { CIcons } from '../ui/CIcons';
+import { isEmpty } from 'lodash';
+import EmptyBox from '../sections/dashboardCards/emptyBox';
 
 export default function AdminDashBoard() {
   const auth: any = useAtomValue(authAtom);
-  const { data: adminDashboardStats, isLoading = false } =
-    useGetAdminDashboardStats();
-  console.log({ adminDashboardStats, auth });
-  const { data: adminAnalytics } = useGetAdminAnalytics(
-    adminDashboardStats?.fundsDisbursed?.currency ?? "NGN"
-  );
+
+  const { data: adminAnalytics, isLoading } = useGetAdminAnalytics('NGN');
   const { data: matches, isLoading: isLoadingSmeMatches } = useSmeMatches();
   const investmentData = formatInvestmentData(
     adminAnalytics?.data?.investmentOpportunities ?? []
@@ -34,48 +29,48 @@ export default function AdminDashBoard() {
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: "Funds Disbursed",
+      label: 'Funds Disbursed',
       amount: adminAnalytics?.data?.investmentsRecorded?.[0]?.amount ?? 0,
       currency:
-        adminAnalytics?.data?.investmentsRecorded?.[0]?.currency ?? "NGN",
+        adminAnalytics?.data?.investmentsRecorded?.[0]?.currency ?? 'NGN',
       percentage: 152000,
-      direction: "up",
+      direction: 'up',
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: "Pending Verifications",
+      label: 'Pending Verifications',
       amount: adminAnalytics?.data?.pendingUserVerification ?? 10,
     },
     {
       id: 3,
       icon: CIcons.profile2,
-      label: "Active Programs",
+      label: 'Active Programs',
       amount: adminAnalytics?.data?.programs?.total ?? 10,
     },
     {
       id: 4,
       icon: CIcons.profile2,
-      label: "Investor-SME Matches",
+      label: 'Investor-SME Matches',
       amount: matches?.items?.length ?? 0,
     },
   ];
 
   const groups = [
     {
-      group: "SMEs",
-      count: adminAnalytics?.data?.users?.byRole?.sme ?? "0",
-      color: "#5CEBB4",
+      group: 'SMEs',
+      count: adminAnalytics?.data?.users?.byRole?.sme ?? '0',
+      color: '#5CEBB4',
     },
     {
-      group: "Investors",
-      count: adminAnalytics?.data?.users?.byRole?.investor ?? "0",
-      color: "#A5BDFA",
+      group: 'Investors',
+      count: adminAnalytics?.data?.users?.byRole?.investor ?? '0',
+      color: '#A5BDFA',
     },
     {
-      group: "Dev Orgs",
-      count: adminAnalytics?.data?.users?.byRole?.development_org ?? "0",
-      color: "#FCA5A5",
+      group: 'Dev Orgs',
+      count: adminAnalytics?.data?.users?.byRole?.development_org ?? '0',
+      color: '#FCA5A5',
     },
   ];
   console.log({ adminAnalytics, matches });
@@ -134,7 +129,7 @@ export default function AdminDashBoard() {
           <DashboardCardLayout
             caption={`Support Tickets Open (${
               supportTicket?.tickets?.filter(
-                (ticket: any) => ticket.status === "open"
+                (ticket: any) => ticket.status === 'open'
               )?.length ?? 0
             })`}
           >
@@ -143,15 +138,23 @@ export default function AdminDashBoard() {
             ) : (
               <div className="flex my-8 flex-col gap-3">
                 <div className="flex flex-col gap-4">
-                  {adminDashboardStats?.openTicketsCountByRoles.map(
-                    (ticket: any) => (
-                      <div
-                        key={ticket.userRole}
-                        className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
-                      >
-                        <span>{ticket.userRole}</span>
-                        <span>{ticket.count}</span>
-                      </div>
+                  {isEmpty((adminAnalytics as any)?.openTicketsCountByRoles) ? (
+                    <EmptyBox
+                      caption="No Open Tickets by role yet"
+                      caption2=""
+                      showButton={false}
+                    />
+                  ) : (
+                    (adminAnalytics as any)?.openTicketsCountByRoles?.map(
+                      (ticket: any) => (
+                        <div
+                          key={ticket.userRole}
+                          className="flex items-center justify-between border border-gray-200 rounded-lg px-6 py-5  text-xl font-medium bg-transparent"
+                        >
+                          <span>{ticket.userRole}</span>
+                          <span>{ticket.count}</span>
+                        </div>
+                      )
                     )
                   )}
                 </div>

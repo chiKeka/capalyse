@@ -20,6 +20,7 @@ import { formatCurrency } from '@/lib/uitils/fns';
 import { format } from 'date-fns';
 import { Loader2Icon } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
 type Props = {};
@@ -54,11 +55,12 @@ const columns = [
   },
   {
     header: 'Readiness Score',
-    accessor: (row: (typeof smes)[0]) => row.metadata.readiness ?? '-',
+    accessor: (row: (typeof smes)[0]) =>
+      row.metadata.readiness?.overallScore ?? '-',
   },
   {
     header: 'Revenue',
-    accessor: (row: (typeof smes)[0]) => row.metadata.revenue ?? '-',
+    accessor: (row: (typeof smes)[0]) => row.metadata.totalRevenue ?? '-',
   },
   {
     header: 'Team Size',
@@ -72,6 +74,7 @@ const columns = [
 ];
 
 function page({}: Props) {
+  const router = useRouter();
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
   const { data: investments = [], isLoading, error } = useInvestments();
@@ -172,7 +175,11 @@ function page({}: Props) {
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
             />
           </div>
-          <Button>Quick Actions</Button>
+          <Button
+            onClick={() => router.push('/investor/profile?tab=investments')}
+          >
+            Quick Actions
+          </Button>
         </div>
       </div>
       <ReusableTable

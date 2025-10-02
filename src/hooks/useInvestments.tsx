@@ -37,8 +37,11 @@ export const useInvestmentMutations = () => {
           ...clientData.data,
         },
       };
-      console.log({ newPayload });
-      const resp = await api.post(apiRoutes.investments.createInvestment, data);
+
+      const resp = await api.post(
+        apiRoutes.investments.createInvestment,
+        newPayload
+      );
       return resp.data;
     },
     onSuccess: () => {
@@ -48,7 +51,7 @@ export const useInvestmentMutations = () => {
   const updateInvestment = useMutation({
     mutationFn: async (data: any) => {
       const { id, smeUserId, metadata, ...rest } = data;
-      console.log({ rest });
+
       const clientData = await getSingleSmeById(data.smeUserId);
       const newPayload = {
         ...rest,
@@ -57,7 +60,7 @@ export const useInvestmentMutations = () => {
           ...clientData.data,
         },
       };
-      console.log({ newPayload });
+
       const resp = await api.patch(
         apiRoutes.investments.updateInvestment(id),
         newPayload

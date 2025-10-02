@@ -14,17 +14,20 @@ import { useRouter } from 'next/navigation';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import Button from '@/components/ui/Button';
 
 interface Props {
   setLoading: (loading: boolean) => void;
   onFinish: () => void;
   onSuccess?: () => void;
+  isProfile?: boolean;
+  initialData?: any;
 }
 
 const DevelopmentOrganisation = forwardRef<
   { submit: () => void; isLoading: boolean },
   Props
->(({ setLoading, onFinish, onSuccess }, ref) => {
+>(({ setLoading, onFinish, onSuccess, initialData, isProfile }, ref) => {
   const auth: any = useAtomValue(authAtom);
   const { dev_org } = updateProfile();
   const {
@@ -32,6 +35,7 @@ const DevelopmentOrganisation = forwardRef<
     handleSubmit,
     setValue,
     watch,
+    reset,
     getValues,
     formState: { errors },
   } = useForm<developmentOrg>({
@@ -39,6 +43,19 @@ const DevelopmentOrganisation = forwardRef<
       companyEmail: auth?.email,
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        organizationName:
+          initialData?.investorOrganizationInfo?.organizationName,
+        companyEmail: initialData?.investorOrganizationInfo?.companyEmail,
+        countryHeadquarters:
+          initialData?.investorOrganizationInfo?.countryHeadquarters,
+        website: initialData?.investorOrganizationInfo?.website,
+      });
+    }
+  }, [initialData]);
 
   const [selectedCountryId, setSelectedCountryId] = useState('');
   const [selectedCountryName, setSelectedCountryName] = useState('');
@@ -326,6 +343,14 @@ const DevelopmentOrganisation = forwardRef<
         routename="A password reset link has been sent to your inbox"
         showModal={showModal}
       />
+      {isProfile && (
+        <Button
+          type="submit"
+          state={dev_org?.isPending ? 'loading' : 'default'}
+        >
+          {dev_org?.isPending ? 'Submitting...' : 'Submit'}
+        </Button>
+      )}
     </div>
   );
 });

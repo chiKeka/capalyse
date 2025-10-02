@@ -120,13 +120,13 @@ export default function SingleSMEDirectoryPage({}: Props) {
     setSelectedDoc(doc);
     setOpen(true);
   }
-  const { id } = useParams();
+  const { id, accessType } = useParams();
 
   const { data: smeData, isLoading: isSmeLoading } = useGetSmeById(
     id as string
   );
   const { data: smeSaveStatus, isLoading: isSmeSaveStatusLoading } =
-    useSmeSaveStatus(id as string);
+    useSmeSaveStatus(accessType === 'investor' ? (id as string) : undefined);
   const { saveSme } = useSmeDirectoryMutations();
   console.log({ smeData, smeSaveStatus });
   const overviewCards = [
@@ -246,20 +246,24 @@ export default function SingleSMEDirectoryPage({}: Props) {
               </div>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <Button
-                className="text-green"
-                iconPosition={!smeSaveStatus?.isSaved ? 'file' : undefined}
-                state={saveSme.isPending ? 'loading' : 'default'}
-                onClick={() =>
-                  smeSaveStatus?.isSaved ? null : saveSme.mutate({ smeId: id })
-                }
-              >
-                {saveSme.isPending
-                  ? 'Saving...'
-                  : smeSaveStatus?.isSaved
-                  ? 'SME Saved'
-                  : 'Save SME'}
-              </Button>
+              {accessType === 'investor' && (
+                <Button
+                  className="text-green"
+                  iconPosition={!smeSaveStatus?.isSaved ? 'file' : undefined}
+                  state={saveSme.isPending ? 'loading' : 'default'}
+                  onClick={() =>
+                    smeSaveStatus?.isSaved
+                      ? null
+                      : saveSme.mutate({ smeId: id })
+                  }
+                >
+                  {saveSme.isPending
+                    ? 'Saving...'
+                    : smeSaveStatus?.isSaved
+                    ? 'SME Saved'
+                    : 'Save SME'}
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 iconPosition="right"
