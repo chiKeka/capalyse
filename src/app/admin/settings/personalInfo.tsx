@@ -2,6 +2,7 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Inputs';
 import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
 import { authAtom } from '@/lib/atoms/atoms';
+import { authClient } from '@/lib/auth-client';
 import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -49,16 +50,24 @@ function PersonalInfo({}: Props) {
   const { personal_information } = updateProfile();
 
   const onSubmit = async (data: PersonalInfoData) => {
-    personal_information.mutate(data as any, {
-      onSuccess: () => {
-        toast.success('Profile updated successfully');
+    const { email, ...rest } = data;
+    authClient.updateUser(
+      {
+        name: data.firstName + ' ' + data.lastName,
+        ...rest,
       },
-      onError: (error) => {
-        toast.error(
-          error?.message || 'Failed to update profile. Please try again.'
-        );
-      },
-    });
+      {
+        onSuccess: () => {
+          toast.success('Profile updated successfully');
+        },
+        onError: (error) => {
+          toast.error(
+            error?.error.message ||
+              'Failed to update profile. Please try again.'
+          );
+        },
+      }
+    );
   };
 
   return (

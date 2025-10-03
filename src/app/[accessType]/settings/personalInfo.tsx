@@ -30,9 +30,11 @@ function PersonalInfo({}: Props) {
       firstName: '',
       lastName: '',
       phoneNumber: '',
-      email: '',
+      email: auth?.email ?? '',
     },
+    mode: 'all',
   });
+  console.log({ auth, details });
 
   // Update form values when data is loaded
   useEffect(() => {
@@ -41,7 +43,7 @@ function PersonalInfo({}: Props) {
         firstName: details.personalInfo.firstName || '',
         lastName: details.personalInfo.lastName || '',
         phoneNumber: details.personalInfo.phoneNumber || '',
-        email: details.personalInfo.email || auth?.email || '',
+        email: details.personalInfo.email ?? auth?.email ?? '',
       });
     }
   }, [details, reset]);
