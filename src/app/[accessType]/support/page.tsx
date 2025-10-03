@@ -1,31 +1,32 @@
-'use client';
+"use client";
 
-import Button from '@/components/ui/Button';
-import { CIcons } from '@/components/ui/CIcons';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from "@/components/ui/Button";
+import { CIcons } from "@/components/ui/CIcons";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import useDocument from '@/hooks/useDocument';
-import { useGetSupport, useSupports } from '@/hooks/useSupport';
-import { CreateSupportForm } from '@/lib/uitils/types';
-import { Loader } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import useDocument from "@/hooks/useDocument";
+import { useGetSupport, useSupports } from "@/hooks/useSupport";
+import { CreateSupportForm } from "@/lib/uitils/types";
+import { Loader } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
-
+  const router = useRouter();
   const { data: supportTicket } = useGetSupport();
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
@@ -38,6 +39,7 @@ const SupportPage = () => {
   } = useForm<CreateSupportForm>();
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
+  const params = useParams();
   const onSubmit = ({ subject, description }: CreateSupportForm) => {
     createSupport
       .mutateAsync({
@@ -46,7 +48,7 @@ const SupportPage = () => {
         description,
       })
       .then(() => {
-        toast.success('Ticket submitted successfully');
+        toast.success("Ticket submitted successfully");
         reset();
       });
   };
@@ -57,7 +59,7 @@ const SupportPage = () => {
         {
           file: e.target.files[0],
           fileName: file.name,
-          category: 'support',
+          category: "support",
         },
         {
           onSuccess: (res) => {
@@ -98,7 +100,7 @@ const SupportPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select onValueChange={(val) => setValue('subject', val)}>
+                <Select onValueChange={(val) => setValue("subject", val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -125,8 +127,8 @@ const SupportPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="description">Detailed Description</Label>
                 <Textarea
-                  {...register('description', {
-                    required: 'business Registration number is required',
+                  {...register("description", {
+                    required: "business Registration number is required",
                   })}
                   id="description"
                   placeholder="Enter Message"
@@ -184,7 +186,7 @@ const SupportPage = () => {
               <Button
                 type="submit"
                 disabled={createSupport.isPending || fileUploadLoading}
-                state={createSupport.isPending ? 'loading' : undefined}
+                state={createSupport.isPending ? "loading" : undefined}
                 size="big"
                 className="w-full"
               >
@@ -201,13 +203,19 @@ const SupportPage = () => {
           {supportTicket?.tickets.length > 0 ? (
             <div className="space-y-6">
               {supportTicket?.tickets?.map((item: any, index: number) => (
-                <div key={index} className="flex items-center justify-between">
+                <div
+                  onClick={() =>
+                    router.push(`/${params.accessType}/support/${item?.id}`)
+                  }
+                  key={index}
+                  className="flex cursor-pointer items-center justify-between"
+                >
                   <div className="flex items-start gap-2">
                     <CIcons.messageMinus />
                     <div>
                       <p className="text-sm">
                         <strong>Ticket No:</strong>
-                        <span>{item?.id.slice(0, -8) + '...'}</span>
+                        <span>{item?.id.slice(0, -8) + "..."}</span>
                       </p>
                       <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>
@@ -216,14 +224,14 @@ const SupportPage = () => {
                     <Badge
                       variant={
                         item.status as
-                          | 'resolved'
-                          | 'in_progress'
-                          | 'open'
-                          | 'closed'
+                          | "resolved"
+                          | "in_progress"
+                          | "open"
+                          | "closed"
                       }
                       className="capitalize mb-2"
                     >
-                      {item.status.replace(/([A-Z])/g, ' $1')}
+                      {item.status.replace(/([A-Z])/g, " $1")}
                     </Badge>
                     <p className="text-xs text-gray-500">
                       {item.date} {item.time}
