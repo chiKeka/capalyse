@@ -17,6 +17,7 @@ const tabs = ["active", "closed"];
 function page({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<any>(null);
   const params = useParams();
 
   const filterParams = {
@@ -31,7 +32,6 @@ function page({}: Props) {
   };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const { data: programs } = GetPrograms(filterParams);
-
 
   const filteredPrograms = programs?.programs?.filter((p: any) =>
     currentTab === "active"
@@ -72,12 +72,13 @@ function page({}: Props) {
               </div>
             </div>
 
-            {params.accessType === "development " && (
+            {params.accessType === "development" && (
               <Button
                 size="small"
                 onClick={() => {
                   setIsOpen(true);
                   setIsEdit(false);
+                  setSelectedProgram(null);
                 }}
               >
                 Create New Program
@@ -96,8 +97,14 @@ function page({}: Props) {
               {filteredPrograms?.map((program: any) => {
                 return (
                   <Programs
-                    editProgram={isOpen}
-                    setEditProgram={setIsEdit}
+                    editProgram={isEdit}
+                    setEditProgram={(edit) => {
+                      setIsEdit(edit);
+                      if (edit) {
+                        setSelectedProgram(program);
+                        setIsOpen(true);
+                      }
+                    }}
                     program={program}
                     status={program.status}
                     key={program.id}
@@ -124,7 +131,18 @@ function page({}: Props) {
           </DashboardCardLayout>
         </div>
       )}
-      <CreateProgram isOpen={isOpen} setIsOpen={setIsOpen} isEdit={isEdit} />
+      <CreateProgram
+        isOpen={isOpen}
+        setIsOpen={(open) => {
+          setIsOpen(open);
+          if (!open) {
+            setIsEdit(false);
+            setSelectedProgram(null);
+          }
+        }}
+        isEdit={isEdit}
+        program={selectedProgram}
+      />
     </div>
   );
 }

@@ -14,7 +14,9 @@ import {
   GetProgramById,
   updateProgramStatus,
 } from "@/hooks/usePrograms";
+import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
+import { useAtomValue } from "jotai";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -39,7 +41,7 @@ function page() {
   const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
     params.sluge as string
   );
-
+  const auth = useAtomValue(authAtom);
   let bg = "#DCFCE7";
   let color = "#22C55E";
 
@@ -100,7 +102,7 @@ function page() {
           <p>Program {">"}</p>
           <p className="font-medium text-green ">{program?.name}</p>
         </div>
-        {params?.accessType === "development" && (
+        {params?.accessType === "development" && program?.developmentOrgId === auth?.id && (
           <div className="flex items-center gap-2">
             <Button
               onClick={() =>

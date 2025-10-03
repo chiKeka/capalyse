@@ -9,7 +9,9 @@ import {
   updateProgramStatus,
   useListMyApplications,
 } from "@/hooks/usePrograms";
+import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
+import { useAtomValue } from "jotai";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -46,18 +48,12 @@ function Programs({
     params.accessType === "sme" || params.accessType === "investor"
   );
 
-  // Debug logging
-  console.log("myApplications:", myApplications);
-  console.log("error:", error);
-  console.log("isLoading:", isLoading);
-  console.log("program.id:", program.id);
-  console.log("applications array:", myApplications?.applications);
-
+  const auth = useAtomValue(authAtom);
   // Check if user has applied to this program
   const hasAppliedToProgram = myApplications?.applications?.some(
     (application: any) => application.programId === program.id
   );
-  console.log("hasAppliedToProgram:", hasAppliedToProgram);
+
   const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
     program.id
   );
@@ -225,18 +221,20 @@ function Programs({
                 {CIcons.eye()}
                 View
               </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setEditProgram?.(true);
-                  // router.push(`/${params.accessType}/programs/${program.id}`)
-                }}
-                className="text-green text-sm hover:text-green"
-                size="small"
-              >
-                {CIcons.edit()}
-                Edit
-              </Button>
+
+              {program.developmentOrgId === auth?.id && (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setEditProgram?.(true);
+                  }}
+                  className={`text-green text-sm hover:text-green`}
+                  size="small"
+                >
+                  {CIcons.edit()}
+                  Edit
+                </Button>
+              )}
             </div>
           )}
         </div>

@@ -87,45 +87,83 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   // Watch form values for controlled components
   const watchedValues = watch();
 
-  // Reset form values when program data changes (for edit mode)
+  // Reset form values when modal opens or program data changes
   useEffect(() => {
-    if (isEdit && program) {
-      reset({
-        name: program.name || "",
-        description: program.description || "",
-        startDate: program.startDate || "",
-        endDate: program.endDate || "",
-        smeStage: program.smeStage || [],
-        eligibleCountries: program.eligibleCountries || [],
-        industryFocus: program.industryFocus || [],
-        maxParticipants: program.maxParticipants || 1,
-        supportTypes: program.supportTypes || [],
-        applicationDeadline: program.applicationDeadline || "",
-        requirements: program.requirements || [],
-        partners: program.partners || [
-          {
-            name: "",
-            role: "member",
-            description: "",
-            contactInfo: "",
-          },
-        ],
-      });
-
-      // Set date range for edit mode
-      if (program.startDate && program.endDate) {
-        setRange({
-          from: new Date(program.startDate),
-          to: new Date(program.endDate),
+    if (isOpen) {
+      if (isEdit && program) {
+        // Edit mode - populate form with existing program data
+        reset({
+          name: program.name || "",
+          description: program.description || "",
+          startDate: program.startDate || "",
+          endDate: program.endDate || "",
+          smeStage: program.smeStage || [],
+          eligibleCountries: program.eligibleCountries || [],
+          industryFocus: program.industryFocus || [],
+          maxParticipants: program.maxParticipants || 1,
+          supportTypes: program.supportTypes || [],
+          applicationDeadline: program.applicationDeadline || "",
+          requirements: program.requirements || [],
+          partners: program.partners || [
+            {
+              name: "",
+              role: "member",
+              description: "",
+              contactInfo: "",
+            },
+          ],
         });
-      }
 
-      // Set partners input for edit mode
-      if (program.partners && program.partners.length > 0) {
-        setPartnersInput(program.partners.map((p: any) => p.name).join(", "));
+        // Set date range for edit mode
+        if (program.startDate && program.endDate) {
+          setRange({
+            from: new Date(program.startDate),
+            to: new Date(program.endDate),
+          });
+        }
+
+        // Set partners input for edit mode
+        if (program.partners && program.partners.length > 0) {
+          setPartnersInput(program.partners.map((p: any) => p.name).join(", "));
+        }
+      } else {
+        // Create mode - reset form to default values
+        reset({
+          name: "",
+          description: "",
+          startDate: "",
+          endDate: "",
+          smeStage: [],
+          eligibleCountries: [],
+          industryFocus: [],
+          maxParticipants: 1,
+          supportTypes: [],
+          applicationDeadline: "",
+          requirements: [],
+          partners: [
+            {
+              name: "",
+              role: "member",
+              description: "",
+              contactInfo: "",
+            },
+          ],
+        });
+
+        // Reset additional state
+        setRange({});
+        setPartnersInput("");
       }
     }
-  }, [isEdit, program, reset]);
+  }, [isOpen, isEdit, program, reset]);
+
+  // Reset additional state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setRange({});
+      setPartnersInput("");
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data: ProgramFormData) => {
     const payload = {
@@ -160,7 +198,6 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
     }
   };
 
-  
   return (
     <div>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
