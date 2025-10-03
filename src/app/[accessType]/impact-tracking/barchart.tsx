@@ -21,6 +21,7 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+  maintainAspectRatio: false,
   scales: {
     x: {
       categoryPercentage: 0.8,
@@ -55,7 +56,7 @@ export const data = {
 };
 
 export function BarChart() {
-  const { data:summary } = useImpactSummary({
+  const { data: summary } = useImpactSummary({
     from: "2024-01-01",
     to: "2024-12-31",
     currency: "NGN",
@@ -70,7 +71,13 @@ export function BarChart() {
         </div>
         <div className="w-fit"></div>
       </div>
-      <Bar height={400} width={1024} options={options} data={data} />
+      <Bar
+        height={400}
+        width={1024}
+        options={options as any}
+        data={data}
+        className="w-full h-full"
+      />
     </div>
   );
 }

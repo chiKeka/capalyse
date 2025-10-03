@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
-import { Dialog, DialogContent } from '../ui/dialog';
-import Button from '../ui/Button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import Button from '@/components/ui/Button';
 
 const ConfirmationModal = ({
   handleCancel,
@@ -31,12 +31,12 @@ const ConfirmationModal = ({
           <p className="text-gray-700 mb-4">
             You are about to change this business{' '}
             <span className="font-semibold">
-              "{selectedInvestment.metadata.smeName}"
+              "{selectedInvestment?.metadata?.smeName}"
             </span>{' '}
             verification status from{' '}
             <span className="font-semibold">"In-Review"</span> to{' '}
             <span className="font-semibold">
-              "{selectedInvestment.metadata.investmentType}"
+              "{selectedInvestment?.metadata?.investmentType}"
             </span>
           </p>
           <p className="text-gray-700">Do you want to proceed?</p>
