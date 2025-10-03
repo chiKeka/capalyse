@@ -3,6 +3,7 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
+import CreateProgram from "@/components/ui/createProgram";
 import {
   Popover,
   PopoverContent,
@@ -13,8 +14,11 @@ import {
   GetProgramById,
   updateProgramStatus,
 } from "@/hooks/usePrograms";
+import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
-import { useParams, useRouter } from "next/navigation";
+import { useAtomValue } from "jotai";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 const STATUS_OPTIONS = [
   { value: "publish", label: "Publish" },
@@ -25,6 +29,9 @@ const STATUS_OPTIONS = [
 
 function page() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const { data: program } = GetProgramById(params.sluge as string);
   const router = useRouter();
   const dateRange = `${program?.startDate} – ${program?.endDate}`;
@@ -34,7 +41,7 @@ function page() {
   const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
     params.sluge as string
   );
-
+  const auth = useAtomValue(authAtom);
   let bg = "#DCFCE7";
   let color = "#22C55E";
 
@@ -95,7 +102,7 @@ function page() {
           <p>Program {">"}</p>
           <p className="font-medium text-green ">{program?.name}</p>
         </div>
-        {params?.accessType === "development" && (
+        {params?.accessType === "development" && program?.developmentOrgId === auth?.id && (
           <div className="flex items-center gap-2">
             <Button
               onClick={() =>
@@ -109,25 +116,33 @@ function page() {
               {CIcons?.applicants()}
               View Applicants
             </Button>
-            <Button className="text-green w-fit" variant="tertiary">
+            <Button
+              className="text-green w-fit"
+              variant="tertiary"
+              onClick={() => {
+                setIsOpen(true);
+                setIsEdit(true);
+              }}
+            >
               {CIcons?.edit()}
               Edit
             </Button>
           </div>
         )}
 
-        {(params?.accessType === "sme" ||
-          params?.accessType === "investor") && (
-          <div className="flex items-center gap-2">
-            <Button
-              className="text-green w-fit"
-              variant="primary"
-              onClick={handleApplyToProgram}
-            >
-              Apply Now
-            </Button>
-          </div>
-        )}
+        {searchParams.get("apply") === "true" &&
+          (params?.accessType === "sme" ||
+            params?.accessType === "investor") && (
+            <div className="flex items-center gap-2">
+              <Button
+                className="text-green w-fit"
+                variant="primary"
+                onClick={handleApplyToProgram}
+              >
+                Apply Now
+              </Button>
+            </div>
+          )}
       </div>
 
       <DashboardCardLayout>
@@ -234,6 +249,12 @@ function page() {
             </div>
           </div>
         </div>
+        <CreateProgram
+          program={program}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          isEdit={isEdit}
+        />
       </DashboardCardLayout>
     </div>
   );

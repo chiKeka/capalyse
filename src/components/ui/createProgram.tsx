@@ -1,9 +1,13 @@
 import Input from "@/components/ui/Inputs";
 import { useAfricanCountries } from "@/hooks/useComplianceCatalogs";
-import { createProgram, ProgramFormData } from "@/hooks/usePrograms";
+import {
+  createProgram,
+  ProgramFormData,
+  updateProgram,
+} from "@/hooks/usePrograms";
 import { format } from "date-fns";
 import { Loader } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Button from "./Button";
@@ -31,12 +35,15 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
 type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  program?: any;
+  isEdit?: boolean;
 };
 
-function CreateProgram({ isOpen, setIsOpen }: Props) {
+function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   const [range, setRange] = useState<{ from?: Date; to?: Date }>({});
   const [partnersInput, setPartnersInput] = useState("");
   const { mutateAsync: createProgramMutation } = createProgram();
+  const { mutateAsync: updateProgramMutation } = updateProgram(program?.id);
 
   // React Hook Form setup
   const {
@@ -58,6 +65,8 @@ function CreateProgram({ isOpen, setIsOpen }: Props) {
       industryFocus: [],
       maxParticipants: 1,
       supportTypes: [],
+      applicationDeadline: "",
+      requirements: [],
       partners: [
         {
           name: "",
@@ -78,6 +87,84 @@ function CreateProgram({ isOpen, setIsOpen }: Props) {
   // Watch form values for controlled components
   const watchedValues = watch();
 
+  // Reset form values when modal opens or program data changes
+  useEffect(() => {
+    if (isOpen) {
+      if (isEdit && program) {
+        // Edit mode - populate form with existing program data
+        reset({
+          name: program.name || "",
+          description: program.description || "",
+          startDate: program.startDate || "",
+          endDate: program.endDate || "",
+          smeStage: program.smeStage || [],
+          eligibleCountries: program.eligibleCountries || [],
+          industryFocus: program.industryFocus || [],
+          maxParticipants: program.maxParticipants || 1,
+          supportTypes: program.supportTypes || [],
+          applicationDeadline: program.applicationDeadline || "",
+          requirements: program.requirements || [],
+          partners: program.partners || [
+            {
+              name: "",
+              role: "member",
+              description: "",
+              contactInfo: "",
+            },
+          ],
+        });
+
+        // Set date range for edit mode
+        if (program.startDate && program.endDate) {
+          setRange({
+            from: new Date(program.startDate),
+            to: new Date(program.endDate),
+          });
+        }
+
+        // Set partners input for edit mode
+        if (program.partners && program.partners.length > 0) {
+          setPartnersInput(program.partners.map((p: any) => p.name).join(", "));
+        }
+      } else {
+        // Create mode - reset form to default values
+        reset({
+          name: "",
+          description: "",
+          startDate: "",
+          endDate: "",
+          smeStage: [],
+          eligibleCountries: [],
+          industryFocus: [],
+          maxParticipants: 1,
+          supportTypes: [],
+          applicationDeadline: "",
+          requirements: [],
+          partners: [
+            {
+              name: "",
+              role: "member",
+              description: "",
+              contactInfo: "",
+            },
+          ],
+        });
+
+        // Reset additional state
+        setRange({});
+        setPartnersInput("");
+      }
+    }
+  }, [isOpen, isEdit, program, reset]);
+
+  // Reset additional state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setRange({});
+      setPartnersInput("");
+    }
+  }, [isOpen]);
+
   const onSubmit = async (data: ProgramFormData) => {
     const payload = {
       ...data,
@@ -86,19 +173,29 @@ function CreateProgram({ isOpen, setIsOpen }: Props) {
       endDate: range?.to ? format(range?.to, "yyyy-MM-dd") : "",
       applicationDeadline: range?.from ? format(range?.from, "yyyy-MM-dd") : "",
     };
-    await createProgramMutation(payload, {
-      onSuccess: () => {
-        toast.success("Program created successfully");
-        setIsOpen(false);
-        reset();
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-      onSettled: () => {
-        setIsOpen(false);
-      },
-    });
+    if (isEdit) {
+      await updateProgramMutation(payload, {
+        onSuccess: () => {
+          toast.success("Program updated successfully");
+          setIsOpen(false);
+          reset();
+        },
+      });
+    } else {
+      await createProgramMutation(payload, {
+        onSuccess: () => {
+          toast.success("Program created successfully");
+          setIsOpen(false);
+          reset();
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+        onSettled: () => {
+          setIsOpen(false);
+        },
+      });
+    }
   };
 
   return (
