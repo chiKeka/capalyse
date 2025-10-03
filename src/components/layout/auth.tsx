@@ -1,4 +1,12 @@
-import React from "react";
+import { useGetProfileNextStep } from '@/hooks/useProfileManagement';
+import { authAtom } from '@/lib/atoms/atoms';
+import { authClient, useSession } from '@/lib/auth-client';
+import { routes } from '@/lib/routes';
+import { getKeyByValue } from '@/lib/uitils/fns';
+import { onboardingSteps, UserType } from '@/lib/utils';
+import { useSetAtom } from 'jotai';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 interface AuthLayoutProps {
   title?: string;
@@ -14,9 +22,53 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   children,
   google_signtures,
   sub_caption,
-  inputFieldSize = "max-w-md ",
-  layoutSize = "lg:max-w-2xl",
+  inputFieldSize = 'max-w-md ',
+  layoutSize = 'lg:max-w-2xl',
 }) => {
+  const setAuth = useSetAtom(authAtom);
+  const router = useRouter();
+  const { data: profileNextStep } = useGetProfileNextStep();
+  const urlSearchParams = useSearchParams();
+  const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const { data: isAuth, isPending: isAuthLoading } = authClient.useSession();
+
+  const rootRoute = getKeyByValue(UserType, isAuth?.user?.roles!);
+  const sessionData = useSession();
+  const isIncompleteStep =
+    profileNextStep?.completedSteps?.length! <
+    onboardingSteps.find(
+      (step) => step.role === sessionData?.data?.user?.roles!
+    )?.steps?.length!;
+
+  const googleSignIn = async () => {
+    setIsLoading(true);
+    await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: `${window?.location?.origin}/signin`,
+    });
+  };
+
+  useEffect(() => {
+    // if (isAuth?.user && !isAuthLoading) {
+    //   setAuth(isAuth?.user as any);
+    // }
+    const getSession = async () => {
+      const session = await authClient.getSession();
+      setAuth(session?.data?.user as any);
+    };
+    getSession();
+
+    if (isIncompleteStep) {
+      router?.push(`/${rootRoute}/onboarding`);
+    } else {
+      router?.push(
+        routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+      );
+    }
+  }, [isAuth, isIncompleteStep, rootRoute, routes, router, isAuthLoading]);
+
   return (
     <div className="min-h-screen flex flex-col w-full items-center justify-center bg-[#EEF6F4]  px-4">
       <div
@@ -36,8 +88,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
         {google_signtures && (
           <>
-            <button className="max-w-md w-full gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center">
-              <img  src={'/icons/google.svg'} /> Sign up with Google
+            <button
+              onClick={googleSignIn}
+              disabled={isLoading}
+              className="max-w-md w-full gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center"
+            >
+              <img
+                src={'/icons/google.svg'}
+                className={`${isLoading ? 'animate-spin' : ''} w-4 h-4`}
+              />{' '}
+              Sign up with Google
             </button>
             <div className="flex w-full max-w-md gap-2 items-center justify-center ">
               <hr className="h-[0.5px] w-full bg-[#1261AC]" /> or

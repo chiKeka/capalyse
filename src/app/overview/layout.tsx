@@ -1,0 +1,16 @@
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+
+export default function OverviewLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <main>
+      <Header />
+      {children}
+      <Footer />
+    </main>
+  );
+}

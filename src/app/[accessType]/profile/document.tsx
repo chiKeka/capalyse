@@ -1,55 +1,83 @@
-import Button from "@/components/ui/Button";
-import { ReusableTable } from "@/components/ui/table";
-import { File, Pen, Trash2 } from "lucide-react";
+import { ReusableTable } from '@/components/ui/table';
+import useDocument, { Document as DocumentType } from '@/hooks/useDocument';
+import { File, Loader2, Trash2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { useMemo, useState } from 'react';
 
 type Props = {};
-const documents: any[] = [];
 
-const columns = [
-  {
-    header: "File name",
-    accessor: (row: (typeof documents)[0]) => (
-      <div className="flex items-center gap-2">
-        <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
-          <File className="text-green w-5 h-5" />
-        </div>
-
-        <div>
-          <div className="font-medium text-sm text-[#101828]">{row.name}</div>
-          <div className="text-xs text-gray-400">{row.size}</div>
-        </div>
-      </div>
-    ),
-  },
-  { header: "Date uploaded", accessor: "date" },
-  {
-    header: "Status",
-    accessor: (row: (typeof documents)[0]) => (
-      <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-        <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
-      </span>
-    ),
-  },
-  {
-    header: "",
-    accessor: () => (
-      <div className="flex gap-4 items-end justify-end">
-        <button className="text-gray-400 hover:text-red-600">
-          <Trash2 className="w-4 h-4" />
-        </button>
-        <button className="text-gray-400 hover:text-green-600">
-          <Pen className="w-4 h-4" />
-        </button>
-      </div>
-    ),
-    className: "text-right",
-  },
-];
 export default function Document({}: Props) {
+  const { useGetDocuments, useDeleteDocument } = useDocument();
+  const { data: documents } = useGetDocuments();
+
+  const deleteMutation = useDeleteDocument();
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
+  console.log(documents, 'documents');
+  const handleDelete = (id: string) => {
+    setSelectedDocument(id || null);
+    deleteMutation.mutate(id);
+  };
+  const columns = useMemo(() => {
+    return [
+      {
+        header: 'File name',
+        accessor: (row: DocumentType) => (
+          <div className="flex items-center gap-2">
+            <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
+              <File className="text-green w-5 h-5" />
+            </div>
+
+            <div>
+              <div className="font-medium text-sm text-[#101828]">
+                {row.originalName}
+              </div>
+              <div className="text-xs text-gray-400">{row.size}</div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        header: 'Date uploaded',
+        accessor: (row: DocumentType) => format(row.uploadedAt, 'MMM dd, yyyy'),
+      },
+      {
+        header: 'Category',
+        accessor: 'category',
+      },
+      {
+        header: '',
+        accessor: (row: DocumentType) => (
+          <div className="flex gap-4 items-end justify-end">
+            {row.category !== 'assessment' && (
+              <button
+                onClick={() => handleDelete(row._id)}
+                className="text-gray-400 hover:text-red-600"
+              >
+                {selectedDocument === row._id && deleteMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+              </button>
+            )}
+            {/* <button className="text-gray-400 hover:text-green-600">
+              <Pen className="w-4 h-4" />
+            </button> */}
+          </div>
+        ),
+        className: 'text-right',
+      },
+    ];
+  }, [documents]);
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6 ">
-      <ReusableTable columns={columns} data={documents} />
-      <div className="flex mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
+      <ReusableTable
+        columns={columns}
+        data={documents || []}
+        noDataText="No documents found check back later, any new document added will be found here"
+        noDataCaption="No documents found check back later"
+      />
+      {/* <div className="flex mt-8 w-full justify-end lg:flex-row flex-col items-end pr-6">
         <Button
           iconPosition="file"
           variant="primary"
@@ -58,7 +86,7 @@ export default function Document({}: Props) {
         >
           Upload
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

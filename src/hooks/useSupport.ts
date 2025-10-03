@@ -1,11 +1,11 @@
-import api from "@/api/axios";
-import { ApiEndPoints } from "@/api/endpoints";
-import { CreateSupportForm } from "@/lib/uitils/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from '@/api/axios';
+import { ApiEndPoints } from '@/api/endpoints';
+import { CreateSupportForm } from '@/lib/uitils/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useGetSupport = () => {
   return useQuery({
-    queryKey: ["sme_Support"],
+    queryKey: ['sme_Support'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.SupportTicket);
       return resp?.data;
@@ -14,17 +14,18 @@ export const useGetSupport = () => {
 };
 export const useGetSingleTicket = (id: string) => {
   return useQuery({
-    queryKey: ["sme_single_support"],
+    queryKey: ['sme_single_support'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.TicketsActions(id));
-      return resp.data.data;
+      console.log({ resp });
+      return resp.data;
     },
   });
 };
 
 export const useGetTicketMessage = (id: string) => {
   return useQuery({
-    queryKey: ["sme_ticket_messages"],
+    queryKey: ['sme_ticket_messages'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.TicketMessage(id));
       return resp.data.data;
@@ -39,9 +40,9 @@ export const useSupports = () => {
       return api.post(ApiEndPoints.SupportTicket, cred);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sme_Support"] });
-      queryClient.invalidateQueries({ queryKey: ["sme_single_support"] });
-      queryClient.invalidateQueries({ queryKey: ["sme_ticket_messages"] });
+      queryClient.invalidateQueries({ queryKey: ['sme_Support'] });
+      queryClient.invalidateQueries({ queryKey: ['sme_single_support'] });
+      queryClient.invalidateQueries({ queryKey: ['sme_ticket_messages'] });
     },
   });
 
@@ -87,5 +88,41 @@ export const useSupports = () => {
     updateTicketMessage,
     createTicketMessage,
     createSupport,
+  };
+};
+
+export const useSupportTicketMutations = () => {
+  const queryClient = useQueryClient();
+  const updateTicket = useMutation({
+    mutationFn: async ({
+      id,
+      rest,
+    }: {
+      id: string;
+      rest: any;
+    }): Promise<any> => {
+      return api.patch(ApiEndPoints.TicketsActions(id), rest);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sme_single_support'] });
+    },
+  });
+  const submitSupportMessage = useMutation({
+    mutationFn: async ({
+      id,
+      rest,
+    }: {
+      id: string;
+      rest: any;
+    }): Promise<any> => {
+      return api.post(ApiEndPoints.TicketMessage(id), rest);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sme_ticket_messages'] });
+    },
+  });
+  return {
+    updateTicket,
+    submitSupportMessage,
   };
 };

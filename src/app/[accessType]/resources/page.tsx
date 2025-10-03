@@ -1,65 +1,34 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import ResourceCard from "@/components/sections/dashboardCards/ResourceCard";
-import { Card } from "@/components/ui/card";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import ResourceCard from '@/components/sections/dashboardCards/ResourceCard';
+import { Card } from '@/components/ui/card';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useGetResources } from "@/hooks/useResources";
-import { useParams, useRouter } from "next/navigation";
-
-interface LearningTrack {
-  id: string;
-  title: string;
-  category: string;
-  image: string;
-  progress: number;
-}
-
-const learningTracks: LearningTrack[] = [
-  {
-    id: "1",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Business Strategy",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "2",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Financial Management",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "3",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Legal & Compliance",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-  {
-    id: "4",
-    title: "Trading Across Africa: How AfCFTA Is Changing the Game",
-    category: "Fundraising & Pitching",
-    image: "/images/resource.png",
-    progress: 0,
-  },
-];
+} from '@/components/ui/select';
+import { useGetResources } from '@/hooks/useResources';
+import { useRouter } from 'next/navigation';
 
 export default function ResourcesPage() {
   const router = useRouter();
-  const params = useParams();
-  const { data: resources } = useGetResources();
-  console.log(resources);
 
+  const { data: resources } = useGetResources({
+    page: 1,
+    limit: 10,
+    status: undefined,
+    sortBy: undefined,
+    sortOrder: 'asc',
+    categoryId: undefined,
+    type: undefined,
+    difficulty: undefined,
+  });
+  console.log(resources);
   // Group resources by category
   const resourcesByCategory =
     resources?.categories?.reduce((acc: any, category: any) => {
@@ -119,7 +88,7 @@ export default function ResourcesPage() {
                       id={resource.id}
                       title={resource.title}
                       category={resource.category}
-                      image={resource.image || "/images/resource.png"}
+                      image={resource.image || '/images/resource.png'}
                       progress={resource.progress || 0}
                     />
                   ))
@@ -142,19 +111,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: "Business Plan Template",
+    title: 'Business Plan Template',
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: "Investor Pitch Deck Guide",
+    title: 'Investor Pitch Deck Guide',
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: "Financial Model Spreadsheet",
+    title: 'Financial Model Spreadsheet',
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

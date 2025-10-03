@@ -4,23 +4,47 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
+import CreateProgram from "@/components/ui/createProgram";
+
+import { GetPrograms } from "@/hooks/usePrograms";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 type Props = {};
-const programs = [
-  { id: 1, status: "active", label: "Open for Applications" },
-  { id: 2, status: "closed", label: "Applications Closed" },
-  { id: 3, status: "active", label: "Open for Applications" },
-  { id: 4, status: "closed", label: "Applications Closed" },
-];
 
 const tabs = ["active", "closed"];
 
 function page({}: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<any>(null);
+  const params = useParams();
+
+  const filterParams = {
+    page: 1,
+    limit: 10,
+    industry: undefined,
+    country: undefined,
+    stage: undefined,
+    supportType: undefined,
+    status: undefined,
+    sortBy: undefined,
+  };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
-  const filteredPrograms = programs.filter((p) =>
-    currentTab === "active" ? p.status === "active" : p.status === "closed"
+  const { data: programs } = GetPrograms(filterParams);
+
+  const filteredPrograms = programs?.programs?.filter((p: any) =>
+    currentTab === "active"
+      ? p.status === "published" ||
+        p.status === "draft" ||
+        p.status === "active"
+      : p.status === "closed" ||
+        p.status === "completed" ||
+        p.status === "cancelled"
   );
+
+  // console.log({ filteredPrograms });
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -48,19 +72,44 @@ function page({}: Props) {
               </div>
             </div>
 
-            <Button>Create New Program</Button>
+            {params.accessType === "development" && (
+              <Button
+                size="small"
+                onClick={() => {
+                  setIsOpen(true);
+                  setIsEdit(false);
+                  setSelectedProgram(null);
+                }}
+              >
+                Create New Program
+              </Button>
+            )}
           </div>
         </DashboardCardLayout>
       </div>
-      {filteredPrograms.length > 0 ? (
+      {filteredPrograms?.length > 0 ? (
         <div className="flex-1 ">
           <DashboardCardLayout
             height="h-full"
             // caption={`Recent ${currentTab} Programs`}
           >
             <div className="my-8 flex-col flex gap-2">
-              {filteredPrograms.map((program) => {
-                return <Programs status={program.status as "pending" | "active" | "closed"} label={program.label} key={program.id} />;
+              {filteredPrograms?.map((program: any) => {
+                return (
+                  <Programs
+                    editProgram={isEdit}
+                    setEditProgram={(edit) => {
+                      setIsEdit(edit);
+                      if (edit) {
+                        setSelectedProgram(program);
+                        setIsOpen(true);
+                      }
+                    }}
+                    program={program}
+                    status={program.status}
+                    key={program.id}
+                  />
+                );
               })}
             </div>
           </DashboardCardLayout>
@@ -76,11 +125,24 @@ function page({}: Props) {
                 buttonText="Create Program"
                 caption="No Programs Yet!"
                 caption2={`You have not created any ${currentTab.toLowerCase()} programs yet.`}
+                actionType="createProgram"
               />
             </div>
           </DashboardCardLayout>
         </div>
       )}
+      <CreateProgram
+        isOpen={isOpen}
+        setIsOpen={(open) => {
+          setIsOpen(open);
+          if (!open) {
+            setIsEdit(false);
+            setSelectedProgram(null);
+          }
+        }}
+        isEdit={isEdit}
+        program={selectedProgram}
+      />
     </div>
   );
 }

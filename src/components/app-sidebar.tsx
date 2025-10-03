@@ -1,7 +1,7 @@
 'use client';
 
+import { BadgeCheck } from 'lucide-react';
 import * as React from 'react';
-import { Settings } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
@@ -11,16 +11,15 @@ import {
   SidebarContent,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { CIcons } from './ui/CIcons';
-import { useParams } from 'next/navigation';
 import { routes } from '@/lib/routes';
+import { useParams } from 'next/navigation';
+import { CIcons } from './ui/CIcons';
 
 export function AppSidebar({
   isAdmin,
   ...props
 }: React.ComponentProps<typeof Sidebar> & { isAdmin?: boolean }) {
   const params = useParams();
-  console.log({ params });
   const data = getSideBarLinks(params.accessType as string, isAdmin);
 
   return (
@@ -30,7 +29,9 @@ export function AppSidebar({
     >
       <SidebarContent className="no-scrollbar">
         <NavMain items={data?.navMain} />
-        <NavSecondary items={data?.navSecondary} className="mt-auto" />
+        {!isAdmin && (
+          <NavSecondary items={data?.navSecondary} className="mt-auto" />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data?.user} />
@@ -43,9 +44,19 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
   const navs = {
     sme: [
       {
-        title: 'Overview',
+        title: 'Analytics & Finance',
         url: routes.sme.root,
         icon: CIcons.overview,
+        items: [
+          {
+            title: 'Analytics',
+            url: routes.sme.root,
+          },
+          {
+            title: 'Financial',
+            url: routes.sme.finance,
+          },
+        ],
       },
       {
         title: 'Readiness Report',
@@ -165,11 +176,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         url: routes.admin.assessmentManagement,
         icon: CIcons.linearGraph,
       },
-      {
-        title: 'Content & Communication',
-        url: routes.admin.contentCommunication,
-        icon: CIcons.learning,
-      },
+      // {
+      //   title: "Content & Communication",
+      //   url: routes.admin.contentCommunication,
+      //   icon: CIcons.learning,
+      // },
       {
         title: 'Support',
         url: routes.admin.support,
@@ -186,11 +197,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
     navMain: navs[isAdmin ? 'admin' : (type as keyof typeof navs)] || [],
     navSecondary: [
       {
-        title: 'Settings',
+        title: 'Account',
         url: isAdmin
-          ? routes.admin.settings
-          : routes[type as keyof typeof routes]?.settings || '',
-        icon: Settings,
+          ? routes.admin.profile
+          : routes[type as keyof typeof routes]?.profile || '',
+        icon: BadgeCheck,
       },
     ],
   };

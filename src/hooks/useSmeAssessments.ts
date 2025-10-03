@@ -54,8 +54,8 @@ export const useGetSmeAssesmentsProgress = (enabled?: boolean) => {
   return useQuery({
     queryKey: ['sme_assessment_progress'],
     queryFn: async () => {
-      const resp = await api.get(ApiEndPoints.SMEs_Assessments('progress'));
-      return resp.data.data;
+      const resp = await api.get(ApiEndPoints.SMEs_Assessments('status'));
+      return resp.data;
     },
     enabled,
   });

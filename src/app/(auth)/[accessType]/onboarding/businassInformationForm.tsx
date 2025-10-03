@@ -1,23 +1,24 @@
-import Input from "@/components/ui/Inputs";
+import Input from '@/components/ui/Inputs';
 import {
   MultiSelect,
   MultiSelectContent,
   MultiSelectItem,
   MultiSelectTrigger,
   MultiSelectValue,
-} from "@/components/ui/multi-select";
+} from '@/components/ui/multi-select';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
-import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { SMEsBusinessInfo } from "@/lib/uitils/types";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { SMEsBusinessInfo } from '@/lib/uitils/types';
+import { useAfricanCountries } from '@/hooks/useComplianceCatalogs';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import {
   Dispatch,
   forwardRef,
@@ -25,9 +26,9 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
+} from 'react';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
 type Props = {};
 
 type BusinassInformationFormProps = {
@@ -37,8 +38,8 @@ type BusinassInformationFormProps = {
 };
 const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
   (props, ref) => {
-    const [selectedCountryName, setSelectedCountryName] = useState("");
-    const { smes_bussiness_info } = useAuth();
+    const [selectedCountryName, setSelectedCountryName] = useState('');
+    const { smes_bussiness_info } = updateProfile();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
     const {
@@ -48,6 +49,8 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
       formState: { errors },
     } = useForm<SMEsBusinessInfo>();
     const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
+    const { data: countries = [], isLoading: countriesLoading } = useAfricanCountries();
+    
     useEffect(() => {
       props.setLoading(smes_bussiness_info.isPending);
     }, [smes_bussiness_info.isPending, props]);
@@ -85,13 +88,13 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
         : [...selectedCountry, value];
 
       setSelectedCountry(newCountry);
-      setValue("countryOfOperation", newCountry);
+      setValue('countryOfOperation', newCountry);
     };
 
     const handleRemoveBusinessStage = (value: string) => {
       const newCountry = selectedCountry.filter((item) => item !== value);
       setSelectedCountry(newCountry);
-      setValue("countryOfOperation", newCountry);
+      setValue('countryOfOperation', newCountry);
     };
 
     return (
@@ -105,8 +108,8 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             label="Business Name"
             placeholder="Input business name"
             type="text"
-            {...register("businessName", {
-              required: "Business Name is required",
+            {...register('businessName', {
+              required: 'Business Name is required',
             })}
           />
           {errors.businessName && (
@@ -122,8 +125,8 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             label="Business registration number"
             placeholder="Earnest"
             type="text"
-            {...register("registrationNumber", {
-              required: "business Registration number is required",
+            {...register('registrationNumber', {
+              required: 'business Registration number is required',
             })}
           />
           {errors.registrationNumber && (
@@ -169,10 +172,11 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <MultiSelectValue placeholder="Select business stage" />
             </MultiSelectTrigger>
             <MultiSelectContent>
-              <MultiSelectItem value="Nigeria">Nigeria</MultiSelectItem>
-              <MultiSelectItem value="USA">United States</MultiSelectItem>
-              <MultiSelectItem value="Canada">Canada</MultiSelectItem>
-              <MultiSelectItem value="Australlia">Australlia</MultiSelectItem>
+              {countries.map((c) => (
+                <MultiSelectItem key={c.code} value={c.name}>
+                  {c.name}
+                </MultiSelectItem>
+              ))}
             </MultiSelectContent>
           </MultiSelect>
           {errors.businessStage && (
@@ -188,7 +192,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
           </label>
           <Select
             // value={watch("businessStage")}
-            onValueChange={(val) => setValue("businessStage", val)}
+            onValueChange={(val) => setValue('businessStage', val)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select business stage" />
@@ -210,7 +214,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
           <label className="block mb-1 text-sm font-medium">
             Industry (Optional)
           </label>
-          <Select onValueChange={(val) => setValue("industry", val)}>
+          <Select onValueChange={(val) => setValue('industry', val)}>
             <SelectTrigger>
               <SelectValue placeholder="Select Industry" />
             </SelectTrigger>
@@ -235,7 +239,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             label="Business website (Optional)"
             placeholder="Input your website link"
             type="text"
-            {...register("website", {
+            {...register('website', {
               setValueAs: (v) => {
                 if (!v) return v;
                 const value = String(v).trim();
@@ -244,7 +248,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               pattern: {
                 value:
                   /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-                message: "Please enter a valid URL",
+                message: 'Please enter a valid URL',
               },
             })}
           />

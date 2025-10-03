@@ -9,8 +9,8 @@ export type PersonalInfoInputs = {
   lastName: string;
   phoneNumber: string;
   email: string;
-  countryOfResidence: string;
-  stateOfResidence: string;
+  countryOfResidence?: string;
+  stateOfResidence?: string;
 };
 
 export type SMEsBusinessInfo = {
@@ -20,13 +20,20 @@ export type SMEsBusinessInfo = {
   businessStage: string;
   industry: string;
   website: string;
+  socials: {
+    socialMedia: string;
+    url: string;
+  }[];
+  logo: string;
 };
 
 export type InvestmentPreferenceInfo = {
   investmentType: string[];
+  investmentTypes?: string[];
   targetRegions: string[];
   targetIndustries: string[];
   businessStage: string[];
+  businessStages?: string[];
   max: number;
   min: number;
   min_currency: string;
@@ -34,39 +41,41 @@ export type InvestmentPreferenceInfo = {
 };
 
 export type investorOrg = {
-  organizationName: "";
-  companyEmail: "";
-  countryHeadquarters: "";
-  website: "";
+  organizationName: '';
+  companyEmail: '';
+  countryHeadquarters: '';
+  website: '';
 };
 export type developmentOrg = {
-  organizationName: "";
-  companyEmail: "";
-  countryHeadquarters: "";
-  website?: "";
+  organizationName: '';
+  companyEmail: '';
+  countryHeadquarters: '';
+  website?: '';
 };
 
 export type AuthState = {
-  createdAt: string;
-  email: string;
-  emailVerified: boolean;
-  firstName: string;
-  id: string;
-  lastName: string;
-  profileCompletionStep: number;
-  role: string;
-  status: string;
-  updatedAt: string;
+  createdAt?: string;
+  email?: string;
+  emailVerified?: boolean;
+  firstName?: string;
+  id?: string;
+  lastName?: string;
+  role?: string;
+  status?: string;
+  updatedAt?: string;
+  name?: string;
+  image?: string | null | undefined;
+  roles?: string;
 };
 
 // Messaging and conversation types (matching backend interfaces)
 
 export enum MessageType {
-  TEXT = "text",
-  IMAGE = "image",
-  FILE = "file",
-  AUDIO = "audio",
-  VIDEO = "video",
+  TEXT = 'text',
+  IMAGE = 'image',
+  FILE = 'file',
+  AUDIO = 'audio',
+  VIDEO = 'video',
 }
 
 export type MessageAttachment = {
@@ -265,19 +274,19 @@ export const validateConversationRequest = (
   const errors: string[] = [];
 
   if (!request.participants || request.participants.length < 2) {
-    errors.push("At least 2 participants are required");
+    errors.push('At least 2 participants are required');
   }
 
   if (request.groupName && request.groupName.length > 100) {
-    errors.push("Group name must be less than 100 characters");
+    errors.push('Group name must be less than 100 characters');
   }
 
   if (request.groupDescription && request.groupDescription.length > 500) {
-    errors.push("Group description must be less than 500 characters");
+    errors.push('Group description must be less than 500 characters');
   }
 
   if (request.isGroup && !request.groupAdmin) {
-    errors.push("Group admin is required for group conversations");
+    errors.push('Group admin is required for group conversations');
   }
 
   return errors;
@@ -289,11 +298,11 @@ export const validateMessageRequest = (
   const errors: string[] = [];
 
   if (!request.content || request.content.trim().length === 0) {
-    errors.push("Message content is required");
+    errors.push('Message content is required');
   }
 
   if (request.content && request.content.length > 2000) {
-    errors.push("Message content must be less than 2000 characters");
+    errors.push('Message content must be less than 2000 characters');
   }
 
   return errors;
@@ -341,7 +350,7 @@ export type ReadinessScoreBreakdown = {
 
 export type ReadinessScoreRecommendation = {
   category: string;
-  priority: "high" | "medium" | "low";
+  priority: 'high' | 'medium' | 'low';
   title: string;
   description: string;
   impact: number;
@@ -384,12 +393,46 @@ export type ReadinessScoreImprovements = {
 
 export type ReadinessScoreResponse = {
   success: boolean;
-  data: {
-    currentScore: ReadinessScoreData;
-    scoreLevel: string;
-    improvements: ReadinessScoreImprovements;
-    lastUpdated: string;
+  smeId: string;
+  overallScore: {
+    percentage: number;
+    status: string;
+    maxPossibleScore: number;
+    actualScore: number;
   };
+  categoryBreakdown: {
+    category: string;
+    name: string;
+    percentage: number;
+    status: string;
+    description: string;
+    maxScore: number;
+    actualScore: number;
+    subCategories: {
+      name: string;
+      percentage: number;
+      status: string;
+      description: string;
+    }[];
+    recommendations: string[];
+  }[];
+  lastAssessmentDate: string | null;
+  assessmentVersion: string;
+  canRetakeAssessment: boolean;
+  nextRetakeDate: string;
+  recommendations: {
+    id: string;
+    smeId: string;
+    category: string;
+    priority: string;
+    title: string;
+    description: string;
+    actionItems: string[];
+
+    estimatedImpact: number;
+    isActive: boolean;
+    createdAt: string;
+  }[];
 };
 
 // support
@@ -397,8 +440,7 @@ export type ReadinessScoreResponse = {
 export type CreateSupportForm = {
   subject: string;
   description: string;
-  category: string;
-  file?: supportAttachment[];
+  images?: supportAttachment[];
 };
 
 export type createComplianceForm = {
@@ -413,9 +455,4 @@ export type complianceAttachment = {
   fileSize: number;
   mimeType: string;
 };
-export type supportAttachment = {
-  fileName: string;
-  fileUrl: string;
-  fileSize: number;
-  mimeType: string;
-};
+export type supportAttachment = any[];

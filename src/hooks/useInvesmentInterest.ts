@@ -1,5 +1,5 @@
 import api from "@/api/axios";
-import { ApiEndPoints } from "@/api/endpoints";
+import { ApiEndPoints, matchingRoutes } from "@/api/endpoints";
 import { useQuery } from "@tanstack/react-query";
 
 export const useRecievedInvestmentInterest = () => {
@@ -12,15 +12,25 @@ export const useRecievedInvestmentInterest = () => {
   });
 };
 
-export const useInvestorMatches = () => {
+export const useSmeMatches = () => {
   return useQuery({
     queryKey: ["investor_matches"],
     queryFn: async () => {
-      const resp = await api.get(ApiEndPoints.investor_matches);
+      const resp = await api.get(matchingRoutes.smesMatches);
       return resp?.data;
     },
   });
 };
+export const useInvestorMatches = () => {
+  return useQuery({
+    queryKey: ["investor_matches"],
+    queryFn: async () => {
+      const resp = await api.get(matchingRoutes.investorMatches);
+      return resp?.data;
+    },
+  });
+};
+
 
 export const useInvestmentInterestDetails = (id: string) => {
   return useQuery({
@@ -41,4 +51,3 @@ export const useSentInvestmentInterest = () => {
     },
   });
 };
-

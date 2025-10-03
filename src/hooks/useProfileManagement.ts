@@ -1,15 +1,27 @@
 import api from "@/api/axios";
-import { ApiEndPoints } from "@/api/endpoints";
+import {
+  ApiEndPoints,
+  investorsAnalytics,
+  profileRoutes,
+} from "@/api/endpoints";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-export const useGetCurrentProfile = () => {
+export const useGetProfileNextStep = () => {
+  return useQuery({
+    queryKey: ["profile_next_step"],
+    queryFn: async () => {
+      const response = await api.get(ApiEndPoints.Profile_Next_Step);
+      return response?.data;
+    },
+  });
+};
+
+export const ProfileData = () => {
   return useQuery({
     queryKey: ["current_profile"],
     queryFn: async () => {
       const response = await api.get(ApiEndPoints.Profile);
-
-      const user = response?.data?.data?.user;
-      return user;
+      return response?.data;
     },
   });
 };
@@ -25,5 +37,26 @@ export const useUpdatePersonalInfo = () => {
     mutationFn: async (cred): Promise<any> => {
       api.put(ApiEndPoints.Profile_Info, cred);
     },
+  });
+};
+
+export const useGetInvestorsAnalytics = () => {
+  return useQuery({
+    queryKey: ["investors_analytics"],
+    queryFn: async () => {
+      const response = await api.get(investorsAnalytics.getInvestorsAnalytics);
+      return response?.data;
+    },
+  });
+};
+
+export const usePublicProfile = (id: string) => {
+  return useQuery({
+    queryKey: ["public_profile"],
+    queryFn: async () => {
+      const response = await api.get(profileRoutes.publicProfile(id));
+      return response?.data;
+    },
+    enabled: !!id,
   });
 };

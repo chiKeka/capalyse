@@ -1,34 +1,37 @@
-"use client";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
-import { ProfileSheet } from "@/components/ui/profileSheet";
+'use client';
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
+import { ProfileSheet } from '@/components/ui/profileSheet';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { useInvestorMatches } from "@/hooks/useInvesmentInterest";
-import Image from "next/image";
-import { useState } from "react";
-type Props = {};
+} from '@/components/ui/select';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import { useSmeMatches } from '@/hooks/useDirectories';
+import { Loader2Icon } from 'lucide-react';
+
+import Image from 'next/image';
+import { useState } from 'react';
 
 // Example data
 const investors: any = [];
 
 // Table columns
 
-function InvestorsPage({}: Props) {
+function InvestorsPage() {
   const [open, setOpen] = useState(false);
-  const RecievedInvestment = useInvestorMatches();
-  const { data: user, isLoading, error } = RecievedInvestment;
-  console.log({ user });
+  const { data: user, isLoading } = useSmeMatches({
+    page: 1,
+    limit: 20,
+  });
+
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
           <Image
@@ -42,14 +45,14 @@ function InvestorsPage({}: Props) {
         </div>
       ),
     },
-    { header: "Investor Type", accessor: "type" },
-    { header: "Investment Focus", accessor: "focus" },
+    { header: 'Investor Type', accessor: 'type' },
+    { header: 'Investment Focus', accessor: 'focus' },
     {
-      header: "Status",
+      header: 'Status',
       accessor: (row: any) => statusBadge(row.status),
     },
     {
-      header: "Action",
+      header: 'Action',
       accessor: () => (
         <button
           className="text-green font-medium hover:underline"
@@ -58,9 +61,10 @@ function InvestorsPage({}: Props) {
           View Profile
         </button>
       ),
-      className: "text-green",
+      className: 'text-green',
     },
   ];
+
   return (
     <div>
       {/* Filter Section */}
@@ -69,7 +73,7 @@ function InvestorsPage({}: Props) {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Investor Matches
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {user?.data?.length}
+              {user?.items?.length}
             </span>
           </p>
         </div>
@@ -93,12 +97,18 @@ function InvestorsPage({}: Props) {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
+            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
           </Button>
         </div>
       </div>
 
-      <ReusableTable columns={columns} data={user?.data} />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-full">
+          <Loader2Icon className="w-12 h-12 animate-spin" />
+        </div>
+      ) : (
+        <ReusableTable columns={columns} data={user?.items} />
+      )}
       <ProfileSheet open={open} onOpenChange={setOpen} />
     </div>
   );

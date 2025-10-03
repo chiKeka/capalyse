@@ -1,10 +1,9 @@
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
-import { useSmeProfile } from "@/hooks/useSmeProfile";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
+import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type Props = {};
 
@@ -15,8 +14,8 @@ type SummaryFormData = {
 };
 
 export default function Summary({}: Props) {
-  const { updateSmeBusinessDetails } = useSmeProfile();
-  const ProfileDetails = useGetCurrentProfile();
+  const { update_business_summary } = updateProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
   const {
     register,
@@ -25,26 +24,26 @@ export default function Summary({}: Props) {
     reset,
   } = useForm<SummaryFormData>({
     defaultValues: {
-      shortPitch: "",
-      missionStatement: "",
-      visionStatement: "",
+      shortPitch: '',
+      missionStatement: '',
+      visionStatement: '',
     },
   });
 
   useEffect(() => {
     if (user) {
       reset({
-        shortPitch: user?.shortPitch || "",
-        missionStatement: user?.missionStatement || "",
-        visionStatement: user?.visionStatement || "",
+        shortPitch: user?.businessSummary?.shortPitch || '',
+        missionStatement: user?.businessSummary?.missionStatement || '',
+        visionStatement: user?.businessSummary?.visionStatement || '',
       });
     }
   }, [user, reset]);
   const onSubmit = (data: any) => {
-    updateSmeBusinessDetails
+    update_business_summary
       .mutateAsync(data)
       .then((res) => {
-        toast.success("Business Summary updated successfully");
+        toast.success('Business Summary updated successfully');
       })
       .catch((err) => toast.error(err?.msg));
   };
@@ -56,11 +55,11 @@ export default function Summary({}: Props) {
     >
       <div className="w-full grid grid-col-1 lg:w-[85%]">
         <Input
-          {...register("shortPitch", {
-            required: "Short pitch is required",
+          {...register('shortPitch', {
+            required: 'Short pitch is required',
             minLength: {
               value: 10,
-              message: "Short pitch must be at least 10 characters",
+              message: 'Short pitch must be at least 10 characters',
             },
           })}
           type="text"
@@ -78,11 +77,11 @@ export default function Summary({}: Props) {
       <div className="grid grid-cols-1 gap-2 lg:w-[80%] w-full lg:grid-cols-2">
         <div>
           <Input
-            {...register("missionStatement", {
-              required: "Mission statement is required",
+            {...register('missionStatement', {
+              required: 'Mission statement is required',
               minLength: {
                 value: 10,
-                message: "Mission statement must be at least 10 characters",
+                message: 'Mission statement must be at least 10 characters',
               },
             })}
             type="text"
@@ -98,11 +97,11 @@ export default function Summary({}: Props) {
         </div>
         <div>
           <Input
-            {...register("visionStatement", {
-              required: "Vision statement is required",
+            {...register('visionStatement', {
+              required: 'Vision statement is required',
               minLength: {
                 value: 10,
-                message: "Vision statement must be at least 10 characters",
+                message: 'Vision statement must be at least 10 characters',
               },
             })}
             type="text"
@@ -122,7 +121,7 @@ export default function Summary({}: Props) {
         <Button
           variant="primary"
           type="submit"
-          state={updateSmeBusinessDetails.isPending ? "loading" : undefined}
+          state={update_business_summary.isPending ? 'loading' : undefined}
         >
           Submit
         </Button>

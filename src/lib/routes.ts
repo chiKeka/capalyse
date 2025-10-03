@@ -17,6 +17,7 @@ export const routes = {
     support: '/sme/support',
     settings: '/sme/settings',
     profile: '/sme/profile',
+    finance: '/sme/finance',
   },
   investor: {
     root: '/investor',
@@ -27,6 +28,8 @@ export const routes = {
     support: '/investor/support',
     settings: '/investor/settings',
     profile: '/investor/profile',
+    analytics: '/investor/analytics',
+    finance: '/investor/finance',
   },
   development: {
     root: '/development',

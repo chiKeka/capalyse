@@ -1,11 +1,11 @@
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import { ReusableTable } from "@/components/ui/table";
-import { useGetCurrentProfile } from "@/hooks/useProfileManagement";
-import { useSmeProfile } from "@/hooks/useSmeProfile";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
+import { ReusableTable } from '@/components/ui/table';
+import { getCurrentProfile } from '@/hooks/useUpdateProfile';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { useEffect, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type Props = {};
 
@@ -20,10 +20,10 @@ type TeamFormData = {
 };
 
 export default function Team({}: Props) {
-  const { updateTeamMemeber } = useSmeProfile();
+  const { updateTeamMemeber } = updateProfile();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const ProfileDetails = useGetCurrentProfile();
+  const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
 
   const {
@@ -34,24 +34,24 @@ export default function Team({}: Props) {
     reset,
   } = useForm<TeamFormData>({
     defaultValues: {
-      teamMembers: [{ name: "", email: "", role: "" }],
+      teamMembers: [{ name: '', email: '', role: '' }],
     },
   });
 
   useEffect(() => {
     if (user) {
       reset({
-        teamMembers: [{ name: "", email: "", role: "" }],
+        teamMembers: [{ name: '', email: '', role: '' }],
       });
     }
   }, [user, reset]);
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "teamMembers",
+    name: 'teamMembers',
   });
 
   const addTeamMember = () => {
-    append({ name: "", email: "", role: "" });
+    append({ name: '', email: '', role: '' });
   };
 
   const removeTeamMember = (index: number) => {
@@ -64,22 +64,27 @@ export default function Team({}: Props) {
     updateTeamMemeber
       .mutateAsync(data)
       .then((res) => {
-        toast.success("Team updated successfully");
+        toast.success('Team updated successfully');
       })
       .catch((err) => toast.error(err?.msg));
   };
 
   const columns = [
-    { header: "Name", accessor: "name" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
+    { header: 'Name', accessor: 'name' },
+    { header: 'Email', accessor: 'email' },
+    { header: 'Role', accessor: 'role' },
   ];
 
   return (
     <>
       {user?.teamMembers && (
         <div className="w-full h-auto my-10">
-          <ReusableTable columns={columns} data={user?.teamMembers} />{" "}
+          <ReusableTable
+            columns={columns}
+            data={user?.teamMembers}
+            noDataText="No team members found check back later, any new team member added will be found here"
+            noDataCaption="No team members found check back later"
+          />{' '}
         </div>
       )}
       <form
@@ -93,7 +98,7 @@ export default function Team({}: Props) {
           >
             <Input
               {...register(`teamMembers.${index}.name` as const, {
-                required: "Name is required",
+                required: 'Name is required',
               })}
               type="text"
               label="Name"
@@ -108,10 +113,10 @@ export default function Team({}: Props) {
 
             <Input
               {...register(`teamMembers.${index}.email` as const, {
-                required: "Email is required",
+                required: 'Email is required',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
+                  message: 'Invalid email address',
                 },
               })}
               type="email"
@@ -128,7 +133,7 @@ export default function Team({}: Props) {
             <div className="flex  items-center gap-2">
               <Input
                 {...register(`teamMembers.${index}.role` as const, {
-                  required: "Role is required",
+                  required: 'Role is required',
                 })}
                 type="text"
                 label="Role"
@@ -171,7 +176,7 @@ export default function Team({}: Props) {
             size="medium"
             className="w-fit my-4"
             type="submit"
-            state={updateTeamMemeber.isPending ? "loading" : undefined}
+            state={updateTeamMemeber.isPending ? 'loading' : undefined}
           >
             Save Changes
           </Button>

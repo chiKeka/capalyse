@@ -11,6 +11,14 @@
 import React from 'react';
 import EmptyBox from '../sections/dashboardCards/emptyBox';
 import { Loader2Icon } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from './pagination';
 
 type Column<T> = {
   header: string;
@@ -28,17 +36,20 @@ type ReusableTableProps<T> = {
   setPage?: (page: number) => void;
   totalPages?: number;
   loading?: boolean;
+  noDataText?: string;
+  noDataCaption?: string;
 };
 
 export function ReusableTable<T extends object>({
   columns,
   data = [],
   className = '',
-  rowsPerPage = 4,
   page = 1,
   setPage,
   totalPages,
   loading,
+  noDataText = 'No Programs found check back later, any new program added will be found here',
+  noDataCaption = 'No Programs found check back later',
 }: ReusableTableProps<T>) {
   return (
     <div className={`overflow-x-auto rounded-lg  bg-white ${className}`}>
@@ -71,8 +82,8 @@ export function ReusableTable<T extends object>({
               <td colSpan={columns.length}>
                 <EmptyBox
                   showButton={false}
-                  caption2="No Programs found check back later, any new program added will be found here"
-                  caption="No Programs found check back later"
+                  caption2={noDataText}
+                  caption={noDataCaption}
                 />
               </td>
             </tr>
@@ -88,14 +99,14 @@ export function ReusableTable<T extends object>({
                   >
                     {typeof col.accessor === 'function'
                       ? col.accessor(row)
-                      : (row as any)[col.accessor]}
+                      : (row as any)[col.accessor] ?? '-'}
                   </td>
                 ))}
               </tr>
             ))}
         </tbody>
       </table>
-      {/* {totalPages && totalPages > 1 && (
+      {totalPages && totalPages > 1 ? (
         <div className="pt-5">
           <Pagination>
             <PaginationContent>
@@ -136,7 +147,7 @@ export function ReusableTable<T extends object>({
             </PaginationContent>
           </Pagination>
         </div>
-      )} */}
+      ) : null}
     </div>
   );
 }

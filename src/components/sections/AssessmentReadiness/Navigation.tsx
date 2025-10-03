@@ -1,5 +1,5 @@
-import Button from "@/components/ui/Button";
-import { ChevronLeft } from "lucide-react";
+import Button from '@/components/ui/Button';
+import { ChevronLeft } from 'lucide-react';
 
 interface NavigationProps {
   currentSection: number;
@@ -10,6 +10,7 @@ interface NavigationProps {
   totalQuestions: number;
   loading?: boolean;
   sections: { totalQuestions: number }[];
+  isCurrentQuestionRequired?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ interface NavigationProps {
  * @param handleSkip Handler for skipping
  * @param totalQuestions Number of questions in current section.
  * @param sections All section data.
+ * @param isCurrentQuestionRequired Whether the current question is required.
  */
 export function Navigation({
   currentSection,
@@ -31,6 +33,7 @@ export function Navigation({
   totalQuestions,
   sections,
   loading,
+  isCurrentQuestionRequired = false,
 }: NavigationProps) {
   return (
     <div className="flex justify-between items-center mt-auto">
@@ -38,7 +41,7 @@ export function Navigation({
         variant="secondary"
         onClick={handleBack}
         state={
-          currentSection === 0 && currentQuestion === 0 ? "disabled" : "default"
+          currentSection === 0 && currentQuestion === 0 ? 'disabled' : 'default'
         }
       >
         <ChevronLeft className="w-4 h-4" />
@@ -46,15 +49,17 @@ export function Navigation({
       </Button>
 
       <div>
+        {!isCurrentQuestionRequired && (
+          <Button
+            variant="tertiary"
+            className="text-error-100"
+            onClick={handleSkip}
+          >
+            Skip
+          </Button>
+        )}
         <Button
-          variant="tertiary"
-          className="text-error-100"
-          onClick={handleSkip}
-        >
-          Skip
-        </Button>
-        <Button
-          state={loading ? "loading" : "default"}
+          state={loading ? 'loading' : 'default'}
           onClick={handleNext}
           iconPosition="right"
         >

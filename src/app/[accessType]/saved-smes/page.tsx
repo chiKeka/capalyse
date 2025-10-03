@@ -1,59 +1,57 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import { useWatchlist } from "@/hooks/useWatchlist";
-import Image from "next/image";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import { useInvestorSavedSMEs } from '@/hooks/useDirectories';
+import Image from 'next/image';
 
 // Example data
-const smes: any[] = [];
 
-const columns = [
-  {
-    header: "Name",
-    accessor: (row: (typeof smes)[0]) => (
-      <div className="flex items-center gap-2">
-        {row.avatar ? (
-          <Image
-            src={row.avatar}
-            alt={row.name}
-            width={24}
-            height={24}
-            className="rounded-full"
-          />
-        ) : null}
-        <span className="font-medium text-sm">{row.name}</span>
-      </div>
-    ),
-  },
-  { header: "Industry", accessor: "industry" },
-  { header: "Country", accessor: "country" },
-  { header: "Readiness Score", accessor: "readiness" },
-  { header: "Last Viewed", accessor: "date" },
+const SavedSMEDirectoryPage = () => {
+  const { data: smes, isLoading } = useInvestorSavedSMEs();
+  console.log({ smes });
+  const columns = [
+    {
+      header: 'Name',
+      accessor: (row: (typeof smes)[0]) => (
+        <div className="flex items-center gap-2">
+          {row.avatar ? (
+            <Image
+              src={row.avatar}
+              alt={row.name}
+              width={24}
+              height={24}
+              className="rounded-full"
+            />
+          ) : null}
+          <span className="font-medium text-sm">{row.name}</span>
+        </div>
+      ),
+    },
+    { header: 'Industry', accessor: 'industry' },
+    { header: 'Country', accessor: 'location' },
+    { header: 'Readiness Score', accessor: 'readiness' },
+    { header: 'Last Viewed', accessor: 'date' },
 
-  {
-    header: "Action",
-    accessor: (row: (typeof smes)[0]) => (
-      <div className="flex flex-row gap-3">
-        <CIcons.message />
-        <CIcons.delete />
-      </div>
-    ),
-  },
-];
+    {
+      header: 'Action',
+      accessor: (row: (typeof smes)[0]) => (
+        <div className="flex flex-row gap-3">
+          <CIcons.message />
+          <CIcons.delete />
+        </div>
+      ),
+    },
+  ];
 
-const SMEDirectoryPage = () => {
-  const { data: watchlist } = useWatchlist();
-  console.log({ watchlist });
-  // const smes = watchlist?.map((item) => item.target);
   return (
     <div>
       {/* Filter Section */}
@@ -62,7 +60,7 @@ const SMEDirectoryPage = () => {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             My Saved SMEs
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {smes.length}
+              {smes?.items?.length}
             </span>
           </p>
         </div>
@@ -90,11 +88,12 @@ const SMEDirectoryPage = () => {
       </div>
       <ReusableTable
         columns={columns}
-        data={smes}
-        totalPages={Math.ceil(smes.length / 4)}
+        data={smes?.items ?? []}
+        loading={isLoading}
+        totalPages={Math.ceil(smes?.items?.length / 4)}
       />
     </div>
   );
 };
 
-export default SMEDirectoryPage;
+export default SavedSMEDirectoryPage;

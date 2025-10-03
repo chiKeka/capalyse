@@ -1,7 +1,7 @@
 'use client';
 
 import Input from '@/components/ui/Inputs';
-import { useAuth } from '@/hooks/useAuth';
+import { updateProfile } from '@/hooks/useUpdateProfile';
 import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
 import { PersonalInfoInputs } from '@/lib/uitils/types';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -24,8 +24,10 @@ type PersonalInformationFormProps = {
 const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
   (props, ref) => {
     const auth: any = useAtomValue(authAtom);
-    const { personal_information } = useAuth();
+    const { personal_information } = updateProfile();
     const setStep = useSetAtom(onboardingStepAtom);
+    console.log({ auth });
+    const names = auth?.name?.split?.(' ');
     const {
       register,
       handleSubmit,
@@ -34,8 +36,8 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       formState: { errors },
     } = useForm<PersonalInfoInputs>({
       defaultValues: {
-        firstName: '',
-        lastName: '',
+        firstName: names?.[0] ?? '',
+        lastName: names?.[names?.length - 1] ?? '',
         email: auth?.email ?? '',
       },
     });
@@ -60,7 +62,6 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       },
       isLoading: personal_information.isPending,
     }));
-    const setAuth = useSetAtom(authAtom);
 
     const onSubmit = (values: PersonalInfoInputs) => {
       const { email, ...data } = values;
@@ -68,7 +69,6 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
         .mutateAsync(data)
         .then((res) => {
           console.log({ res });
-          setAuth((prev: any) => ({ ...prev, ...res?.data?.data?.user }));
         })
         .catch((err) => toast.error(err?.message));
     };

@@ -1,40 +1,21 @@
-"use client";
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
-import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
-import { useGetReadinessScore } from "@/hooks/useReadiness";
-import { useGetResources } from "@/hooks/useResources";
-import { routes } from "@/lib/routes";
-import { formatCurrency } from "@/lib/uitils/fns";
-import { useParams, useRouter } from "next/navigation";
-import EmptyBox from "../sections/dashboardCards/emptyBox";
-import ResourceCard from "../sections/dashboardCards/ResourceCard";
-import { Card, CardContent } from "../ui/card";
-import { CIcons } from "../ui/CIcons";
+'use client';
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import { OverviewHeaderCard } from '@/components/sections/dashboardCards/overviewHeaderCard';
+import {
+  ProfileData,
+  useGetInvestorsAnalytics,
+} from '@/hooks/useProfileManagement';
+import { useGetReadinessScore } from '@/hooks/useReadiness';
+import { useGetResources } from '@/hooks/useResources';
+import { routes } from '@/lib/routes';
+import { formatCurrency, formatInvestmentData } from '@/lib/uitils/fns';
+import { useParams, useRouter } from 'next/navigation';
+import EmptyBox from '../sections/dashboardCards/emptyBox';
+import ResourceCard from '../sections/dashboardCards/ResourceCard';
+import { Card, CardContent } from '../ui/card';
+import { CIcons } from '../ui/CIcons';
+import InvestmentOpportunitiesCard from '../InvesmentOpportunitiesCard';
 
-const overviewCards = [
-  {
-    id: 1,
-    icon: CIcons.walletMoney,
-    label: "Total Amount Invested",
-    amount: 0,
-    currency: "NGN",
-    percentage: 0,
-    direction: "up",
-  },
-  {
-    id: 2,
-    icon: CIcons.profile2,
-    label: "Total Verified SMEs",
-    amount: 0,
-  },
-  {
-    id: 3,
-    icon: CIcons.profile2,
-    label: "Active SMEs",
-    amount: 0,
-  },
-];
 export default function InvestorDashBoard() {
   const router = useRouter();
   const params = useParams();
@@ -42,20 +23,48 @@ export default function InvestorDashBoard() {
   // Fetch readiness score data
   const { data: readinessData, isLoading: isReadinessLoading } =
     useGetReadinessScore();
-
+  const { data: user } = ProfileData();
+  const { data: investorsAnalytics } = useGetInvestorsAnalytics();
+  console.log({ investorsAnalytics });
+  const investmentData = formatInvestmentData(
+    investorsAnalytics?.investmentOpportunities ?? []
+  );
+  const overviewCards = [
+    {
+      id: 1,
+      icon: CIcons.walletMoney,
+      label: 'Total Amount Invested',
+      amount: investorsAnalytics?.totalAmountInvested ?? 0,
+      currency: 'NGN',
+      percentage: 0,
+      direction: 'up',
+    },
+    {
+      id: 2,
+      icon: CIcons.profile2,
+      label: 'Total Verified SMEs',
+      amount: investorsAnalytics?.totalPlatformSMEs ?? 0,
+    },
+    {
+      id: 3,
+      icon: CIcons.profile2,
+      label: 'Active SMEs',
+      amount: investorsAnalytics?.activeSMEs ?? 0,
+    },
+  ];
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
         value={30}
         link={routes.investor.smeDirectory}
-        user={{ name: "Paul" }}
+        user={{ name: user?.personalInfo?.lastName }}
         textContent="Here's a snapshot of active SMEs, matches, and opportunities."
         showButton={true}
         buttonText="View SMEs"
         buttonProps={{
-          className: "max-w-max",
-          variant: "primary",
-          iconPosition: "right",
+          className: 'max-w-max',
+          variant: 'primary',
+          iconPosition: 'right',
         }}
       />
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-6">
@@ -71,7 +80,7 @@ export default function InvestorDashBoard() {
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
-                    (card.direction === "up" ? (
+                    (card.direction === 'up' ? (
                       <span className="text-sm text-success-100 font-bold">
                         {card.percentage}%
                       </span>
@@ -93,10 +102,9 @@ export default function InvestorDashBoard() {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6">
-        <ReadinessScoreCard
-          readinessData={readinessData?.data?.currentScore}
-          isLoading={isReadinessLoading}
-          scoreValue={0} // fallback value
+        <InvestmentOpportunitiesCard
+          caption="Investor Opportunities by Sector"
+          investmentData={investmentData}
         />
 
         <div className="flex flex-col w-full">

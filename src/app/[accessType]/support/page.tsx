@@ -15,55 +15,69 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import useDocument from "@/hooks/useDocument";
 import { useGetSupport, useSupports } from "@/hooks/useSupport";
-import { handleImageUpload } from "@/lib/uitils/fns";
-import { CreateSupportForm, supportAttachment } from "@/lib/uitils/types";
+import { CreateSupportForm } from "@/lib/uitils/types";
 import { Loader } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
-
-  const { data } = useGetSupport();
-  const supportTicket: any = data?.data;
+  const router = useRouter();
+  const { data: supportTicket } = useGetSupport();
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
-  const [files, setFiles] = useState<supportAttachment[]>([]);
+  const [files, setFiles] = useState<any[]>([]);
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<CreateSupportForm>();
-
-  const onSubmit = ({ category, description }: CreateSupportForm) => {
+  const { useUploadDocument } = useDocument();
+  const uploadDocument = useUploadDocument();
+  const params = useParams();
+  const onSubmit = ({ subject, description }: CreateSupportForm) => {
     createSupport
       .mutateAsync({
-        subject: category,
-        file: files,
+        subject,
+        images: files?.map((file) => file.fileUrl),
         description,
-        category,
       })
       .then(() => {
         toast.success("Ticket submitted successfully");
+        reset();
       });
   };
   const handleFileUpload = async (e: any) => {
-    if (e) setFileUploadLoading(true);
     const file = e.target.files[0];
-    const fileUrl = await handleImageUpload(file, (res: any) => {
-      console.log({ res });
-      setFiles([
+    if (file) {
+      uploadDocument.mutateAsync(
         {
-          fileName: res?.original_filename,
-          fileUrl: res?.secure_url,
-          fileSize: res?.bytes,
-          mimeType: res?.format,
+          file: e.target.files[0],
+          fileName: file.name,
+          category: "support",
         },
-      ]);
-      setFileUploadLoading(false);
-    });
+        {
+          onSuccess: (res) => {
+            setFiles([
+              {
+                fileName: res?.originalName,
+                fileUrl: `${process.env.NEXT_PUBLIC_API_URL}/documents/${res?._id}/download`,
+                fileSize: res?.size,
+                mimeType: res?.mimeType,
+              },
+            ]);
+          },
+          onError(error: any) {
+            toast.error(error?.response?.data?.message);
+          },
+        }
+      );
+    }
   };
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
@@ -86,7 +100,7 @@ const SupportPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select onValueChange={(val) => setValue("category", val)}>
+                <Select onValueChange={(val) => setValue("subject", val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -103,9 +117,9 @@ const SupportPage = () => {
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
-                {errors.category && (
+                {errors.subject && (
                   <span className="col-span-2 text-[10px] text-red-500">
-                    {errors.category.message}
+                    {errors.subject.message}
                   </span>
                 )}
               </div>
@@ -189,7 +203,13 @@ const SupportPage = () => {
           {supportTicket?.tickets.length > 0 ? (
             <div className="space-y-6">
               {supportTicket?.tickets?.map((item: any, index: number) => (
-                <div key={index} className="flex items-center justify-between">
+                <div
+                  onClick={() =>
+                    router.push(`/${params.accessType}/support/${item?.id}`)
+                  }
+                  key={index}
+                  className="flex cursor-pointer items-center justify-between"
+                >
                   <div className="flex items-start gap-2">
                     <CIcons.messageMinus />
                     <div>

@@ -20,9 +20,12 @@ const InvestorDetails = ({ id }: { id: string }) => {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 mt-6">
       <div className="space-y-6 lg:col-span-2">
-        <ContactDetails data={businessProfile} />
+        <ContactDetails data={businessProfile?.personalInfo} />
         <Verification
-          verificationStatus={businessProfile?.verificationStatus ?? 'Pending'}
+          verificationStatus={
+            businessProfile?.investorOrganizationInfo?.verificationStatus ??
+            'Pending'
+          }
         />
       </div>
       <div className="lg:col-span-3 space-y-6">

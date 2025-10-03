@@ -1,24 +1,33 @@
-import { UserIcon } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState, useRef, useEffect } from 'react';
-import { Message } from '../ui/message-sheet';
-import { useGetConversationMessages, useMessages } from '@/hooks/useMessages';
-import { useGetCurrentUser } from '@/hooks/useAuth';
-import { ChatMessage, createSendMessageRequest, validateMessageRequest } from '@/lib/uitils/types';
+import { useGetConversationMessages, useMessages } from "@/hooks/useMessages";
+import { useSession } from "@/lib/auth-client";
+import {
+  ChatMessage,
+  createSendMessageRequest,
+  validateMessageRequest,
+} from "@/lib/uitils/types";
+import { UserIcon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { Message } from "../ui/message-sheet";
 
-const formatMessageForDisplay = (apiMessage: ChatMessage, currentUserId: string) => {
+const formatMessageForDisplay = (
+  apiMessage: ChatMessage,
+  currentUserId: string
+) => {
   const isFromCurrentUser = apiMessage.senderId._id === currentUserId;
   return {
     id: apiMessage._id,
-    sender: isFromCurrentUser ? 'me' : `${apiMessage.senderId.firstName} ${apiMessage.senderId.lastName}`,
+    sender: isFromCurrentUser
+      ? "me"
+      : `${apiMessage.senderId.firstName} ${apiMessage.senderId.lastName}`,
     text: apiMessage.content,
     time: new Date(apiMessage.createdAt).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
     }),
-    avatar: '',
-    senderType: apiMessage.senderId.businessName || 'Member',
+    avatar: "",
+    senderType: apiMessage.senderId.businessName || "Member",
     online: false,
   };
 };
@@ -31,48 +40,56 @@ export default function ChatPage({
   setChatOpen: (open: boolean) => void;
 }) {
   const router = useRouter();
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Get current user to determine message ownership
-  const { data: currentUserResponse } = useGetCurrentUser();
-  const currentUserId = currentUserResponse?.data?.data?.user?.id || 'unknown-user';
+  const { data: currentUserResponse } = useSession();
+  const currentUserId = currentUserResponse?.user?.id || "unknown-user";
 
   // Get conversation messages
   const conversationId = chatUser.id; // The conversation ID
-  const { messages: apiMessages, isLoading, pagination, hasNextPage } = useGetConversationMessages(conversationId);
+  const {
+    messages: apiMessages,
+    isLoading,
+    pagination,
+    hasNextPage,
+  } = useGetConversationMessages(conversationId);
 
   // Get messaging functions
   const { sendMessage } = useMessages();
 
   // Filter out deleted messages and convert to display format
   const messages = apiMessages
-    .filter(msg => !msg.deletedAt) // Filter out soft-deleted messages
+    .filter((msg) => !msg.deletedAt) // Filter out soft-deleted messages
     .map((msg) => formatMessageForDisplay(msg, currentUserId));
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   function handleSend() {
     if (!input.trim()) return;
-    
+
     // Create and validate the message request
-    const messageRequest = createSendMessageRequest(conversationId, input.trim());
+    const messageRequest = createSendMessageRequest(
+      conversationId,
+      input.trim()
+    );
     const validationErrors = validateMessageRequest(messageRequest);
-    
+
     if (validationErrors.length > 0) {
-      console.error('Validation errors:', validationErrors);
+      console.error("Validation errors:", validationErrors);
       // You could show these errors to the user via toast/alert
       return;
     }
-    
+
     sendMessage.mutate(messageRequest, {
       onSuccess: () => {
-        setInput('');
+        setInput("");
       },
       onError: (error) => {
-        console.error('Failed to send message:', error);
+        console.error("Failed to send message:", error);
       },
     });
   }
@@ -87,8 +104,8 @@ export default function ChatPage({
           {new Date().toLocaleDateString()}
           {pagination && pagination.total > 0 && (
             <div className="text-center mt-1">
-              {pagination.total} message{pagination.total !== 1 ? 's' : ''}
-              {hasNextPage && ' (more available)'}
+              {pagination.total} message{pagination.total !== 1 ? "s" : ""}
+              {hasNextPage && " (more available)"}
             </div>
           )}
         </div>
@@ -98,27 +115,30 @@ export default function ChatPage({
           </div>
         ) : (
           messages.map((msg, idx) =>
-            msg.sender === 'me' ? (
-            <div key={msg.id} className="flex items-end justify-end gap-2 mb-2">
-              <div className="flex flex-col items-end">
-                <div className="bg-emerald-700 text-white px-4 py-2 rounded-2xl text-sm max-w-xs mb-1">
-                  {msg.text}
+            msg.sender === "me" ? (
+              <div
+                key={msg.id}
+                className="flex items-end justify-end gap-2 mb-2"
+              >
+                <div className="flex flex-col items-end">
+                  <div className="bg-emerald-700 text-white px-4 py-2 rounded-2xl text-sm max-w-xs mb-1">
+                    {msg.text}
+                  </div>
                 </div>
+                {msg.avatar ? (
+                  <Image
+                    src={msg.avatar}
+                    alt={msg.sender}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover mr-4"
+                  />
+                ) : (
+                  <div className="rounded-full object-cover mr-4 bg-muted aspect-square h-10 w-10 flex items-center justify-center">
+                    <UserIcon className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                )}
               </div>
-              {msg.avatar ? (
-                <Image
-                  src={msg.avatar}
-                  alt={msg.sender}
-                  width={40}
-                  height={40}
-                  className="rounded-full object-cover mr-4"
-                />
-              ) : (
-                <div className="rounded-full object-cover mr-4 bg-muted aspect-square h-10 w-10 flex items-center justify-center">
-                  <UserIcon className="h-4 w-4 text-muted-foreground" />
-                </div>
-              )}
-            </div>
             ) : (
               <div key={msg.id} className="flex items-end gap-2 mb-2">
                 {msg.avatar ? (
@@ -151,7 +171,7 @@ export default function ChatPage({
             {2000 - input.length} characters remaining
           </div>
         )}
-        
+
         <form
           className="px-4 py-4 flex items-center gap-2"
           onSubmit={(e) => {

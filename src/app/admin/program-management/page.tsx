@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  programColumns,
-  programsData,
-} from '@/components/ProgramComponents/pageContent';
+import { programColumns } from '@/components/ProgramComponents/pageContent';
 import { SearchForm } from '@/components/search-form';
 import {
   Select,
@@ -13,11 +10,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
-import { smes } from '@/lib/uitils/contentData';
+import { GetPrograms } from '@/hooks/usePrograms';
+import { useState } from 'react';
 
-const ProgramManagement = async ({ params }: { params: Promise<{ type: string }> }) => {
-  const { type } = await params;
-  
+const ProgramManagement = () => {
+  // const { type } = await params;
+  const [page, setPage] = useState(1);
+  const { data } = GetPrograms({ page: page, limit: 20 });
+  console.log({ data });
+
   return (
     <div>
       <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
@@ -27,7 +28,7 @@ const ProgramManagement = async ({ params }: { params: Promise<{ type: string }>
               <span className="capitalize">Programs</span>
             </span>
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {smes.length}
+              {data?.pagination?.total}
             </span>
           </p>
         </div>
@@ -55,8 +56,12 @@ const ProgramManagement = async ({ params }: { params: Promise<{ type: string }>
       </div>
       <ReusableTable
         columns={programColumns}
-        data={programsData}
-        totalPages={Math.ceil(smes.length / 4)}
+        data={data?.programs}
+        totalPages={data?.pagination?.totalPages}
+        page={page}
+        setPage={(page) => {
+          setPage(page);
+        }}
       />
     </div>
   );

@@ -2,13 +2,14 @@
 
 import {
   ArrowRightIcon,
-  BadgeCheck,
+  // BadgeCheck,
   Bell,
-  CreditCard,
+  // CreditCard,
   LogOut,
-  Sparkles,
+  Settings,
 } from 'lucide-react';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,13 +33,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import Button from './ui/Button';
-import { useAtomValue } from 'jotai';
+import { useGetNotifications } from '@/hooks/useNotification';
 import { authAtom } from '@/lib/atoms/atoms';
+import { authClient } from '@/lib/auth-client';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAtomValue, useSetAtom } from 'jotai';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import Button from './ui/Button';
+import { NotificationSheet } from './ui/notification-sheet';
 
 export function NavUser({
   user,
@@ -53,17 +56,36 @@ export function NavUser({
   const [showLogout, setShowLogout] = useState(false);
   const param = useParams();
   const { isMobile } = useSidebar();
-  const { signOutMutation } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [openNotifications, setOpenNotifications] = useState(false);
+  const setAuth = useSetAtom(authAtom);
   const auth: any = useAtomValue(authAtom);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const Notifications = useGetNotifications();
+  const { data: notifications } = Notifications;
   const handleLogout = () => {
-    signOutMutation.mutate();
+    authClient.signOut(undefined, {
+      onSuccess: () => {
+        setAuth(undefined);
+        queryClient.clear();
+        router.push('/signin');
+      },
+      onError: (ctx) => {
+        // toast.error(ctx.error.message);
+        setAuth(undefined);
+        queryClient.clear();
+        router.push('/signin');
+      },
+    });
   };
+  console.log({ auth });
   const renderUserDetails = useCallback(() => {
     if (auth) {
       return (
         <>
           <span className="truncate font-medium">{`${auth?.firstName || ''} ${
-            auth?.lastName || ''
+            auth?.name || ''
           }`}</span>
           <span className="truncate text-xs">{auth?.email}</span>
         </>
@@ -109,23 +131,26 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator /> */}
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                <Link href={`/${param?.accessType}/profile`}>Account</Link>
+                <Settings className="mr-2 h-4 w-4" />
+                <Link
+                  href={`/${
+                    auth?.role === 'admin' ? auth?.role : param?.accessType
+                  }/settings`}
+                >
+                  Settings
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem></DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => setOpenNotifications(true)}>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
@@ -137,6 +162,11 @@ export function NavUser({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <NotificationSheet
+          open={openNotifications}
+          onOpenChange={setOpenNotifications}
+          notifications={notifications}
+        />
       </SidebarMenuItem>
       <Dialog open={showLogout} onOpenChange={setShowLogout}>
         <DialogContent className="sm:!max-w-[425px]" hideIcon>
@@ -158,7 +188,7 @@ export function NavUser({
               size="small"
               className="bg-red-600 hover:bg-red-700"
               onClick={handleLogout}
-              state={signOutMutation.isPending ? 'loading' : 'default'}
+              state={loading ? 'loading' : 'default'}
             >
               Log out
             </Button>

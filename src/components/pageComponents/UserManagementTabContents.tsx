@@ -9,41 +9,35 @@ import {
   SelectValue,
 } from '../ui/select';
 import { SearchForm } from '../search-form';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { statusBadge } from '../ui/statusBar';
-import { useInvestorDirectory, useSmeDirectory } from '@/hooks/useDirectories';
+import { useUserDirectory } from '@/hooks/useDirectories';
 import { notFound } from 'next/navigation';
-
+const typeMap = {
+  SMEs: 'sme',
+  Investors: 'investor',
+  'Development Organization': 'development_org',
+};
 const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
+  const [page, setPage] = useState(1);
   const mgtColumns = useMemo(
-    () => (type === 'SMEs' ? columns : invColumns),
+    () =>
+      type === 'SMEs'
+        ? columns
+        : type === 'Investors'
+        ? invColumns
+        : devColumns,
     [type]
   );
-  const { data: smesd, isLoading } = useSmeDirectory(type === 'SMEs');
-  const { data: investors, isLoading: isLoadingInvestors } =
-    useInvestorDirectory(type === 'Investors');
-  const data = useMemo(() => {
-    const loading = isLoading || isLoadingInvestors;
-    if (loading) {
-      return null;
-    }
-    if (type === 'SMEs') {
-      return smesd;
-    }
-    if (type === 'Investors') {
-      return investors;
-    }
-    return null;
-  }, [type, smesd, investors, isLoading, isLoadingInvestors]);
-
-  const loading = useMemo(() => {
-    return type === 'SMEs' ? isLoading : isLoadingInvestors;
-  }, [isLoading, isLoadingInvestors, type]);
+  const { data, isLoading } = useUserDirectory({
+    role: typeMap[type as keyof typeof typeMap],
+    page,
+  });
 
   if (!type) {
     return notFound();
   }
-  console.log({ object: smesd?.data });
+  console.log({ data, type });
   return (
     <div>
       <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
@@ -81,9 +75,13 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
       </div>
       <ReusableTable
         columns={mgtColumns}
-        data={data?.data}
-        loading={loading}
-        totalPages={Math.ceil(data?.pagination?.total / 4)}
+        data={data?.profiles}
+        loading={isLoading}
+        totalPages={data?.pagination?.totalPages}
+        page={page}
+        setPage={(page) => {
+          setPage(page);
+        }}
       />
     </div>
   );
@@ -95,23 +93,30 @@ const columns = [
     header: 'Name',
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        {row?.avatar && (
-          <Image
-            src={row.avatar}
-            alt={row.businessName}
+        {row?.smeBusinessInfo?.logo && (
+          <img
+            src={row.smeBusinessInfo.logo}
+            alt={row.name}
             width={24}
             height={24}
             className="rounded-full"
           />
         )}
-        <span className="font-medium text-sm">{row.businessName}</span>
+        <span className="font-medium text-sm">
+          {row?.smeBusinessInfo?.businessName}
+        </span>
       </div>
     ),
   },
-  { header: 'Industry', accessor: 'industry' },
+  {
+    header: 'Industry',
+    accessor: (row: any) => row?.smeBusinessInfo?.industry,
+  },
   {
     header: 'Country',
-    accessor: (row: any) => <span>{row?.countryOfOperation?.join(', ')}</span>,
+    accessor: (row: any) => (
+      <span>{row?.smeBusinessInfo?.countryOfOperation?.join(', ')}</span>
+    ),
   },
   { header: 'Readiness Score', accessor: 'readinessScore' },
   { header: 'Revenue', accessor: 'revenue' },
@@ -123,7 +128,7 @@ const columns = [
     header: 'Action',
     accessor: (row: any) => (
       <Link
-        href={`/admin/user-management/sme/${row._id}`}
+        href={`/admin/user-management/sme/${row.userId}`}
         className="text-green font-medium hover:underline"
       >
         View Profile
@@ -136,23 +141,45 @@ const columns = [
 const invColumns = [
   {
     header: 'Name',
+    accessor: (row: any) =>
+      `${row?.personalInfo?.firstName ?? '-'} ${
+        row?.personalInfo?.lastName ?? ''
+      }`,
+  },
+  {
+    header: 'Company Name',
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        {row.avatar ? (
+        {row?.investorOrganizationInfo?.logo ? (
           <Image
-            src={row.avatar}
+            src={row?.investorOrganizationInfo?.logo}
             alt={row.name}
             width={24}
             height={24}
             className="rounded-full"
           />
         ) : null}
-        <span className="font-medium text-sm">{row.name}</span>
+        <span className="font-medium text-sm">
+          {row?.investorOrganizationInfo?.organizationName}
+        </span>
       </div>
     ),
   },
-  { header: 'Investor Type', accessor: 'type' },
-  { header: 'Investment Focus', accessor: 'focus' },
+  {
+    header: 'Investor Type',
+    accessor: (row: any) =>
+      row?.investorInvestmentInfo?.investmentTypes?.join(', ') ?? '-',
+  },
+  {
+    header: 'Target Regions',
+    accessor: (row: any) =>
+      row?.investorInvestmentInfo?.targetRegions?.join(', ') ?? '-',
+  },
+  {
+    header: 'Target Industries',
+    accessor: (row: any) =>
+      row?.investorInvestmentInfo?.targetIndustries?.join(', ') ?? '-',
+  },
   {
     header: 'Status',
     accessor: (row: any) => statusBadge(row.status),
@@ -161,7 +188,58 @@ const invColumns = [
     header: 'Action',
     accessor: (row: any) => (
       <Link
-        href={`/admin/user-management/investor/${row._id}`}
+        href={`/admin/user-management/investor/${row.userId}`}
+        className="text-green font-medium hover:underline"
+      >
+        View Profile
+      </Link>
+    ),
+    className: 'text-green',
+  },
+];
+
+const devColumns = [
+  {
+    header: 'Name',
+    accessor: (row: any) => (
+      <div className="flex items-center gap-2">
+        {row?.devOrgInfo?.logo ? (
+          <Image
+            src={row?.devOrgInfo?.logo}
+            alt={row.name}
+            width={24}
+            height={24}
+            className="rounded-full"
+          />
+        ) : null}
+        <span className="font-medium text-sm">
+          {row?.devOrgInfo?.organizationName || '-'}
+        </span>
+      </div>
+    ),
+  },
+  {
+    header: 'Company Headquarters',
+    accessor: (row: any) => row?.devOrgInfo?.countryHeadquarters ?? '-',
+  },
+  {
+    header: 'Investment Focus',
+    accessor: (row: any) => row?.devOrgInfo?.focusAreas?.join(', ') || '-',
+  },
+  {
+    header: 'Target Regions',
+    accessor: (row: any) =>
+      row?.devOrgInfo?.operatingRegions?.join(', ') || '-',
+  },
+  {
+    header: 'Verification Status',
+    accessor: (row: any) => statusBadge(row?.devOrgInfo?.verificationStatus),
+  },
+  {
+    header: 'Action',
+    accessor: (row: any) => (
+      <Link
+        href={`/admin/user-management/dev/${row.userId}`}
         className="text-green font-medium hover:underline"
       >
         View Profile

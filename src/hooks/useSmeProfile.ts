@@ -22,15 +22,6 @@ export const useSmeProfile = () => {
     },
   });
 
-  const updateTeamMemeber = useMutation({
-    mutationFn: async (cred): Promise<any> => {
-      return api.post(ApiEndPoints.SMEs_Profile("team"), cred);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["current_profile"] });
-    },
-  });
-
   const delTeamMemeber = useMutation({
     mutationFn: async (): Promise<any> => {
       return api.delete(ApiEndPoints.Delete_SMEs_profile("memberId"));
@@ -42,7 +33,6 @@ export const useSmeProfile = () => {
 
   return {
     updateSmeBusinessInfo,
-    updateTeamMemeber,
     updateSmeBusinessDetails,
     delTeamMemeber,
   };

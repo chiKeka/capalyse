@@ -25,8 +25,9 @@ export function OverviewHeaderCard({
   buttonProps,
 }: Props) {
   const router = useRouter();
+  console.log({ value });
   return (
-    <div className="justify-between my-4 flex flex-row">
+    <div className="justify-between my-4 flex max-w-full">
       <div className="">
         <p className="lg:text-4xl text-2xl font-bold ">Hi {user?.name} 👋</p>
         <p className="text-base font-normal">{textContent}</p>

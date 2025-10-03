@@ -159,7 +159,7 @@ export function NetworkProfileSheet({
               <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
                 <p>{data ? data?.businessStage : "Packaging"}</p>
                 <p className="text-2xl font-medium mb-2">.</p>
-                <p>{data ? data?.countryOfOperation.join(", ") : "Lagos"}</p>
+                <p>{data ? data?.countryOfOperation?.join(", ") : "Lagos"}</p>
               </span>
               <span className="inline-flex mt-2 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
                 <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> Connected

@@ -1,12 +1,12 @@
-"use client";
-import Button from "@/components/ui/Button";
-import { CIcons } from "@/components/ui/CIcons";
-import { NetworkProfileSheet } from "@/components/ui/profileSheet";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { useNetworking } from "@/hooks/networking";
-import Image from "next/image";
-import { useState } from "react";
+'use client';
+import Button from '@/components/ui/Button';
+import { CIcons } from '@/components/ui/CIcons';
+import { NetworkProfileSheet } from '@/components/ui/profileSheet';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import { useSmeDirectory } from '@/hooks/useDirectories';
+import Image from 'next/image';
+import { useState } from 'react';
 interface NetworkingProfile {
   _id: string;
   logo: string;
@@ -19,13 +19,12 @@ interface NetworkingProfile {
 }
 
 function NetworkingPage() {
-  const { data } = useNetworking();
-  const networking = data?.data;
+  const { data } = useSmeDirectory();
+  const networking = data?.items;
   const [selectedProfile, setSelectedProfile] =
     useState<NetworkingProfile | null>(null);
 
   const handleViewProfile = (profile: NetworkingProfile) => {
-    console.log(profile);
     setSelectedProfile(profile);
   };
 
@@ -34,29 +33,33 @@ function NetworkingPage() {
   };
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: NetworkingProfile) => (
         <div className="flex items-center gap-2">
-          <Image
-            src={row?.logo ? row?.logo : ""}
-            alt={row?.name}
-            width={24}
-            height={24}
-            className="rounded-full"
-          />
-          <span className="font-medium text-sm">{row?.businessName}</span>
+          {row?.logo && (
+            <Image
+              src={row?.logo}
+              alt={row?.name}
+              width={24}
+              height={24}
+              className="rounded-full"
+            />
+          )}
+          <span className="font-medium text-sm">
+            {row?.businessName ?? row?.name ?? 'N/A'}
+          </span>
         </div>
       ),
     },
-    { header: "Industry", accessor: "industry" },
-    { header: "Business Type", accessor: "businessStage" },
-    { header: "Service Offered", accessor: "serviceOffered" },
+    { header: 'Industry', accessor: 'industry' },
+    { header: 'Business Type', accessor: 'businessStage' },
+    { header: 'Service Offered', accessor: 'serviceOffered' },
     {
-      header: "Status",
+      header: 'Status',
       accessor: (row: NetworkingProfile) => statusBadge(row?.status),
     },
     {
-      header: "Action",
+      header: 'Action',
       accessor: (row: NetworkingProfile) => (
         <div className="flex gap-2">
           <Button
@@ -70,6 +73,7 @@ function NetworkingPage() {
       ),
     },
   ];
+
   return (
     <div>
       {/* Filter Section */}
@@ -88,7 +92,7 @@ function NetworkingPage() {
           </Button>
           <Button variant="primary">
             Message Business
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
+            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
           </Button>
         </div>
       </div>

@@ -1,25 +1,27 @@
-import Input from "@/components/ui/Inputs";
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useAuth } from "@/hooks/useAuth";
-import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
-import { investorOrg } from "@/lib/uitils/types";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { useAfricanCountries } from '@/hooks/useComplianceCatalogs';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
+import { investorOrg } from '@/lib/uitils/types';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
 import {
   Dispatch,
   forwardRef,
   SetStateAction,
   useEffect,
   useImperativeHandle,
-} from "react";
-import "react-country-state-city/dist/react-country-state-city.css";
-import { useForm } from "react-hook-form";
+} from 'react';
+import 'react-country-state-city/dist/react-country-state-city.css';
+import { useForm } from 'react-hook-form';
 
 type Props = {};
 
@@ -27,24 +29,47 @@ type InvestmentPreferenceormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
   onSuccess?: () => void;
+  isProfile?: boolean;
+  initialData?: any;
 };
 
 const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
   (props, ref) => {
-    const { investor_org_info } = useAuth();
+    const { investor_org_info } = updateProfile();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
+    const {
+      data: countries = [],
+      isLoading: countriesLoading,
+      isError: countriesError,
+    } = useAfricanCountries();
+    console.log({ countries });
     const {
       register,
       handleSubmit,
       setValue,
       watch,
+      reset,
       formState: { errors },
     } = useForm<investorOrg>();
 
     useEffect(() => {
       props.setLoading(investor_org_info.isPending);
     }, [investor_org_info.isPending, props]);
+
+    useEffect(() => {
+      if (props?.initialData) {
+        reset({
+          organizationName:
+            props?.initialData?.investorOrganizationInfo?.organizationName,
+          companyEmail:
+            props?.initialData?.investorOrganizationInfo?.companyEmail,
+          countryHeadquarters:
+            props?.initialData?.investorOrganizationInfo?.countryHeadquarters,
+          website: props?.initialData?.investorOrganizationInfo?.website,
+        });
+      }
+    }, [props?.initialData]);
 
     useImperativeHandle(ref, () => ({
       submit: () => {
@@ -68,7 +93,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       const payload = {
         ...data,
       };
-      console.log("SUBMIT PAYLOAD:", payload); // Log payload for user to see
+      console.log('SUBMIT PAYLOAD:', payload); // Log payload for user to see
       investor_org_info.mutateAsync(payload, {
         onSuccess: () => {
           if (props.onSuccess) {
@@ -88,8 +113,8 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
           <Input
             label="Organization name"
             placeholder="Jane"
-            {...register("organizationName", {
-              required: "organisation name is required",
+            {...register('organizationName', {
+              required: 'organisation name is required',
             })}
             type="text"
             name="organizationName"
@@ -105,7 +130,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
           <Input
             label="Company Email address"
             placeholder="Janeearnest@gmail.com"
-            {...register("companyEmail", { required: "Email is required" })}
+            {...register('companyEmail', { required: 'Email is required' })}
             type="email"
             name="companyEmail"
           />
@@ -120,16 +145,21 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
             Country Headquarters
           </label>
           <Select
-            onValueChange={(val: any) => setValue("countryHeadquarters", val)}
+            onValueChange={(val: any) => setValue('countryHeadquarters', val)}
+            defaultValue={
+              props?.initialData?.investorOrganizationInfo?.countryHeadquarters
+            }
+            value={watch('countryHeadquarters')}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select business stage" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Abuja">Abuja</SelectItem>
-              <SelectItem value="Sydney">Sydney</SelectItem>
-              <SelectItem value="Illinois">Illinois</SelectItem>
-              <SelectItem value="Los_angeles">Los Angeles</SelectItem>
+              {countries?.map((country) => (
+                <SelectItem key={country.code} value={country.name}>
+                  {country.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           {errors.countryHeadquarters && (
@@ -142,7 +172,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
           <Input
             label="Website"
             placeholder="wwww.us.com"
-            {...register("website", {
+            {...register('website', {
               setValueAs: (v) => {
                 if (!v) return v;
                 const value = String(v).trim();
@@ -151,9 +181,9 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
               pattern: {
                 value:
                   /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-                message: "Please enter a valid URL",
+                message: 'Please enter a valid URL',
               },
-              required: "website is required",
+              required: 'website is required',
             })}
             type="text"
             name="website"
@@ -164,6 +194,14 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
             </span>
           )}
         </div>
+        {props?.isProfile && (
+          <Button
+            type="submit"
+            state={investor_org_info?.isPending ? 'loading' : 'default'}
+          >
+            {investor_org_info?.isPending ? 'Submitting...' : 'Submit'}
+          </Button>
+        )}
       </form>
     );
   }

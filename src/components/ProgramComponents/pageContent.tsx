@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import Link from 'next/link';
 
 // Programs data array
@@ -121,21 +122,35 @@ const programColumns = [
     ),
   },
   {
+    header: 'Organization',
+    accessor: (row: any) => row?.organization?.organizationName,
+  },
+  {
     header: 'Partner Organization',
-    accessor: 'partnerOrganization',
+    accessor: (row: any) =>
+      row.partners?.map((partner: any) => partner.name).join(', '),
   },
   {
     header: 'Program Duration',
-    accessor: 'programDuration',
+    accessor: (row: any) =>
+      `${format(row.startDate, 'MMM d, yyyy')} - ${format(
+        row.endDate,
+        'MMM d, yyyy'
+      )}`,
   },
   {
     header: 'Total Applicants',
-    accessor: 'totalApplicants',
+    accessor: (row: any) => row?.applications?.total,
+    className: 'text-center',
+  },
+  {
+    header: 'Eligible Countries',
+    accessor: (row: any) => row?.eligibleCountries?.join(', ') || '-',
     className: 'text-center',
   },
   {
     header: 'Assigned SMEs',
-    accessor: 'assignedSMEs',
+    accessor: (row: any) => row?.assignedSMEs?.length,
     className: 'text-center',
   },
   {
@@ -212,14 +227,14 @@ const smeApplicantsColumns = [
     header: 'Name',
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        {row.avatar ? (
+        {row?.avatar ? (
           <img
             src={row.avatar}
             alt={row.businessName}
             className="w-8 h-8 rounded-full object-cover"
           />
         ) : null}
-        <span className="font-medium text-sm">{row.businessName}</span>
+        <span className="font-medium text-sm">{row?.businessName}</span>
       </div>
     ),
   },
@@ -235,7 +250,7 @@ const smeApplicantsColumns = [
     header: 'Readiness Score',
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">{row.readinessScore}</span>
+        <span className="text-sm font-medium">{row?.readinessScore}</span>
       </div>
     ),
   },

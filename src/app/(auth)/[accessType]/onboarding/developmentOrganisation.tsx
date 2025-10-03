@@ -3,11 +3,12 @@ import Input from "@/components/ui/Inputs";
 import { Input as FileInput } from "@/components/ui/input";
 import { CountrySelect } from "react-country-state-city";
 
+import Button from "@/components/ui/Button";
 import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { useAuth } from "@/hooks/useAuth";
+import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { handleImageUpload } from "@/lib/uitils/fns";
-import { developmentOrg, supportAttachment } from "@/lib/uitils/types";
+import { developmentOrg } from "@/lib/uitils/types";
 import { useAtomValue } from "jotai";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -19,19 +20,22 @@ interface Props {
   setLoading: (loading: boolean) => void;
   onFinish: () => void;
   onSuccess?: () => void;
+  isProfile?: boolean;
+  initialData?: any;
 }
 
 const DevelopmentOrganisation = forwardRef<
   { submit: () => void; isLoading: boolean },
   Props
->(({ setLoading, onFinish, onSuccess }, ref) => {
+>(({ setLoading, onFinish, onSuccess, initialData, isProfile }, ref) => {
   const auth: any = useAtomValue(authAtom);
-  const { dev_org } = useAuth();
+  const { dev_org } = updateProfile();
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     getValues,
     formState: { errors },
   } = useForm<developmentOrg>({
@@ -39,6 +43,19 @@ const DevelopmentOrganisation = forwardRef<
       companyEmail: auth?.email,
     },
   });
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        organizationName:
+          initialData?.investorOrganizationInfo?.organizationName,
+        companyEmail: initialData?.investorOrganizationInfo?.companyEmail,
+        countryHeadquarters:
+          initialData?.investorOrganizationInfo?.countryHeadquarters,
+        website: initialData?.investorOrganizationInfo?.website,
+      });
+    }
+  }, [initialData]);
 
   const [selectedCountryId, setSelectedCountryId] = useState("");
   const [selectedCountryName, setSelectedCountryName] = useState("");
@@ -50,12 +67,8 @@ const DevelopmentOrganisation = forwardRef<
   );
   const [fileUploadLoading1, setFileUploadLoading1] = useState(false);
   const [fileUploadLoading2, setFileUploadLoading2] = useState(false);
-  const [certificateFiles, setCertificateFiles] = useState<supportAttachment[]>(
-    []
-  );
-  const [operationalLicences, setOperationalLicences] = useState<
-    supportAttachment[]
-  >([]);
+  const [certificateFiles, setCertificateFiles] = useState<any[]>([]);
+  const [operationalLicences, setOperationalLicences] = useState<any>([]);
   const [showModal, setShowModal] = useState(false);
   const handleCertificateFileUpload = async (e: any) => {
     if (e) setFileUploadLoading1(true);
@@ -103,15 +116,17 @@ const DevelopmentOrganisation = forwardRef<
           const formDataWithFiles = {
             ...data,
             documents: [
-              ...certificateFiles.map((file) => ({
+              ...certificateFiles.map((file: any) => ({
                 type: "Certificate",
                 document: file.fileUrl,
               })),
-              ...operationalLicences.map((file) => ({
+              ...operationalLicences.map((file: any) => ({
                 type: "License",
                 document: file.fileUrl,
               })),
             ],
+            focusAreas: [""],
+            operatingRegions: [""],
           };
           // Add your form submission logic here
           await dev_org
@@ -302,7 +317,7 @@ const DevelopmentOrganisation = forwardRef<
           />
         </label>
         {/* Show uploaded file name if present */}
-        {operationalLicences?.map((items) => {
+        {operationalLicences?.map((items: any) => {
           return (
             <div className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
               {items.fileName}
@@ -313,21 +328,62 @@ const DevelopmentOrganisation = forwardRef<
           Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
         </p>
       </div>
-      <StatusChangeModal
-        description="We're reviewing your details. You'll get an email once verification is complete."
-        handleAction={() => {
-          router.push(`/${role}/dashbaord`);
-          setShowModal(false);
-        }}
-        modalType="warning"
-        handleCancel={() => {
-          router.push(`/${role}/dashbaord`);
-          setShowModal(false);
-        }}
-        title="Link sent!!"
-        routename="A password reset link has been sent to your inbox"
-        showModal={showModal}
-      />
+      {!isProfile && (
+        <StatusChangeModal
+          description="We're reviewing your details. You'll get an email once verification is complete."
+          handleAction={() => {
+            router.push(`/${role}/dashbord`);
+            setShowModal(false);
+          }}
+          modalType="warning"
+          handleCancel={() => {
+            router.push(`/${role}/dashbaord`);
+            setShowModal(false);
+          }}
+          title="Link sent!!"
+          routename="A password reset link has been sent to your inbox"
+          showModal={showModal}
+        />
+      )}
+
+      {isProfile && (
+        <Button
+          type="submit"
+          state={dev_org?.isPending ? "loading" : "default"}
+          onClick={handleSubmit(async (data) => {
+            setIsLoading(true);
+            setLoading(true);
+            const formDataWithFiles = {
+              ...data,
+              documents: [
+                ...certificateFiles.map((file: any) => ({
+                  type: "Certificate",
+                  document: file.fileUrl,
+                })),
+                ...operationalLicences.map((file: any) => ({
+                  type: "License",
+                  document: file.fileUrl,
+                })),
+              ],
+              focusAreas: [""],
+              operatingRegions: [""],
+            };
+            // Add your form submission logic here
+            await dev_org
+              .mutateAsync(formDataWithFiles)
+              .then(() => {
+                setShowModal(true);
+                onSuccess?.();
+              })
+              .catch((err) => {
+                console.log(err);
+                toast.error(err?.message);
+              });
+          })}
+        >
+          {dev_org?.isPending ? "Submitting..." : "Submit"}
+        </Button>
+      )}
     </div>
   );
 });

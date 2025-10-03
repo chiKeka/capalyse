@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface CircularScoreBarProps {
   value: number; // 0-100
@@ -12,7 +12,7 @@ const CircularScoreBar: React.FC<CircularScoreBarProps> = ({
   value,
   size = 80,
   strokeWidth = 12,
-  className = "",
+  className = '',
   showPercentage = true,
 }) => {
   const normalizedValue = Math.min(Math.max(value, 0), 100);
@@ -57,9 +57,16 @@ const CircularScoreBar: React.FC<CircularScoreBarProps> = ({
         />
       </svg>
       {showPercentage && (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center flex-col">
           <span className="font-bold ,g:text-4xl md:text-3xl text-2xl xl:text-5xl  text-[#282828]">
             {Math.round(normalizedValue)}%
+          </span>
+          <span>
+            {normalizedValue < 60
+              ? 'Not Ready'
+              : normalizedValue < 90
+              ? 'Almost Ready'
+              : 'Excellent'}
           </span>
         </div>
       )}
