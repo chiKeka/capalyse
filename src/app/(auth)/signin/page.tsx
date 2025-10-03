@@ -1,22 +1,22 @@
-"use client";
-import AuthLayout from "@/components/layout/auth";
-import GetStarted from "@/components/layout/GetStarted";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import PasswordChecker from "@/components/ui/passwordChecker";
-import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
-import { authAtom } from "@/lib/atoms/atoms";
-import { authClient, useSession } from "@/lib/auth-client";
-import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
-import { onboardingSteps, UserType } from "@/lib/utils";
-import { useSetAtom } from "jotai";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { toast } from "sonner";
+'use client';
+import AuthLayout from '@/components/layout/auth';
+import GetStarted from '@/components/layout/GetStarted';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
+import PasswordChecker from '@/components/ui/passwordChecker';
+import { useGetProfileNextStep } from '@/hooks/useProfileManagement';
+import { authAtom } from '@/lib/atoms/atoms';
+import { authClient, useSession } from '@/lib/auth-client';
+import { getKeyByValue, validateAuthForm } from '@/lib/uitils/fns';
+import { onboardingSteps, UserType } from '@/lib/utils';
+import { useSetAtom } from 'jotai';
+import { useRouter } from 'next/navigation';
+import React, { Suspense, useState } from 'react';
+import { toast } from 'sonner';
 type Props = {};
 
-function page({}: Props) {
-  const [form, setForm] = useState({ email: "", password: "", role: "SME" });
+function SignIn({}: Props) {
+  const [form, setForm] = useState({ email: '', password: '', role: 'SME' });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
@@ -57,12 +57,12 @@ function page({}: Props) {
             if (!data?.user?.emailVerified) {
               authClient.emailOtp.sendVerificationOtp({
                 email: form?.email,
-                type: "email-verification",
+                type: 'email-verification',
               });
               router.push(`/verify?email=${data?.user?.email}`);
               return;
             }
-            if (data?.user?.roles?.toLocaleUpperCase() === "ADMIN") {
+            if (data?.user?.roles?.toLocaleUpperCase() === 'ADMIN') {
               router.push(`/admin`);
               return;
             } else {
@@ -80,7 +80,7 @@ function page({}: Props) {
             }
           });
           setIsLoading(false);
-          toast.success("Sign in successful");
+          toast.success('Sign in successful');
         },
         onError: (ctx) => {
           console.log({ ctx });
@@ -125,9 +125,9 @@ function page({}: Props) {
           )}
 
           <div className="mb-12">
-            Forgot password?{" "}
+            Forgot password?{' '}
             <Button
-              onClick={() => router.push("/forgot_password")}
+              onClick={() => router.push('/forgot_password')}
               variant="tertiary"
               size="small"
               className="text-green hover:bg-transparent"
@@ -141,7 +141,7 @@ function page({}: Props) {
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={isLoading ? "loading" : "default"}
+            state={isLoading ? 'loading' : 'default'}
           >
             Sign in
           </Button>
@@ -167,4 +167,12 @@ function page({}: Props) {
   );
 }
 
-export default page;
+const SignInPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignIn />
+    </Suspense>
+  );
+};
+
+export default SignInPage;
