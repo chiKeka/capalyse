@@ -44,7 +44,6 @@ export function ReusableTable<T extends object>({
   columns,
   data = [],
   className = '',
-  rowsPerPage = 4,
   page = 1,
   setPage,
   totalPages,

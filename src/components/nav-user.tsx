@@ -79,6 +79,7 @@ export function NavUser({
       },
     });
   };
+  console.log({ auth });
   const renderUserDetails = useCallback(() => {
     if (auth) {
       return (
@@ -140,7 +141,13 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
-                <Link href={`/${param?.accessType}/settings`}>Settings</Link>
+                <Link
+                  href={`/${
+                    auth?.role === 'admin' ? auth?.role : param?.accessType
+                  }/settings`}
+                >
+                  Settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem></DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setOpenNotifications(true)}>

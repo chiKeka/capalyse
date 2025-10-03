@@ -1,10 +1,10 @@
-import api from "@/api/axios";
-import { adminRoutes, apiRoutes } from "@/api/endpoints";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import api from '@/api/axios';
+import { adminRoutes, apiRoutes } from '@/api/endpoints';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useGetAllTickets = () => {
   return useQuery({
-    queryKey: ["admin_all_tickets"],
+    queryKey: ['admin_all_tickets'],
     queryFn: async () => {
       const resp = await api.get(apiRoutes.admin.getAllTickets);
       return resp.data.data;
@@ -14,7 +14,7 @@ export const useGetAllTickets = () => {
 
 export const useGetAdminAnalytics = (currency: string) => {
   return useQuery({
-    queryKey: ["admin_analytics"],
+    queryKey: ['admin_analytics'],
     queryFn: async () => {
       const resp = await api.get(adminRoutes.adminAnalytics, {
         params: {
@@ -25,9 +25,20 @@ export const useGetAdminAnalytics = (currency: string) => {
     },
   });
 };
+
+export const useGetAdminProgramApplications = (id: string) => {
+  return useQuery({
+    queryKey: ['admin_program_applications'],
+    queryFn: async () => {
+      const resp = await api.get(adminRoutes.getAdminProgramApplications(id));
+      return resp.data;
+    },
+    enabled: !!id,
+  });
+};
 export const useGetAdminDashboardStats = () => {
   return useQuery({
-    queryKey: ["admin_dashboard_stats"],
+    queryKey: ['admin_dashboard_stats'],
     queryFn: async () => {
       const resp = await api.get(apiRoutes.admin.adminDashSats);
       return resp.data.data;
@@ -37,10 +48,21 @@ export const useGetAdminDashboardStats = () => {
 
 export const useGetInvestorById = (id: string) => {
   return useQuery({
-    queryKey: ["get_investor_by_id"],
+    queryKey: ['get_investor_by_id', id],
     queryFn: async () => {
-      const resp = await api.get(apiRoutes.investors.getProfileById(id));
-      return resp.data.data;
+      const resp = await api.get(apiRoutes.smes.getProfileById(id));
+      return resp.data;
+    },
+    enabled: !!id,
+  });
+};
+
+export const useGetDevOrgById = (id: string) => {
+  return useQuery({
+    queryKey: ['get_dev_org_by_id', id],
+    queryFn: async () => {
+      const resp = await api.get(apiRoutes.smes.getProfileById(id));
+      return resp.data;
     },
     enabled: !!id,
   });
@@ -48,10 +70,10 @@ export const useGetInvestorById = (id: string) => {
 
 export const useGetSmeById = (id: string) => {
   return useQuery({
-    queryKey: ["get_sme_by_id"],
+    queryKey: ['get_sme_by_id', id],
     queryFn: async () => {
       const resp = await api.get(apiRoutes.smes.getProfileById(id));
-      return resp.data.data;
+      return resp.data;
     },
     enabled: !!id,
   });
