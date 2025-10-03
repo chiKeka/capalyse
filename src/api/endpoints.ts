@@ -83,7 +83,7 @@ export const ApiEndPoints = {
   //support
   SupportTicket: '/support/tickets',
   TicketsActions: (ticketId: string) => `/support/tickets/${ticketId}`,
-  TicketMessage: (ticketId: string) => `/support/tickets//${ticketId}/messages`,
+  TicketMessage: (ticketId: string) => `/support/tickets/${ticketId}/messages`,
   TicketMessagesAction: (ticketId: string, messageId: string) =>
     `/support/tickets/${ticketId}/messages/${messageId}`,
 
@@ -201,7 +201,7 @@ export const apiRoutes = {
     directory: '/directory/smes',
     directory_search: (smeId: string) => `/directory/smes/${smeId}`,
     search: '/smes/search',
-    getProfileById: (id: string) => `/smes/${id}/profile`,
+    getProfileById: (id: string) => `/profile/user/${id}`,
     contact: (id: string) => `/smes/${id}/contact`,
     getGlobalStats: '/smes/stats',
   },
@@ -447,6 +447,11 @@ export const adminRoutes = {
     `/compliance/admin/cases/${caseId}/certify`, // post request no body
   revokeAdminCompliance: (caseId: string) =>
     `/compliance/admin/cases/${caseId}/revoke`, // post request no body
+  getAdminProgramApplications: (id: string) =>
+    `/admin/programs/${id}/applications`,
+
+  // User Management
+  getUsers: `/admin/profiles`,
 
   // Assessments
   createAssessmentQuestion: '/admin/assessments/questions', // post request

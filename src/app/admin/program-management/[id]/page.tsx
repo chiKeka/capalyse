@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  getProgramApplicants,
-  smeApplicantsColumns,
-} from '@/components/ProgramComponents/pageContent';
+import { smeApplicantsColumns } from '@/components/ProgramComponents/pageContent';
 import { SearchForm } from '@/components/search-form';
 import Button from '@/components/ui/Button';
 import { Card } from '@/components/ui/card';
@@ -16,14 +13,28 @@ import {
 } from '@/components/ui/select';
 import { statusBadge } from '@/components/ui/statusBar';
 import { ReusableTable } from '@/components/ui/table';
+import { useGetAdminProgramApplications } from '@/hooks/useAdmin';
+import { GetProgramById } from '@/hooks/usePrograms';
+import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
 type Props = {};
 
 const page = (props: Props) => {
+  const [page, setPage] = useState(1);
   const params = useParams();
-  const smes = getProgramApplicants(Number(params?.id));
+  const { data: program, isLoading: isProgramLoading } = GetProgramById(
+    params?.id as string
+  );
+  const { data: applicants, isLoading: isApplicantsLoading } =
+    useGetAdminProgramApplications(params?.id as string);
+  console.log({ applicants, program });
+
+  if (isProgramLoading || isApplicantsLoading)
+    return <Loader2Icon className="animate-spin w-12 h-12" />;
+
   return (
     <div>
       <p className="font-medium">
@@ -34,9 +45,13 @@ const page = (props: Props) => {
       </p>
       <Card className="flex items-center gap-5 p-8 my-2 shadow-none justify-between">
         <div className="flex flex-col gap-0">
-          <span className="text-2xl font-bold text-black">SME Growth 2.0</span>
+          <span className="text-2xl font-bold text-black">{program?.name}</span>
           <span className="text-gray-500 text-sm">
-            UNDP Nigeria {statusBadge('active')}
+            {program?.organization?.organizationName ??
+              program?.partners
+                ?.map((partner: any) => partner.name)
+                .join(', ')}{' '}
+            {statusBadge(program?.status)}
           </span>
         </div>
         <div className="space-x-3">
@@ -57,7 +72,7 @@ const page = (props: Props) => {
             <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
               SME Applicants
               <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-                {smes.length}
+                {program?.applications?.total}
               </span>
             </p>
           </div>
@@ -85,8 +100,12 @@ const page = (props: Props) => {
         </div>
         <ReusableTable
           columns={smeApplicantsColumns}
-          data={smes}
-          totalPages={Math.ceil(smes.length / 4)}
+          data={applicants?.applications}
+          totalPages={applicants?.pagination?.totalPages}
+          page={page}
+          setPage={(page) => {
+            setPage(page);
+          }}
         />
       </Card>
     </div>

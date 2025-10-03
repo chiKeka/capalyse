@@ -3,7 +3,8 @@ export const statusBadge = (status: string) => {
   let text = status;
   if (status === 'Connected' || status === 'active')
     color = 'bg-green-100 text-green-700';
-  if (status === 'Shortlisted') color = 'bg-yellow-100 text-yellow-700';
+  if (status === 'Shortlisted' || status === 'Pending')
+    color = 'bg-yellow-100 text-yellow-700';
   if (status === 'Viewed') color = 'bg-blue-100 text-blue-700';
   return (
     <span
@@ -13,12 +14,12 @@ export const statusBadge = (status: string) => {
         className={`w-2 h-2 rounded-full ${
           status === 'Connected' || status === 'active'
             ? 'bg-green-500'
-            : status === 'Shortlisted'
+            : status === 'Shortlisted' || status === 'Pending'
             ? 'bg-yellow-400'
             : 'bg-blue-500'
         }`}
       />
-      {text}
+      {text || '-'}
     </span>
   );
 };

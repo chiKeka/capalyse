@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Card } from '../ui/card';
 import { statusBadge } from '../ui/statusBar';
 import BusinessDetails from './BusinessDetails';
@@ -17,6 +16,7 @@ const businessProfile = {
 };
 const SMEDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetSmeById(id);
+  // const {} =
   console.log({ businessProfile, error });
   if (isLoading) return <Loader2Icon className="animate-spin w-12 h-12" />;
   if (error) {
@@ -26,9 +26,9 @@ const SMEDetails = ({ id }: { id: string }) => {
   return (
     <div>
       <Card className="flex items-center gap-5 p-8 my-2 shadow-none">
-        {businessProfile.logo && (
-          <Image
-            src={businessProfile.logo}
+        {businessProfile?.smeBusinessInfo?.logo && (
+          <img
+            src={businessProfile.smeBusinessInfo.logo}
             alt="logo"
             width={80}
             height={80}
@@ -37,15 +37,15 @@ const SMEDetails = ({ id }: { id: string }) => {
         )}
         <div className="flex flex-col gap-0">
           <span className="text-2xl font-bold text-black">
-            {businessProfile.businessName}
+            {businessProfile.smeBusinessInfo.businessName}
           </span>
           <span className="text-gray-500 text-sm">
-            {businessProfile.industry} <span className="mx-2">•</span>{' '}
-            {businessProfile?.countryOfOperation?.join(', ') ??
-              businessProfile?.countryOfResidence}
+            {businessProfile.smeBusinessInfo.industry}{' '}
+            <span className="mx-2">•</span>{' '}
+            {businessProfile?.smeBusinessInfo?.countryOfOperation?.join(', ')}
           </span>
           <div className="mt-2">
-            {statusBadge(businessProfile.status?.toLowerCase())}
+            {statusBadge(businessProfile.currentStep?.toLowerCase())}
           </div>
         </div>
       </Card>
@@ -54,13 +54,13 @@ const SMEDetails = ({ id }: { id: string }) => {
         <BusinessDetails
           className="lg:col-span-3"
           showDocuments
-          data={businessProfile}
+          data={businessProfile.smeBusinessInfo}
         />
         <div className="space-y-6 lg:col-span-2">
-          <ContactDetails data={businessProfile} />
+          <ContactDetails data={businessProfile.personalInfo} />
           <Verification
             verificationStatus={
-              businessProfile?.verificationStatus ?? 'Pending'
+              businessProfile?.smeBusinessInfo?.verificationStatus ?? 'Pending'
             }
           />
         </div>

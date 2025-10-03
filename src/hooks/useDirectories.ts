@@ -1,5 +1,5 @@
 import api from '@/api/axios';
-import { apiRoutes, directoryRoutes } from '@/api/endpoints';
+import { adminRoutes, apiRoutes, directoryRoutes } from '@/api/endpoints';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useSmeDirectory = (enabled?: boolean, params?: any) => {
@@ -12,7 +12,16 @@ export const useSmeDirectory = (enabled?: boolean, params?: any) => {
     enabled: enabled !== undefined ? enabled : true,
   });
 };
-
+export const useUserDirectory = (params?: any) => {
+  return useQuery({
+    queryKey: ['userDirectory', { params }],
+    queryFn: async () => {
+      const resp = await api.get(adminRoutes.getUsers, { params });
+      return resp.data;
+    },
+    enabled: Boolean(params?.role),
+  });
+};
 export const useInvestorDirectory = (enabled?: boolean) => {
   return useQuery({
     queryKey: ['investorDirectory'],
