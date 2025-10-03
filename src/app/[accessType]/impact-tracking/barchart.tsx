@@ -1,4 +1,4 @@
-import { useImpactSummary } from "@/hooks/usePrograms";
+import { useImpactSummary } from '@/hooks/usePrograms';
 import {
   BarElement,
   CategoryScale,
@@ -7,8 +7,8 @@ import {
   LinearScale,
   Title,
   Tooltip,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -41,13 +41,13 @@ export const data = {
   datasets: [
     {
       data: [] as number[],
-      backgroundColor: "#2E8E73",
+      backgroundColor: '#2E8E73',
       borderRadius: 8,
       borderSkipped: false,
     },
     {
       data: [] as number[],
-      backgroundColor: "#ABD2C7",
+      backgroundColor: '#ABD2C7',
       borderRadius: 4,
       borderSkipped: false,
     },
@@ -55,10 +55,10 @@ export const data = {
 };
 
 export function BarChart() {
-  const { data:summary } = useImpactSummary({
-    from: "2024-01-01",
-    to: "2024-12-31",
-    currency: "NGN",
+  const { data: summary } = useImpactSummary({
+    from: '2024-01-01',
+    to: '2024-12-31',
+    currency: 'NGN',
   });
   console.log(summary);
   return (
@@ -70,7 +70,7 @@ export function BarChart() {
         </div>
         <div className="w-fit"></div>
       </div>
-      <Bar height={400} width={1024} options={options} data={data} />
+      <Bar height={400} width={1024} options={options as any} data={data} />
     </div>
   );
 }
