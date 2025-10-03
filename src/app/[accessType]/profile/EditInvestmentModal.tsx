@@ -1,6 +1,6 @@
-import { X } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import Button from '@/components/ui/Button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 
 const ConfirmationModal = ({
   handleCancel,
@@ -9,7 +9,7 @@ const ConfirmationModal = ({
   showConfirmModal,
 }: {
   handleCancel: () => void;
-  selectedInvestment: string;
+  selectedInvestment: any;
   handleUpdate: () => void;
   showConfirmModal: boolean;
 }) => {
