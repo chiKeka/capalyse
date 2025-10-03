@@ -1,20 +1,20 @@
-import { CIcons } from '@/components/ui/CIcons';
-import Input from '@/components/ui/Inputs';
-import { Input as FileInput } from '@/components/ui/input';
-import { CountrySelect } from 'react-country-state-city';
+import { CIcons } from "@/components/ui/CIcons";
+import Input from "@/components/ui/Inputs";
+import { Input as FileInput } from "@/components/ui/input";
+import { CountrySelect } from "react-country-state-city";
 
-import StatusChangeModal from '@/components/useManagementComponents.tsx/modals';
-import { updateProfile } from '@/hooks/useUpdateProfile';
-import { authAtom } from '@/lib/atoms/atoms';
-import { handleImageUpload } from '@/lib/uitils/fns';
-import { developmentOrg } from '@/lib/uitils/types';
-import { useAtomValue } from 'jotai';
-import { Loader } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import Button from '@/components/ui/Button';
+import Button from "@/components/ui/Button";
+import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
+import { updateProfile } from "@/hooks/useUpdateProfile";
+import { authAtom } from "@/lib/atoms/atoms";
+import { handleImageUpload } from "@/lib/uitils/fns";
+import { developmentOrg } from "@/lib/uitils/types";
+import { useAtomValue } from "jotai";
+import { Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface Props {
   setLoading: (loading: boolean) => void;
@@ -57,9 +57,9 @@ const DevelopmentOrganisation = forwardRef<
     }
   }, [initialData]);
 
-  const [selectedCountryId, setSelectedCountryId] = useState('');
-  const [selectedCountryName, setSelectedCountryName] = useState('');
-  const [selectedStateName, setSelectedStateName] = useState('');
+  const [selectedCountryId, setSelectedCountryId] = useState("");
+  const [selectedCountryName, setSelectedCountryName] = useState("");
+  const [selectedStateName, setSelectedStateName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: any }>(
@@ -117,16 +117,16 @@ const DevelopmentOrganisation = forwardRef<
             ...data,
             documents: [
               ...certificateFiles.map((file: any) => ({
-                type: 'Certificate',
+                type: "Certificate",
                 document: file.fileUrl,
               })),
               ...operationalLicences.map((file: any) => ({
-                type: 'License',
+                type: "License",
                 document: file.fileUrl,
               })),
             ],
-            focusAreas: [''],
-            operatingRegions: [''],
+            focusAreas: [""],
+            operatingRegions: [""],
           };
           // Add your form submission logic here
           await dev_org
@@ -153,8 +153,8 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Organization Name*"
           placeholder="Enter organization name"
-          {...register('organizationName', {
-            required: 'Organization name is required',
+          {...register("organizationName", {
+            required: "Organization name is required",
           })}
           type="text"
           name="organizationName"
@@ -170,7 +170,7 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Enter Company Email Address*"
           placeholder="Company@gmail.com"
-          {...register('companyEmail', { required: 'Email is required' })}
+          {...register("companyEmail", { required: "Email is required" })}
           type="email"
           name="companyEmail"
           readOnly={true}
@@ -194,18 +194,18 @@ const DevelopmentOrganisation = forwardRef<
             console.log({ country });
             if (
               country &&
-              typeof country === 'object' &&
-              'id' in country &&
-              'name' in country
+              typeof country === "object" &&
+              "id" in country &&
+              "name" in country
             ) {
               setSelectedCountryId(country.id);
               setSelectedCountryName(country.name);
-              setValue('countryHeadquarters', country.name);
+              setValue("countryHeadquarters", country.name);
             }
           }}
           defaultValue={getValues()?.countryHeadquarters as any}
           onTextChange={(_txt: any) =>
-            setValue('countryHeadquarters', _txt.target.value)
+            setValue("countryHeadquarters", _txt.target.value)
           }
         />
         {errors.countryHeadquarters && (
@@ -221,7 +221,7 @@ const DevelopmentOrganisation = forwardRef<
           label="Business website (Optional)"
           placeholder="Input your website link"
           type="text"
-          {...register('website', {
+          {...register("website", {
             setValueAs: (v) => {
               if (!v) return v;
               const value = String(v).trim();
@@ -230,7 +230,7 @@ const DevelopmentOrganisation = forwardRef<
             pattern: {
               value:
                 /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-              message: 'Please enter a valid URL',
+              message: "Please enter a valid URL",
             },
           })}
         />
@@ -328,33 +328,66 @@ const DevelopmentOrganisation = forwardRef<
           Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
         </p>
       </div>
-      <StatusChangeModal
-        description="We're reviewing your details. You'll get an email once verification is complete."
-        handleAction={() => {
-          router.push(`/${role}/dashbord`);
-          setShowModal(false);
-        }}
-        modalType="warning"
-        handleCancel={() => {
-          router.push(`/${role}/dashbaord`);
-          setShowModal(false);
-        }}
-        title="Link sent!!"
-        routename="A password reset link has been sent to your inbox"
-        showModal={showModal}
-      />
+      {!isProfile && (
+        <StatusChangeModal
+          description="We're reviewing your details. You'll get an email once verification is complete."
+          handleAction={() => {
+            router.push(`/${role}/dashbord`);
+            setShowModal(false);
+          }}
+          modalType="warning"
+          handleCancel={() => {
+            router.push(`/${role}/dashbaord`);
+            setShowModal(false);
+          }}
+          title="Link sent!!"
+          routename="A password reset link has been sent to your inbox"
+          showModal={showModal}
+        />
+      )}
+
       {isProfile && (
         <Button
           type="submit"
-          state={dev_org?.isPending ? 'loading' : 'default'}
+          state={dev_org?.isPending ? "loading" : "default"}
+          onClick={handleSubmit(async (data) => {
+            setIsLoading(true);
+            setLoading(true);
+            const formDataWithFiles = {
+              ...data,
+              documents: [
+                ...certificateFiles.map((file: any) => ({
+                  type: "Certificate",
+                  document: file.fileUrl,
+                })),
+                ...operationalLicences.map((file: any) => ({
+                  type: "License",
+                  document: file.fileUrl,
+                })),
+              ],
+              focusAreas: [""],
+              operatingRegions: [""],
+            };
+            // Add your form submission logic here
+            await dev_org
+              .mutateAsync(formDataWithFiles)
+              .then(() => {
+                setShowModal(true);
+                onSuccess?.();
+              })
+              .catch((err) => {
+                console.log(err);
+                toast.error(err?.message);
+              });
+          })}
         >
-          {dev_org?.isPending ? 'Submitting...' : 'Submit'}
+          {dev_org?.isPending ? "Submitting..." : "Submit"}
         </Button>
       )}
     </div>
   );
 });
 
-DevelopmentOrganisation.displayName = 'DevelopmentOrganisation';
+DevelopmentOrganisation.displayName = "DevelopmentOrganisation";
 
 export default DevelopmentOrganisation;
