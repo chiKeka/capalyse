@@ -1,19 +1,18 @@
-"use client";
-import AuthLayout from "@/components/layout/auth";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Inputs";
-import { authClient } from "@/lib/auth-client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+'use client';
+import AuthLayout from '@/components/layout/auth';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Inputs';
+import { authClient } from '@/lib/auth-client';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Suspense, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface ForgotPasswordForm {
   email: string;
 }
-
-const ForgotPasswordPage = () => {
+const ForgotPassword = () => {
   const {
     register,
     handleSubmit,
@@ -22,7 +21,7 @@ const ForgotPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (data: ForgotPasswordForm) => {
     authClient.emailOtp.sendVerificationOtp(
-      { ...data, type: "forget-password" },
+      { ...data, type: 'forget-password' },
       {
         onRequest: (ctx) => {
           console.log({ ctx });
@@ -31,12 +30,12 @@ const ForgotPasswordPage = () => {
         onSuccess: (ctx) => {
           console.log({ ctx });
           setIsLoading(false);
-          toast.success("Reset token sent to your email");
+          toast.success('Reset token sent to your email');
           router.push(`/verify?reset_email=${data.email}`);
         },
         onError: (error) => {
           setIsLoading(false);
-          toast.error("Failed to send reset link. Please try again.");
+          toast.error('Failed to send reset link. Please try again.');
         },
       }
     );
@@ -51,11 +50,11 @@ const ForgotPasswordPage = () => {
     >
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <Input
-          {...register("email", {
-            required: "Email is required",
+          {...register('email', {
+            required: 'Email is required',
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Please enter a valid email address",
+              message: 'Please enter a valid email address',
             },
           })}
           name="email"
@@ -80,14 +79,14 @@ const ForgotPasswordPage = () => {
           className="font-bold w-full"
           type="submit"
           disabled={isLoading}
-          state={isLoading ? "loading" : "default"}
+          state={isLoading ? 'loading' : 'default'}
         >
-          {isLoading ? "Sending Link..." : "Get link"}
+          {isLoading ? 'Sending Link...' : 'Get link'}
         </Button>
 
         <div className="flex flex-col items-center justify-center my-6">
           <Link
-            href={"/signin"}
+            href={'/signin'}
             className="flex font-bold text-green text-sm text-center items-center"
           >
             Return to login page
@@ -95,6 +94,23 @@ const ForgotPasswordPage = () => {
         </div>
       </form>
     </AuthLayout>
+  );
+};
+
+const ForgotPasswordPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full min-h-[80vh] bg-white mt-[10rem] p-4 md:p-8">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-dark mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <ForgotPassword />
+    </Suspense>
   );
 };
 
