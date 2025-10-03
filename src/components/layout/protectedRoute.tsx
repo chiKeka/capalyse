@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useSession } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useSession } from '@/lib/auth-client';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface ProtectedDashboardProps {
   children: React.ReactNode;
@@ -11,11 +11,12 @@ interface ProtectedDashboardProps {
 
 export function ProtectedDashboard({ children }: ProtectedDashboardProps) {
   const { data: session, isPending } = useSession();
+  console.log({ session });
   const router = useRouter();
 
   useEffect(() => {
     if (!isPending && !session) {
-      router.push("/signin");
+      router.push('/signin');
     }
   }, [session, isPending, router]);
 
