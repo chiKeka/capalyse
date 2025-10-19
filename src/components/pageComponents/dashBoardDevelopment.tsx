@@ -11,6 +11,8 @@ import { formatCurrency } from "@/lib/uitils/fns";
 import { useParams } from "next/navigation";
 import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
+import { useAtomValue } from "jotai";
+import { authAtom } from "@/lib/atoms/atoms";
 
 export default function DevelopmentDashBoard() {
   const params = useParams();
@@ -27,6 +29,12 @@ export default function DevelopmentDashBoard() {
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
   const { data: programs } = GetPrograms(filterParams);
   const { data: profile } = ProfileData();
+    const auth = useAtomValue(authAtom);
+  const filteredPrograms = programs?.programs?.filter((p: any) => {
+    // First filter by current user's programs
+    const isMyProgram = p.developmentOrgId === auth?.id;
+    return isMyProgram;
+  });
   const overviewCards = [
     {
       id: 3,
@@ -96,7 +104,7 @@ export default function DevelopmentDashBoard() {
         ))}
       </div>
 
-      {programs?.programs?.length > 0 ? (
+      {filteredPrograms?.length > 0 ? (
         <div className="flex-1 ">
           <DashboardCardLayout
             linkName="See all Programs"
@@ -105,7 +113,7 @@ export default function DevelopmentDashBoard() {
             caption="Recent Programs"
           >
             <div className="my-8 flex-col flex gap-2">
-              {programs?.programs?.map((program: any, index: string) => {
+              {filteredPrograms?.map((program: any, index: string) => {
                 return <Programs key={index} program={program} />;
               })}
             </div>

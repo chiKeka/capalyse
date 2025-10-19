@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 // import {
 //   Pagination,
@@ -8,9 +8,9 @@
 //   PaginationNext,
 //   PaginationPrevious,
 // } from "@/components/ui/pagination";
-import React from 'react';
-import EmptyBox from '../sections/dashboardCards/emptyBox';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon } from "lucide-react";
+import React from "react";
+import EmptyBox from "../sections/dashboardCards/emptyBox";
 import {
   Pagination,
   PaginationContent,
@@ -18,7 +18,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from './pagination';
+} from "./pagination";
 
 type Column<T> = {
   header: string;
@@ -43,13 +43,13 @@ type ReusableTableProps<T> = {
 export function ReusableTable<T extends object>({
   columns,
   data = [],
-  className = '',
+  className = "",
   page = 1,
   setPage,
   totalPages,
   loading,
-  noDataText = 'No Programs found check back later, any new program added will be found here',
-  noDataCaption = 'No Programs found check back later',
+  noDataText = "No Programs found check back later, any new program added will be found here",
+  noDataCaption = "No Programs found check back later",
 }: ReusableTableProps<T>) {
   return (
     <div className={`overflow-x-auto rounded-lg  bg-white ${className}`}>
@@ -60,7 +60,7 @@ export function ReusableTable<T extends object>({
               <th
                 key={idx}
                 className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase ${
-                  col.className || ''
+                  col.className || ""
                 }`}
               >
                 {col.header}
@@ -95,11 +95,11 @@ export function ReusableTable<T extends object>({
                 {columns.map((col: any, cidx: number) => (
                   <td
                     key={cidx}
-                    className={`px-4 py-3 text-sm ${col.className || ''}`}
+                    className={`px-4 py-3 text-sm ${col.className || ""}`}
                   >
-                    {typeof col.accessor === 'function'
+                    {typeof col.accessor === "function"
                       ? col.accessor(row)
-                      : (row as any)[col.accessor] ?? '-'}
+                      : (row as any)[col.accessor] ?? "-"}
                   </td>
                 ))}
               </tr>

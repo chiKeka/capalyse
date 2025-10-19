@@ -1,30 +1,33 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ReusableTable } from '../ui/table';
+import useDebounce from "@/hooks/useDebounce";
+import { useUserDirectory } from "@/hooks/useDirectories";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { useMemo, useState } from "react";
+import { SearchForm } from "../search-form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { SearchForm } from '../search-form';
-import { useMemo, useState } from 'react';
-import { statusBadge } from '../ui/statusBar';
-import { useUserDirectory } from '@/hooks/useDirectories';
-import { notFound } from 'next/navigation';
+} from "../ui/select";
+import { statusBadge } from "../ui/statusBar";
+import { ReusableTable } from "../ui/table";
 const typeMap = {
-  SMEs: 'sme',
-  Investors: 'investor',
-  'Development Organization': 'development_org',
+  SMEs: "sme",
+  Investors: "investor",
+  "Development Organization": "development_org",
 };
 const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const mgtColumns = useMemo(
     () =>
-      type === 'SMEs'
+      type === "SMEs"
         ? columns
-        : type === 'Investors'
+        : type === "Investors"
         ? invColumns
         : devColumns,
     [type]
@@ -32,6 +35,7 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
   const { data, isLoading } = useUserDirectory({
     role: typeMap[type as keyof typeof typeMap],
     page,
+    q: debouncedSearch || undefined,
   });
 
   if (!type) {
@@ -66,6 +70,11 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
           </Select>
           <div className="flex items-center gap-2">
             <SearchForm
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
@@ -90,7 +99,7 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
 export default UserManagementTabContents;
 const columns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.smeBusinessInfo?.logo && (
@@ -109,23 +118,23 @@ const columns = [
     ),
   },
   {
-    header: 'Industry',
+    header: "Industry",
     accessor: (row: any) => row?.smeBusinessInfo?.industry,
   },
   {
-    header: 'Country',
+    header: "Country",
     accessor: (row: any) => (
-      <span>{row?.smeBusinessInfo?.countryOfOperation?.join(', ')}</span>
+      <span>{row?.smeBusinessInfo?.countryOfOperation?.join(", ")}</span>
     ),
   },
-  { header: 'Readiness Score', accessor: 'readinessScore' },
-  { header: 'Revenue', accessor: 'revenue' },
+  { header: "Readiness Score", accessor: "readinessScore" },
+  { header: "Revenue", accessor: "revenue" },
   {
-    header: 'Team Size',
+    header: "Team Size",
     accessor: (row: any) => <span>{row?.teamMembers?.length}</span>,
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/sme/${row.userId}`}
@@ -134,20 +143,20 @@ const columns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];
 
 const invColumns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) =>
-      `${row?.personalInfo?.firstName ?? '-'} ${
-        row?.personalInfo?.lastName ?? ''
+      `${row?.personalInfo?.firstName ?? "-"} ${
+        row?.personalInfo?.lastName ?? ""
       }`,
   },
   {
-    header: 'Company Name',
+    header: "Company Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.investorOrganizationInfo?.logo ? (
@@ -166,26 +175,26 @@ const invColumns = [
     ),
   },
   {
-    header: 'Investor Type',
+    header: "Investor Type",
     accessor: (row: any) =>
-      row?.investorInvestmentInfo?.investmentTypes?.join(', ') ?? '-',
+      row?.investorInvestmentInfo?.investmentTypes?.join(", ") ?? "-",
   },
   {
-    header: 'Target Regions',
+    header: "Target Regions",
     accessor: (row: any) =>
-      row?.investorInvestmentInfo?.targetRegions?.join(', ') ?? '-',
+      row?.investorInvestmentInfo?.targetRegions?.join(", ") ?? "-",
   },
   {
-    header: 'Target Industries',
+    header: "Target Industries",
     accessor: (row: any) =>
-      row?.investorInvestmentInfo?.targetIndustries?.join(', ') ?? '-',
+      row?.investorInvestmentInfo?.targetIndustries?.join(", ") ?? "-",
   },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: any) => statusBadge(row.status),
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/investor/${row.userId}`}
@@ -194,13 +203,13 @@ const invColumns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];
 
 const devColumns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.devOrgInfo?.logo ? (
@@ -213,30 +222,30 @@ const devColumns = [
           />
         ) : null}
         <span className="font-medium text-sm">
-          {row?.devOrgInfo?.organizationName || '-'}
+          {row?.devOrgInfo?.organizationName || "-"}
         </span>
       </div>
     ),
   },
   {
-    header: 'Company Headquarters',
-    accessor: (row: any) => row?.devOrgInfo?.countryHeadquarters ?? '-',
+    header: "Company Headquarters",
+    accessor: (row: any) => row?.devOrgInfo?.countryHeadquarters ?? "-",
   },
   {
-    header: 'Investment Focus',
-    accessor: (row: any) => row?.devOrgInfo?.focusAreas?.join(', ') || '-',
+    header: "Investment Focus",
+    accessor: (row: any) => row?.devOrgInfo?.focusAreas?.join(", ") || "-",
   },
   {
-    header: 'Target Regions',
+    header: "Target Regions",
     accessor: (row: any) =>
-      row?.devOrgInfo?.operatingRegions?.join(', ') || '-',
+      row?.devOrgInfo?.operatingRegions?.join(", ") || "-",
   },
   {
-    header: 'Verification Status',
+    header: "Verification Status",
     accessor: (row: any) => statusBadge(row?.devOrgInfo?.verificationStatus),
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/dev/${row.userId}`}
@@ -245,6 +254,6 @@ const devColumns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];

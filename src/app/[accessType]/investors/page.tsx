@@ -1,21 +1,22 @@
-'use client';
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
-import { ProfileSheet } from '@/components/ui/profileSheet';
+"use client";
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { ProfileSheet } from "@/components/ui/profileSheet";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { statusBadge } from '@/components/ui/statusBar';
-import { ReusableTable } from '@/components/ui/table';
-import { useSmeMatches } from '@/hooks/useDirectories';
-import { Loader2Icon } from 'lucide-react';
+} from "@/components/ui/select";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import { useSmeMatches } from "@/hooks/useDirectories";
+import { Loader2Icon } from "lucide-react";
 
-import Image from 'next/image';
-import { useState } from 'react';
+import useDebounce from "@/hooks/useDebounce";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 
 // Example data
 const investors: any = [];
@@ -24,14 +25,20 @@ const investors: any = [];
 
 function InvestorsPage() {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const debouncedSearch = useDebounce(search, 300);
+
   const { data: user, isLoading } = useSmeMatches({
-    page: 1,
+    page,
     limit: 20,
+    q: debouncedSearch || undefined,
   });
 
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
           <Image
@@ -45,14 +52,14 @@ function InvestorsPage() {
         </div>
       ),
     },
-    { header: 'Investor Type', accessor: 'type' },
-    { header: 'Investment Focus', accessor: 'focus' },
+    { header: "Investor Type", accessor: "type" },
+    { header: "Investment Focus", accessor: "focus" },
     {
-      header: 'Status',
+      header: "Status",
       accessor: (row: any) => statusBadge(row.status),
     },
     {
-      header: 'Action',
+      header: "Action",
       accessor: () => (
         <button
           className="text-green font-medium hover:underline"
@@ -61,9 +68,21 @@ function InvestorsPage() {
           View Profile
         </button>
       ),
-      className: 'text-green',
+      className: "text-green",
     },
   ];
+
+  const totalPages = useMemo(() => {
+    const metaTotalPages = (user as any)?.meta?.totalPages;
+    if (metaTotalPages) return metaTotalPages;
+    const totalItems =
+      (user as any)?.meta?.total ??
+      (user as any)?.total ??
+      (user as any)?.count ??
+      (user as any)?.items?.length ??
+      0;
+    return totalItems ? Math.ceil(totalItems / 20) : 1;
+  }, [user]);
 
   return (
     <div>
@@ -90,6 +109,11 @@ function InvestorsPage() {
           </Select>
           <div className="flex items-center gap-2">
             <SearchForm
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
@@ -97,7 +121,7 @@ function InvestorsPage() {
           </div>
           <Button variant="primary">
             Message Investor
-            <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
+            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
           </Button>
         </div>
       </div>
@@ -107,7 +131,14 @@ function InvestorsPage() {
           <Loader2Icon className="w-12 h-12 animate-spin" />
         </div>
       ) : (
-        <ReusableTable columns={columns} data={user?.items} />
+        <ReusableTable
+          columns={columns}
+          data={(user as any)?.items ?? []}
+          loading={isLoading}
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+        />
       )}
       <ProfileSheet open={open} onOpenChange={setOpen} />
     </div>

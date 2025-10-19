@@ -97,7 +97,7 @@ function NetworkingPage() {
         </div>
       </div>
 
-      <ReusableTable columns={columns} data={networking} />
+      <ReusableTable  columns={columns} data={networking} />
       <NetworkProfileSheet
         id={selectedProfile?._id}
         onOpenChange={(open) => !open && handleCloseSheet()}

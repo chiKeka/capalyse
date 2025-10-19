@@ -1,10 +1,10 @@
-import api from '@/api/axios';
-import { adminRoutes, apiRoutes, directoryRoutes } from '@/api/endpoints';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api from "@/api/axios";
+import { adminRoutes, apiRoutes, directoryRoutes } from "@/api/endpoints";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useSmeDirectory = (enabled?: boolean, params?: any) => {
   return useQuery({
-    queryKey: ['smeDirectory', { params }],
+    queryKey: ["smeDirectory", { params }],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.smes, { params });
       return resp.data;
@@ -14,7 +14,7 @@ export const useSmeDirectory = (enabled?: boolean, params?: any) => {
 };
 export const useUserDirectory = (params?: any) => {
   return useQuery({
-    queryKey: ['userDirectory', { params }],
+    queryKey: ["userDirectory", { params }],
     queryFn: async () => {
       const resp = await api.get(adminRoutes.getUsers, { params });
       return resp.data;
@@ -24,7 +24,7 @@ export const useUserDirectory = (params?: any) => {
 };
 export const useInvestorDirectory = (enabled?: boolean) => {
   return useQuery({
-    queryKey: ['investorDirectory'],
+    queryKey: ["investorDirectory"],
     queryFn: async () => {
       const resp = await api.get(directoryRoutes.getInvestorMatches);
       return resp.data;
@@ -33,14 +33,16 @@ export const useInvestorDirectory = (enabled?: boolean) => {
   });
 };
 
-export const useInvestorSavedSMEs = (enabled?: boolean) => {
+export const useInvestorSavedSMEs = (params?: any) => {
   return useQuery({
-    queryKey: ['investorSavedSMEs'],
+    queryKey: ["investorSavedSMEs", { params }],
     queryFn: async () => {
-      const resp = await api.get(directoryRoutes.getInvestorSavedSMEs);
+      const resp = await api.get(directoryRoutes.getInvestorSavedSMEs, {
+        params,
+      });
       return resp.data;
     },
-    enabled: enabled !== undefined ? enabled : true,
+    enabled: params?.enabled !== undefined ? params?.enabled : true,
   });
 };
 
@@ -49,7 +51,7 @@ export const getSingleSmeById = async (id: string) =>
 
 export const useGetSmeById = (id: string) => {
   return useQuery({
-    queryKey: ['smeById'],
+    queryKey: ["smeById"],
     queryFn: async () => {
       const resp = await getSingleSmeById(id);
       return resp.data;
@@ -60,9 +62,9 @@ export const useGetSmeById = (id: string) => {
 
 export const useSmeMatches = (params?: any) => {
   return useQuery({
-    queryKey: ['smeMatches'],
+    queryKey: ["smeMatches", { params }],
     queryFn: async () => {
-      const resp = await api.get(directoryRoutes.smeMatches, params ?? {});
+      const resp = await api.get(directoryRoutes.smeMatches, { params });
       return resp.data;
     },
   });
@@ -70,7 +72,7 @@ export const useSmeMatches = (params?: any) => {
 
 export const useSmeSaveStatus = (smeId?: string) => {
   return useQuery({
-    queryKey: ['smeSaveStatus'],
+    queryKey: ["smeSaveStatus"],
     queryFn: async () => {
       const resp = await api.get(
         apiRoutes.investors.smeSaveStatus(smeId as string)
@@ -89,7 +91,7 @@ export const useSmeDirectoryMutations = () => {
       return resp.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['smeSaveStatus'] });
+      queryClient.invalidateQueries({ queryKey: ["smeSaveStatus"] });
     },
   });
   const getSmeByIdMutation = useMutation({

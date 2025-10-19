@@ -5,8 +5,11 @@ import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
 import Button from "@/components/ui/Button";
 import CreateProgram from "@/components/ui/createProgram";
+import useDebounce from "@/hooks/useDebounce";
 
 import { GetPrograms } from "@/hooks/usePrograms";
+import { authAtom } from "@/lib/atoms/atoms";
+import { useAtomValue } from "jotai";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
@@ -19,7 +22,11 @@ function page({}: Props) {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<any>(null);
   const params = useParams();
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
+  const debouncedSearch = useDebounce(search, 300);
+  const auth = useAtomValue(authAtom);
   const filterParams = {
     page: 1,
     limit: 10,
@@ -29,21 +36,34 @@ function page({}: Props) {
     supportType: undefined,
     status: undefined,
     sortBy: undefined,
+    q: debouncedSearch || undefined,
   };
   const [currentTab, setCurrentTab] = useState(tabs[0]);
-  const { data: programs } = GetPrograms(filterParams);
+  const { data: programs } = GetPrograms({ ...filterParams, userId: auth?.id });
 
-  const filteredPrograms = programs?.programs?.filter((p: any) =>
-    currentTab === "active"
-      ? p.status === "published" ||
-        p.status === "draft" ||
-        p.status === "active"
-      : p.status === "closed" ||
-        p.status === "completed" ||
-        p.status === "cancelled"
-  );
+  const filteredPrograms = programs?.programs?.filter((p: any) => {
+    // First filter by current user's programs
+    const isMyProgram = p.developmentOrgId === auth?.id;
 
-  // console.log({ filteredPrograms });
+    // filter by status based on current tab
+    const statusMatch =
+      currentTab === "active"
+        ? p.status === "published" ||
+          p.status === "draft" ||
+          p.status === "active"
+        : p.status === "closed" ||
+          p.status === "completed" ||
+          p.status === "cancelled";
+
+    return isMyProgram && statusMatch;
+  });
+
+  console.log({
+    allPrograms: programs?.programs?.length,
+    myPrograms: filteredPrograms?.length,
+    currentUser: auth?.id,
+    currentTab,
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -87,7 +107,7 @@ function page({}: Props) {
           </div>
         </DashboardCardLayout>
       </div>
-      {filteredPrograms?.length > 0 ? (
+      {filteredPrograms && filteredPrograms?.length > 0 ? (
         <div className="flex-1 ">
           <DashboardCardLayout
             height="h-full"

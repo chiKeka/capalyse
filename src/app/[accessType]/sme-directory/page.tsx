@@ -1,31 +1,41 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
+import { SearchForm } from "@/components/search-form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { useSmeDirectory } from '@/hooks/useDirectories';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import useDebounce from "@/hooks/useDebounce";
+import { useSmeDirectory } from "@/hooks/useDirectories";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 // Example data
 
 const SMEDirectoryPage = () => {
-  const { data: smes, isLoading } = useSmeDirectory();
-  console.log(smes);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const debouncedSearch = useDebounce(search, 300);
+
+  const { data: smes, isLoading } = useSmeDirectory(true, {
+    page,
+    limit: 20,
+    q: debouncedSearch || undefined,
+  });
+  // console.log(smes);
   const params = useParams();
 
   const columns = useMemo(
     () => [
       {
-        header: 'Name',
+        header: "Name",
         accessor: (row: any) => (
           <div className="flex items-center gap-2">
             {row.avatar ? (
@@ -41,13 +51,13 @@ const SMEDirectoryPage = () => {
           </div>
         ),
       },
-      { header: 'Industry', accessor: 'industry' },
-      { header: 'Country', accessor: 'location' },
-      { header: 'Readiness Score', accessor: 'readinessScore' },
-      { header: 'Revenue', accessor: 'revenue' },
-      { header: 'Team Size', accessor: (row: any) => row.teamMembers?.length },
+      { header: "Industry", accessor: "industry" },
+      { header: "Country", accessor: "location" },
+      { header: "Readiness Score", accessor: "readinessScore" },
+      { header: "Revenue", accessor: "revenue" },
+      { header: "Team Size", accessor: (row: any) => row.teamMembers?.length },
       {
-        header: 'Action',
+        header: "Action",
         accessor: (row: any) => (
           <Link
             href={`/${params.accessType}/sme-directory/${row?.userId}`}
@@ -56,11 +66,23 @@ const SMEDirectoryPage = () => {
             View Profile
           </Link>
         ),
-        className: 'text-green',
+        className: "text-green",
       },
     ],
     [params.accessType]
   );
+
+  const totalPages = useMemo(() => {
+    const metaTotalPages = (smes as any)?.meta?.totalPages;
+    if (metaTotalPages) return metaTotalPages;
+    const totalItems =
+      (smes as any)?.meta?.total ??
+      (smes as any)?.total ??
+      (smes as any)?.count ??
+      (smes as any)?.items?.length ??
+      0;
+    return totalItems ? Math.ceil(totalItems / 20) : 1;
+  }, [smes]);
 
   // console.log({ smesd });
   return (
@@ -93,14 +115,22 @@ const SMEDirectoryPage = () => {
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
             />
           </div>
         </div>
       </div>
       <ReusableTable
         columns={columns}
-        data={smes?.items}
-        totalPages={Math.ceil(smes?.items?.length / 4)}
+        data={smes?.items ?? []}
+        loading={isLoading}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
       />
     </div>
   );

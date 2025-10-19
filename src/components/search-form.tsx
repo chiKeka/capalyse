@@ -10,7 +10,7 @@ export function SearchForm({
   value,
   onChange,
   ...props
-}: React.ComponentProps<"form"> & {
+}: Omit<React.ComponentProps<"form">, "onChange"> & {
   inputClassName?: string;
   iconWrapperClassName?: string;
   value?: string;
