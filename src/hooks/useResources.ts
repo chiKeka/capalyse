@@ -10,7 +10,7 @@ interface ResourceQueryParams {
   type?: string;
   difficulty?: string;
   status?: string;
-  search?: string;
+  q?: string;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
@@ -80,7 +80,7 @@ export const useSearchResource = (searchParamd: string) => {
     queryKey: ['search_resources', searchParamd],
     queryFn: async () => {
       const response = await api.get(ApiEndPoints.Search_Resources, {
-        params: { search: searchParamd },
+        params: { q: searchParamd },
       });
 
       const user = response?.data?.data?.user;

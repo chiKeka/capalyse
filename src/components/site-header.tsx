@@ -39,7 +39,7 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
             <Image src="/logo.png" alt="logo" width={148.28} height={35.35} />
           </div>
         </div>
-        <SearchForm className="w-full  sm:w-auto md:min-w-sm" />
+        <SearchForm  className="w-full  sm:w-auto md:min-w-sm" />
         <div className="flex items-center gap-2">
           <button
             type="button"

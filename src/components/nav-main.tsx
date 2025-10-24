@@ -84,15 +84,23 @@ export function NavMain({
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item?.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <Link href={subItem?.url}>
-                                <span>{subItem?.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                        {item?.items?.map((subItem) => {
+                          const isSubItemActive = pathname === subItem?.url;
+                          return (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton
+                                className={`${
+                                  isSubItemActive ? "bg-muted text-green" : ""
+                                }`}
+                                asChild
+                              >
+                                <Link href={subItem?.url}>
+                                  <span>{subItem?.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </>

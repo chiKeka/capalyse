@@ -30,7 +30,7 @@ const page = (props: Props) => {
   );
   const { data: applicants, isLoading: isApplicantsLoading } =
     useGetAdminProgramApplications(params?.id as string);
-  console.log({ applicants, program });
+  // console.log({ applicants, program });
 
   if (isProgramLoading || isApplicantsLoading)
     return <Loader2Icon className="animate-spin w-12 h-12" />;

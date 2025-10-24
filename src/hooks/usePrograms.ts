@@ -3,7 +3,7 @@ import { programsRoutes } from "@/api/endpoints";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export const GetPrograms = (params: any) => {
   return useQuery({
-    queryKey: ["programs"],
+    queryKey: ["programs", { params }],
     queryFn: async () => {
       const response = await api.get(programsRoutes.programs, {
         params: params,

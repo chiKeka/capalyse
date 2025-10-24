@@ -1,26 +1,38 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
-import { CIcons } from '@/components/ui/CIcons';
+import { SearchForm } from "@/components/search-form";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { useInvestorSavedSMEs } from '@/hooks/useDirectories';
-import Image from 'next/image';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import useDebounce from "@/hooks/useDebounce";
+import { useInvestorSavedSMEs } from "@/hooks/useDirectories";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 
 // Example data
 
 const SavedSMEDirectoryPage = () => {
-  const { data: smes, isLoading } = useInvestorSavedSMEs();
-  console.log({ smes });
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const debouncedSearch = useDebounce(search, 300);
+
+  const { data: smes, isLoading } = useInvestorSavedSMEs({
+    page,
+    limit: 20,
+    q: debouncedSearch || undefined,
+    enabled: true,
+  });
+  // console.log({ smes });
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -36,13 +48,13 @@ const SavedSMEDirectoryPage = () => {
         </div>
       ),
     },
-    { header: 'Industry', accessor: 'industry' },
-    { header: 'Country', accessor: 'location' },
-    { header: 'Readiness Score', accessor: 'readiness' },
-    { header: 'Last Viewed', accessor: 'date' },
+    { header: "Industry", accessor: "industry" },
+    { header: "Country", accessor: "location" },
+    { header: "Readiness Score", accessor: "readiness" },
+    { header: "Last Viewed", accessor: "date" },
 
     {
-      header: 'Action',
+      header: "Action",
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex flex-row gap-3">
           <CIcons.message />
@@ -51,6 +63,18 @@ const SavedSMEDirectoryPage = () => {
       ),
     },
   ];
+
+  const totalPages = useMemo(() => {
+    const metaTotalPages = (smes as any)?.meta?.totalPages;
+    if (metaTotalPages) return metaTotalPages;
+    const totalItems =
+      (smes as any)?.meta?.total ??
+      (smes as any)?.total ??
+      (smes as any)?.count ??
+      (smes as any)?.items?.length ??
+      0;
+    return totalItems ? Math.ceil(totalItems / 20) : 1;
+  }, [smes]);
 
   return (
     <div>
@@ -82,6 +106,11 @@ const SavedSMEDirectoryPage = () => {
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPage(1);
+                setSearch(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -90,7 +119,9 @@ const SavedSMEDirectoryPage = () => {
         columns={columns}
         data={smes?.items ?? []}
         loading={isLoading}
-        totalPages={Math.ceil(smes?.items?.length / 4)}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
       />
     </div>
   );

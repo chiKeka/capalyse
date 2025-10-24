@@ -67,13 +67,13 @@ function Programs({
     color = "#FACC15";
     bg = "#FEF9C3";
   } else if (program?.status === "published") {
-    color;
+    color ;
     bg;
   } else if (program?.status === "cancel") {
     color = "#DC3545";
     bg = "#E8E8E8";
   } else if (program?.status === "completed") {
-    color = "#007BFF";
+    color = "#282828";
     bg = "#E8E8E8";
   }
 

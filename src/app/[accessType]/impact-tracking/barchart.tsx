@@ -21,6 +21,7 @@ ChartJS.register(
 
 export const options = {
   responsive: true,
+  maintainAspectRatio: false,
   scales: {
     x: {
       categoryPercentage: 0.8,
