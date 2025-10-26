@@ -207,7 +207,7 @@ export const useImpactSummary = (params: ImpactQueryParams) => {
   });
 };
 
-export const useImpactByCountry = (params: ImpactQueryParams) => {
+export const useImpactByCountry = (params?: ImpactQueryParams) => {
   return useQuery({
     queryKey: ["impact-by-country", params],
     queryFn: async () => {
@@ -240,10 +240,10 @@ export const useListMyApplications = (
   });
 };
 
-export const useImpactMonthly = (params: ImpactMonthlyQueryParams) => {
+export const useImpactMonthly = (params?: ImpactMonthlyQueryParams) => {
   const normalized = {
     ...params,
-    months: params.months === undefined ? null : params.months,
+    months: params?.months === undefined ? null : params?.months,
   };
 
   return useQuery({

@@ -79,7 +79,7 @@ export function NavUser({
       },
     });
   };
-  console.log({ auth });
+  // console.log({ auth });
   const renderUserDetails = useCallback(() => {
     if (auth) {
       return (

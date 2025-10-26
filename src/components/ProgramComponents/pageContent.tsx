@@ -288,11 +288,11 @@ const smeApplicantsColumns = [
 
 // Example usage - get SME applicants for a specific program
 const getProgramApplicants = (programId: number) => {
-  console.log({ programId });
+  // console.log({ programId });
   const program = programsData.find((p) => p.id == programId);
 
   const smeApplicants = generateSMEApplicants(program?.totalApplicants);
-  console.log({ program, smeApplicants });
+  // console.log({ program, smeApplicants });
   return program ? smeApplicants : [];
 };
 

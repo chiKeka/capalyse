@@ -26,7 +26,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
     const auth: any = useAtomValue(authAtom);
     const { personal_information } = updateProfile();
     const setStep = useSetAtom(onboardingStepAtom);
-    console.log({ auth });
+    // console.log({ auth });
     const names = auth?.name?.split?.(' ');
     const {
       register,
@@ -68,7 +68,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
       personal_information
         .mutateAsync(data)
         .then((res) => {
-          console.log({ res });
+          // console.log({ res });
         })
         .catch((err) => toast.error(err?.message));
     };
@@ -150,7 +150,7 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
             autoComplete="new-country"
             inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
             onChange={(country: any) => {
-              console.log({ country });
+              // console.log({ country });
               if (
                 country &&
                 typeof country === 'object' &&

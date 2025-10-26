@@ -24,7 +24,7 @@ function page({}: Props) {
   const router = useRouter();
   const applicants: any[] = program?.applications ?? [];
 
-  console.log({ program });
+  // console.log({ program });
   const columns = [
     {
       header: "Name",

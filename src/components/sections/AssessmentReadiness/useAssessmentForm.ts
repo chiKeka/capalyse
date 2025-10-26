@@ -533,14 +533,14 @@ export function useAssessmentForm(
       });
 
       if (hasError) {
-        console.log('Validation failed, setting error for field:', fieldId);
+        // console.log('Validation failed, setting error for field:', fieldId);
         setErrors((prev) => ({
           ...prev,
           [fieldId]: 'Please fill in all required fields',
         }));
         return;
       } else {
-        console.log('Validation passed for field:', fieldId);
+        // console.log('Validation passed for field:', fieldId);
       }
     }
 
@@ -632,7 +632,7 @@ export function useAssessmentForm(
           });
         }
       } catch (error) {
-        console.error('Failed to submit answer:', error);
+        // console.error('Failed to submit answer:', error);
         setErrors((prev) => ({
           ...prev,
           [fieldId]: 'Failed to save answer. Please try again.',

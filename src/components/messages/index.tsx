@@ -79,7 +79,7 @@ export default function ChatPage({
     const validationErrors = validateMessageRequest(messageRequest);
 
     if (validationErrors.length > 0) {
-      console.error("Validation errors:", validationErrors);
+      // console.error("Validation errors:", validationErrors);
       // You could show these errors to the user via toast/alert
       return;
     }
@@ -89,7 +89,7 @@ export default function ChatPage({
         setInput("");
       },
       onError: (error) => {
-        console.error("Failed to send message:", error);
+        // console.error("Failed to send message:", error);
       },
     });
   }

@@ -39,12 +39,12 @@ const MultiSelectTrigger = React.forwardRef<
     const [isRemoving, setIsRemoving] = React.useState(false);
 
     const handleRemoveItem = (item: string) => {
-      console.log("X button clicked for item:", item);
-      console.log("Current selectedItems:", selectedItems);
+      // console.log("X button clicked for item:", item);
+      // console.log("Current selectedItems:", selectedItems);
       setIsRemoving(true);
-      console.log("About to call onRemoveItem with:", item);
+      // console.log("About to call onRemoveItem with:", item);
       onRemoveItem?.(item);
-      console.log("onRemoveItem called successfully");
+      // console.log("onRemoveItem called successfully");
       // Reset after a short delay
       setTimeout(() => setIsRemoving(false), 100);
     };

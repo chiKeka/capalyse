@@ -83,7 +83,7 @@ function SignIn({}: Props) {
           toast.success('Sign in successful');
         },
         onError: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(false);
           toast.error(ctx.error.message);
         },

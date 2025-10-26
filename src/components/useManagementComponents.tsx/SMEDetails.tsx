@@ -17,7 +17,7 @@ const businessProfile = {
 const SMEDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetSmeById(id);
   // const {} =
-  console.log({ businessProfile, error });
+  // console.log({ businessProfile, error });
   if (isLoading) return <Loader2Icon className="animate-spin w-12 h-12" />;
   if (error) {
     toast.error((error as any)?.error);

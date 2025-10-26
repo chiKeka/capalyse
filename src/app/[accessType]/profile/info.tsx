@@ -30,7 +30,7 @@ export default function Info({}: Props) {
   const { smes_bussiness_info } = updateProfile();
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
-  console.log(user, 'user');
+  // console.log(user, 'user');
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
     user?.countryOfOperation || []
   );

@@ -231,7 +231,7 @@ export function useDocument() {
                   (progressEvent.loaded * 100) / progressEvent.total
                 );
                 // You can use this for progress tracking if needed
-                console.log(`Upload progress: ${percentage}%`);
+                // console.log(`Upload progress: ${percentage}%`);
               }
             },
           }
@@ -249,7 +249,7 @@ export function useDocument() {
         queryClient.setQueryData(documentQueryKeys.detail(data._id), data);
       },
       onError: (error) => {
-        console.error('Document upload failed:', error);
+        // console.error('Document upload failed:', error);
       },
     });
   };
@@ -303,7 +303,7 @@ export function useDocument() {
         });
       },
       onError: (error) => {
-        console.error('Multiple document upload failed:', error);
+        // console.error('Multiple document upload failed:', error);
       },
     });
   };
@@ -335,7 +335,7 @@ export function useDocument() {
         // Remove from documents list cache
       },
       onError: (error) => {
-        console.error('Document deletion failed:', error);
+        // console.error('Document deletion failed:', error);
       },
     });
   };
@@ -370,7 +370,7 @@ export function useDocument() {
         window.URL.revokeObjectURL(url);
       },
       onError: (error) => {
-        console.error('Document download failed:', error);
+        // console.error('Document download failed:', error);
       },
     });
   };

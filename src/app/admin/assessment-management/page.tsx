@@ -83,7 +83,7 @@ function AssessmentManagement() {
     selectedCategory as AssessmentCategory,
     !!selectedCategory
   );
-  console.log({ categoryData, questionsData });
+  // console.log({ categoryData, questionsData });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [editing, setEditing] = useState<boolean>(false);
@@ -127,7 +127,7 @@ function AssessmentManagement() {
     resetForm();
     setIsModalOpen(true);
   }
-  console.log({ form });
+  // console.log({ form });
 
   const setFormData = (q: any) => {
     setForm({
@@ -160,7 +160,7 @@ function AssessmentManagement() {
   };
 
   function openEdit(q: any) {
-    console.log({ q });
+    // console.log({ q });
     setEditing(true);
     setFormData(q);
     setIsModalOpen(true);
@@ -180,7 +180,7 @@ function AssessmentManagement() {
       answerType:
         form.answerTypes.length > 1 ? form.answerTypes : form.answerTypes[0],
     } as any;
-    console.log({ payload });
+    // console.log({ payload });
 
     if (editing && form.id) {
       updateMutation.mutate(payload as any, {

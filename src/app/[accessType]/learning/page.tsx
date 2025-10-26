@@ -72,7 +72,7 @@ export default function ResourcesPage() {
     isLoading: programsLoading,
     error: programsError,
   } = programs;
-  console.log({ program, programsLoading, programsError });
+  // console.log({ program, programsLoading, programsError });
   return (
     <div className="space-y-8">
       {/* Recommendation Card */}

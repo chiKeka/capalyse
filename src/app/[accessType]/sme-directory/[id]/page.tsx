@@ -128,7 +128,7 @@ export default function SingleSMEDirectoryPage({}: Props) {
   const { data: smeSaveStatus, isLoading: isSmeSaveStatusLoading } =
     useSmeSaveStatus(accessType === 'investor' ? (id as string) : undefined);
   const { saveSme } = useSmeDirectoryMutations();
-  console.log({ smeData, smeSaveStatus });
+  // console.log({ smeData, smeSaveStatus });
   const overviewCards = [
     {
       id: 1,
@@ -185,7 +185,7 @@ export default function SingleSMEDirectoryPage({}: Props) {
 
   const checklist = getCategoryBreakdown();
   const img = `${process.env.NEXT_PUBLIC_API_URL}/documents/${selectedDoc?.id}/download`;
-  console.log({ img });
+  // console.log({ img });
   return (
     <div className="w-full h-full gap-6 flex flex-col">
       <div>

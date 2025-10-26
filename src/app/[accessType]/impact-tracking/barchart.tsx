@@ -1,4 +1,4 @@
-import { useImpactSummary } from '@/hooks/usePrograms';
+import { useImpactMonthly } from "@/hooks/usePrograms";
 import {
   BarElement,
   CategoryScale,
@@ -7,8 +7,8 @@ import {
   LinearScale,
   Title,
   Tooltip,
-} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -37,31 +37,37 @@ export const options = {
 
 const labels: string[] = [];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      data: [] as number[],
-      backgroundColor: '#2E8E73',
-      borderRadius: 8,
-      borderSkipped: false,
-    },
-    {
-      data: [] as number[],
-      backgroundColor: '#ABD2C7',
-      borderRadius: 4,
-      borderSkipped: false,
-    },
-  ],
+type dataSets = {
+  month: string;
+  amount: {
+    amount: number;
+    currency: string;
+  };
 };
 
 export function BarChart() {
-  const { data: summary } = useImpactSummary({
-    from: '2024-01-01',
-    to: '2024-12-31',
-    currency: 'NGN',
-  });
-  console.log(summary);
+  const { data: summary } = useImpactMonthly();
+  const summaryData = Array.isArray(summary) ? summary : summary?.data || [];
+  const labels = summaryData.map((item: dataSets) => item.month);
+  const data = {
+    labels,
+    datasets: [
+      {
+        labels: "Female",
+        data: summaryData?.map((item: dataSets) => item.amount?.amount ?? 0),
+        backgroundColor: "#2E8E73",
+        borderRadius: 8,
+        borderSkipped: false,
+      },
+      {
+        labels: "Male",
+        data: summaryData?.map((item: dataSets) => item.amount?.amount ?? 0),
+        backgroundColor: "#ABD2C7",
+        borderRadius: 4,
+        borderSkipped: false,
+      },
+    ],
+  };
   return (
     <div className="border rounded-lg p-4 h-full w-full">
       <div className="flex mb-8 items-center justify-between ">
@@ -71,7 +77,9 @@ export function BarChart() {
         </div>
         <div className="w-fit"></div>
       </div>
-      <Bar height={400} width={1024} options={options as any} data={data} />
+      <Bar height={400} width={1024} data={data} />
     </div>
   );
 }
+
+//options={options as any}

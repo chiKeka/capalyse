@@ -56,9 +56,9 @@ const InvestorInvestments = () => {
     const oldpayload = {
       ...data.investments?.[0],
     };
-    console.log({
-      oldpayload,
-    });
+    // console.log({
+    //   oldpayload,
+    // });
 
     try {
       if (isEditing && selectedInvestment) {
@@ -67,7 +67,7 @@ const InvestorInvestments = () => {
           id: selectedInvestment.id,
           ...oldpayload,
         };
-        console.log({ updatePayload });
+        // console.log({ updatePayload });
         await updateInvestment.mutateAsync(updatePayload);
         toast.success('Investment updated successfully');
         handleNewInvestment(); // Reset form after successful update

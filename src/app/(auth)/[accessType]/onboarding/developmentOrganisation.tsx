@@ -137,7 +137,7 @@ const DevelopmentOrganisation = forwardRef<
               resolve(true);
             })
             .catch((err) => {
-              console.log(err);
+              // console.log(err);
               toast.error(err?.message);
               resolve(false);
             });
@@ -191,7 +191,7 @@ const DevelopmentOrganisation = forwardRef<
           autoComplete="new-country"
           inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
           onChange={(country: any) => {
-            console.log({ country });
+            // console.log({ country });
             if (
               country &&
               typeof country === "object" &&
@@ -376,7 +376,7 @@ const DevelopmentOrganisation = forwardRef<
                 onSuccess?.();
               })
               .catch((err) => {
-                console.log(err);
+                // console.log(err);
                 toast.error(err?.message);
               });
           })}

@@ -11,7 +11,7 @@ interface ProtectedDashboardProps {
 
 export function ProtectedDashboard({ children }: ProtectedDashboardProps) {
   const { data: session, isPending } = useSession();
-  console.log({ session });
+  // console.log({ session });
   const router = useRouter();
 
   useEffect(() => {

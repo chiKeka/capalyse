@@ -31,7 +31,7 @@ function CompliancePage() {
   const [files, setFiles] = useState<complianceAttachment[]>([]);
   const { createCompliance, refreshCompliance } = useCompliance();
   const { data: complianceCases } = useGetComplianceCases();
-  console.log({ complianceCases });
+  // console.log({ complianceCases });
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
   // Catalog data
@@ -61,13 +61,13 @@ function CompliancePage() {
         .then(() => {
           toast.success('Compliance refreshed successfully');
           // reset();
-          console.log({ data });
+          // console.log({ data });
         });
     } else {
       createCompliance.mutateAsync(data).then(() => {
         toast.success('Compliance submitted successfully');
         // reset();
-        console.log({ data });
+        // console.log({ data });
       });
     }
   };

@@ -24,11 +24,11 @@ const ForgotPassword = () => {
       { ...data, type: 'forget-password' },
       {
         onRequest: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(false);
           toast.success('Reset token sent to your email');
           router.push(`/verify?reset_email=${data.email}`);

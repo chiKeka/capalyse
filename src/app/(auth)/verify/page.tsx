@@ -55,7 +55,7 @@ const VerifyPageContent = () => {
 
   const onSubmit = (data: OTPForm) => {
     if (resetEmail) {
-      console.log({ ...data, resetEmail });
+      // console.log({ ...data, resetEmail });
       localStorage.setItem(
         "reset_password",
         JSON.stringify({ ...data, email: resetEmail })
@@ -71,22 +71,22 @@ const VerifyPageContent = () => {
       },
       {
         onRequest: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(true);
         },
         onSuccess: async (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(false);
           toast.success("Email verified successfully");
           const auth = await authClient.getSession();
 
           setAuth(auth?.data?.user);
           const rootRoute = getKeyByValue(UserType, auth?.data?.user?.roles!);
-          console.log({ auth, rootRoute });
+          // console.log({ auth, rootRoute });
           if (rootRoute) router.push(`/${rootRoute}/onboarding`);
         },
         onError: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(false);
           toast.error(ctx.error.message);
         },
@@ -97,18 +97,18 @@ const VerifyPageContent = () => {
     if (!canResend) return;
     setIsResending(true);
     try {
-      console.log("Resending OTP...");
+      // console.log("Resending OTP...");
       await authClient.emailOtp.sendVerificationOtp({
         email: email,
         type: "email-verification",
         fetchOptions: {
           onSuccess: (ctx) => {
-            console.log({ ctx });
+            // console.log({ ctx });
             setIsResending(false);
             toast.success("OTP sent successfully");
           },
           onError: (ctx) => {
-            console.log({ ctx });
+            // console.log({ ctx });
             setIsResending(false);
             toast.error(ctx.error.message);
           },
@@ -127,12 +127,12 @@ const VerifyPageContent = () => {
         });
       }, 1000);
     } catch (error) {
-      console.error("Resend error:", error);
+      // console.error("Resend error:", error);
     } finally {
       setIsResending(false);
     }
   };
- 
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;

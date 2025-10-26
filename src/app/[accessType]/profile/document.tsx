@@ -12,7 +12,7 @@ export default function Document({}: Props) {
 
   const deleteMutation = useDeleteDocument();
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
-  console.log(documents, 'documents');
+  // console.log(documents, 'documents');
   const handleDelete = (id: string) => {
     setSelectedDocument(id || null);
     deleteMutation.mutate(id);

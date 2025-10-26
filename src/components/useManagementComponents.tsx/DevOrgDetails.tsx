@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 
 const DevOrgDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetDevOrgById(id);
-  console.log({ businessProfile, error });
+  // console.log({ businessProfile, error });
   if (isLoading) return <Loader2Icon className="animate-spin w-12 h-12" />;
   if (error) {
     toast.error((error as any)?.error);

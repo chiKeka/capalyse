@@ -334,13 +334,13 @@ All queries and mutations include error handling:
 const { data, error, isLoading } = useGetSmeScore();
 
 if (error) {
-  console.error('Failed to fetch score:', error);
+  // console.error('Failed to fetch score:', error);
   return <div>Error loading assessment data</div>;
 }
 
 const mutation = useSubmitResponse();
 if (mutation.error) {
-  console.error('Failed to submit response:', mutation.error);
+  // console.error('Failed to submit response:', mutation.error);
 }
 ```
 

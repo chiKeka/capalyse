@@ -34,7 +34,7 @@ function PersonalInfo({}: Props) {
     },
     mode: 'all',
   });
-  console.log({ auth, details });
+  // console.log({ auth, details });
 
   // Update form values when data is loaded
   useEffect(() => {
