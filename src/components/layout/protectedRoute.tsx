@@ -1,6 +1,8 @@
 'use client';
 
+import { authAtom } from '@/lib/atoms/atoms';
 import { useSession } from '@/lib/auth-client';
+import { useAtomValue } from 'jotai';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -10,15 +12,18 @@ interface ProtectedDashboardProps {
 }
 
 export function ProtectedDashboard({ children }: ProtectedDashboardProps) {
-  const { data: session, isPending } = useSession();
-  // console.log({ session });
+  const auth = useAtomValue(authAtom);
+  const { data: session, isPending, refetch } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!auth?.roles) {
       router.push('/signin');
     }
-  }, [session, isPending, router]);
+    if (auth?.roles && !session) {
+      refetch();
+    }
+  }, [auth, router]);
 
   if (isPending) {
     return (

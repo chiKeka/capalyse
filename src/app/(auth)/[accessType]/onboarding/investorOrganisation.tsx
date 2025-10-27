@@ -43,7 +43,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       isLoading: countriesLoading,
       isError: countriesError,
     } = useAfricanCountries();
-    console.log({ countries });
+
     const {
       register,
       handleSubmit,
@@ -102,7 +102,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
         },
         onError: (error: any) => {
           // console.log(error)
-        }
+        },
       });
     };
 

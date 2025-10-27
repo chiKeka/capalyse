@@ -1,16 +1,16 @@
-"use client";
-import AuthLayout from "@/components/layout/auth";
-import Button from "@/components/ui/Button";
-import { Verify } from "@/components/ui/inputOtp";
-import { authAtom } from "@/lib/atoms/atoms";
-import { authClient, useSession } from "@/lib/auth-client";
-import { getKeyByValue } from "@/lib/uitils/fns";
-import { UserType } from "@/lib/utils";
-import { useSetAtom } from "jotai";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+'use client';
+import AuthLayout from '@/components/layout/auth';
+import Button from '@/components/ui/Button';
+import { Verify } from '@/components/ui/inputOtp';
+import { authAtom } from '@/lib/atoms/atoms';
+import { authClient, useSession } from '@/lib/auth-client';
+import { getKeyByValue } from '@/lib/uitils/fns';
+import { UserType } from '@/lib/utils';
+import { useSetAtom } from 'jotai';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface OTPForm {
   otp: string;
@@ -21,8 +21,8 @@ const VerifyPageContent = () => {
   const [countdown, setCountdown] = useState(1 * 60); // 9 minutes in seconds
   const [canResend, setCanResend] = useState(false);
   const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
-  const resetEmail = searchParams.get("reset_email");
+  const email = searchParams.get('email') || '';
+  const resetEmail = searchParams.get('reset_email');
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
   const sessionData = useSession();
@@ -51,13 +51,13 @@ const VerifyPageContent = () => {
     setError,
   } = useForm<OTPForm>();
   const [isLoading, setIsLoading] = useState(false);
-  const [otpValue, setOtpValue] = useState("");
+  const [otpValue, setOtpValue] = useState('');
 
   const onSubmit = (data: OTPForm) => {
     if (resetEmail) {
       // console.log({ ...data, resetEmail });
       localStorage.setItem(
-        "reset_password",
+        'reset_password',
         JSON.stringify({ ...data, email: resetEmail })
       );
       router.push(`/reset_password`);
@@ -77,7 +77,7 @@ const VerifyPageContent = () => {
         onSuccess: async (ctx) => {
           // console.log({ ctx });
           setIsLoading(false);
-          toast.success("Email verified successfully");
+          toast.success('Email verified successfully');
           const auth = await authClient.getSession();
 
           setAuth(auth?.data?.user);
@@ -100,12 +100,12 @@ const VerifyPageContent = () => {
       // console.log("Resending OTP...");
       await authClient.emailOtp.sendVerificationOtp({
         email: email,
-        type: "email-verification",
+        type: 'email-verification',
         fetchOptions: {
           onSuccess: (ctx) => {
             // console.log({ ctx });
             setIsResending(false);
-            toast.success("OTP sent successfully");
+            toast.success('OTP sent successfully');
           },
           onError: (ctx) => {
             // console.log({ ctx });
@@ -136,13 +136,14 @@ const VerifyPageContent = () => {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
+    return `${mins.toString().padStart(2, '0')}:${secs
       .toString()
-      .padStart(2, "0")}`;
+      .padStart(2, '0')}`;
   };
   return (
     <AuthLayout
       google_signtures={false}
+      noRedirect
       title={`Enter the 6-digit code sent to your mail ${email}`}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -151,7 +152,7 @@ const VerifyPageContent = () => {
             validCode="123456"
             onValueChange={(value) => {
               setOtpValue(value);
-              setValue("otp", value);
+              setValue('otp', value);
             }}
           />
 
@@ -172,29 +173,29 @@ const VerifyPageContent = () => {
           <Button
             className="w-full"
             variant="primary"
-            state={isLoading ? "loading" : "default"}
+            state={isLoading ? 'loading' : 'default'}
             type="submit"
             disabled={isLoading || otpValue.length !== 6}
           >
-            {isLoading ? "Verifying..." : "Next"}
+            {isLoading ? 'Verifying...' : 'Next'}
           </Button>
         </div>
 
         <div className="w-full text-sm mx-auto mt-10 text-center">
-          Didn't receive a mail?{" "}
+          Didn't receive a mail?{' '}
           <button
             type="button"
             onClick={handleResend}
             // disabled={!canResend || isResending}
             className={`font-bold ${
               canResend && !isResending
-                ? "text-green cursor-pointer"
-                : "text-gray-400 cursor-not-allowed"
+                ? 'text-green cursor-pointer'
+                : 'text-gray-400 cursor-not-allowed'
             }`}
           >
-            {isResending ? "Sending..." : "Resend"}
-          </button>{" "}
-          in{" "}
+            {isResending ? 'Sending...' : 'Resend'}
+          </button>{' '}
+          in{' '}
           <span className="text-[#DC2626] font-bold">
             {formatTime(countdown)}
           </span>
