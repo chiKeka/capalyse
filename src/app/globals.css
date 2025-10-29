@@ -304,3 +304,7 @@ h6 {
     @apply bg-background text-foreground;
   }
 }
+
+.bg-hero {
+  background-image: url('/images/background2.png');
+}
