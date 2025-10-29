@@ -4,7 +4,7 @@ import { authClient, useSession } from '@/lib/auth-client';
 import { routes } from '@/lib/routes';
 import { getKeyByValue } from '@/lib/uitils/fns';
 import { onboardingSteps, UserType } from '@/lib/utils';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -15,6 +15,7 @@ interface AuthLayoutProps {
   sub_caption?: string;
   inputFieldSize?: string;
   layoutSize?: string;
+  noRedirect?: boolean;
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({
@@ -22,10 +23,12 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   children,
   google_signtures,
   sub_caption,
+  noRedirect = false,
   inputFieldSize = 'max-w-md ',
   layoutSize = 'lg:max-w-2xl',
 }) => {
   const setAuth = useSetAtom(authAtom);
+  const auth = useAtomValue(authAtom);
   const router = useRouter();
   const { data: profileNextStep } = useGetProfileNextStep();
   const urlSearchParams = useSearchParams();
@@ -58,14 +61,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       const session = await authClient.getSession();
       setAuth(session?.data?.user as any);
     };
-    getSession();
+    if (!auth) {
+      getSession();
+    }
 
-    if (isIncompleteStep) {
-      router?.push(`/${rootRoute}/onboarding`);
-    } else {
-      router?.push(
-        routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
-      );
+    if (!noRedirect && auth && rootRoute) {
+      if (isIncompleteStep) {
+        router?.push(`/${rootRoute}/onboarding`);
+      } else {
+        router?.push(
+          routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root
+        );
+      }
     }
   }, [isAuth, isIncompleteStep, rootRoute, routes, router, isAuthLoading]);
 

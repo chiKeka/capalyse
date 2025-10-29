@@ -178,7 +178,7 @@ function FinancePage({}: Props) {
     icon2: any;
   };
 
-  console.log({ summary, growth, docsData });
+  // console.log({ summary, growth, docsData });
 
   const overviewCards: OverviewCard[] = useMemo(() => {
     const overall = summary?.overall || {};

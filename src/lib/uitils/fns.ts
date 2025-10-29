@@ -59,7 +59,7 @@ export const handleImageUpload = async (
   await axios
     .post(uploadUrl, formData)
     .then(({ data }) => {
-      console.log({ data });
+      // console.log({ data });
       onSuccess?.(data);
       return data?.secure_url;
     })
@@ -146,7 +146,25 @@ export function formatDateRange(dateRange: string): string {
 
     return `${startFormatted} — ${endFormatted}, ${year}`;
   } catch (error) {
-    console.error("Error formatting date range:", error);
+    // console.error("Error formatting date range:", error);
     return dateRange; // Return original string if there's an error
   }
+}
+
+
+export function generateColor(amount: number, min: number, max: number): string {
+  // Clamp amount between min and max
+  const normalized = Math.min(Math.max((amount - min) / (max - min), 0), 1);
+
+  // Start (#036449) and end (#ABD2C7) RGB values
+  const start = { r: 3, g: 100, b: 73 }; // #036449
+  const end = { r: 171, g: 210, b: 199 }; // #ABD2C7
+
+  // Linear interpolation between start and end colors
+  const r = Math.round(start.r + normalized * (end.r - start.r));
+  const g = Math.round(start.g + normalized * (end.g - start.g));
+  const b = Math.round(start.b + normalized * (end.b - start.b));
+
+  // Convert to hex string
+  return `rgb(${r}, ${g}, ${b})`;
 }

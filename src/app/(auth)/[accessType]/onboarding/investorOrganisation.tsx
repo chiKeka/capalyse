@@ -43,7 +43,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       isLoading: countriesLoading,
       isError: countriesError,
     } = useAfricanCountries();
-    console.log({ countries });
+
     const {
       register,
       handleSubmit,
@@ -93,14 +93,16 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       const payload = {
         ...data,
       };
-      console.log('SUBMIT PAYLOAD:', payload); // Log payload for user to see
+      // console.log('SUBMIT PAYLOAD:', payload); // Log payload for user to see
       investor_org_info.mutateAsync(payload, {
         onSuccess: () => {
           if (props.onSuccess) {
             props.onSuccess();
           }
         },
-        onError: (error: any) => console.log(error),
+        onError: (error: any) => {
+          // console.log(error)
+        },
       });
     };
 

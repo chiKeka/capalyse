@@ -25,7 +25,7 @@ export default function InvestorDashBoard() {
     useGetReadinessScore();
   const { data: user } = ProfileData();
   const { data: investorsAnalytics } = useGetInvestorsAnalytics();
-  console.log({ investorsAnalytics });
+  // console.log({ investorsAnalytics });
   const investmentData = formatInvestmentData(
     investorsAnalytics?.investmentOpportunities ?? []
   );

@@ -63,6 +63,7 @@ const Page = () => {
   const isCompletedStep =
     (onboardingSteps.find((step) => step.role === authState?.roles)?.steps
       ?.length || 0) >= (profileNextStep?.completedSteps?.length || 0);
+
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showReadiness, setShowReadiness] = useState(false);
   useEffect(() => {

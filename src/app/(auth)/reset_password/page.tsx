@@ -41,17 +41,17 @@ const ResetPassword = () => {
       { email, otp, password: data.new_password },
       {
         onRequest: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           localStorage.removeItem('reset_password');
           setShowModal(true);
           setIsLoading(false);
         },
         onError: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           toast.error(ctx.error.message || 'Failed to reset password');
           setIsLoading(false);
         },

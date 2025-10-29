@@ -78,7 +78,7 @@ function page({}: Props) {
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
   const { data: investments = [], isLoading, error } = useInvestments();
-  console.log({ portfolioSummary });
+  // console.log({ portfolioSummary });
   const overviewCards = useMemo(() => {
     return [
       {

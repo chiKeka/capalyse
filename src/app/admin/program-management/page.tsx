@@ -24,7 +24,7 @@ const ProgramManagement = () => {
     limit: 20,
     q: debouncedSearch || undefined,
   });
-  console.log({ data });
+  // console.log({ data });
 
   return (
     <div>

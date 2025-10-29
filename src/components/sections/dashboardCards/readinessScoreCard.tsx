@@ -22,7 +22,7 @@ function ReadinessScoreCard({
   extraContent,
 }: Props) {
   const [open, setOpen] = useState(false);
-  console.log({ readinessData });
+  // console.log({ readinessData });
 
   // Use readinessData overall score if available, otherwise fall back to scoreValue
   const displayScore =

@@ -72,7 +72,7 @@ export const useGetRandomResources = () => {
       return randomThree;
     },
     throwOnError: (error: any) => {
-      console.log({ error });
+      // console.log({ error });
       toast.error(error?.response?.data?.error || 'Failed to fetch resources');
       return false;
     },

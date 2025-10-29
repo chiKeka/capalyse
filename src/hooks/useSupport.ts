@@ -17,7 +17,7 @@ export const useGetSingleTicket = (id: string) => {
     queryKey: ['sme_single_support'],
     queryFn: async () => {
       const resp = await api.get(ApiEndPoints.TicketsActions(id));
-      console.log({ resp });
+      // console.log({ resp });
       return resp.data;
     },
   });

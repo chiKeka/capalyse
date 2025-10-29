@@ -98,7 +98,7 @@ function Page({}: Props) {
   const [statusFilter, setStatusFilter] = useState('all');
 
   const { data: supportData, isLoading } = useGetSupport();
-  console.log({ supportData });
+  // console.log({ supportData });
 
   // Filter data based on status
   const filteredData =

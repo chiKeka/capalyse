@@ -51,39 +51,45 @@ function SignIn({}: Props) {
           setIsLoading(true);
         },
         onSuccess: (ctx) => {
+          console.log({ ctx });
           authClient.getSession().then((ctx) => {
             const { data } = ctx;
-            setAuth(data?.user as any);
-            if (!data?.user?.emailVerified) {
-              authClient.emailOtp.sendVerificationOtp({
-                email: form?.email,
-                type: 'email-verification',
-              });
-              router.push(`/verify?email=${data?.user?.email}`);
-              return;
-            }
-            if (data?.user?.roles?.toLocaleUpperCase() === 'ADMIN') {
-              router.push(`/admin`);
-              return;
-            } else {
-              const rootRoute = getKeyByValue(UserType, data?.user?.roles);
-
-              if (rootRoute && isIncompleteStep) {
-                router?.push(`/${rootRoute}/onboarding`);
+            console.log({ data });
+            if (data) {
+              setAuth(data?.user as any);
+              if (!data?.user?.emailVerified) {
+                authClient.emailOtp.sendVerificationOtp({
+                  email: form?.email,
+                  type: 'email-verification',
+                });
+                router.push(`/verify?email=${data?.user?.email}`);
+                return;
               }
-              // else {
-              //   router.push(
-              //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
-              //       ?.root
-              //   );
-              // }
+              if (data?.user?.roles?.toLocaleUpperCase() === 'ADMIN') {
+                router.push(`/admin`);
+                return;
+              } else {
+                const rootRoute = getKeyByValue(UserType, data?.user?.roles);
+
+                if (rootRoute && isIncompleteStep) {
+                  router?.push(`/${rootRoute}/onboarding`);
+                }
+                // else {
+                //   router.push(
+                //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
+                //       ?.root
+                //   );
+                // }
+              }
+            } else {
+              throw new Error('Signin faled no session found');
             }
           });
           setIsLoading(false);
           toast.success('Sign in successful');
         },
         onError: (ctx) => {
-          console.log({ ctx });
+          // console.log({ ctx });
           setIsLoading(false);
           toast.error(ctx.error.message);
         },

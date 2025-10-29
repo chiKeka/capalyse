@@ -103,7 +103,7 @@ export default function page({}: Props) {
   const router = useRouter();
   const auth: any = useAtomValue(authAtom);
   const param = useParams();
-  console.log({ param });
+  // console.log({ param });
   const tabOptions = useMemo(() => {
     return param.accessType === 'sme'
       ? smeTabOptions
@@ -129,7 +129,7 @@ export default function page({}: Props) {
   const activeTab = tabOptions.find((tab) => tab.key === formState);
   const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
-  console.log({ user, auth });
+  // console.log({ user, auth });
 
   // Function to handle tab change and update URL
   const handleTabChange = (tabKey: string) => {

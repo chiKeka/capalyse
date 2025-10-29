@@ -43,7 +43,7 @@ function Page({}: Props) {
   const { data: ticketData, isLoading: ticketLoading } =
     useGetSingleTicket(ticketId);
   const { updateTicket, submitSupportMessage } = useSupportTicketMutations();
-  console.log({ ticketData });
+  // console.log({ ticketData });
 
   // Mock data for demonstration - replace with actual data from API
   const disputeHistory = useMemo(() => {
@@ -86,7 +86,7 @@ function Page({}: Props) {
   const handleStatusChange = (status: string) => {
     setSelectedStatus(status);
     // Here you would typically make an API call to update the status
-    console.log('Status changed to:', status);
+    // console.log('Status changed to:', status);
     updateTicket.mutate({ id: ticketId, rest: { status } });
     const message =
       status === 'in_progress'

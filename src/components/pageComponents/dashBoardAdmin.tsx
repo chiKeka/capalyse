@@ -73,7 +73,7 @@ export default function AdminDashBoard() {
       color: '#FCA5A5',
     },
   ];
-  console.log({ adminAnalytics, matches });
+  // console.log({ adminAnalytics, matches });
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard

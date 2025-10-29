@@ -41,7 +41,7 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
   if (!type) {
     return notFound();
   }
-  console.log({ data, type });
+  // console.log({ data, type });
   return (
     <div>
       <div className="flex items-center my-8 justify-between max-lg:flex-wrap">

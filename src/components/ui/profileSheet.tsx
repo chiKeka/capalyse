@@ -53,7 +53,7 @@ export function ProfileSheet({
     },
   ];
 
-  console.log(data);
+  // console.log(data);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -139,7 +139,7 @@ export function NetworkProfileSheet({
     "Bulk packaging supply",
   ];
 
-  console.log(data);
+  // console.log(data);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">

@@ -58,12 +58,6 @@ function page({}: Props) {
     return isMyProgram && statusMatch;
   });
 
-  console.log({
-    allPrograms: programs?.programs?.length,
-    myPrograms: filteredPrograms?.length,
-    currentUser: auth?.id,
-    currentTab,
-  });
 
   return (
     <div className="flex flex-col gap-6">
