@@ -6,7 +6,8 @@ const GridSvg = ({ className }: { className: string }) => {
       viewBox="0 0 1440 916"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`${className} opacity-10 `}
+      preserveAspectRatio="none"
     >
       <path d="M0 0V915" stroke="#EEF6F4" strokeWidth="0.59488" />
       <path d="M119.925 0V915" stroke="#EEF6F4" strokeWidth="0.59488" />
