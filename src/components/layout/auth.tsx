@@ -125,8 +125,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           authClient.getSession().then((session) => {
             setAuth(session?.data?.user);
           });
-          console.log({ rootRoute });
-          router.push(`/${rootRoute}/onboarding`);
+          const onboardRootRoute = getKeyByValue(UserType, savedRole)
+          router.push(`/${onboardRootRoute}/onboarding`);
         },
         onError: () => {
           roleUpdateInFlight.current = false;
