@@ -43,7 +43,8 @@ export const useResources = () => {
       console.log({ res });
       return res?.data.data;
     },
-    throwOnError: () => {
+    throwOnError: (e) => {
+      console.log({ e });
       toast.error('Failed to fetch resources');
       return false;
     },
@@ -70,10 +71,11 @@ export const useGetRandomResources = () => {
         link: item?.link,
       }));
       const randomThree = getRandomThree(mapped);
+      console.log({ mapped, randomThree})
       return randomThree;
     },
     throwOnError: (error: any) => {
-      // console.log({ error });
+      console.log({ error });
       toast.error(error?.response?.data?.error || 'Failed to fetch resources');
       return false;
     },
