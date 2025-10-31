@@ -123,8 +123,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           removeCookie(LOGIN_OPTION_COOKIE_KEY);
           removeCookie(USER_TYPE_COOKIE_KEY);
           authClient.getSession().then((session) => {
-            setAuth(session?.data?.user as any);
+            setAuth(session?.data?.user);
           });
+          if (rootRoute) router.push(`/${rootRoute}/onboarding`);
         },
         onError: () => {
           roleUpdateInFlight.current = false;
