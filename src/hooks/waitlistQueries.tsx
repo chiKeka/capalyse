@@ -40,6 +40,7 @@ export const useResources = () => {
     queryKey: ['resources'],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/resources`);
+      console.log({ res });
       return res?.data.data;
     },
     throwOnError: () => {
