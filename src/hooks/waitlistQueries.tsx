@@ -14,7 +14,7 @@ export const useWaitlistCount = () => {
     queryKey: ['waitlistCount'],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/waitlist/count`);
-      return res?.data.data;
+      return res?.data.count;
     },
   });
 };
@@ -40,8 +40,7 @@ export const useResources = () => {
     queryKey: ['resources'],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/resources`);
-      console.log({ res });
-      return res?.data.data;
+      return res?.data.resources;
     },
     throwOnError: (e) => {
       console.log({ e });
@@ -60,10 +59,10 @@ export const useGetRandomResources = () => {
     queryKey: ['resources'],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/resources`);
-      return res?.data.data;
+      return res?.data.resources;
     },
     select: (data) => {
-      const mapped = data?.resources?.map((item: any) => ({
+      const mapped = data?.map((item: any) => ({
         title: item?.title,
         desc: item?.desc,
         image: item?.image,
@@ -71,7 +70,6 @@ export const useGetRandomResources = () => {
         link: item?.link,
       }));
       const randomThree = getRandomThree(mapped);
-      console.log({ mapped, randomThree})
       return randomThree;
     },
     throwOnError: (error: any) => {

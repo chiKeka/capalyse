@@ -125,7 +125,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           authClient.getSession().then((session) => {
             setAuth(session?.data?.user);
           });
-          if (rootRoute) router.push(`/${rootRoute}/onboarding`);
+          console.log({ rootRoute });
+          router.push(`/${rootRoute}/onboarding`);
         },
         onError: () => {
           roleUpdateInFlight.current = false;
@@ -143,7 +144,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     // }
     const getSession = async () => {
       const session = await authClient.getSession();
-      setAuth(session?.data?.user as any);
+      setAuth(session?.data?.user);
     };
     if (!auth) {
       getSession();
