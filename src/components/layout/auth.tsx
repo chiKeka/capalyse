@@ -4,9 +4,10 @@ import { authClient, useSession } from '@/lib/auth-client';
 import { routes } from '@/lib/routes';
 import { getKeyByValue } from '@/lib/uitils/fns';
 import { onboardingSteps, UserType } from '@/lib/utils';
+import Cookies from 'js-cookie';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 interface AuthLayoutProps {
   title?: string;
@@ -17,6 +18,35 @@ interface AuthLayoutProps {
   layoutSize?: string;
   noRedirect?: boolean;
 }
+
+const LOGIN_OPTION_COOKIE_KEY = 'capalyze_auth_login_option';
+const USER_TYPE_COOKIE_KEY = 'capalyze_auth_user_type';
+
+const cookieOptions = {
+  path: '/',
+  sameSite: 'lax' as const,
+  secure: process.env.NODE_ENV === 'production',
+};
+
+const resolveRoleValue = (raw?: string | null) => {
+  if (!raw) return undefined;
+  const lower = raw.toLowerCase();
+  const fromKey = UserType[lower as keyof typeof UserType];
+  if (fromKey) return fromKey.toUpperCase();
+  const fromValue = Object.values(UserType).find(
+    (value) => value.toLowerCase() === lower
+  );
+  return fromValue ? fromValue.toUpperCase() : undefined;
+};
+
+const deriveRoleFromPathname = (pathname: string | null) => {
+  if (!pathname) return undefined;
+  const [segment] = pathname.split('/').filter(Boolean);
+  if (!segment) return undefined;
+  return resolveRoleValue(segment);
+};
+
+const removeCookie = (key: string) => Cookies.remove(key, { path: cookieOptions.path });
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({
   title,
@@ -36,6 +66,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const { data: isAuth, isPending: isAuthLoading } = authClient.useSession();
+  const roleUpdateInFlight = useRef(false);
 
   const rootRoute = getKeyByValue(UserType, isAuth?.user?.roles!);
   const sessionData = useSession();
@@ -45,13 +76,65 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       (step) => step.role === sessionData?.data?.user?.roles!
     )?.steps?.length!;
 
+  const computePreferredRole = useCallback(() => {
+    const roleFromPath = deriveRoleFromPathname(pathname);
+    if (roleFromPath) return roleFromPath;
+    const paramRole =
+      urlSearchParams?.get('type') ?? urlSearchParams?.get('accessType');
+    const resolvedParamRole = resolveRoleValue(paramRole);
+    if (resolvedParamRole) return resolvedParamRole;
+    return resolveRoleValue(Cookies.get(USER_TYPE_COOKIE_KEY));
+  }, [pathname, urlSearchParams]);
+
   const googleSignIn = async () => {
     setIsLoading(true);
+    Cookies.set(LOGIN_OPTION_COOKIE_KEY, 'google', cookieOptions);
+    const preferredRole = computePreferredRole();
+    if (preferredRole) {
+      Cookies.set(USER_TYPE_COOKIE_KEY, preferredRole, cookieOptions);
+    }
     await authClient.signIn.social({
       provider: 'google',
       callbackURL: `${window?.location?.origin}/signin`,
     });
   };
+
+  useEffect(() => {
+    const sessionUser = sessionData?.data?.user;
+    if (!sessionUser) return;
+
+    const loginOption = Cookies.get(LOGIN_OPTION_COOKIE_KEY);
+    if (loginOption !== 'google') return;
+
+    if (sessionUser.roles) {
+      removeCookie(LOGIN_OPTION_COOKIE_KEY);
+      return;
+    }
+
+    if (roleUpdateInFlight.current) return;
+    const savedRole = computePreferredRole();
+    if (!savedRole) return;
+
+    roleUpdateInFlight.current = true;
+    authClient.updateUser(
+      { roles: savedRole },
+      {
+        onSuccess: () => {
+          removeCookie(LOGIN_OPTION_COOKIE_KEY);
+          removeCookie(USER_TYPE_COOKIE_KEY);
+          authClient.getSession().then((session) => {
+            setAuth(session?.data?.user as any);
+          });
+        },
+        onError: () => {
+          roleUpdateInFlight.current = false;
+        },
+        onSettled: () => {
+          roleUpdateInFlight.current = false;
+        },
+      }
+    );
+  }, [computePreferredRole, sessionData?.data?.user, setAuth]);
 
   useEffect(() => {
     // if (isAuth?.user && !isAuthLoading) {
