@@ -1,16 +1,16 @@
-"use client";
-import Image from "next/image";
-import { useState } from "react";
-import GetStarted from "../layout/GetStarted";
-import Button from "../ui/Button";
-import GridSvg from "../ui/gridSvg";
-import { Waitlist } from "./waitlist";
+'use client';
+import Image from 'next/image';
+import { useState } from 'react';
+import GetStarted from '../layout/GetStarted';
+import Button from '../ui/Button';
+import GridSvg from '../ui/gridSvg';
+import { Waitlist } from './waitlist';
 
 const LandingHero = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   // console.log(data)
   return (
-    <section className=" py-20 relative bg-[#01281D]  bg-hero  bg-no-repeat  xl:bg-contain   bg-[position:360%_center]">
+    <section className="py-20 relative bg-[#01281D] bg-no-repeat xl:bg-contain bg-[position:360%_center]">
       <GridSvg className="absolute inset-0  w-screen h-full" />
       <div className="max-w-7xl z-10 mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid gap-12 items-center text-black-500 ">
