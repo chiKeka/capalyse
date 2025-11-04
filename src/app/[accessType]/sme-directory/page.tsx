@@ -29,7 +29,7 @@ const SMEDirectoryPage = () => {
     limit: 20,
     q: debouncedSearch || undefined,
   });
-  // console.log(smes);
+
   const params = useParams();
 
   const columns = useMemo(
@@ -53,9 +53,9 @@ const SMEDirectoryPage = () => {
       },
       { header: "Industry", accessor: "industry" },
       { header: "Country", accessor: "location" },
-      { header: "Readiness Score", accessor: "readinessScore" },
-      { header: "Revenue", accessor: "revenue" },
-      { header: "Team Size", accessor: (row: any) => row.teamMembers?.length },
+      { header: "Readiness Score", accessor: "readinessPct" },
+      { header: "Revenue", accessor: "totalRevenue" },
+      { header: "Team Size", accessor: "teamSize" },
       {
         header: "Action",
         accessor: (row: any) => (

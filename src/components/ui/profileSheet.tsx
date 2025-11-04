@@ -139,7 +139,7 @@ export function NetworkProfileSheet({
     "Bulk packaging supply",
   ];
 
-  // console.log(data);
+ console.log(data);
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -154,15 +154,15 @@ export function NetworkProfileSheet({
             />
             <div>
               <p className="text-black font-bold text-2xl">
-                {data ? data?.businessName : "GreenPack Solutions Ltd"}
+                {data ? data?.name : "GreenPack Solutions Ltd"}
               </p>
               <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
-                <p>{data ? data?.businessStage : "Packaging"}</p>
+                <p>{data ? data?.businessType : "Packaging"}</p>
                 <p className="text-2xl font-medium mb-2">.</p>
-                <p>{data ? data?.countryOfOperation?.join(", ") : "Lagos"}</p>
+                <p>{data ? data?.location: "Lagos"}</p>
               </span>
               <span className="inline-flex mt-2 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
-                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> Connected
+                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {data?.status}
               </span>
             </div>
           </div>
