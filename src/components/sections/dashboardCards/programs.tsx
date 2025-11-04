@@ -12,6 +12,7 @@ import {
 import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useAtomValue } from "jotai";
+import { Settings, Settings2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -67,7 +68,7 @@ function Programs({
     color = "#FACC15";
     bg = "#FEF9C3";
   } else if (program?.status === "published") {
-    color ;
+    color;
     bg;
   } else if (program?.status === "cancel") {
     color = "#DC3545";
@@ -107,44 +108,49 @@ function Programs({
   };
   return (
     <div className="w-full gap-1 rounded-[12px] md:min-h-[239px] h-auto p-6 flex flex-col justify-between border-1 border-[#E8E8E8]">
-      <div
-        className="flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2"
-        style={{ backgroundColor: bg }}
-      >
+      <div className="flex gap-0.5">
         <div
-          className="rounded-full h-2 w-2 font-medium"
-          style={{ backgroundColor: color }}
-        />
-        {(params.accessType === "investor" || params.accessType === "sme") &&
-          label()}
-        {(params.accessType === "development" ||
-          params.accessType === "admin") && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size="small"
-                className="text-xs font-medium"
-              >
-                {label()}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-40 p-1 bg-white border border-[#E8E8E8] rounded-[8px] shadow-lg">
-              <div className="flex flex-col">
-                {STATUS_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleStatusUpdate(option.value)}
-                    className="text-left px-3 py-2 text-xs font-normal text-[#0F2501] hover:bg-[#F5F5F5] rounded-[4px] transition-colors w-full first:rounded-t-[4px] last:rounded-b-[4px]"
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        )}
+          className="flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2"
+          style={{ backgroundColor: bg }}
+        >
+          <div
+            className="rounded-full h-2 w-2 font-medium"
+            style={{ backgroundColor: color }}
+          />
+          {(params.accessType === "investor" || params.accessType === "sme") &&
+            label()}
+          {(params.accessType === "development" ||
+            params.accessType === "admin") && <div>{label()}</div>}
+        </div>
+
+        {/* {params.accessType === admin || } */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="ghost"
+              size="small"
+              className="text-xs capitalize text-green hover:bg-transparent cursor-pointer font-medium"
+            >
+              <Settings2 className="w-4 h-4" />
+              manage
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-40 p-1 bg-white border border-[#E8E8E8] rounded-[8px] shadow-lg">
+            <div className="flex flex-col">
+              {STATUS_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleStatusUpdate(option.value)}
+                  className="text-left px-3 py-2 text-xs font-normal text-[#0F2501] hover:bg-[#F5F5F5] rounded-[4px] transition-colors w-full first:rounded-t-[4px] last:rounded-b-[4px]"
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
+
       <p className="font-bold text-lg text-green">{program?.name}</p>
       <div className="flex items-center  gap-2">
         <img
