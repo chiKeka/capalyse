@@ -55,7 +55,12 @@ function page({}: Props) {
           p.status === 'completed' ||
           p.status === 'cancelled';
 
-    return (isMyProgram || params.accessType === 'sme') && statusMatch;
+    return (isMyProgram ||
+      params.accessType === 'sme' ||
+      params.accessType === 'admin') &&
+      statusMatch
+      ? { ...p, isMyProgram }
+      : null;
   });
 
   return (
