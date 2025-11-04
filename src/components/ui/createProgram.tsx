@@ -57,6 +57,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   } = useForm<ProgramFormData>({
     defaultValues: {
       name: "",
+      objectives:"",
       description: "",
       startDate: "",
       endDate: "",
@@ -94,6 +95,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
         // Edit mode - populate form with existing program data
         reset({
           name: program.name || "",
+          objectives: program?.objectives|| "",
           description: program.description || "",
           startDate: program.startDate || "",
           endDate: program.endDate || "",
@@ -131,6 +133,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
         reset({
           name: "",
           description: "",
+          objectives:"",
           startDate: "",
           endDate: "",
           smeStage: [],
@@ -242,6 +245,24 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                   type="textarea"
                   className="border min-h-26 rounded-lg w-full"
                   {...register("description", {
+                    required: "Description is required",
+                  })}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-foreground">
+                  Program Objectives
+                </Label>
+                <Input
+                  placeholder="Program Objectives"
+                  type="textarea"
+                  className="border min-h-26 rounded-lg w-full"
+                  {...register("objectives", {
                     required: "Description is required",
                   })}
                 />

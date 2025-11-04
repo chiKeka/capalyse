@@ -96,7 +96,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     await authClient.signIn.social({
       provider: 'google',
       callbackURL: `${window?.location?.origin}/signin`,
-    });
+    })
   };
 
   useEffect(() => {
@@ -125,7 +125,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
           authClient.getSession().then((session) => {
             setAuth(session?.data?.user);
           });
-          if (rootRoute) router.push(`/${rootRoute}/onboarding`);
+          const onboardRootRoute = getKeyByValue(UserType, savedRole)
+          router.push(`/${onboardRootRoute}/onboarding`);
         },
         onError: () => {
           roleUpdateInFlight.current = false;
@@ -143,7 +144,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     // }
     const getSession = async () => {
       const session = await authClient.getSession();
-      setAuth(session?.data?.user as any);
+      setAuth(session?.data?.user);
     };
     if (!auth) {
       getSession();
