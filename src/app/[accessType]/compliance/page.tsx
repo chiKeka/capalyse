@@ -20,7 +20,10 @@ import {
 } from '@/hooks/useCompliance';
 import { useDocument } from '@/hooks/useDocument';
 import { complianceAttachment } from '@/lib/uitils/types';
-import { useAfricanCountries, useProductCategories } from '@/hooks/useComplianceCatalogs';
+import {
+  useAfricanCountries,
+  useProductCategories,
+} from '@/hooks/useComplianceCatalogs';
 import { Loader } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -74,6 +77,11 @@ function CompliancePage() {
 
   const handleFileUpload = async (e: any) => {
     const file = e.target.files[0];
+    // check if file size is greater than 2MB
+    if (file && file.size > 2000000) {
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     if (file) {
       uploadDocument.mutateAsync(
         {
@@ -119,11 +127,20 @@ function CompliancePage() {
                 <Label htmlFor="reason">Select Country</Label>
                 <Select
                   onValueChange={(val) => setValue('country', val)}
-                  disabled={countriesLoading || (!!countriesError && countries.length === 0)}
+                  disabled={
+                    countriesLoading ||
+                    (!!countriesError && countries.length === 0)
+                  }
                 >
                   <SelectTrigger id="reason">
                     <SelectValue
-                      placeholder={countriesLoading ? 'Loading countries...' : countriesError ? 'Failed to load countries' : 'Select Country'}
+                      placeholder={
+                        countriesLoading
+                          ? 'Loading countries...'
+                          : countriesError
+                          ? 'Failed to load countries'
+                          : 'Select Country'
+                      }
                       className="placeholder:text-[#D1D1D1]"
                     />
                   </SelectTrigger>
@@ -145,11 +162,20 @@ function CompliancePage() {
                 <Label htmlFor="reason">Select Product Category</Label>
                 <Select
                   onValueChange={(val) => setValue('productCategory', val)}
-                  disabled={categoriesLoading || (!!categoriesError && categories.length === 0)}
+                  disabled={
+                    categoriesLoading ||
+                    (!!categoriesError && categories.length === 0)
+                  }
                 >
                   <SelectTrigger id="reason">
                     <SelectValue
-                      placeholder={categoriesLoading ? 'Loading categories...' : categoriesError ? 'Failed to load categories' : 'Select Category'}
+                      placeholder={
+                        categoriesLoading
+                          ? 'Loading categories...'
+                          : categoriesError
+                          ? 'Failed to load categories'
+                          : 'Select Category'
+                      }
                       className="placeholder:text-[#D1D1D1]"
                     />
                   </SelectTrigger>
@@ -192,7 +218,7 @@ function CompliancePage() {
                 <div className="flex items-center justify-center w-full">
                   <Label
                     htmlFor="upload"
-                    className="flex flex-col items-center justify-center w-full h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
+                    className="flex flex-col items-center justify-center w-full min-h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center  ">
                       {!fileUploadLoading ? (
@@ -201,6 +227,12 @@ function CompliancePage() {
 
                           <p className=" text-sm text-[#52575C]">
                             Click to add image/Video
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            Accepted formats: PNG, JPG, JPEG
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            max file size: 2MB each
                           </p>
                         </>
                       ) : (

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { AssessmentQuestion } from '@/hooks/useAssessment';
 import { useDocument } from '@/hooks/useDocument';
 import { useUnions } from '@/hooks/useComplianceCatalogs';
+import { toast } from 'sonner';
 
 interface InputsProps {
   currentQuestionData: AssessmentQuestion;
@@ -47,6 +48,10 @@ export function Inputs({
 
   // Handle file upload using useDocument hook
   const handleFileUpload = async (file: File, answerTypeIndex: number) => {
+    if (file && file.size > 2000000) {
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     const uploadKey = `${fieldId}-${answerTypeIndex}`;
     setUploading((prev) => ({ ...prev, [uploadKey]: true }));
 
@@ -420,14 +425,17 @@ export function Inputs({
                   <div className="flex gap-3 flex-wrap">
                     {unionCodes.map((code) => {
                       const label = code.toUpperCase();
-                      const selected = (value[index]?.value || []).includes(code);
+                      const selected = (value[index]?.value || []).includes(
+                        code
+                      );
                       return (
                         <button
                           key={code}
                           type="button"
                           disabled={unionsLoading}
                           onClick={() => {
-                            const currentSelections: string[] = value[index]?.value || [];
+                            const currentSelections: string[] =
+                              value[index]?.value || [];
                             const exists = currentSelections.includes(code);
                             const newSelections = exists
                               ? currentSelections.filter((o) => o !== code)

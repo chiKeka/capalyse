@@ -11,7 +11,9 @@ const LandingHero = () => {
   // console.log(data)
   return (
     <section className="py-20 relative bg-[#01281D] bg-no-repeat xl:bg-contain bg-[position:360%_center]">
-      <GridSvg className="absolute inset-0  w-screen h-full" />
+      <div className="overflow-hidden absolute inset-0 min-w-full max-w-screen h-auto">
+        <GridSvg className="absolute right-0 lg:inset-0 min-w-auto md:min-w-full md:max-w-screen h-full md:h-auto" />
+      </div>
       <div className="max-w-7xl z-10 mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid gap-12 items-center text-black-500 ">
           <div className="relative z-10 flex flex-col items-center text-center max-w-[36.75rem] mx-auto">

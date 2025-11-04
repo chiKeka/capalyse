@@ -1,8 +1,6 @@
 const GridSvg = ({ className }: { className: string }) => {
   return (
     <svg
-      width="1439"
-      height="915"
       viewBox="0 0 1439 915"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

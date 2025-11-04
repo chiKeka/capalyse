@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import useDocument from "@/hooks/useDocument";
-import { useCreateFinancials, useDefaultCurrency } from "@/hooks/useFinancials";
-import { format } from "date-fns";
-import { Loader } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import Button from "./Button";
-import { Calendar } from "./calendar";
-import { CIcons } from "./CIcons";
-import { Input } from "./input";
-import { CurrencyAmountInput } from "./Inputs";
-import { Label } from "./label";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import useDocument from '@/hooks/useDocument';
+import { useCreateFinancials, useDefaultCurrency } from '@/hooks/useFinancials';
+import { format } from 'date-fns';
+import { Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import Button from './Button';
+import { Calendar } from './calendar';
+import { CIcons } from './CIcons';
+import { Input } from './input';
+import { CurrencyAmountInput } from './Inputs';
+import { Label } from './label';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "./sheet";
+} from './sheet';
 
 interface UpdateFinancialRecordsSheetProps {
   open: boolean;
@@ -30,27 +30,27 @@ export function UpdateFinancialRecordsSheet({
   open,
   onOpenChange,
 }: UpdateFinancialRecordsSheetProps) {
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
   const [range, setRange] = useState<{ from?: Date; to?: Date }>({});
   const [revenue, setRevenue] = useState<{
-    amount: number | "";
+    amount: number | '';
     currency: string;
-  }>({ amount: "", currency: "NGN" });
+  }>({ amount: '', currency: 'NGN' });
   const [expenses, setExpenses] = useState<{
-    amount: number | "";
+    amount: number | '';
     currency: string;
-  }>({ amount: "", currency: "NGN" });
-  const [debt, setDebt] = useState<{ amount: number | ""; currency: string }>({
-    amount: "",
-    currency: "NGN",
+  }>({ amount: '', currency: 'NGN' });
+  const [debt, setDebt] = useState<{ amount: number | ''; currency: string }>({
+    amount: '',
+    currency: 'NGN',
   });
 
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
   const [files, setFiles] = useState<any[]>([]);
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
-  const { data: defaultCurrency = "NGN" } = useDefaultCurrency();
+  const { data: defaultCurrency = 'NGN' } = useDefaultCurrency();
   const createFinancials = useCreateFinancials();
 
   // keep currency synced to user's default
@@ -66,12 +66,16 @@ export function UpdateFinancialRecordsSheet({
   const handleFileUpload = async (e: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file && file.size > 2000000) {
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     setFileUploadLoading(true);
     await uploadDocument.mutateAsync(
       {
         file,
         fileName: file.name,
-        category: "finance",
+        category: 'finance',
       },
       {
         onSuccess: (res) => {
@@ -95,7 +99,7 @@ export function UpdateFinancialRecordsSheet({
 
   const onSubmit = async () => {
     if (!startDate || !endDate) {
-      toast.error("Please select a start and end date");
+      toast.error('Please select a start and end date');
       return;
     }
     const payload = {
@@ -115,10 +119,10 @@ export function UpdateFinancialRecordsSheet({
 
     try {
       await createFinancials.mutateAsync(payload);
-      toast.success("Financial records updated");
+      toast.success('Financial records updated');
       onOpenChange(false);
     } catch (e: any) {
-      toast.error(e?.message || "Failed to update financial records");
+      toast.error(e?.message || 'Failed to update financial records');
     }
   };
 
@@ -155,11 +159,11 @@ export function UpdateFinancialRecordsSheet({
                     />
                     <span className="text-foreground/80">
                       {range.from && range.to
-                        ? `${format(range.from, "PPP")} - ${format(
+                        ? `${format(range.from, 'PPP')} - ${format(
                             range.to,
-                            "PPP"
+                            'PPP'
                           )}`
-                        : "Select Date"}
+                        : 'Select Date'}
                     </span>
                   </button>
                 </PopoverTrigger>
@@ -170,10 +174,10 @@ export function UpdateFinancialRecordsSheet({
                     onSelect={(val: any) => {
                       setRange(val || {});
                       setStartDate(
-                        val?.from ? format(val.from as Date, "yyyy-MM-dd") : ""
+                        val?.from ? format(val.from as Date, 'yyyy-MM-dd') : ''
                       );
                       setEndDate(
-                        val?.to ? format(val.to as Date, "yyyy-MM-dd") : ""
+                        val?.to ? format(val.to as Date, 'yyyy-MM-dd') : ''
                       );
                     }}
                     numberOfMonths={2}
@@ -191,7 +195,7 @@ export function UpdateFinancialRecordsSheet({
                 amount={revenue.amount}
                 currency={revenue.currency}
                 onAmountChange={(val) =>
-                  setRevenue((s) => ({ ...s, amount: val as number | "" }))
+                  setRevenue((s) => ({ ...s, amount: val as number | '' }))
                 }
                 onCurrencyChange={(cur) =>
                   setRevenue((s) => ({ ...s, currency: cur }))
@@ -209,7 +213,7 @@ export function UpdateFinancialRecordsSheet({
                 amount={expenses.amount}
                 currency={expenses.currency}
                 onAmountChange={(val) =>
-                  setExpenses((s) => ({ ...s, amount: val as number | "" }))
+                  setExpenses((s) => ({ ...s, amount: val as number | '' }))
                 }
                 onCurrencyChange={(cur) =>
                   setExpenses((s) => ({ ...s, currency: cur }))
@@ -227,7 +231,7 @@ export function UpdateFinancialRecordsSheet({
                 amount={debt.amount}
                 currency={debt.currency}
                 onAmountChange={(val) =>
-                  setDebt((s) => ({ ...s, amount: val as number | "" }))
+                  setDebt((s) => ({ ...s, amount: val as number | '' }))
                 }
                 onCurrencyChange={(cur) =>
                   setDebt((s) => ({ ...s, currency: cur }))
@@ -247,7 +251,7 @@ export function UpdateFinancialRecordsSheet({
               <div className="flex items-center justify-center w-full">
                 <Label
                   htmlFor="finance-upload"
-                  className="flex flex-col items-center justify-center w-full h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
+                  className="flex flex-col items-center justify-center w-full min-h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     {!fileUploadLoading ? (
@@ -255,6 +259,12 @@ export function UpdateFinancialRecordsSheet({
                         <CIcons.documentUpload />
                         <p className="mb-2 text-sm text-[#52575C]">
                           Click to add document
+                        </p>
+                        <p className="text-xs text-gray-400 mt-2">
+                          Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
+                        </p>
+                        <p className="text-xs text-gray-400 mt-2">
+                          max file size: 2MB each
                         </p>
                       </>
                     ) : (
@@ -288,7 +298,7 @@ export function UpdateFinancialRecordsSheet({
             className="w-full"
             variant="primary"
             onClick={onSubmit}
-            state={createFinancials.isPending ? "loading" : undefined}
+            state={createFinancials.isPending ? 'loading' : undefined}
             disabled={createFinancials.isPending}
           >
             Update

@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/card';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import { GetDevOrgAnalytics } from "@/hooks/devOrg/devOrgsAnalytics";
-import { formatCurrency } from "@/lib/uitils/fns";
-import Image from "next/image";
-import Link from "next/link";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import { GetDevOrgAnalytics } from '@/hooks/devOrg/devOrgsAnalytics';
+import { formatCurrency } from '@/lib/uitils/fns';
+import Image from 'next/image';
+import Link from 'next/link';
 
 type Props = {};
 
@@ -26,7 +26,7 @@ function page({}: Props) {
   const smes: any = [];
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -42,13 +42,13 @@ function page({}: Props) {
         </div>
       ),
     },
-    { header: "Industry", accessor: "industry" },
-    { header: "Country", accessor: "country" },
-    { header: "Readiness Score", accessor: "readiness" },
-    { header: "Revenue", accessor: "revenue" },
-    { header: "Team Size", accessor: "teamSize" },
+    { header: 'Industry', accessor: 'industry' },
+    { header: 'Country', accessor: 'country' },
+    { header: 'Readiness Score', accessor: 'readinessPct' },
+    { header: 'Revenue', accessor: 'revenue' },
+    { header: 'Team Size', accessor: 'teamSize' },
     {
-      header: "Action",
+      header: 'Action',
       accessor: (row: (typeof smes)[0]) => (
         <Link
           href={`/investor/sme-directory/${row.id}`}
@@ -57,29 +57,29 @@ function page({}: Props) {
           View Profile
         </Link>
       ),
-      className: "text-green",
+      className: 'text-green',
     },
   ];
   const overviewCards = [
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: "Total Amount Invested",
+      label: 'Total Amount Invested',
       amount: devOrgAnalytics?.applications?.total ?? 0,
-      currency: "NGN",
+      currency: 'NGN',
       percentage: 0,
-      direction: "up",
+      direction: 'up',
     },
     {
       id: 3,
       icon: CIcons.stickyNote,
-      label: "Total Investments",
+      label: 'Total Investments',
       amount: 0,
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: "Active Investment",
+      label: 'Active Investment',
       amount: 0,
     },
   ];
@@ -98,7 +98,7 @@ function page({}: Props) {
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
-                    (card.direction === "up" ? (
+                    (card.direction === 'up' ? (
                       <span className="text-sm text-success-100 font-bold">
                         {card.percentage}%
                       </span>
