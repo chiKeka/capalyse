@@ -57,17 +57,15 @@ function page({}: Props) {
     },
     {
       header: 'Readiness Score',
-      accessor: (row: (typeof applicants)[0]) => row.sme?.readinessPct,
+      accessor: (row: (typeof applicants)[0]) => row.sme?.readinessPct ?? '-',
     },
     {
       header: 'Revenue',
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.revenue,
+      accessor: (row: (typeof applicants)[0]) => row.sme?.revenueTTM ?? '-',
     },
     {
       header: 'Team Size',
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.teamSize,
+      accessor: (row: (typeof applicants)[0]) => row.sme?.teamSize ?? '-',
     },
 
     {
@@ -140,7 +138,7 @@ function page({}: Props) {
           noDataCaption="No applicants found"
           noDataText="No Applicants found check back later, any new application added will be found here"
           data={applicants}
-          totalPages={Math.ceil(applicants.length / 4)}
+          totalPages={program?.pagination?.totalPages ?? 0}
         />
       </DashboardCardLayout>
     </div>

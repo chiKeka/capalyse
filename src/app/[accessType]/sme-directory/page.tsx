@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
+import { SearchForm } from '@/components/search-form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import useDebounce from "@/hooks/useDebounce";
-import { useSmeDirectory } from "@/hooks/useDirectories";
-import Image from "next/image";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import useDebounce from '@/hooks/useDebounce';
+import { useSmeDirectory } from '@/hooks/useDirectories';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 // Example data
 
 const SMEDirectoryPage = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -35,7 +35,7 @@ const SMEDirectoryPage = () => {
   const columns = useMemo(
     () => [
       {
-        header: "Name",
+        header: 'Name',
         accessor: (row: any) => (
           <div className="flex items-center gap-2">
             {row.avatar ? (
@@ -51,13 +51,13 @@ const SMEDirectoryPage = () => {
           </div>
         ),
       },
-      { header: "Industry", accessor: "industry" },
-      { header: "Country", accessor: "location" },
-      { header: "Readiness Score", accessor: "readinessScore" },
-      { header: "Revenue", accessor: "revenue" },
-      { header: "Team Size", accessor: (row: any) => row.teamMembers?.length },
+      { header: 'Industry', accessor: 'industry' },
+      { header: 'Country', accessor: 'location' },
+      { header: 'Readiness Score', accessor: 'readinessPct' },
+      { header: 'Revenue', accessor: 'totalRevenue' },
+      { header: 'Team Size', accessor: 'teamSize' },
       {
-        header: "Action",
+        header: 'Action',
         accessor: (row: any) => (
           <Link
             href={`/${params.accessType}/sme-directory/${row?.userId}`}
@@ -66,7 +66,7 @@ const SMEDirectoryPage = () => {
             View Profile
           </Link>
         ),
-        className: "text-green",
+        className: 'text-green',
       },
     ],
     [params.accessType]
