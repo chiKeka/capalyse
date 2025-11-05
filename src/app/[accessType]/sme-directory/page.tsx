@@ -29,7 +29,7 @@ const SMEDirectoryPage = () => {
     limit: 20,
     q: debouncedSearch || undefined,
   });
-  // console.log(smes);
+
   const params = useParams();
 
   const columns = useMemo(

@@ -13,7 +13,7 @@ const page = (props: Props) => {
   const slug = params.slug as string;
   const { data: publicProfile } = usePublicProfile(slug);
   const data = {
-    logo: "/icons/sportify.svg",
+    logo: publicProfile?.smeBusinessInfo?.logo,
     businessName: "GreenPack Solutions Ltd",
     businessStage: "Packaging",
     countryOfOperation: ["Lagos"],
@@ -56,7 +56,7 @@ const page = (props: Props) => {
       "Export logistics providers",
     ],
   };
-
+console.log(publicProfile)
   return (
     <div className="grid max-w-7xl mx-auto h-screen   grid-cols-1 lg:grid-cols-[1fr_2fr] items-start gap-6 overflow-y-auto  p-4 lg:p-12">
       <div className="overflow-y-auto ">
