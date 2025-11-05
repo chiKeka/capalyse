@@ -34,7 +34,8 @@ export default function Info({}: Props) {
   const [selectedCountry, setSelectedCountry] = useState<string[]>(
     user?.countryOfOperation || []
   );
-  const { data: countries = [], isLoading: countriesLoading } = useAfricanCountries();
+  const { data: countries = [], isLoading: countriesLoading } =
+    useAfricanCountries();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -117,19 +118,24 @@ export default function Info({}: Props) {
   const businessStage = watch('businessStage');
   const logo = watch('logo');
 
-
   const handleLogoChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
     try {
       setUploading(true);
-      const response = await uploadDocument.mutateAsync({ file, fileName: file.name, category: 'logo' });
+      const response = await uploadDocument.mutateAsync({
+        file,
+        fileName: file.name,
+        category: 'logo',
+      });
       const logoUrl = `${process.env.NEXT_PUBLIC_API_URL}/documents/${response._id}/download`;
       setValue('logo', logoUrl);
       toast.success('Logo uploaded successfully');
       handleSubmit(onSubmit)();
     } catch (error: any) {
-      toast.error(error.message || 'An error occurred while uploading the logo');
+      toast.error(
+        error.message || 'An error occurred while uploading the logo'
+      );
     } finally {
       setUploading(false);
     }
@@ -248,16 +254,21 @@ export default function Info({}: Props) {
                 className="h-[43px]"
                 type="text"
               />
-              <Button type="button" onClick={() => remove(index)} variant='tertiary' size='small'>
-                <Trash2 className='w-4 h-4 text-red-500' />
+              <Button
+                type="button"
+                onClick={() => remove(index)}
+                variant="tertiary"
+                size="small"
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
               </Button>
             </div>
           ))}
           <Button
             type="button"
             onClick={() => append({ socialMedia: '', url: '' })}
-            variant='secondary'
-            className='w-fit'
+            variant="secondary"
+            className="w-fit"
           >
             Add Social Media
           </Button>
@@ -286,6 +297,12 @@ export default function Info({}: Props) {
                 <img src={'/icons/upload2.svg'} />
                 <p className="text-[#52575C] font-normal text-xs">
                   Click to add logo
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
+                  Accepted formats: PNG, JPG, JPEG
+                </p>
+                <p className="text-xs text-gray-400 mt-2">
+                  max file size: 2MB each
                 </p>
               </>
             )}

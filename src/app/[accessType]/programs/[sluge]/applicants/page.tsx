@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import { SearchForm } from '@/components/search-form';
+import Button from '@/components/ui/Button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import { GetProgramApplications, GetProgramById } from "@/hooks/usePrograms";
-import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import { GetProgramApplications, GetProgramById } from '@/hooks/usePrograms';
+import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
 
 type Props = {};
 
@@ -27,7 +27,7 @@ function page({}: Props) {
   // console.log({ program });
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: (typeof applicants)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -46,33 +46,30 @@ function page({}: Props) {
       ),
     },
     {
-      header: "Industry",
+      header: 'Industry',
       accessor: (row: (typeof applicants)[0]) =>
         row.sme?.smeBusinessInfo?.industry,
     },
     {
-      header: "Country",
+      header: 'Country',
       accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.countryOfOperation?.join(", "),
+        row.sme?.smeBusinessInfo?.countryOfOperation?.join(', '),
     },
     {
-      header: "Readiness Score",
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.readiness?.readinessScore,
+      header: 'Readiness Score',
+      accessor: (row: (typeof applicants)[0]) => row.sme?.readinessPct ?? '-',
     },
     {
-      header: "Revenue",
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.revenue,
+      header: 'Revenue',
+      accessor: (row: (typeof applicants)[0]) => row.sme?.revenueTTM ?? '-',
     },
     {
-      header: "Team Size",
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.teamSize,
+      header: 'Team Size',
+      accessor: (row: (typeof applicants)[0]) => row.sme?.teamSize ?? '-',
     },
 
     {
-      header: "Action",
+      header: 'Action',
       accessor: (row: (typeof applicants)[0]) => (
         <div className="flex flex-row gap-3">
           <Button
@@ -99,10 +96,10 @@ function page({}: Props) {
     <div>
       <div className="inline-flex my-3 md:text-sm text-xs lg:text-base">
         <p>
-          Program {">"} {programDetails?.name} {">"}
-          {"  "}
+          Program {'>'} {programDetails?.name} {'>'}
+          {'  '}
         </p>
-        <p className="font-medium text-green ">{"Applicants"}</p>
+        <p className="font-medium text-green ">{'Applicants'}</p>
       </div>
       <DashboardCardLayout>
         <div className="flex items-center my-8 justify-between max-lg:flex-wrap">
@@ -141,7 +138,7 @@ function page({}: Props) {
           noDataCaption="No applicants found"
           noDataText="No Applicants found check back later, any new application added will be found here"
           data={applicants}
-          totalPages={Math.ceil(applicants.length / 4)}
+          totalPages={program?.pagination?.totalPages ?? 0}
         />
       </DashboardCardLayout>
     </div>

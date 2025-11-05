@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
-import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
-import Programs from "@/components/sections/dashboardCards/programs";
-import Button from "@/components/ui/Button";
-import CreateProgram from "@/components/ui/createProgram";
-import useDebounce from "@/hooks/useDebounce";
+import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
+import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
+import Programs from '@/components/sections/dashboardCards/programs';
+import Button from '@/components/ui/Button';
+import CreateProgram from '@/components/ui/createProgram';
+import useDebounce from '@/hooks/useDebounce';
 
-import { GetPrograms } from "@/hooks/usePrograms";
-import { authAtom } from "@/lib/atoms/atoms";
-import { useAtomValue } from "jotai";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { GetPrograms } from '@/hooks/usePrograms';
+import { authAtom } from '@/lib/atoms/atoms';
+import { useAtomValue } from 'jotai';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
 type Props = {};
 
-const tabs = ["active", "closed"];
+const tabs = ['active', 'closed'];
 
 function page({}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<any>(null);
   const params = useParams();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -47,17 +47,21 @@ function page({}: Props) {
 
     // filter by status based on current tab
     const statusMatch =
-      currentTab === "active"
-        ? p.status === "published" ||
-          p.status === "draft" ||
-          p.status === "active"
-        : p.status === "closed" ||
-          p.status === "completed" ||
-          p.status === "cancelled";
+      currentTab === 'active'
+        ? p.status === 'published' ||
+          p.status === 'draft' ||
+          p.status === 'active'
+        : p.status === 'closed' ||
+          p.status === 'completed' ||
+          p.status === 'cancelled';
 
-    return isMyProgram && statusMatch;
+    return (isMyProgram ||
+      params.accessType === 'sme' ||
+      params.accessType === 'admin') &&
+      statusMatch
+      ? { ...p, isMyProgram }
+      : null;
   });
-
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,7 +70,7 @@ function page({}: Props) {
           <div className="flex flex-row justify-between">
             <div>
               <div className="flex flex-row gap-3">
-                <img src={"/icons/code.svg"} />
+                <img src={'/icons/code.svg'} />
                 <p className="text-green text-base font-bold">Program</p>
               </div>
               <div className="flex gap-0 my-5">
@@ -76,8 +80,8 @@ function page({}: Props) {
                     onClick={() => setCurrentTab(tab)}
                     className={`transition-all capitalize duration-300 ease-in-out  px-4 py-2 text-sm h-[39px] whitespace-nowrap ${
                       currentTab === tab
-                        ? "text-green border-b-green border-b font-bold"
-                        : "text-[#A0A4A8] border-b border-b-[#A0A4A8] hover:font-bold"
+                        ? 'text-green border-b-green border-b font-bold'
+                        : 'text-[#A0A4A8] border-b border-b-[#A0A4A8] hover:font-bold'
                     }`}
                   >
                     {tab}
@@ -86,7 +90,7 @@ function page({}: Props) {
               </div>
             </div>
 
-            {params.accessType === "development" && (
+            {params.accessType === 'development' && (
               <Button
                 size="small"
                 onClick={() => {

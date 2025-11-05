@@ -134,6 +134,7 @@ export interface Requirement {
 export interface ProgramFormData {
   name: string;
   description: string;
+  objectives: string;
   startDate: string;
   endDate?: string;
   smeStage: string[];

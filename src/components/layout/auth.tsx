@@ -96,7 +96,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     await authClient.signIn.social({
       provider: 'google',
       callbackURL: `${window?.location?.origin}/signin`,
-    });
+    })
   };
 
   useEffect(() => {

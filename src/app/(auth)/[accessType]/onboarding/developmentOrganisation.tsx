@@ -1,20 +1,20 @@
-import { CIcons } from "@/components/ui/CIcons";
-import Input from "@/components/ui/Inputs";
-import { Input as FileInput } from "@/components/ui/input";
-import { CountrySelect } from "react-country-state-city";
+import { CIcons } from '@/components/ui/CIcons';
+import Input from '@/components/ui/Inputs';
+import { Input as FileInput } from '@/components/ui/input';
+import { CountrySelect } from 'react-country-state-city';
 
-import Button from "@/components/ui/Button";
-import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { updateProfile } from "@/hooks/useUpdateProfile";
-import { authAtom } from "@/lib/atoms/atoms";
-import { handleImageUpload } from "@/lib/uitils/fns";
-import { developmentOrg } from "@/lib/uitils/types";
-import { useAtomValue } from "jotai";
-import { Loader } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import Button from '@/components/ui/Button';
+import StatusChangeModal from '@/components/useManagementComponents.tsx/modals';
+import { updateProfile } from '@/hooks/useUpdateProfile';
+import { authAtom } from '@/lib/atoms/atoms';
+import { handleImageUpload } from '@/lib/uitils/fns';
+import { developmentOrg } from '@/lib/uitils/types';
+import { useAtomValue } from 'jotai';
+import { Loader } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 interface Props {
   setLoading: (loading: boolean) => void;
@@ -57,9 +57,9 @@ const DevelopmentOrganisation = forwardRef<
     }
   }, [initialData]);
 
-  const [selectedCountryId, setSelectedCountryId] = useState("");
-  const [selectedCountryName, setSelectedCountryName] = useState("");
-  const [selectedStateName, setSelectedStateName] = useState("");
+  const [selectedCountryId, setSelectedCountryId] = useState('');
+  const [selectedCountryName, setSelectedCountryName] = useState('');
+  const [selectedStateName, setSelectedStateName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: any }>(
@@ -73,6 +73,11 @@ const DevelopmentOrganisation = forwardRef<
   const handleCertificateFileUpload = async (e: any) => {
     if (e) setFileUploadLoading1(true);
     const file = e.target?.files[0];
+    if (file && file.size > 2000000) {
+      setFileUploadLoading1(false);
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     await handleImageUpload(file, (res: any) => {
       setCertificateFiles([
         {
@@ -94,6 +99,11 @@ const DevelopmentOrganisation = forwardRef<
   const handleOperationalLicenseFileUpload = async (e: any) => {
     if (e) setFileUploadLoading2(true);
     const file = e.target?.files[0];
+    if (file && file.size > 2000000) {
+      setFileUploadLoading2(false);
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     await handleImageUpload(file, (res: any) => {
       setOperationalLicences([
         {
@@ -117,16 +127,16 @@ const DevelopmentOrganisation = forwardRef<
             ...data,
             documents: [
               ...certificateFiles.map((file: any) => ({
-                type: "Certificate",
+                type: 'Certificate',
                 document: file.fileUrl,
               })),
               ...operationalLicences.map((file: any) => ({
-                type: "License",
+                type: 'License',
                 document: file.fileUrl,
               })),
             ],
-            focusAreas: [""],
-            operatingRegions: [""],
+            focusAreas: [''],
+            operatingRegions: [''],
           };
           // Add your form submission logic here
           await dev_org
@@ -153,8 +163,8 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Organization Name*"
           placeholder="Enter organization name"
-          {...register("organizationName", {
-            required: "Organization name is required",
+          {...register('organizationName', {
+            required: 'Organization name is required',
           })}
           type="text"
           name="organizationName"
@@ -170,7 +180,7 @@ const DevelopmentOrganisation = forwardRef<
         <Input
           label="Enter Company Email Address*"
           placeholder="Company@gmail.com"
-          {...register("companyEmail", { required: "Email is required" })}
+          {...register('companyEmail', { required: 'Email is required' })}
           type="email"
           name="companyEmail"
           readOnly={true}
@@ -194,18 +204,18 @@ const DevelopmentOrganisation = forwardRef<
             // console.log({ country });
             if (
               country &&
-              typeof country === "object" &&
-              "id" in country &&
-              "name" in country
+              typeof country === 'object' &&
+              'id' in country &&
+              'name' in country
             ) {
               setSelectedCountryId(country.id);
               setSelectedCountryName(country.name);
-              setValue("countryHeadquarters", country.name);
+              setValue('countryHeadquarters', country.name);
             }
           }}
           defaultValue={getValues()?.countryHeadquarters as any}
           onTextChange={(_txt: any) =>
-            setValue("countryHeadquarters", _txt.target.value)
+            setValue('countryHeadquarters', _txt.target.value)
           }
         />
         {errors.countryHeadquarters && (
@@ -221,7 +231,7 @@ const DevelopmentOrganisation = forwardRef<
           label="Business website (Optional)"
           placeholder="Input your website link"
           type="text"
-          {...register("website", {
+          {...register('website', {
             setValueAs: (v) => {
               if (!v) return v;
               const value = String(v).trim();
@@ -230,7 +240,7 @@ const DevelopmentOrganisation = forwardRef<
             pattern: {
               value:
                 /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-              message: "Please enter a valid URL",
+              message: 'Please enter a valid URL',
             },
           })}
         />
@@ -283,6 +293,7 @@ const DevelopmentOrganisation = forwardRef<
         <p className="text-xs text-gray-400 mt-2">
           Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
         </p>
+        <p className="text-xs text-gray-400 mt-2">max file size: 2MB each</p>
       </div>
 
       {/* Operational License or NGO/Development Registration Certificate Upload */}
@@ -327,6 +338,7 @@ const DevelopmentOrganisation = forwardRef<
         <p className="text-xs text-gray-400 mt-2">
           Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
         </p>
+        <p className="text-xs text-gray-400 mt-2">max file size: 2MB each</p>
       </div>
       {!isProfile && (
         <StatusChangeModal
@@ -349,7 +361,7 @@ const DevelopmentOrganisation = forwardRef<
       {isProfile && (
         <Button
           type="submit"
-          state={dev_org?.isPending ? "loading" : "default"}
+          state={dev_org?.isPending ? 'loading' : 'default'}
           onClick={handleSubmit(async (data) => {
             setIsLoading(true);
             setLoading(true);
@@ -357,16 +369,16 @@ const DevelopmentOrganisation = forwardRef<
               ...data,
               documents: [
                 ...certificateFiles.map((file: any) => ({
-                  type: "Certificate",
+                  type: 'Certificate',
                   document: file.fileUrl,
                 })),
                 ...operationalLicences.map((file: any) => ({
-                  type: "License",
+                  type: 'License',
                   document: file.fileUrl,
                 })),
               ],
-              focusAreas: [""],
-              operatingRegions: [""],
+              focusAreas: [''],
+              operatingRegions: [''],
             };
             // Add your form submission logic here
             await dev_org
@@ -381,13 +393,13 @@ const DevelopmentOrganisation = forwardRef<
               });
           })}
         >
-          {dev_org?.isPending ? "Submitting..." : "Submit"}
+          {dev_org?.isPending ? 'Submitting...' : 'Submit'}
         </Button>
       )}
     </div>
   );
 });
 
-DevelopmentOrganisation.displayName = "DevelopmentOrganisation";
+DevelopmentOrganisation.displayName = 'DevelopmentOrganisation';
 
 export default DevelopmentOrganisation;

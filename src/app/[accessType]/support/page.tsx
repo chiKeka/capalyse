@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import Button from "@/components/ui/Button";
-import { CIcons } from "@/components/ui/CIcons";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import Button from '@/components/ui/Button';
+import { CIcons } from '@/components/ui/CIcons';
+import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import useDocument from "@/hooks/useDocument";
-import { useGetSupport, useSupports } from "@/hooks/useSupport";
-import { CreateSupportForm } from "@/lib/uitils/types";
-import { Loader } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import useDocument from '@/hooks/useDocument';
+import { useGetSupport, useSupports } from '@/hooks/useSupport';
+import { CreateSupportForm } from '@/lib/uitils/types';
+import { Loader } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
@@ -48,18 +48,22 @@ const SupportPage = () => {
         description,
       })
       .then(() => {
-        toast.success("Ticket submitted successfully");
+        toast.success('Ticket submitted successfully');
         reset();
       });
   };
   const handleFileUpload = async (e: any) => {
     const file = e.target.files[0];
+    if (file && file.size > 2000000) {
+      toast.error('File size must be less than 2MB');
+      return;
+    }
     if (file) {
       uploadDocument.mutateAsync(
         {
           file: e.target.files[0],
           fileName: file.name,
-          category: "support",
+          category: 'support',
         },
         {
           onSuccess: (res) => {
@@ -100,7 +104,7 @@ const SupportPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select onValueChange={(val) => setValue("subject", val)}>
+                <Select onValueChange={(val) => setValue('subject', val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -127,8 +131,8 @@ const SupportPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="description">Detailed Description</Label>
                 <Textarea
-                  {...register("description", {
-                    required: "business Registration number is required",
+                  {...register('description', {
+                    required: 'business Registration number is required',
                   })}
                   id="description"
                   placeholder="Enter Message"
@@ -148,7 +152,7 @@ const SupportPage = () => {
                 <div className="flex items-center justify-center w-full">
                   <Label
                     htmlFor="upload"
-                    className="flex flex-col items-center justify-center w-full h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
+                    className="flex flex-col items-center justify-center w-full min-h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       {!fileUploadLoading ? (
@@ -157,6 +161,12 @@ const SupportPage = () => {
 
                           <p className="mb-2 text-sm text-[#52575C]">
                             Click to add image/Video
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
+                          </p>
+                          <p className="text-xs text-gray-400 mt-2">
+                            max file size: 2MB each
                           </p>
                         </>
                       ) : (
@@ -186,7 +196,7 @@ const SupportPage = () => {
               <Button
                 type="submit"
                 disabled={createSupport.isPending || fileUploadLoading}
-                state={createSupport.isPending ? "loading" : undefined}
+                state={createSupport.isPending ? 'loading' : undefined}
                 size="big"
                 className="w-full"
               >
@@ -215,7 +225,7 @@ const SupportPage = () => {
                     <div>
                       <p className="text-sm">
                         <strong>Ticket No:</strong>
-                        <span>{item?.id.slice(0, -8) + "..."}</span>
+                        <span>{item?.id.slice(0, -8) + '...'}</span>
                       </p>
                       <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>
@@ -224,14 +234,14 @@ const SupportPage = () => {
                     <Badge
                       variant={
                         item.status as
-                          | "resolved"
-                          | "in_progress"
-                          | "open"
-                          | "closed"
+                          | 'resolved'
+                          | 'in_progress'
+                          | 'open'
+                          | 'closed'
                       }
                       className="capitalize mb-2"
                     >
-                      {item.status.replace(/([A-Z])/g, " $1")}
+                      {item.status.replace(/([A-Z])/g, ' $1')}
                     </Badge>
                     <p className="text-xs text-gray-500">
                       {item.date} {item.time}

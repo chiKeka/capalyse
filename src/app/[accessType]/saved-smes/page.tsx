@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { SearchForm } from "@/components/search-form";
-import { CIcons } from "@/components/ui/CIcons";
+import { SearchForm } from '@/components/search-form';
+import { CIcons } from '@/components/ui/CIcons';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ReusableTable } from "@/components/ui/table";
-import useDebounce from "@/hooks/useDebounce";
-import { useInvestorSavedSMEs } from "@/hooks/useDirectories";
-import Image from "next/image";
-import { useMemo, useState } from "react";
+} from '@/components/ui/select';
+import { ReusableTable } from '@/components/ui/table';
+import useDebounce from '@/hooks/useDebounce';
+import { useInvestorSavedSMEs } from '@/hooks/useDirectories';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
 
 // Example data
 
 const SavedSMEDirectoryPage = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -32,7 +32,7 @@ const SavedSMEDirectoryPage = () => {
   // console.log({ smes });
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -48,13 +48,13 @@ const SavedSMEDirectoryPage = () => {
         </div>
       ),
     },
-    { header: "Industry", accessor: "industry" },
-    { header: "Country", accessor: "location" },
-    { header: "Readiness Score", accessor: "readiness" },
-    { header: "Last Viewed", accessor: "date" },
+    { header: 'Industry', accessor: 'industry' },
+    { header: 'Country', accessor: 'location' },
+    { header: 'Readiness Score', accessor: 'readinessPct' },
+    { header: 'Last Viewed', accessor: 'date' },
 
     {
-      header: "Action",
+      header: 'Action',
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex flex-row gap-3">
           <CIcons.message />
