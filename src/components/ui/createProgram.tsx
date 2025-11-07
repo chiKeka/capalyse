@@ -6,9 +6,9 @@ import {
   updateProgram,
 } from "@/hooks/usePrograms";
 import { format } from "date-fns";
-import { Loader } from "lucide-react";
+import { Loader, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import Button from "./Button";
 import { Calendar } from "./calendar";
@@ -39,6 +39,10 @@ type Props = {
   isEdit?: boolean;
 };
 
+interface ProgramFormValues extends Omit<ProgramFormData, "objectives"> {
+  objectives: { value: string }[];
+}
+
 function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   const [range, setRange] = useState<{ from?: Date; to?: Date }>({});
   const [partnersInput, setPartnersInput] = useState("");
@@ -54,10 +58,11 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
     setValue,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ProgramFormData>({
+  } = useForm<ProgramFormValues>({
     defaultValues: {
       name: "",
-      objectives:"",
+
+      objectives: [{ value: "" }],
       description: "",
       startDate: "",
       endDate: "",
@@ -79,6 +84,11 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "objectives",
+  });
+
   const {
     data: countries = [],
     isLoading: countriesLoading,
@@ -95,7 +105,16 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
         // Edit mode - populate form with existing program data
         reset({
           name: program.name || "",
-          objectives: program?.objectives|| "",
+          objectives: (Array.isArray(program?.objectives)
+            ? program.objectives.map((obj: string | { value: string }) =>
+                typeof obj === "string" ? { value: obj } : obj
+              )
+            : program?.objectives
+            ? String(program.objectives)
+                .split(",")
+                .map((s: string) => ({ value: s.trim() }))
+                .filter((o: { value: string }) => o.value.length > 0)
+            : []) || [{ value: "" }],
           description: program.description || "",
           startDate: program.startDate || "",
           endDate: program.endDate || "",
@@ -133,7 +152,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
         reset({
           name: "",
           description: "",
-          objectives:"",
+          objectives: [{ value: "" }],
           startDate: "",
           endDate: "",
           smeStage: [],
@@ -168,13 +187,24 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
     }
   }, [isOpen]);
 
-  const onSubmit = async (data: ProgramFormData) => {
-    const payload = {
-      ...data,
-      maxParticipants: Number(data.maxParticipants),
+  const onSubmit = async (data: ProgramFormValues) => {
+    const objectivesArray = (data.objectives || [])
+      .map((o) => o.value.trim())
+      .filter((value) => value.length > 0);
+    const payload: ProgramFormData = {
+      name: data.name,
+      description: data.description,
+      objectives: objectivesArray,
       startDate: range?.from ? format(range?.from, "yyyy-MM-dd") : "",
       endDate: range?.to ? format(range?.to, "yyyy-MM-dd") : "",
+      smeStage: data.smeStage,
+      eligibleCountries: data.eligibleCountries,
+      industryFocus: data.industryFocus,
+      maxParticipants: Number(data.maxParticipants),
+      supportTypes: data.supportTypes,
+      partners: data.partners,
       applicationDeadline: range?.from ? format(range?.from, "yyyy-MM-dd") : "",
+      requirements: data.requirements,
     };
     if (isEdit) {
       await updateProgramMutation(payload, {
@@ -255,22 +285,49 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 )}
               </div>
               <div>
-                <Label className="text-sm font-medium text-foreground">
-                  Program Objectives
-                </Label>
-                <Input
-                  placeholder="Program Objectives"
-                  type="textarea"
-                  className="border min-h-26 rounded-lg w-full"
-                  {...register("objectives", {
-                    required: "Description is required",
-                  })}
-                />
-                {errors.description && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.description.message}
-                  </p>
-                )}
+                <div className="flex items-center   justify-between">
+                  <Label className="text-sm font-medium text-foreground">
+                    Program Objectives
+                  </Label>
+                  <button
+                    type="button"
+                    onClick={() => append({ value: "" })}
+                    className="inline-flex items-center gap-1 text-green text-sm hover:underline"
+                    aria-label="Add objective"
+                  >
+                    <Plus className="h-4 w-4" /> Add
+                  </button>
+                </div>
+                <div className="mt-2 w-full flex flex-col gap-2">
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex w-full items-center gap-2"
+                    >
+                      <Input
+                        placeholder={`Objective ${index + 1}`}
+                        type="text"
+                        className="border w-full rounded-lg"
+                        {...register(`objectives.${index}.value` as const)}
+                      />
+
+                      {fields.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="inline-flex items-center justify-center rounded-md border p-2 hover:bg-accent/50"
+                          aria-label={`Remove objective ${index + 1}`}
+                          title="Remove"
+                        >
+                          <Trash2 className="h-4 w-4 " />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="font-normal text-xs mt-1">
+                  Click Add to include more objectives.
+                </p>
               </div>
               <div className="flex flex-col gap-2">
                 <Label className="text-sm font-medium text-foreground">

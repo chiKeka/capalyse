@@ -128,7 +128,7 @@ const columns = [
     ),
   },
   { header: "Readiness Score", accessor: "readinessScore" },
-  { header: "Revenue", accessor: "revenue" },
+  { header: "Revenue", accessor: "totalRevenue" },
   {
     header: "Team Size",
     accessor: (row: any) => <span>{row?.teamMembers?.length}</span>,

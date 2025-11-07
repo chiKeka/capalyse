@@ -47,6 +47,7 @@ type OverviewCard = {
 };
 function page({}: Props) {
   const [summaryMonths, setSummaryMonths] = useState(30);
+  
   const overviewCards: OverviewCard[] = useMemo(() => {
     return [
       {
