@@ -99,40 +99,41 @@ function page() {
     <div>
       <div className="flex my-4 justify-between w-full">
         <div className="inline-flex my-3 md:text-sm text-xs lg:text-base">
-          <p>Program {">"}</p>
+          <p>Program {'>'}</p>
           <p className="font-medium text-green ">{program?.name}</p>
         </div>
-        {params?.accessType === "development" && program?.developmentOrgId === auth?.id && (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() =>
-                router.push(
-                  `/${params.accessType}/programs/${params.sluge}/applicants`
-                )
-              }
-              className="text-green w-fit"
-              variant="tertiary"
-            >
-              {CIcons?.applicants()}
-              View Applicants
-            </Button>
-            <Button
-              className="text-green w-fit"
-              variant="tertiary"
-              onClick={() => {
-                setIsOpen(true);
-                setIsEdit(true);
-              }}
-            >
-              {CIcons?.edit()}
-              Edit
-            </Button>
-          </div>
-        )}
+        {params?.accessType === 'development' &&
+          program?.developmentOrgId === auth?.id && (
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() =>
+                  router.push(
+                    `/${params.accessType}/programs/${params.sluge}/applicants`
+                  )
+                }
+                className="text-green w-fit"
+                variant="tertiary"
+              >
+                {CIcons?.applicants()}
+                View Applicants
+              </Button>
+              <Button
+                className="text-green w-fit"
+                variant="tertiary"
+                onClick={() => {
+                  setIsOpen(true);
+                  setIsEdit(true);
+                }}
+              >
+                {CIcons?.edit()}
+                Edit
+              </Button>
+            </div>
+          )}
 
-        {searchParams.get("apply") === "true" &&
-          (params?.accessType === "sme" ||
-            params?.accessType === "investor") && (
+        {searchParams.get('apply') === 'true' &&
+          (params?.accessType === 'sme' ||
+            params?.accessType === 'investor') && (
             <div className="flex items-center gap-2">
               <Button
                 className="text-green w-fit"
@@ -158,10 +159,10 @@ function page() {
                   className="max-h-4  h-auto w-auto max-w-4"
                 />
                 <div className="flex flex-wrap gap-2">
-                  Hosted by{" "}
+                  Hosted by{' '}
                   {program?.partners
                     ?.map((partner: any) => partner?.name)
-                    .join(", ")}
+                    .join(', ')}
                 </div>
               </div>
               <div
@@ -172,11 +173,11 @@ function page() {
                   className="rounded-full h-2 w-2 font-medium"
                   style={{ backgroundColor: color }}
                 />
-                {(params.accessType === "investor" ||
-                  params.accessType === "sme") &&
+                {(params.accessType === 'investor' ||
+                  params.accessType === 'sme') &&
                   label()}
-                {(params.accessType === "development" ||
-                  params.accessType === "admin") && (
+                {(params.accessType === 'development' ||
+                  params.accessType === 'admin') && (
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -210,12 +211,9 @@ function page() {
             <div>
               <p className="font-bold text-base">Program Objective</p>
               <ol className="list-disc font-normal text-base ml-5">
-                <li>Improve SME compliance and documentation</li>
-                <li>Raise average Investment Readiness Scores</li>
-                <li>
-                  Support 50% of participants in meeting investor criteria
-                </li>
-                <li>Promote regional trade awareness (AfCFTA, ECOWAS)</li>
+                {program?.objectives?.map((item: string, index: number) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ol>
             </div>
             <div>
@@ -227,16 +225,15 @@ function page() {
             <div>
               <p className="font-bold text-normal">Target Region</p>
               <p className="font-normal text-base">
-                {program?.eligibleCountries?.join(", ")}
+                {program?.eligibleCountries?.join(', ')}
               </p>
             </div>
             <div>
               <p className="font-normal text-base">Support Provided:</p>
               <ol className="list-disc font-normal text-base ml-5">
-                <li>Guided readiness assessments</li>
-                <li>Personalized feedback and resources</li>
-                <li>Live virtual workshops and office hours</li>
-                <li>Final demo day with investors</li>
+                {program?.supportTypes?.map((item: string, index: number) => (
+                  <li key={index}>{item?.replace('_', ' ')}</li>
+                ))}
               </ol>
             </div>
             <div>
@@ -244,7 +241,7 @@ function page() {
               <p className="font-normal text-base">
                 {program?.partners
                   ?.map((partner: any) => partner?.name)
-                  .join(", ")}
+                  .join(', ')}
               </p>
             </div>
           </div>
