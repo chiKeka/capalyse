@@ -278,7 +278,7 @@ export default function Info({}: Props) {
             Upload Business logo
           </p>
           <div
-            className="w-full border-1 boeder-[#ABD2C7] flex flex-col items-center justify-center gap-2 border-dashed h-20 rounded-md cursor-pointer"
+            className="w-full border-1 boeder-[#ABD2C7] flex flex-col items-center justify-center gap-2 border-dashed min-h-20 text-center rounded-md cursor-pointer"
             onClick={handleDivClick}
           >
             <input

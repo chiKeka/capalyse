@@ -104,7 +104,7 @@ export const ApiEndPoints = {
   Edit_Message: (id: string) => `/messages/${id}`,
 
   //networking
-  networking: 'smes/directory',
+  networking: '/smes/directory',
 };
 
 /**

@@ -1,22 +1,21 @@
-"use client";
-import { SearchForm } from "@/components/search-form";
-import Button from "@/components/ui/Button";
-import { ProfileSheet } from "@/components/ui/profileSheet";
+'use client';
+import { SearchForm } from '@/components/search-form';
+import { ProfileSheet } from '@/components/ui/profileSheet';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { statusBadge } from "@/components/ui/statusBar";
-import { ReusableTable } from "@/components/ui/table";
-import { useSmeMatches } from "@/hooks/useDirectories";
-import { Loader2Icon } from "lucide-react";
+} from '@/components/ui/select';
+import { statusBadge } from '@/components/ui/statusBar';
+import { ReusableTable } from '@/components/ui/table';
+import { useSmeMatches } from '@/hooks/useDirectories';
+import { Loader2Icon } from 'lucide-react';
 
-import useDebounce from "@/hooks/useDebounce";
-import Image from "next/image";
-import { useMemo, useState } from "react";
+import useDebounce from '@/hooks/useDebounce';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
 
 // Example data
 const investors: any = [];
@@ -24,8 +23,8 @@ const investors: any = [];
 // Table columns
 
 function InvestorsPage() {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [selectedInvestor, setSelectedInvestor] = useState<any | null>(null);
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -36,9 +35,17 @@ function InvestorsPage() {
     q: debouncedSearch || undefined,
   });
 
+  const handleViewProfile = (investor: any) => {
+    setSelectedInvestor(investor);
+  };
+
+  const handleCloseSheet = () => {
+    setSelectedInvestor(null);
+  };
+
   const columns = [
     {
-      header: "Name",
+      header: 'Name',
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
           <Image
@@ -52,23 +59,23 @@ function InvestorsPage() {
         </div>
       ),
     },
-    { header: "Investor Type", accessor: "type" },
-    { header: "Investment Focus", accessor: "focus" },
+    { header: 'Investor Type', accessor: 'type' },
+    { header: 'Investment Focus', accessor: 'focus' },
     {
-      header: "Status",
+      header: 'Status',
       accessor: (row: any) => statusBadge(row.status),
     },
     {
-      header: "Action",
-      accessor: () => (
+      header: 'Action',
+      accessor: (row: any) => (
         <button
           className="text-green font-medium hover:underline"
-          onClick={() => setOpen(true)}
+          onClick={() => handleViewProfile(row)}
         >
           View Profile
         </button>
       ),
-      className: "text-green",
+      className: 'text-green',
     },
   ];
 
@@ -119,10 +126,10 @@ function InvestorsPage() {
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
             />
           </div>
-          <Button variant="primary">
+          {/* <Button variant="primary">
             Message Investor
             <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -140,7 +147,12 @@ function InvestorsPage() {
           totalPages={totalPages}
         />
       )}
-      <ProfileSheet open={open} onOpenChange={setOpen} />
+      <ProfileSheet
+        open={!!selectedInvestor}
+        onOpenChange={(open) => !open && handleCloseSheet()}
+        data={selectedInvestor}
+        id={selectedInvestor?._id || selectedInvestor?.id}
+      />
     </div>
   );
 }

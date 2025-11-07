@@ -39,7 +39,7 @@ const conversationToMessage = (
   }
 
   return {
-    id: conversation._id,
+    id: conversation.id,
     sender: `${otherParticipant.firstName} ${otherParticipant.lastName}`,
     senderType: otherParticipant.businessName || "Member", // Use businessName as role fallback
     avatar: "/icons/default-avatar.svg",
@@ -81,7 +81,7 @@ export function MessageSheet({
 
   function onSelectMessage(conversationId: string) {
     const conversation = conversations.find(
-      (conv) => conv._id === conversationId
+      (conv) => conv.id === conversationId
     );
     if (conversation) {
       setSelectedMessage(conversationToMessage(conversation, currentUserId));
