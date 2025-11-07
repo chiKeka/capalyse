@@ -100,7 +100,7 @@ export default UserManagementTabContents;
 
 const columns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.smeBusinessInfo?.logo && (
@@ -113,27 +113,27 @@ const columns = [
           />
         )}
         <span className="font-medium text-sm">
-          {row?.smeBusinessInfo?.businessName ?? '-'}
+          {row?.smeBusinessInfo?.businessName ?? "-"}
         </span>
       </div>
     ),
   },
   {
-    header: 'Industry',
-    accessor: (row: any) => row?.smeBusinessInfo?.industry ?? '-',
+    header: "Industry",
+    accessor: (row: any) => row?.smeBusinessInfo?.industry ?? "-",
   },
   {
-    header: 'Country',
+    header: "Country",
     accessor: (row: any) => (
-      <span>{row?.smeBusinessInfo?.countryOfOperation?.join(', ') ?? '-'}</span>
+      <span>{row?.smeBusinessInfo?.countryOfOperation?.join(", ") ?? "-"}</span>
     ),
   },
 
-  { header: 'Readiness Score', accessor: 'readinessPct' },
-  { header: 'Revenue', accessor: 'totalRevenue' },
-  { header: 'Team Size', accessor: 'teamSize' },
+  { header: "Readiness Score", accessor: "readinessScore" },
+  { header: "Revenue", accessor: "totalRevenue" },
+  { header: "Team Size", accessor: "teamSize" },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/sme/${row.userId}`}
@@ -142,7 +142,7 @@ const columns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];
 
