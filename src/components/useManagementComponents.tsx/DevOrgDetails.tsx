@@ -1,11 +1,11 @@
-import { Loader2Icon } from 'lucide-react';
-import { Card } from '../ui/card';
-import ContactDetails from './ContactDetails';
-import Documents from './Documents';
-import Verification from './Verification';
-import { useGetDevOrgById } from '@/hooks/useAdmin';
-import { toast } from 'sonner';
-import { notFound } from 'next/navigation';
+import { useGetDevOrgById } from "@/hooks/useAdmin";
+import { Loader2Icon } from "lucide-react";
+import { notFound } from "next/navigation";
+import { toast } from "sonner";
+import { Card } from "../ui/card";
+import ContactDetails from "./ContactDetails";
+import Documents from "./Documents";
+import Verification from "./Verification";
 
 const DevOrgDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetDevOrgById(id);
@@ -21,11 +21,12 @@ const DevOrgDetails = ({ id }: { id: string }) => {
         <ContactDetails
           data={{
             firstName: businessProfile?.devOrgInfo?.organizationName,
+            ...(businessProfile?.devOrgInfo || {}),
           }}
         />
         <Verification
           verificationStatus={
-            businessProfile?.devOrgInfo?.verificationStatus ?? 'Pending'
+            businessProfile?.devOrgInfo?.verificationStatus ?? "Pending"
           }
         />
       </div>

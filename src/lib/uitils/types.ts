@@ -207,7 +207,7 @@ export type ChatParticipant = {
 };
 
 export type ChatConversation = {
-  _id: string;
+  id: string;
   participants: ChatParticipant[];
   unreadCount: Record<string, number>;
   isGroup: boolean;

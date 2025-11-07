@@ -9,49 +9,62 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Card } from "@/components/ui/card";
+import { useSingleResource } from "@/hooks/useResources";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-
-const courseData = {
-  title: "Trading Across Africa: How AfCFTA is Changing the Game",
-  instructor: {
-    name: "Dr. Emily Carter",
-    avatar: "/avatars/01.png",
-  },
-  image: "/images/resource.png",
-  modules: [
-    {
-      title: "Module 1: Introduction to AfCFTA",
-      lessons: [
-        { title: "What is AfCFTA?", duration: "12:34", isCompleted: true },
-        {
-          title: "Key Objectives and Benefits",
-          duration: "15:20",
-          isCompleted: true,
-        },
-        {
-          title: "The Role of SMEs in AfCFTA",
-          duration: "10:05",
-          isCompleted: false,
-          isCurrent: true,
-        },
-      ],
-    },
-  ],
-  resources: [
-    { title: "AfCFTA Official Agreement", type: "PDF" },
-    { title: "Rules of Origin Manual", type: "PDF" },
-  ],
-};
+import { notFound, useParams } from "next/navigation";
 
 export default function SingleCoursePage() {
-  const { accessType } = useParams();
+  const { accessType, courseId } = useParams();
+
+  const { data: course, isLoading } = useSingleResource(courseId as string);
+  const courseData = {
+    title: course?.title,
+    instructor: {
+      name: "Dr. Emily Carter",
+      avatar: "/avatars/01.png",
+    },
+    image: course?.thumbnailUrl,
+    modules: [
+      {
+        title: "Module 1: Introduction to AfCFTA",
+        lessons: [
+          { title: "What is AfCFTA?", duration: "12:34", isCompleted: true },
+          {
+            title: "Key Objectives and Benefits",
+            duration: "15:20",
+            isCompleted: true,
+          },
+          {
+            title: "The Role of SMEs in AfCFTA",
+            duration: "10:05",
+            isCompleted: false,
+            isCurrent: true,
+          },
+        ],
+      },
+    ],
+    resources: [
+      { title: "AfCFTA Official Agreement", type: "PDF" },
+      { title: "Rules of Origin Manual", type: "PDF" },
+    ],
+  };
+
   const totalLessons = courseData.modules.flatMap((mod) => mod.lessons).length;
   const completedLessons = courseData.modules
     .flatMap((mod) => mod.lessons)
     .filter((l) => l.isCompleted).length;
   const progress = (completedLessons / totalLessons) * 100;
-
+  if (isLoading) {
+    return (
+      <div className="">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+  if (!course) {
+    return notFound();
+  }
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
       <Breadcrumb>
@@ -63,7 +76,7 @@ export default function SingleCoursePage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{courseData.title}</BreadcrumbPage>
+            <BreadcrumbPage>{course?.title}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -72,15 +85,15 @@ export default function SingleCoursePage() {
         <div className="md:col-span-4 space-y-6">
           <Card className="overflow-hidden">
             <Image
-              src={courseData?.image}
-              alt={courseData.title}
+              src={course?.thumbnailUrl}
+              alt={course?.title}
               width={1102}
               height={278}
               className="w-full object-cover h-auto max-h-[278px]"
             />
           </Card>
           <h1 className="text-2xl font-bold tracking-tight text-center">
-            {courseData.title}
+            {course?.title}
           </h1>
           <div className="text-center flex items-center gap-2 justify-center">
             <span>May 19, 2025</span>{" "}

@@ -46,7 +46,7 @@ export default function ChatPage({
   // Get current user to determine message ownership
   const { data: currentUserResponse } = useSession();
   const currentUserId = currentUserResponse?.user?.id || "unknown-user";
-
+console.log({chatUser})
   // Get conversation messages
   const conversationId = chatUser.id; // The conversation ID
   const {

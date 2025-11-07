@@ -13,6 +13,8 @@ import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/lib/atoms/atoms";
+import CreateProgram from "../ui/createProgram";
+import { useState } from "react";
 
 export default function DevelopmentDashBoard() {
   const params = useParams();
@@ -35,6 +37,9 @@ export default function DevelopmentDashBoard() {
     const isMyProgram = p.developmentOrgId === auth?.id;
     return isMyProgram;
   });
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [selectedProgram, setSelectedProgram] = useState<any>(null);
   const overviewCards = [
     {
       id: 3,
@@ -114,7 +119,20 @@ export default function DevelopmentDashBoard() {
           >
             <div className="my-8 flex-col flex gap-2">
               {filteredPrograms?.map((program: any, index: string) => {
-                return <Programs key={index} program={program} />;
+                return (
+                  <Programs
+                    editProgram={isEdit}
+                    setEditProgram={(edit) => {
+                      setIsEdit(edit);
+                      if (edit) {
+                        setSelectedProgram(program);
+                        setIsOpen(true);
+                      }
+                    }}
+                    key={index}
+                    program={program}
+                  />
+                );
               })}
             </div>
           </DashboardCardLayout>
@@ -133,6 +151,19 @@ export default function DevelopmentDashBoard() {
           </DashboardCardLayout>
         </div>
       )}
+
+      <CreateProgram
+        isOpen={isOpen}
+        setIsOpen={(open) => {
+          setIsOpen(open);
+          if (!open) {
+            setIsEdit(false);
+            setSelectedProgram(null);
+          }
+        }}
+        isEdit={isEdit}
+        program={selectedProgram}
+      />
     </div>
   );
 }

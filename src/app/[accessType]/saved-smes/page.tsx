@@ -29,7 +29,7 @@ const SavedSMEDirectoryPage = () => {
     q: debouncedSearch || undefined,
     enabled: true,
   });
-  // console.log({ smes });
+
   const columns = [
     {
       header: 'Name',

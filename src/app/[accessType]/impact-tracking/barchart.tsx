@@ -53,19 +53,19 @@ export function BarChart() {
     labels,
     datasets: [
       {
-        labels: "Female",
+        label: "Impact per month",
         data: summaryData?.map((item: dataSets) => item.amount?.amount ?? 0),
         backgroundColor: "#2E8E73",
         borderRadius: 8,
         borderSkipped: false,
       },
-      {
-        labels: "Male",
-        data: summaryData?.map((item: dataSets) => item.amount?.amount ?? 0),
-        backgroundColor: "#ABD2C7",
-        borderRadius: 4,
-        borderSkipped: false,
-      },
+      // {
+      //   labels: "Male",
+      //   data: summaryData?.map((item: dataSets) => item.amount?.amount ?? 0),
+      //   backgroundColor: "#ABD2C7",
+      //   borderRadius: 4,
+      //   borderSkipped: false,
+      // },
     ],
   };
   return (

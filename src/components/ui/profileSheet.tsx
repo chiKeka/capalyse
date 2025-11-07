@@ -1,5 +1,13 @@
-import Button from "./Button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
+'use client';
+
+import { useAtomValue } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { authAtom } from '@/lib/atoms/atoms';
+import { useCreateConversation } from '@/hooks/useMessages';
+import Button from './Button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
 
 export interface Notification {
   id: string;
@@ -20,40 +28,75 @@ export function ProfileSheet({
   open,
   onOpenChange,
   data,
+  id,
 }: NotificationSheetProps) {
+  const auth = useAtomValue(authAtom);
+  const router = useRouter();
+  const { createConversation, isLoading } = useCreateConversation();
+  const [isCreating, setIsCreating] = useState(false);
+
   const investment = [
-    { name: "Viaplay Group", icon: "/images/viaPlay.svg" },
-    { name: "Spotify", icon: "/icons/sportify.svg" },
-    { name: "VKing Games", icon: "/images/king.svg" },
-    { name: "DreamHack", icon: "/images/dreamHAck.svg" },
+    { name: 'Viaplay Group', icon: '/images/viaPlay.svg' },
+    { name: 'Spotify', icon: '/icons/sportify.svg' },
+    { name: 'VKing Games', icon: '/images/king.svg' },
+    { name: 'DreamHack', icon: '/images/dreamHAck.svg' },
   ];
 
   const contact = [
-    { name: "Website", icon: "/icons/web.svg" },
-    { name: "LinkedIn", icon: "/icons/linkedIn.svg" },
-    { name: "Facebook", icon: "/icons/facebook.svg" },
-    { name: "X", icon: "/icons/twitter.svg" },
+    { name: 'Website', icon: '/icons/web.svg' },
+    { name: 'LinkedIn', icon: '/icons/linkedIn.svg' },
+    { name: 'Facebook', icon: '/icons/facebook.svg' },
+    { name: 'X', icon: '/icons/twitter.svg' },
   ];
   const details = [
     {
-      name: "Investor Name",
-      activity: "Investor A",
+      name: 'Investor Name',
+      activity: data?.name || 'Investor A',
     },
     {
-      name: "Investment Type",
-      activity: "Venture Capital",
+      name: 'Investment Type',
+      activity: data?.type || 'Venture Capital',
     },
     {
-      name: "Investment Focus",
-      activity: "Agribusiness, Fintech",
+      name: 'Investment Focus',
+      activity: data?.focus || 'Agribusiness, Fintech',
     },
     {
-      name: "Location",
-      activity: "Kentucky, USA",
+      name: 'Location',
+      activity: data?.location || 'Kentucky, USA',
     },
   ];
 
-  // console.log(data);
+  const handleSendMessage = async () => {
+    if (!auth?.id) {
+      toast.error('Please log in to send a message');
+      return;
+    }
+
+    const investorId = data?._id || data?.id || id;
+    if (!investorId) {
+      toast.error('Investor ID not found');
+      return;
+    }
+
+    if (auth.id === investorId) {
+      toast.error('Cannot create a conversation with yourself');
+      return;
+    }
+
+    setIsCreating(true);
+    try {
+      const conversation = await createConversation([auth.id, investorId]);
+      toast.success('Conversation created successfully');
+      onOpenChange?.(false);
+      // Navigate to messages page or open conversation
+      router.push(`/messages?conversation=${conversation.data.id}`);
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to create conversation');
+    } finally {
+      setIsCreating(false);
+    }
+  };
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -62,11 +105,11 @@ export function ProfileSheet({
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-row gap-2">
-            <img src={"/images/dasboardProfileImg.svg"} />
+            <img src={'/images/dasboardProfileImg.svg'} />
             <div className="h-auto flex flex-col justify-between">
               {details.map((items, i) => (
                 <div key={i}>
-                  {" "}
+                  {' '}
                   <p className="font-normal flex-col flex gap-4 text-sm">
                     {items.name}
                   </p>
@@ -105,8 +148,13 @@ export function ProfileSheet({
           </div>
           <div className="mt-20w-full flex flex-col gap-4">
             <hr className="h-[1px]" />
-            <Button variant="primary" className="w-full">
-              Send Message
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={handleSendMessage}
+              disabled={isCreating || isLoading}
+            >
+              {isCreating || isLoading ? 'Creating...' : 'Send Message'}
             </Button>
           </div>
         </div>
@@ -121,25 +169,59 @@ export function NetworkProfileSheet({
   open,
   onOpenChange,
 }: NotificationSheetProps) {
+  const auth = useAtomValue(authAtom);
+  const router = useRouter();
+  const { createConversation, isLoading } = useCreateConversation();
+  const [isCreating, setIsCreating] = useState(false);
+
   const colaboration = [
-    "Food & Beverage businesses",
-    "Retail chains",
-    "Export logistics providers",
+    'Food & Beverage businesses',
+    'Retail chains',
+    'Export logistics providers',
   ];
 
   const contact = [
-    { name: "Website", icon: "/icons/web.svg" },
-    { name: "LinkedIn", icon: "/icons/linkedIn.svg" },
-    { name: "Facebook", icon: "/icons/facebook.svg" },
-    { name: "X", icon: "/icons/twitter.svg" },
+    { name: 'Website', icon: '/icons/web.svg' },
+    { name: 'LinkedIn', icon: '/icons/linkedIn.svg' },
+    { name: 'Facebook', icon: '/icons/facebook.svg' },
+    { name: 'X', icon: '/icons/twitter.svg' },
   ];
   const services = [
-    "Biodegradable food containers",
-    "Custom-printed eco-bags",
-    "Bulk packaging supply",
+    'Biodegradable food containers',
+    'Custom-printed eco-bags',
+    'Bulk packaging supply',
   ];
+console.log({ data });
+  const handleSendMessage = async () => {
+    if (!auth?.id) {
+      toast.error('Please log in to send a message');
+      return;
+    }
 
- console.log(data);
+    const smeId = data?.userId
+    if (!smeId) {
+      toast.error('SME ID not found');
+      return;
+    }
+
+    if (auth.id === smeId) {
+      toast.error('Cannot create a conversation with yourself');
+      return;
+    }
+
+    setIsCreating(true);
+    try {
+      const conversation = await createConversation([auth.id, smeId]);
+      toast.success('Conversation created successfully');
+      onOpenChange?.(false);
+      // Navigate to messages page or open conversation
+      router.push(`/messages?conversation=${conversation.data.id}`);
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to create conversation');
+    } finally {
+      setIsCreating(false);
+    }
+  };
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
@@ -149,20 +231,21 @@ export function NetworkProfileSheet({
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-row gap-2">
             <img
-              src={data ? data?.logo : "/icons/sportify.svg"}
+              src={data ? data?.logo : '/icons/sportify.svg'}
               className="rounded-full h-21 w-21"
             />
             <div>
               <p className="text-black font-bold text-2xl">
-                {data ? data?.name : "GreenPack Solutions Ltd"}
+                {data ? data?.name : 'GreenPack Solutions Ltd'}
               </p>
               <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
-                <p>{data ? data?.businessType : "Packaging"}</p>
+                <p>{data ? data?.businessType : 'Packaging'}</p>
                 <p className="text-2xl font-medium mb-2">.</p>
-                <p>{data ? data?.location: "Lagos"}</p>
+                <p>{data ? data?.location : 'Lagos'}</p>
               </span>
               <span className="inline-flex mt-2 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
-                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {data?.status}
+                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" />{' '}
+                {data?.status}
               </span>
             </div>
           </div>
@@ -216,8 +299,13 @@ export function NetworkProfileSheet({
           </div>
           <div className="mt-20w-full flex flex-col gap-4">
             <hr className="h-[1px]" />
-            <Button variant="primary" className="w-full">
-              Send Message
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={handleSendMessage}
+              disabled={isCreating || isLoading}
+            >
+              {isCreating || isLoading ? 'Creating...' : 'Send Message'}
             </Button>
           </div>
         </div>

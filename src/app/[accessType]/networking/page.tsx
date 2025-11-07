@@ -4,9 +4,10 @@ import { CIcons } from "@/components/ui/CIcons";
 import { NetworkProfileSheet } from "@/components/ui/profileSheet";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
+import useDebounce from "@/hooks/useDebounce";
 import { useSmeDirectory } from "@/hooks/useDirectories";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 interface NetworkingProfile {
   _id: string;
   logo: string;
@@ -19,13 +20,33 @@ interface NetworkingProfile {
 }
 
 function NetworkingPage() {
-  const { data } = useSmeDirectory();
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const debouncedSearch = useDebounce(search, 300);
+
+  const { data, isLoading } = useSmeDirectory(true, {
+    page,
+    limit: 20,
+    q: debouncedSearch || undefined,
+  });
+
   const networking = data?.items;
   const [selectedProfile, setSelectedProfile] =
     useState<NetworkingProfile | null>(null);
 
-  const handleViewProfile = (profile: NetworkingProfile) => {
+  const totalPages = useMemo(() => {
+    const metaTotalPages = (data as any)?.meta?.totalPages;
+    if (metaTotalPages) return metaTotalPages;
+    const totalItems =
+      (data as any)?.meta?.total ??
+      (data as any)?.total ??
+      (data as any)?.count ??
+      (data as any)?.items?.length ??
+      0;
+    return totalItems ? Math.ceil(totalItems / 20) : 1;
+  }, [data]);
 
+  const handleViewProfile = (profile: NetworkingProfile) => {
     setSelectedProfile(profile);
   };
 
@@ -102,7 +123,14 @@ function NetworkingPage() {
         </div>
       </div>
 
-      <ReusableTable columns={columns} data={networking} />
+      <ReusableTable
+        columns={columns}
+        data={networking ?? []}
+        loading={isLoading}
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
       <NetworkProfileSheet
         id={selectedProfile?._id}
         onOpenChange={(open) => !open && handleCloseSheet()}

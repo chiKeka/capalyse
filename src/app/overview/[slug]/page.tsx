@@ -3,6 +3,7 @@
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
 import { usePublicProfile } from "@/hooks/useProfileManagement";
+import { useSession } from "@/lib/auth-client";
 import { useParams, useRouter } from "next/navigation";
 
 type Props = {};
@@ -10,18 +11,32 @@ type Props = {};
 const page = (props: Props) => {
   const params = useParams();
   const router = useRouter();
+  const { data: session } = useSession();
+
   const slug = params.slug as string;
   const { data: publicProfile } = usePublicProfile(slug);
   const data = {
-    logo: publicProfile?.smeBusinessInfo?.logo,
-    businessName: "GreenPack Solutions Ltd",
-    businessStage: "Packaging",
+    logo:
+      publicProfile?.userRole === "development_org"
+        ? publicProfile?.devOrgInfo?.organizationName
+        : publicProfile?.smeBusinessInfo?.logo,
+    businessName:
+      publicProfile?.userRole === "development_org"
+        ? publicProfile?.devOrgInfo?.organizationName
+        : publicProfile?.smeBusinessInfo?.businessName,
+    businessStage:
+      publicProfile?.userRole === "development_org"
+        ? publicProfile?.devOrgInfo?.organizationName
+        : publicProfile?.smeBusinessInfo?.businessStage,
     countryOfOperation: ["Lagos"],
     contact: [
       {
         icon: <CIcons.web />,
         name: "Website",
-        url: publicProfile?.smeBusinessInfo?.website,
+        url:
+          publicProfile?.userRole === "development_org"
+            ? publicProfile?.smeBusinessInfo?.website
+            : publicProfile?.smeBusinessInfo?.website,
       },
       {
         icon: <CIcons.linkedIn />,
@@ -56,7 +71,7 @@ const page = (props: Props) => {
       "Export logistics providers",
     ],
   };
-console.log(publicProfile)
+  console.log(publicProfile);
   return (
     <div className="grid max-w-7xl mx-auto h-screen   grid-cols-1 lg:grid-cols-[1fr_2fr] items-start gap-6 overflow-y-auto  p-4 lg:p-12">
       <div className="overflow-y-auto ">
@@ -67,9 +82,7 @@ console.log(publicProfile)
           />
           <div>
             <p className="text-black font-bold text-2xl">
-              {publicProfile
-                ? publicProfile?.smeBusinessInfo?.businessName
-                : "GreenPack Solutions Ltd"}
+              {data?.businessName ?? "GreenPack Solutions Ltd"}
             </p>
             <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
               <p>

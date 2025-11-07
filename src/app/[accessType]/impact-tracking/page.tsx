@@ -20,9 +20,10 @@ import {
 } from "chart.js";
 
 import { CIcons } from "@/components/ui/CIcons";
+import { useImpactSummary } from "@/hooks/usePrograms";
+import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { BarChart } from "./barchart";
-import LineChart from "./lineChart";
 import { PieChart } from "./pieChart";
 
 ChartJS.register(
@@ -47,12 +48,18 @@ type OverviewCard = {
 };
 function page({}: Props) {
   const [summaryMonths, setSummaryMonths] = useState(30);
+
+  const { data: summaryStat } = useImpactSummary({
+    from: format(subDays(new Date(), summaryMonths), "yyyy-MM-dd"),
+    to: format(new Date(), "yyyy-MM-dd"),
+  });
+  console.log(summaryMonths);
   const overviewCards: OverviewCard[] = useMemo(() => {
     return [
       {
         id: 1,
         label: "Total SMEs Funded",
-        amount: 0,
+        amount: summaryStat?.totalFundedSMEs ?? 0,
         percentage: 0,
 
         direction: "up",
@@ -61,8 +68,8 @@ function page({}: Props) {
       },
       {
         id: 2,
-        label: "Male Owned SMEs",
-        amount: 0,
+        label: "Total Amount",
+        amount: summaryStat?.totalAmount?.amount ?? 0,
         percentage: 0,
         direction: "up",
         icon: CIcons.chars,
@@ -70,10 +77,9 @@ function page({}: Props) {
       },
       {
         id: 3,
-        label: "Female Owned SMEs",
-        amount: 0,
+        label: "averageFunded",
+        amount: summaryStat?.totalAmount?.amount ?? 0,
         percentage: 0,
-
         direction: "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
@@ -97,9 +103,7 @@ function page({}: Props) {
                   </div>
                   <Select
                     value={String(summaryMonths)}
-                    onValueChange={(v) =>
-                      setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
-                    }
+                    onValueChange={(v) => setSummaryMonths(Number(v))}
                   >
                     <SelectTrigger className="w-fit border-none rounded-lg">
                       <SelectValue
@@ -121,7 +125,7 @@ function page({}: Props) {
                     {card.amount}
                   </span>
 
-                  <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
+                  {/* <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
                     {card.icon()}
                     {card?.percentage !== undefined &&
                       (card.direction === "up" ? (
@@ -136,7 +140,7 @@ function page({}: Props) {
                           %
                         </span>
                       ))}
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>
@@ -144,11 +148,11 @@ function page({}: Props) {
         </div>
       </div>
       <div className="w-full my-8">
-        <BarChart  />
+        <BarChart />
       </div>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 ">
         {/* <LineChart /> */}
-        <PieChart  />
+        <PieChart />
       </div>
     </div>
   );

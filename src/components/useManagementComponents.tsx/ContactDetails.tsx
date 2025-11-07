@@ -9,8 +9,8 @@ const ContactDetails = ({ data }: { data?: any }) => {
         </div>
         <div>
           <h3 className="text-xl font-semibold text-gray-900">{`${
-            data?.firstName ?? ''
-          } ${data?.lastName ?? ''}`}</h3>
+            data?.firstName ?? ""
+          } ${data?.lastName ?? ""}`}</h3>
           <p className="text-gray-600">{data?.email}</p>
         </div>
       </div>
@@ -19,28 +19,28 @@ const ContactDetails = ({ data }: { data?: any }) => {
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">Name</span>
           <span className="font-semibold text-gray-900">{`${
-            data?.firstName ?? ''
-          } ${data?.lastName ?? ''}`}</span>
+            data?.firstName ?? ""
+          } ${data?.lastName ?? ""}`}</span>
         </div>
 
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">Phone Number</span>
           <span className="font-semibold text-gray-900">
-            {data?.phoneNumber ?? 'N/A'}
+            {data?.phoneNumber ?? "N/A"}
           </span>
         </div>
 
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">Country</span>
           <span className="font-semibold text-gray-900">
-            {data?.countryOfResidence ?? data?.countryOfResidence ?? 'N/A'}
+            {data?.countryOfResidence ?? data?.countryHeadquarters ?? "N/A"}
           </span>
         </div>
 
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">State</span>
           <span className="font-semibold text-gray-900">
-            {data?.stateOfResidence ?? 'N/A'}
+            {data?.stateOfResidence ?? "N/A"}
           </span>
         </div>
       </div>
