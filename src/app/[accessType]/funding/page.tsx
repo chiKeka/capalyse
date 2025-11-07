@@ -45,7 +45,7 @@ function page({}: Props) {
     { header: 'Industry', accessor: 'industry' },
     { header: 'Country', accessor: 'country' },
     { header: 'Readiness Score', accessor: 'readinessPct' },
-    { header: 'Revenue', accessor: 'revenue' },
+    { header: 'Revenue', accessor: 'totalRevenue' },
     { header: 'Team Size', accessor: 'teamSize' },
     {
       header: 'Action',
