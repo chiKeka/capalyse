@@ -1,10 +1,10 @@
 'use client';
 
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { authAtom } from '@/lib/atoms/atoms';
+import { authAtom, messageOpenAtom } from '@/lib/atoms/atoms';
 import { useCreateConversation } from '@/hooks/useMessages';
 import Button from './Button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
@@ -31,6 +31,7 @@ export function ProfileSheet({
   id,
 }: NotificationSheetProps) {
   const auth = useAtomValue(authAtom);
+  const setMessageOpenState = useSetAtom(messageOpenAtom);
   const router = useRouter();
   const { createConversation, isLoading } = useCreateConversation();
   const [isCreating, setIsCreating] = useState(false);
@@ -87,10 +88,17 @@ export function ProfileSheet({
     setIsCreating(true);
     try {
       const conversation = await createConversation([auth.id, investorId]);
+      console.log({conversation})
       toast.success('Conversation created successfully');
+      setTimeout(() => {
+          setMessageOpenState({
+          open: true,
+          conversationId: conversation?.data?.id,
+        })
+      }, 2000);
       onOpenChange?.(false);
       // Navigate to messages page or open conversation
-      router.push(`/messages?conversation=${conversation.data.id}`);
+      // router.push(`/messages?conversation=${conversation.data.id}`);
     } catch (error: any) {
       toast.error(error?.message || 'Failed to create conversation');
     } finally {
@@ -169,6 +177,7 @@ export function NetworkProfileSheet({
   open,
   onOpenChange,
 }: NotificationSheetProps) {
+  const setMessageOpenState = useSetAtom(messageOpenAtom);
   const auth = useAtomValue(authAtom);
   const router = useRouter();
   const { createConversation, isLoading } = useCreateConversation();
@@ -212,10 +221,17 @@ console.log({ data });
     setIsCreating(true);
     try {
       const conversation = await createConversation([auth.id, smeId]);
+      console.log('conversation',{conversation})
       toast.success('Conversation created successfully');
+      setTimeout(() => {
+          setMessageOpenState({
+          open: true,
+          conversationId: conversation?.data?.id,
+        })
+      }, 2000);
       onOpenChange?.(false);
       // Navigate to messages page or open conversation
-      router.push(`/messages?conversation=${conversation.data.id}`);
+      // router.push(`/messages?conversation=${conversation.data.id}`);
     } catch (error: any) {
       toast.error(error?.message || 'Failed to create conversation');
     } finally {

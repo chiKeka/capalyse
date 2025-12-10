@@ -122,7 +122,11 @@ export const useMessages = () => {
     Error,
     CreateConversationRequest
   >({
-    mutationFn: (data) => api.post(ApiEndPoints.Messages_Conversations, data),
+    mutationFn: async (data) => {
+      const res = await api.post(ApiEndPoints.Messages_Conversations, data)
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      return res?.data
+    },
     onSuccess: () => {
       // Invalidate conversations list to refetch
       queryClient.invalidateQueries({ queryKey: ["conversations"] });

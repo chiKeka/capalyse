@@ -87,9 +87,10 @@ export type MessageAttachment = {
 
 // Message types matching actual API response
 export type ChatMessage = {
-  _id: string;
+  id: string;
   conversationId: string;
-  senderId: ChatParticipant;
+  senderId: string;
+  senderDetails:ChatParticipant;
   content: string;
   messageType: MessageType;
   attachments: MessageAttachment[];
@@ -199,16 +200,18 @@ export type GetMessagesQuery = {
 
 // API Response Types (matching actual backend response structure)
 export type ChatParticipant = {
-  _id: string;
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
   businessName: string;
+  name: string;
+  image: string;
 };
 
 export type ChatConversation = {
   id: string;
-  participants: ChatParticipant[];
+  participantsDetails: ChatParticipant[];
   unreadCount: Record<string, number>;
   isGroup: boolean;
   blockedBy: string[];

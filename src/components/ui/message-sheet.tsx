@@ -1,12 +1,16 @@
 import { useGetConversations } from "@/hooks/useMessages";
 import { useSession } from "@/lib/auth-client";
-import { ChatConversation } from "@/lib/uitils/types";
+import { ChatConversation, ChatParticipant } from "@/lib/uitils/types";
 import { ArrowLeftIcon, RefreshCcwIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatPage from "../messages";
 import Button from "./Button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
+import { getChatHeader } from "@/lib/uitils";
+import { get } from "lodash";
+import { useAtom } from "jotai";
+import { messageOpenAtom } from "@/lib/atoms/atoms";
 
 export interface Message {
   id: string;
@@ -18,11 +22,11 @@ export interface Message {
   text?: string;
   typing?: boolean;
   online?: boolean;
+  lastUpdated?: string;
 }
 
 interface MessageSheetProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  
   emptyIllustration?: string;
   // messages: Message[];
 }
@@ -32,17 +36,19 @@ const conversationToMessage = (
   currentUserId: string
 ): Message => {
   const otherParticipant =
-    conversation.participants?.find((p) => p._id !== currentUserId) ||
-    conversation.participants?.[0];
+    conversation.participantsDetails?.find((p) => p.id !== currentUserId) ||
+    conversation.participantsDetails?.[0];
   if (!otherParticipant) {
     throw new Error("No other participant found in conversation");
   }
+  const chatHeader = getChatHeader(currentUserId, conversation.participantsDetails as ChatParticipant[]);
 
   return {
     id: conversation.id,
-    sender: `${otherParticipant.firstName} ${otherParticipant.lastName}`,
+    sender: chatHeader?.name as string,
     senderType: otherParticipant.businessName || "Member", // Use businessName as role fallback
-    avatar: "/icons/default-avatar.svg",
+    avatar: chatHeader?.img ??'',
+    lastUpdated: conversation.updatedAt,
     time: new Date(
       conversation.lastMessageAt || conversation.updatedAt
     ).toLocaleTimeString([], {
@@ -56,18 +62,14 @@ const conversationToMessage = (
 };
 
 export function MessageSheet({
-  open,
-  onOpenChange,
   emptyIllustration = "/icons/empty-messages.svg",
 }: MessageSheetProps) {
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messageOpenState,setMessageOpenState] = useAtom(messageOpenAtom);
+  const [isChatOpen, setIsChatOpen] = useState(Boolean(messageOpenState?.conversationId));
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [selectedConversationId, setSelectedConversationId] = useState<
-    string | null
-  >(null);
 
   // Fetch conversations using the API
-  const { conversations, isLoading, refetch, pagination } =
+  const { conversations, isLoading, refetch, pagination , isFetching} =
     useGetConversations();
 
   // Get current user ID from auth
@@ -80,23 +82,48 @@ export function MessageSheet({
   const hasMessages = messages.length > 0;
 
   function onSelectMessage(conversationId: string) {
+    if(isFetching) {
+      setTimeout(() => {
+        onSelectMessage(messageOpenState?.conversationId)
+      }, 500);
+      return
+    }
     const conversation = conversations.find(
       (conv) => conv.id === conversationId
     );
+    console.log({conversation})
     if (conversation) {
       setSelectedMessage(conversationToMessage(conversation, currentUserId));
-      setSelectedConversationId(conversationId);
       setIsChatOpen(true);
+      if(messageOpenState?.conversationId !== conversationId){
+        setMessageOpenState(prev=>({
+          ...prev,
+          conversationId: conversationId,
+        }))
+      }
     }
   }
+  useEffect(()=>{
+    if(messageOpenState?.conversationId){
+     onSelectMessage(messageOpenState?.conversationId)
+    }
+  },[messageOpenState?.conversationId])
+
   return (
     <Sheet
-      open={open}
+      open={messageOpenState?.open}
       onOpenChange={(open) => {
-        onOpenChange(open);
+        setMessageOpenState(prev=>({
+          ...prev,
+          open: open,
+        }))
         if (!open) {
           setIsChatOpen(false);
-          setSelectedMessage(null);
+          setMessageOpenState(prev=>({
+          ...prev,
+          open: open,
+          conversationId: '',
+        }))
         }
       }}
     >
@@ -106,7 +133,13 @@ export function MessageSheet({
             {isChatOpen ? (
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setIsChatOpen(false)}
+                  onClick={() => {
+                    setIsChatOpen(false)
+                    setMessageOpenState(prev=>({
+                      ...prev,
+                      conversationId: '',
+                    }))
+                  }}
                   aria-label="Back"
                   className="text-emerald-700 hover:bg-emerald-50 rounded-full p-1"
                 >
@@ -147,7 +180,7 @@ export function MessageSheet({
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {/* Pagination info */}
-          {pagination && (
+          {pagination && !isChatOpen&& (
             <div className="text-xs text-muted-foreground mb-2 px-2">
               {pagination.total > 0
                 ? `Showing ${
@@ -170,10 +203,10 @@ export function MessageSheet({
               {isChatOpen ? (
                 <ChatPage
                   chatUser={selectedMessage as Message}
-                  setChatOpen={setIsChatOpen}
+                  currentUserId={currentUserId || "unknown-user"}
                 />
               ) : (
-                messages.map((msg) => (
+                messages?.map((msg) => (
                   <li
                     key={msg.id}
                     className="flex items-center py-4 cursor-pointer hover:bg-muted/40 transition rounded-lg px-2"
