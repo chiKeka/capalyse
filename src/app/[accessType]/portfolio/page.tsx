@@ -76,12 +76,25 @@ const columns = [
 
 function page({}: Props) {
   const [search, setSearch] = useState('');
+  const [industryFilter, setIndustryFilter] = useState('all');
   const router = useRouter();
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
   const { data: investments = [], isLoading, error } = useInvestments();
   const { data: industries = [] } = useIndustries();
   // console.log({ portfolioSummary });
+
+  const filteredInvestments = investments.filter((investment: any) => {
+    const matchesSearch =
+      !search ||
+      investment?.metadata?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      investment?.metadata?.industry?.toLowerCase().includes(search.toLowerCase()) ||
+      investment?.metadata?.location?.toLowerCase().includes(search.toLowerCase());
+    const matchesIndustry =
+      industryFilter === 'all' ||
+      investment?.metadata?.industry?.toLowerCase() === industryFilter.toLowerCase();
+    return matchesSearch && matchesIndustry;
+  });
   const overviewCards = useMemo(() => {
     return [
       {
@@ -159,7 +172,7 @@ function page({}: Props) {
           </p>
         </div>
         <div className="flex gap-2 items-center w-full justify-end">
-          <Select defaultValue="all">
+          <Select value={industryFilter} onValueChange={setIndustryFilter}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
@@ -192,8 +205,8 @@ function page({}: Props) {
       </div>
       <ReusableTable
         columns={columns}
-        data={investments}
-        totalPages={Math.ceil(investments?.length / 4)}
+        data={filteredInvestments}
+        totalPages={Math.ceil(filteredInvestments?.length / 4)}
         loading={isLoading}
       />
     </div>

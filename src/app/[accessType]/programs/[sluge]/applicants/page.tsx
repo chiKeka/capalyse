@@ -21,12 +21,25 @@ type Props = {};
 
 function page({}: Props) {
   const [search, setSearch] = useState('');
+  const [industryFilter, setIndustryFilter] = useState('all');
   const params = useParams();
   const { data: program } = GetProgramApplications(params.sluge as string);
   const { data: programDetails } = GetProgramById(params.sluge as string);
   const { data: industries = [] } = useIndustries();
   const router = useRouter();
   const applicants: any[] = program?.applications ?? [];
+
+  const filteredApplicants = applicants.filter((applicant: any) => {
+    const matchesSearch =
+      !search ||
+      applicant?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      applicant?.industry?.toLowerCase().includes(search.toLowerCase()) ||
+      applicant?.location?.toLowerCase().includes(search.toLowerCase());
+    const matchesIndustry =
+      industryFilter === 'all' ||
+      applicant?.industry?.toLowerCase() === industryFilter.toLowerCase();
+    return matchesSearch && matchesIndustry;
+  });
 
   // console.log({ program });
   const columns = [
@@ -116,12 +129,12 @@ function page({}: Props) {
             </p>
           </div>
           <div className="flex gap-2 items-center w-full justify-end">
-            <Select defaultValue="all">
+            <Select value={industryFilter} onValueChange={setIndustryFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Types</SelectItem>
+                <SelectItem value="all">All Types</SelectItem>
                 {industries.map((industry) => (
                   <SelectItem key={industry} value={industry}>
                     {industry}
@@ -146,7 +159,7 @@ function page({}: Props) {
           columns={columns}
           noDataCaption="No applicants found"
           noDataText="No Applicants found check back later, any new application added will be found here"
-          data={applicants}
+          data={filteredApplicants}
           totalPages={program?.pagination?.totalPages ?? 0}
         />
       </DashboardCardLayout>

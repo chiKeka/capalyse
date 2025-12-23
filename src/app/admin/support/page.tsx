@@ -96,17 +96,26 @@ type Props = {};
 function Page({}: Props) {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [search, setSearch] = useState('');
 
   const { data: supportData, isLoading } = useGetSupport();
   // console.log({ supportData });
 
-  // Filter data based on status
+  // Filter data based on status and search
   const filteredData =
     supportData?.tickets?.filter((ticket: any) => {
       const matchesStatus =
         statusFilter === 'all' ||
         ticket?.status?.toLowerCase() === statusFilter.toLowerCase();
-      return matchesStatus;
+      const matchesSearch =
+        !search ||
+        ticket?.subject?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket?.ticketNumber?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket?.reporter?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket?.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket?.reporter?.email?.toLowerCase().includes(search.toLowerCase()) ||
+        ticket?.user?.email?.toLowerCase().includes(search.toLowerCase());
+      return matchesStatus && matchesSearch;
     }) || [];
 
   return (
@@ -141,6 +150,10 @@ function Page({}: Props) {
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setSearch(e.target.value);
+              }}
             />
           </div>
         </div>

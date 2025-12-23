@@ -14,9 +14,12 @@ import {
 } from '@/components/ui/select';
 import { useGetResources } from '@/hooks/useResources';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function ResourcesPage() {
   const router = useRouter();
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState('all');
 
   const { data: resources } = useGetResources({
     page: 1,
@@ -29,11 +32,23 @@ export default function ResourcesPage() {
     difficulty: undefined,
   });
   console.log(resources);
-  // Group resources by category
+  // Filter resources based on search and type
+  const filteredResources = resources?.resources?.filter((resource: any) => {
+    const matchesSearch =
+      !search ||
+      resource?.title?.toLowerCase().includes(search.toLowerCase()) ||
+      resource?.category?.toLowerCase().includes(search.toLowerCase());
+    const matchesType =
+      typeFilter === 'all' ||
+      resource?.type?.toLowerCase() === typeFilter.toLowerCase();
+    return matchesSearch && matchesType;
+  }) || [];
+
+  // Group filtered resources by category
   const resourcesByCategory =
     resources?.categories?.reduce((acc: any, category: any) => {
       const categoryResources =
-        resources?.resources?.filter(
+        filteredResources?.filter(
           (resource: any) => resource.category === category.name
         ) || [];
 
@@ -45,7 +60,7 @@ export default function ResourcesPage() {
     <div className="space-y-8">
       {/* Filter Section */}
       <div className="flex items-center justify-between">
-        <Select defaultValue="all">
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-32">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
@@ -60,6 +75,10 @@ export default function ResourcesPage() {
             className="w-full sm:w-auto md:min-w-sm"
             inputClassName="h-11 pl-9"
             iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+            value={search}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearch(e.target.value);
+            }}
           />
         </div>
       </div>

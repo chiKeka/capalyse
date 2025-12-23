@@ -25,9 +25,22 @@ type Props = {};
 
 function page({}: Props) {
   const [search, setSearch] = useState('');
+  const [industryFilter, setIndustryFilter] = useState('all');
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
   const { data: industries = [] } = useIndustries();
   const smes: any = [];
+
+  const filteredSmes = smes.filter((sme: any) => {
+    const matchesSearch =
+      !search ||
+      sme?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      sme?.industry?.toLowerCase().includes(search.toLowerCase()) ||
+      sme?.country?.toLowerCase().includes(search.toLowerCase());
+    const matchesIndustry =
+      industryFilter === 'all' ||
+      sme?.industry?.toLowerCase() === industryFilter.toLowerCase();
+    return matchesSearch && matchesIndustry;
+  });
   const columns = [
     {
       header: 'Name',
@@ -133,7 +146,7 @@ function page({}: Props) {
           </p>
         </div>
         <div className="flex gap-2 items-center w-full justify-end">
-          <Select defaultValue="all">
+          <Select value={industryFilter} onValueChange={setIndustryFilter}>
             <SelectTrigger className="w-32">
               <SelectValue placeholder="Type" />
             </SelectTrigger>
@@ -162,8 +175,8 @@ function page({}: Props) {
       </div>
       <ReusableTable
         columns={columns}
-        data={smes}
-        totalPages={Math.ceil(smes.length / 4)}
+        data={filteredSmes}
+        totalPages={Math.ceil(filteredSmes.length / 4)}
       />
     </div>
   );

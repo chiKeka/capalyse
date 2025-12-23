@@ -25,6 +25,8 @@ type Props = {};
 
 const page = (props: Props) => {
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [industryFilter, setIndustryFilter] = useState('all');
   const params = useParams();
   const { data: program, isLoading: isProgramLoading } = GetProgramById(
     params?.id as string
@@ -33,6 +35,18 @@ const page = (props: Props) => {
     useGetAdminProgramApplications(params?.id as string);
   
   const { data: industries = [] } = useIndustries();
+
+  const filteredApplicants = applicants?.applications?.filter((applicant: any) => {
+    const matchesSearch =
+      !search ||
+      applicant?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      applicant?.industry?.toLowerCase().includes(search.toLowerCase()) ||
+      applicant?.location?.toLowerCase().includes(search.toLowerCase());
+    const matchesIndustry =
+      industryFilter === 'all' ||
+      applicant?.industry?.toLowerCase() === industryFilter.toLowerCase();
+    return matchesSearch && matchesIndustry;
+  }) || [];
 
   // console.log({ applicants, program });
 
@@ -81,7 +95,7 @@ const page = (props: Props) => {
             </p>
           </div>
           <div className="flex gap-2 items-center w-full justify-end">
-            <Select defaultValue="all">
+            <Select value={industryFilter} onValueChange={setIndustryFilter}>
               <SelectTrigger className="w-32">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
@@ -99,13 +113,17 @@ const page = (props: Props) => {
                 className="w-full sm:w-auto md:min-w-sm"
                 inputClassName="h-11 pl-9"
                 iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearch(e.target.value);
+                }}
               />
             </div>
           </div>
         </div>
         <ReusableTable
           columns={smeApplicantsColumns}
-          data={applicants?.applications}
+          data={filteredApplicants}
           totalPages={applicants?.pagination?.totalPages}
           page={page}
           setPage={(page) => {
