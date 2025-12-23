@@ -183,7 +183,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
             <button
               onClick={googleSignIn}
               disabled={isLoading}
-              className="max-w-md w-full gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center"
+              className="max-w-md w-full cursor-pointer gap-3 rounded-lg  py-3 font-medium text-sm text-[#2E3034] items-center flex border-[0.5] border-[#829AD9] justify-center"
             >
               <img
                 src={'/icons/google.svg'}
