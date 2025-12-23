@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import useDebounce from '@/hooks/useDebounce';
 import { useInvestorSavedSMEs } from '@/hooks/useDirectories';
 import Image from 'next/image';
@@ -22,6 +23,7 @@ const SavedSMEDirectoryPage = () => {
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
+  const { data: industries = [] } = useIndustries();
 
   const { data: smes, isLoading } = useInvestorSavedSMEs({
     page,
@@ -95,10 +97,11 @@ const SavedSMEDirectoryPage = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Types</SelectItem>
-              <SelectItem value="packaging">Packaging</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="agriculture">Agriculture</SelectItem>
-              <SelectItem value="healthtech">HealthTech</SelectItem>
+              {industries.map((industry) => (
+                <SelectItem key={industry} value={industry}>
+                  {industry}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">

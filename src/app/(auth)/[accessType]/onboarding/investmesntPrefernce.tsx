@@ -23,6 +23,7 @@ import {
 import 'react-country-state-city/dist/react-country-state-city.css';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { useIndustries, useAfricanRegions } from '@/hooks/useComplianceCatalogs';
 
 type Props = {};
 
@@ -45,6 +46,8 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
       string[]
     >([]);
     const { investor_investment_info } = updateProfile();
+    const { data: industries = [] } = useIndustries();
+    const { data: regions = [] } = useAfricanRegions();
     const authState: any = useAtomValue(authAtom);
     const setStep = useSetAtom(onboardingStepAtom);
     const {
@@ -280,12 +283,11 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
                 <MultiSelectValue placeholder="Select Regions" />
               </MultiSelectTrigger>
               <MultiSelectContent>
-                <MultiSelectItem value="North_East">North East</MultiSelectItem>
-                <MultiSelectItem value="North_west">North west</MultiSelectItem>
-                <MultiSelectItem value="South_East">South East</MultiSelectItem>
-                <MultiSelectItem value="South_South">
-                  South South
-                </MultiSelectItem>
+                {regions.map((region) => (
+                  <MultiSelectItem key={region} value={region}>
+                    {region}
+                  </MultiSelectItem>
+                ))}
               </MultiSelectContent>
             </MultiSelect>
             {errors.targetRegions && (
@@ -310,11 +312,11 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>(
                 <MultiSelectValue placeholder="Select Industries" />
               </MultiSelectTrigger>
               <MultiSelectContent>
-                <MultiSelectItem value="Ict">ICT</MultiSelectItem>
-                <MultiSelectItem value="TelCom">
-                  Tel Communication
-                </MultiSelectItem>
-                <MultiSelectItem value="Health">Health</MultiSelectItem>
+                {industries.map((industry) => (
+                  <MultiSelectItem key={industry} value={industry}>
+                    {industry}
+                  </MultiSelectItem>
+                ))}
               </MultiSelectContent>
             </MultiSelect>
             {errors.targetIndustries && (

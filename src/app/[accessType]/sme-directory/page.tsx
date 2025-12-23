@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import useDebounce from '@/hooks/useDebounce';
 import { useSmeDirectory } from '@/hooks/useDirectories';
 import Image from 'next/image';
@@ -29,6 +30,8 @@ const SMEDirectoryPage = () => {
     limit: 20,
     q: debouncedSearch || undefined,
   });
+
+  const { data: industries = [] } = useIndustries();
 
   const params = useParams();
 
@@ -104,10 +107,11 @@ const SMEDirectoryPage = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="packaging">Packaging</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="agriculture">Agriculture</SelectItem>
-              <SelectItem value="healthtech">HealthTech</SelectItem>
+              {industries.map((industry) => (
+                <SelectItem key={industry} value={industry}>
+                  {industry}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">

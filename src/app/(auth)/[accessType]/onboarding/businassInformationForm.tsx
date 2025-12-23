@@ -13,7 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAfricanCountries } from "@/hooks/useComplianceCatalogs";
+import {
+  useAfricanCountries,
+  useIndustries,
+} from "@/hooks/useComplianceCatalogs";
 import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
@@ -51,6 +54,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
     const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
     const { data: countries = [], isLoading: countriesLoading } =
       useAfricanCountries();
+    const { data: industries = [] } = useIndustries();
 
     useEffect(() => {
       props.setLoading(smes_bussiness_info.isPending);
@@ -222,11 +226,11 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
               <SelectValue placeholder="Select Industry" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Health">Health</SelectItem>
-              <SelectItem value="Ict">Information</SelectItem>
-              <SelectItem value="Telcom">Tel Communication</SelectItem>
-              <SelectItem value="Agro">Agriculture</SelectItem>
-              <SelectItem value="Others">Others</SelectItem>
+              {industries.map((industry) => (
+                <SelectItem key={industry} value={industry}>
+                  {industry}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           {errors.industry && (

@@ -1,4 +1,5 @@
 import useDebounce from '@/hooks/useDebounce';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import { useUserDirectory } from '@/hooks/useDirectories';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,6 +39,8 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
     q: debouncedSearch || undefined,
   });
 
+  const { data: industries = [] } = useIndustries();
+
   if (!type) {
     return notFound();
   }
@@ -62,10 +65,11 @@ const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="packaging">Packaging</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="agriculture">Agriculture</SelectItem>
-              <SelectItem value="healthtech">HealthTech</SelectItem>
+              {industries.map((industry) => (
+                <SelectItem key={industry} value={industry}>
+                  {industry}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">

@@ -14,6 +14,7 @@ import {
 import { statusBadge } from '@/components/ui/statusBar';
 import { ReusableTable } from '@/components/ui/table';
 import { useGetAdminProgramApplications } from '@/hooks/useAdmin';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import { GetProgramById } from '@/hooks/usePrograms';
 import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
@@ -30,6 +31,9 @@ const page = (props: Props) => {
   );
   const { data: applicants, isLoading: isApplicantsLoading } =
     useGetAdminProgramApplications(params?.id as string);
+  
+  const { data: industries = [] } = useIndustries();
+
   // console.log({ applicants, program });
 
   if (isProgramLoading || isApplicantsLoading)
@@ -83,10 +87,11 @@ const page = (props: Props) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="packaging">Packaging</SelectItem>
-                <SelectItem value="retail">Retail</SelectItem>
-                <SelectItem value="agriculture">Agriculture</SelectItem>
-                <SelectItem value="healthtech">HealthTech</SelectItem>
+                {industries.map((industry) => (
+                  <SelectItem key={industry} value={industry}>
+                    {industry}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="flex items-center gap-2">

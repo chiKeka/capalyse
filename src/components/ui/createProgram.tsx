@@ -1,5 +1,5 @@
 import Input from "@/components/ui/Inputs";
-import { useAfricanCountries } from "@/hooks/useComplianceCatalogs";
+import { useAfricanCountries, useIndustries } from "@/hooks/useComplianceCatalogs";
 import {
   createProgram,
   ProgramFormData,
@@ -48,6 +48,8 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   const [partnersInput, setPartnersInput] = useState("");
   const { mutateAsync: createProgramMutation } = createProgram();
   const { mutateAsync: updateProgramMutation } = updateProgram(program?.id);
+
+  const { data: industries = [] } = useIndustries();
 
   // React Hook Form setup
   const {
@@ -519,8 +521,11 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                           <SelectValue placeholder="Industry Focus" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Health">Health</SelectItem>
-                          <SelectItem value="Software">Software</SelectItem>
+                          {industries.map((industry) => (
+                            <SelectItem key={industry} value={industry}>
+                              {industry}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     )}

@@ -27,9 +27,57 @@ const catalogKeys = {
   countries: () => [...catalogKeys.all, 'countries'] as const,
   unions: () => [...catalogKeys.all, 'unions'] as const,
   productCategories: () => [...catalogKeys.all, 'product-categories'] as const,
+  africanRegions: () => [...catalogKeys.all, 'african-regions'] as const,
+  globalCountries: (scope: 'africa' | 'global') =>
+    [...catalogKeys.all, 'global-countries', scope] as const,
+  industries: () => [...catalogKeys.all, 'industries'] as const,
 };
 
 // Hooks
+export function useAfricanRegions(enabled = true) {
+  return useQuery({
+    queryKey: catalogKeys.africanRegions(),
+    queryFn: async (): Promise<string[]> => {
+      const res = await api.get(apiRoutes.compliance.catalog.africanRegions);
+      const data = res?.data?.data ?? res?.data ?? [];
+      return Array.isArray(data) ? data : [];
+    },
+    enabled,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+}
+
+export function useIndustries(enabled = true) {
+  return useQuery({
+    queryKey: catalogKeys.industries(),
+    queryFn: async (): Promise<string[]> => {
+      const res = await api.get(apiRoutes.compliance.catalog.industries);
+      const data = res?.data?.data ?? res?.data ?? [];
+      return Array.isArray(data) ? data : [];
+    },
+    enabled,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+}
+
+export function useCountries(scope: 'africa' | 'global' = 'global', enabled = true) {
+  return useQuery({
+    queryKey: catalogKeys.globalCountries(scope),
+    queryFn: async (): Promise<CatalogCountry[]> => {
+      const res = await api.get(apiRoutes.compliance.catalog.countries, {
+        params: { scope },
+      });
+      const data = res?.data?.data ?? res?.data ?? [];
+      return Array.isArray(data) ? data : [];
+    },
+    enabled,
+    staleTime: 24 * 60 * 60 * 1000,
+    retry: 1,
+  });
+}
+
 export function useAfricanCountries(enabled = true) {
   return useQuery({
     queryKey: catalogKeys.countries(),

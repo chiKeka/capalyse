@@ -168,6 +168,9 @@ export const apiRoutes = {
       productCategories: '/compliance/catalog/product-categories',
       unions: '/compliance/catalog/unions',
       africanCurrencies: '/compliance/catalog/african-currencies',
+      africanRegions: '/compliance/catalog/african-regions',
+      countries: '/compliance/catalog/countries',
+      industries: '/compliance/catalog/industries',
     },
   },
 

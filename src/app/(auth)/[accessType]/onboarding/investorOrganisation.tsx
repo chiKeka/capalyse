@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAfricanCountries } from '@/hooks/useComplianceCatalogs';
+import { useCountries } from '@/hooks/useComplianceCatalogs';
 import { updateProfile } from '@/hooks/useUpdateProfile';
 import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
 import { investorOrg } from '@/lib/uitils/types';
@@ -42,7 +42,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>(
       data: countries = [],
       isLoading: countriesLoading,
       isError: countriesError,
-    } = useAfricanCountries();
+    } = useCountries('global');
 
     const {
       register,
