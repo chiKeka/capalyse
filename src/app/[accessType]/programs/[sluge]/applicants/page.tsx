@@ -11,16 +11,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import { GetProgramApplications, GetProgramById } from '@/hooks/usePrograms';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type Props = {};
 
 function page({}: Props) {
+  const [search, setSearch] = useState('');
   const params = useParams();
   const { data: program } = GetProgramApplications(params.sluge as string);
   const { data: programDetails } = GetProgramById(params.sluge as string);
+  const { data: industries = [] } = useIndustries();
   const router = useRouter();
   const applicants: any[] = program?.applications ?? [];
 
@@ -118,10 +122,11 @@ function page({}: Props) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Types</SelectItem>
-                <SelectItem value="packaging">Packaging</SelectItem>
-                <SelectItem value="retail">Retail</SelectItem>
-                <SelectItem value="agriculture">Agriculture</SelectItem>
-                <SelectItem value="healthtech">HealthTech</SelectItem>
+                {industries.map((industry) => (
+                  <SelectItem key={industry} value={industry}>
+                    {industry}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <div className="flex items-center gap-2">
@@ -129,6 +134,10 @@ function page({}: Props) {
                 className="w-full sm:w-auto md:min-w-sm"
                 inputClassName="h-11 pl-9"
                 iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearch(e.target.value);
+                }}
               />
             </div>
           </div>

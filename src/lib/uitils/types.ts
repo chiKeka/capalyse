@@ -41,16 +41,16 @@ export type InvestmentPreferenceInfo = {
 };
 
 export type investorOrg = {
-  organizationName: '';
-  companyEmail: '';
-  countryHeadquarters: '';
-  website: '';
+  organizationName: string;
+  companyEmail: string;
+  countryHeadquarters: string;
+  website: string;
 };
 export type developmentOrg = {
-  organizationName: '';
-  companyEmail: '';
-  countryHeadquarters: '';
-  website?: '';
+  organizationName: string;
+  companyEmail: string;
+  countryHeadquarters: string;
+  website?: string;
 };
 
 export type AuthState = {

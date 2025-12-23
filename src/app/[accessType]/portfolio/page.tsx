@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ReusableTable } from '@/components/ui/table';
+import { useIndustries } from '@/hooks/useComplianceCatalogs';
 import {
   useGetInvestorPortfolioSummary,
   useInvestments,
@@ -21,7 +22,7 @@ import { format } from 'date-fns';
 import { Loader2Icon } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 type Props = {};
 
@@ -74,10 +75,12 @@ const columns = [
 ];
 
 function page({}: Props) {
+  const [search, setSearch] = useState('');
   const router = useRouter();
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
   const { data: investments = [], isLoading, error } = useInvestments();
+  const { data: industries = [] } = useIndustries();
   // console.log({ portfolioSummary });
   const overviewCards = useMemo(() => {
     return [
@@ -162,10 +165,11 @@ function page({}: Props) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Types</SelectItem>
-              <SelectItem value="packaging">Packaging</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="agriculture">Agriculture</SelectItem>
-              <SelectItem value="healthtech">HealthTech</SelectItem>
+              {industries.map((industry) => (
+                <SelectItem key={industry} value={industry}>
+                  {industry}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">
@@ -173,6 +177,10 @@ function page({}: Props) {
               className="w-full sm:w-auto md:min-w-sm"
               inputClassName="h-11 pl-9"
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
+              value={search}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setSearch(e.target.value);
+              }}
             />
           </div>
           <Button
