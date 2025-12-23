@@ -14,3 +14,7 @@ export const authAtom = atomWithStorage<User | undefined>(
 export const onboardingStepAtom = atom(1);
 export const notificationAtom = atom(0);
 export const messagesAtom = atom(0);
+export const messageOpenAtom = atom({
+  open: false,
+  conversationId: '',
+});

@@ -5,8 +5,8 @@ import { BellIcon, MailIcon, SidebarIcon } from "lucide-react";
 import { SearchForm } from "@/components/search-form";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useGetNotifications } from "@/hooks/useNotification";
-import { messagesAtom, notificationAtom } from "@/lib/atoms/atoms";
-import { useAtomValue } from "jotai";
+import { messageOpenAtom, messagesAtom, notificationAtom } from "@/lib/atoms/atoms";
+import { useAtomValue, useSetAtom } from "jotai";
 import Image from "next/image";
 import { useState } from "react";
 import Button from "./ui/Button";
@@ -16,7 +16,7 @@ import { NotificationSheet } from "./ui/notification-sheet";
 export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
   const [open, setOpen] = useState(false);
-  const [openMessages, setOpenMessages] = useState(false);
+  const setMessageOpenState = useSetAtom(messageOpenAtom);
 
   const Notifications = useGetNotifications();
   const { data: notifications } = Notifications;
@@ -44,7 +44,10 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
           <button
             type="button"
             aria-label="Open messages"
-            onClick={() => setOpenMessages(true)}
+            onClick={() => setMessageOpenState(prev=>({
+              ...prev,
+              open: true,
+            }))}
             className="focus:outline-none relative"
           >
             <MailIcon className="h-6 w-6" />
@@ -77,8 +80,6 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
           />
 
           <MessageSheet
-            open={openMessages}
-            onOpenChange={setOpenMessages}
             // messages={messages}
             emptyIllustration="/icons/messages.gif"
           />

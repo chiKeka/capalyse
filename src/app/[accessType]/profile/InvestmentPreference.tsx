@@ -20,6 +20,7 @@ const InvestmentPreferenceWrapper = () => {
     submit: () => void;
     isLoading: boolean;
   }>(null);
+  
   return (
     <div className="border-1 flex flex-col w-full rounded-md p-3 md:p-6">
       <div className="max-w-[832px]">

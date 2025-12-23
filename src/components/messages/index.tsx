@@ -15,38 +15,35 @@ const formatMessageForDisplay = (
   apiMessage: ChatMessage,
   currentUserId: string
 ) => {
-  const isFromCurrentUser = apiMessage.senderId._id === currentUserId;
+  const isFromCurrentUser = apiMessage.senderId === currentUserId;
   return {
-    id: apiMessage._id,
+    id: apiMessage.id,
     sender: isFromCurrentUser
       ? "me"
-      : `${apiMessage.senderId.firstName} ${apiMessage.senderId.lastName}`,
+      : `${apiMessage.senderDetails.name}`,
     text: apiMessage.content,
     time: new Date(apiMessage.createdAt).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     }),
     avatar: "",
-    senderType: apiMessage.senderId.businessName || "Member",
+    senderType: apiMessage.senderDetails.businessName || "Member",
     online: false,
   };
 };
 
 export default function ChatPage({
   chatUser,
-  setChatOpen,
+  currentUserId
 }: {
   chatUser: Message;
-  setChatOpen: (open: boolean) => void;
+  currentUserId: string;
 }) {
   const router = useRouter();
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Get current user to determine message ownership
-  const { data: currentUserResponse } = useSession();
-  const currentUserId = currentUserResponse?.user?.id || "unknown-user";
-console.log({chatUser})
+  
   // Get conversation messages
   const conversationId = chatUser.id; // The conversation ID
   const {
@@ -93,6 +90,7 @@ console.log({chatUser})
       },
     });
   }
+  // console.log({messages})
 
   return (
     <div className="flex flex-col max-h-[90vh] bg-white">
