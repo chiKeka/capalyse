@@ -64,6 +64,8 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
     useEffect(() => {
       if (smes_bussiness_info.error) {
         const error = smes_bussiness_info.error as any;
+        console.log("Business info error:", error);
+        
         if (error?.error?.issues) {
           error.error.issues.forEach((issue: any) => {
             const fieldName = issue.path[0];
@@ -73,6 +75,11 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
                 message: issue.message,
               });
             }
+          });
+        } else if (error?.message) {
+          setError('root', {
+            type: 'manual',
+            message: error.message,
           });
         }
       }

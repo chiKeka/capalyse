@@ -102,6 +102,15 @@ const api: AxiosInstance = axios.create({
 //     return Promise.reject(error?.response?.data || error?.message);
 //   }
 // );
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.data) {
+      return Promise.reject(error.response.data);
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
 
@@ -109,3 +118,13 @@ export const apiWithAuth = axios.create({
   baseURL: AUTH_API_BASE_URL,
   withCredentials: true,
 });
+
+apiWithAuth.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.data) {
+      return Promise.reject(error.response.data);
+    }
+    return Promise.reject(error);
+  }
+);
