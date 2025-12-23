@@ -18,8 +18,8 @@ export type SMEsBusinessInfo = {
   registrationNumber: string;
   countryOfOperation: string[];
   businessStage: string;
-  industry: string;
-  website: string;
+  industry?: string;
+  website?: string;
   socials: {
     socialMedia: string;
     url: string;

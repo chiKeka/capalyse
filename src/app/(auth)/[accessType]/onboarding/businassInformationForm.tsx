@@ -49,6 +49,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
       register,
       handleSubmit,
       setValue,
+      setError,
       formState: { errors },
     } = useForm<SMEsBusinessInfo>();
     const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
@@ -59,6 +60,24 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
     useEffect(() => {
       props.setLoading(smes_bussiness_info.isPending);
     }, [smes_bussiness_info.isPending, props]);
+
+    useEffect(() => {
+      if (smes_bussiness_info.error) {
+        const error = smes_bussiness_info.error as any;
+        if (error?.error?.issues) {
+          error.error.issues.forEach((issue: any) => {
+            const fieldName = issue.path[0];
+            if (fieldName) {
+              setError(fieldName as any, {
+                type: 'manual',
+                message: issue.message,
+              });
+            }
+          });
+        }
+      }
+    }, [smes_bussiness_info.error, setError]);
+    
     useImperativeHandle(ref, () => ({
       submit: () => {
         return new Promise((resolve) => {
@@ -75,9 +94,16 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
       },
       isLoading: smes_bussiness_info.isPending,
     }));
+    
     const router = useRouter();
     const onSubmit = (data: SMEsBusinessInfo) => {
-      smes_bussiness_info.mutateAsync(data, {
+      const cleanedData = {
+        ...data,
+        website: data.website?.trim() || undefined,
+        industry: data.industry || undefined,
+      };
+
+      smes_bussiness_info.mutateAsync(cleanedData, {
         onSuccess: () => {
           if (props.onSuccess) {
             props.onSuccess();
@@ -248,7 +274,7 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
             type="text"
             {...register("website", {
               setValueAs: (v) => {
-                if (!v) return v;
+                if (!v || !String(v).trim()) return undefined;
                 const value = String(v).trim();
                 return /^https?:\/\//i.test(value) ? value : `https://${value}`;
               },
