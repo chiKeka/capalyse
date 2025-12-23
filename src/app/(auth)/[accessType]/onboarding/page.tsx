@@ -278,7 +278,7 @@ const Page = () => {
             {authState?.roles?.toLowerCase() === 'sme'
               ? 'You have successfully created your account. You can start the Investment Readiness Assessment or you can go straight to your dashboard.'
               : authState?.roles?.toLowerCase() === 'investor'
-              ? "Welcome Investor! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete."
+              ? `Welcome ${authState?.name}! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete.`
               : "We're reviewing your details. You'll get an email once verification is complete."}
           </DialogDescription>
           <DialogFooter className="!flex w-full max-w-sm !flex-col">
