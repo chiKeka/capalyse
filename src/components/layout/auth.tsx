@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 interface AuthLayoutProps {
   title?: string;
@@ -166,7 +167,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       <div
         className={`w-full px-4 h-auto ${layoutSize} bg-white flex-col flex gap-8 rounded-4xl border border-[#EEF6F4]  items-center  py-10  shadow-lg`}
       >
+        <Link href={"/"}>
         <img src="/logo.png" className="w-[199px] h-[47px]" />
+        </Link>
         <div>
           <h2 className="text-xl font-bold text-[#2E3034]  text-center">
             {title}

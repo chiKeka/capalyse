@@ -12,6 +12,7 @@ import { useState } from "react";
 import Button from "./ui/Button";
 import { MessageSheet } from "./ui/message-sheet";
 import { NotificationSheet } from "./ui/notification-sheet";
+import Link from "next/link";
 
 export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
   const { toggleSidebar } = useSidebar();
@@ -35,9 +36,9 @@ export function SiteHeader({ isAdmin }: { isAdmin?: boolean }) {
           >
             <SidebarIcon className="h-4 w-4" />
           </Button>
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="logo" width={148.28} height={35.35} />
-          </div>
+          </Link>
         </div>
         <SearchForm  className="w-full  sm:w-auto md:min-w-sm" />
         <div className="flex items-center gap-2">
