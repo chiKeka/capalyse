@@ -30,11 +30,13 @@ function SignIn({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { data: profileNextStep } = useGetProfileNextStep();
   const sessionData = useSession();
+  
   const isIncompleteStep =
     profileNextStep?.completedSteps?.length! <
     onboardingSteps.find(
       (step) => step.role === sessionData?.data?.user?.roles!
     )?.steps?.length!;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateAuthForm(form);
@@ -56,7 +58,7 @@ function SignIn({}: Props) {
             const { data } = ctx;
             console.log({ data });
             if (data) {
-              setAuth(data?.user as any);
+              setAuth(data?.user);
               if (!data?.user?.emailVerified) {
                 authClient.emailOtp.sendVerificationOtp({
                   email: form?.email,
