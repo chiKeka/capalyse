@@ -390,6 +390,12 @@ export const readinessRoutes = {
   getMyReadinessScore: `/assessments/sme/assessment/score`,
 };
 
+export const assessmentQuestionsRoutes = {
+  getCategories: '/assessments/categories',
+  getQuestionsByCategory: (category: string) =>
+    `/assessments/questions/${category}`,
+};
+
 export const matchingRoutes = {
   investorMatches: '/investor/me/matches',
   smesMatches: '/sme/me/matches',

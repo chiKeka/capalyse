@@ -1,8 +1,13 @@
+'use client';
+
 import Button from '@/components/ui/Button';
 import CircularScoreBar from '@/components/ui/CircularScoreBar';
+import { useAllAssessmentQuestions } from '@/hooks/useAssessmentQuestions';
+import { generateAssessmentQuestionsPDF } from '@/lib/generateAssessmentPDF';
 import { ReadinessScoreResponse } from '@/lib/uitils/types';
-import AssessmentReadiness from '../AssessmentReadiness';
+import { Download } from 'lucide-react';
 import { useState } from 'react';
+import AssessmentReadiness from '../AssessmentReadiness';
 
 type Props = {
   scoreValue?: number;
@@ -22,11 +27,26 @@ function ReadinessScoreCard({
   extraContent,
 }: Props) {
   const [open, setOpen] = useState(false);
-  // console.log({ readinessData });
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { refetch: fetchQuestions } = useAllAssessmentQuestions();
 
   // Use readinessData overall score if available, otherwise fall back to scoreValue
   const displayScore =
     readinessData?.overallScore?.percentage ?? scoreValue ?? 0;
+
+  const handleDownloadPDF = async () => {
+    setIsDownloading(true);
+    try {
+      const { data } = await fetchQuestions();
+      if (data) {
+        generateAssessmentQuestionsPDF(data);
+      }
+    } catch (error) {
+      console.error('Failed to download assessment questions:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <div className="border-1 p-[3%] border-[#E8E8E8] flex flex-col rounded-md lg:min-w-[276px] w-full min-h-[356px]">
@@ -62,9 +82,18 @@ function ReadinessScoreCard({
 
         {showAssessment && (
           <>
-            <div className="w-full flex items-center justify-center mt-auto">
+            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-2 mt-auto">
               <Button variant="secondary" onClick={() => setOpen(true)}>
                 Start Assessment
+              </Button>
+              <Button
+                variant="tertiary"
+                onClick={handleDownloadPDF}
+                disabled={isDownloading}
+                className="flex items-center gap-2 border border-[#E8E8E8]"
+              >
+                <Download size={16} />
+                {isDownloading ? 'Downloading...' : 'Download Questions'}
               </Button>
             </div>
             <AssessmentReadiness isOpen={open} setIsOpen={setOpen} />
@@ -76,3 +105,4 @@ function ReadinessScoreCard({
 }
 
 export default ReadinessScoreCard;
+
