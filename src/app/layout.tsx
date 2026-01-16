@@ -20,6 +20,42 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Capalyse - Empowering Growth",
   description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+  keywords: ["Capalyse", "Empowering Growth", "Investment", "SMEs", "Investors", "Africa"],
+  icons: {
+    icon: "/favicon.ico",
+  },
+  applicationName: "Capalyse",
+  openGraph: {
+    title: "Capalyse - Empowering Growth",
+    description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Capalyse",
+    url: "https://capalyse.com",
+    images: [
+      {
+        url: "https://capalyse.com/images/landing-hero.png",
+        width: 1200,
+        height: 630,
+        alt: "Capalyse - Empowering Growth",
+      },
+    ],
+  },
+  twitter: {
+    title: "Capalyse - Empowering Growth",
+    description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+    card: "summary_large_image",
+    site: "@capalyse",
+    creator: "@capalyse",
+    images: [
+      {
+        url: "https://capalyse.com/images/landing-hero.png",
+        width: 1200,
+        height: 630,
+        alt: "Capalyse - Empowering Growth",
+      },
+    ],
+  },  
 };
 
 export default function RootLayout({
