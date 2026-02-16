@@ -57,7 +57,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
 
   const isCompletedStep =
-    (onboardingSteps.find((step) => step.role === authState?.roles)?.steps?.length || 0) >=
+    (onboardingSteps.find((step) => step.role === authState?.role)?.steps?.length || 0) >=
     (profileNextStep?.completedSteps?.length || 0);
 
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -68,7 +68,7 @@ const Page = () => {
 
   const handleNext = async () => {
     setLoading(true);
-    const role = authState?.roles?.toLowerCase();
+    const role = authState?.role?.toLowerCase();
     const step = profileNextStep?.currentStep;
     let valid = true;
     if (role.toLowerCase() === "investor") {
@@ -172,7 +172,7 @@ const Page = () => {
   };
 
   const dashboardUrl =
-    routes?.[getKeyByValue(UserType, authState?.roles) as keyof typeof routes]?.root;
+    routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]?.root;
 
   return (
     <AuthLayout
@@ -183,7 +183,7 @@ const Page = () => {
     >
       <div className="flex w-full border-b border-[#F0F0F0] items-center justify-center mb-6 space-x-12">
         {onboardingSteps
-          ?.find((step) => step.role === authState?.roles)
+          ?.find((step) => step.role === authState?.role)
           ?.steps?.map(({ id, label }: { id: number; label: string }) => (
             <div
               key={id}
@@ -199,7 +199,7 @@ const Page = () => {
       </div>
 
       <div className="w-full">
-        {roleFormMap[getKeyByValue(UserType, authState?.roles) as keyof typeof roleFormMap]}
+        {roleFormMap[getKeyByValue(UserType, authState?.role) as keyof typeof roleFormMap]}
       </div>
 
       <div className="w-full">
@@ -211,8 +211,7 @@ const Page = () => {
             onClick={() =>
               isCompletedStep
                 ? router?.push(
-                    routes?.[getKeyByValue(UserType, authState?.roles) as keyof typeof routes]
-                      ?.root,
+                    routes?.[getKeyByValue(UserType, authState?.role) as keyof typeof routes]?.root,
                   )
                 : null
             }
@@ -253,9 +252,9 @@ const Page = () => {
             </div>
           </DialogTitle>
           <DialogDescription className="text-sm w-full max-w-sm font-normal text-center">
-            {authState?.roles?.toLowerCase() === "sme"
+            {authState?.role?.toLowerCase() === "sme"
               ? "You have successfully created your account. You can start the Investment Readiness Assessment or you can go straight to your dashboard."
-              : authState?.roles?.toLowerCase() === "investor"
+              : authState?.role?.toLowerCase() === "investor"
                 ? `Welcome ${authState?.name}! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete.`
                 : "We're reviewing your details. You'll get an email once verification is complete."}
           </DialogDescription>
@@ -263,7 +262,7 @@ const Page = () => {
             <Button variant="primary" onClick={() => router.push(dashboardUrl)}>
               Go to Dashboard
             </Button>
-            {authState?.roles?.toLowerCase() === "sme" && (
+            {authState?.role?.toLowerCase() === "sme" && (
               <Button
                 variant="secondary"
                 onClick={() => {
