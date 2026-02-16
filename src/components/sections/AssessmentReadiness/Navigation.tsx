@@ -1,5 +1,5 @@
-import Button from '@/components/ui/Button';
-import { ChevronLeft } from 'lucide-react';
+import Button from "@/components/ui/Button";
+import { ChevronLeft } from "lucide-react";
 
 interface NavigationProps {
   currentSection: number;
@@ -40,9 +40,7 @@ export function Navigation({
       <Button
         variant="secondary"
         onClick={handleBack}
-        state={
-          currentSection === 0 && currentQuestion === 0 ? 'disabled' : 'default'
-        }
+        state={currentSection === 0 && currentQuestion === 0 ? "disabled" : "default"}
       >
         <ChevronLeft className="w-4 h-4" />
         <span>Back</span>
@@ -50,19 +48,11 @@ export function Navigation({
 
       <div>
         {!isCurrentQuestionRequired && (
-          <Button
-            variant="tertiary"
-            className="text-error-100"
-            onClick={handleSkip}
-          >
+          <Button variant="tertiary" className="text-error-100" onClick={handleSkip}>
             Skip
           </Button>
         )}
-        <Button
-          state={loading ? 'loading' : 'default'}
-          onClick={handleNext}
-          iconPosition="right"
-        >
+        <Button state={loading ? "loading" : "default"} onClick={handleNext} iconPosition="right">
           <span>Next</span>
         </Button>
       </div>

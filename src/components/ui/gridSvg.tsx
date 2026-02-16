@@ -23,56 +23,16 @@ const GridSvg = ({ className }: { className: string }) => {
           <path d="M1319.17 0V915" stroke="#ABD2C7" strokeWidth="0.59488" />
           <path d="M1439.1 0V915" stroke="#ABD2C7" strokeWidth="0.59488" />
           <path d="M0 915L1439.1 915" stroke="#ABD2C7" strokeWidth="0.59488" />
-          <path
-            d="M0 827.172L1439.1 827.172"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 739.346L1439.1 739.346"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 651.518L1439.1 651.518"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 563.689L1439.1 563.689"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 475.862L1439.1 475.862"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 388.035L1439.1 388.035"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 300.207L1439.1 300.207"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 212.38L1439.1 212.38"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 124.552L1439.1 124.552"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
-          <path
-            d="M0 36.7246L1439.1 36.7246"
-            stroke="#ABD2C7"
-            strokeWidth="0.59488"
-          />
+          <path d="M0 827.172L1439.1 827.172" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 739.346L1439.1 739.346" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 651.518L1439.1 651.518" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 563.689L1439.1 563.689" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 475.862L1439.1 475.862" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 388.035L1439.1 388.035" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 300.207L1439.1 300.207" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 212.38L1439.1 212.38" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 124.552L1439.1 124.552" stroke="#ABD2C7" strokeWidth="0.59488" />
+          <path d="M0 36.7246L1439.1 36.7246" stroke="#ABD2C7" strokeWidth="0.59488" />
         </g>
         <g opacity="0.42" clipPath="url(#clip1_2841_32356)">
           <path
@@ -1426,20 +1386,10 @@ const GridSvg = ({ className }: { className: string }) => {
           <rect width="1439" height="915" fill="white" />
         </clipPath>
         <clipPath id="clip1_2841_32356">
-          <rect
-            width="1829.63"
-            height="926.378"
-            fill="white"
-            transform="translate(253 -23)"
-          />
+          <rect width="1829.63" height="926.378" fill="white" transform="translate(253 -23)" />
         </clipPath>
         <clipPath id="clip2_2841_32356">
-          <rect
-            width="1829.63"
-            height="926.378"
-            fill="white"
-            transform="translate(-1685 -23)"
-          />
+          <rect width="1829.63" height="926.378" fill="white" transform="translate(-1685 -23)" />
         </clipPath>
       </defs>
     </svg>

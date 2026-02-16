@@ -1,27 +1,24 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import CategoryBreakdown from '@/components/sections/dashboardCards/categoryBreakdown';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import { ReusableTable } from '@/components/ui/table';
-import { Document, useDocument } from '@/hooks/useDocument';
-import { useGetReadinessScore } from '@/hooks/useReadiness';
-import { Download, File, Loader2 } from 'lucide-react';
-import { format } from 'date-fns';
-import { useState } from 'react';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import { ReusableTable } from "@/components/ui/table";
+import { Document, useDocument } from "@/hooks/useDocument";
+import { useGetReadinessScore } from "@/hooks/useReadiness";
+import { Download, File, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { useState } from "react";
 type Props = {};
 
 function page({}: Props) {
   const readinessScore = useGetReadinessScore();
 
   const { data: readinessData, isLoading, error } = readinessScore;
-  const { useGetDocumentsByCategory, useDeleteDocument, useDownloadDocument } =
-    useDocument();
-  const { data: documents } = useGetDocumentsByCategory('assessment');
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(
-    null
-  );
+  const { useGetDocumentsByCategory, useDeleteDocument, useDownloadDocument } = useDocument();
+  const { data: documents } = useGetDocumentsByCategory("assessment");
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   // const deleteMutation = useDeleteDocument();
   const downloadMutation = useDownloadDocument();
   // const handleDelete = (id: string) => {
@@ -35,7 +32,7 @@ function page({}: Props) {
 
   const columns = [
     {
-      header: 'File name',
+      header: "File name",
       accessor: (row: Document) => (
         <div className="flex items-center gap-2">
           <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -43,27 +40,23 @@ function page({}: Props) {
           </div>
 
           <div>
-            <div className="font-medium text-sm text-[#101828]">
-              {row.originalName}
-            </div>
+            <div className="font-medium text-sm text-[#101828]">{row.originalName}</div>
             <div className="text-xs text-gray-400">{row.size}</div>
           </div>
         </div>
       ),
     },
     {
-      header: 'Date uploaded',
-      accessor: (row: Document) => format(row.uploadedAt, 'MMM dd, yyyy'),
+      header: "Date uploaded",
+      accessor: (row: Document) => format(row.uploadedAt, "MMM dd, yyyy"),
     },
 
     {
-      header: '',
+      header: "",
       accessor: (row: Document) => (
         <div className="flex gap-4 items-end justify-end">
           <button
-            disabled={
-              selectedDocument?._id === row._id || downloadMutation.isPending
-            }
+            disabled={selectedDocument?._id === row._id || downloadMutation.isPending}
             onClick={() => handleDownload(row._id)}
             className="text-gray-400 hover:text-green-600"
           >
@@ -75,7 +68,7 @@ function page({}: Props) {
           </button>
         </div>
       ),
-      className: 'text-right',
+      className: "text-right",
     },
   ];
   // Get category breakdown from API data
@@ -84,18 +77,18 @@ function page({}: Props) {
       return [
         {
           value: 0,
-          label: 'Strong foundation in place',
-          caption: 'Foundational',
+          label: "Strong foundation in place",
+          caption: "Foundational",
         },
         {
           value: 0,
-          label: 'Moderate financial stability',
-          caption: 'Financial Health',
+          label: "Moderate financial stability",
+          caption: "Financial Health",
         },
         {
           value: 0,
-          label: 'Significant gaps in compliance',
-          caption: 'Compliance',
+          label: "Significant gaps in compliance",
+          caption: "Compliance",
         },
       ];
     }
@@ -109,10 +102,10 @@ function page({}: Props) {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 80) return 'Excellent foundation in place';
-    if (score >= 60) return 'Good progress made';
-    if (score >= 40) return 'Moderate improvements needed';
-    return 'Significant gaps identified';
+    if (score >= 80) return "Excellent foundation in place";
+    if (score >= 60) return "Good progress made";
+    if (score >= 40) return "Moderate improvements needed";
+    return "Significant gaps identified";
   };
 
   const checklist = getCategoryBreakdown();
@@ -157,33 +150,25 @@ function page({}: Props) {
           <DashboardCardLayout caption="Recommendations">
             <div className="my-8 space-y-4">
               {readinessData.recommendations.map((recommendation, index) => (
-                <div
-                  key={recommendation.id}
-                  className="border-b pb-4 last:border-b-0"
-                >
+                <div key={recommendation.id} className="border-b pb-4 last:border-b-0">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-base">
-                      {recommendation.title}
-                    </h3>
+                    <h3 className="font-semibold text-base">{recommendation.title}</h3>
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium ${
-                        recommendation.priority === 'high'
-                          ? 'bg-red-100 text-red-800'
-                          : recommendation.priority === 'medium'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-green-100 text-green-800'
+                        recommendation.priority === "high"
+                          ? "bg-red-100 text-red-800"
+                          : recommendation.priority === "medium"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-100 text-green-800"
                       }`}
                     >
                       {recommendation.priority.toUpperCase()} PRIORITY
                     </span>
                   </div>
-                  <p className="text-gray-600 mb-3">
-                    {recommendation.description}
-                  </p>
+                  <p className="text-gray-600 mb-3">{recommendation.description}</p>
                   <div className="mb-3">
                     <span className="text-sm font-medium text-gray-700">
-                      Potential Impact: +{recommendation.estimatedImpact}% score
-                      increase
+                      Potential Impact: +{recommendation.estimatedImpact}% score increase
                     </span>
                   </div>
                   <div>

@@ -1,9 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { useImpactMonthly } from "@/hooks/usePrograms";
 import { useMemo } from "react";
 import { Line } from "react-chartjs-2";
@@ -42,28 +37,23 @@ function LineChart({}: Props) {
       datasets: [],
     };
   }, []);
-  const { data } =
-    useImpactMonthly();
-    // {
-    // from: "2024-01-01",
-    // to: "2024-12-31",
-    // currency: "NGN",
-    // }
+  const { data } = useImpactMonthly();
+  // {
+  // from: "2024-01-01",
+  // to: "2024-12-31",
+  // currency: "NGN",
+  // }
   // console.log(data);
   return (
     <div className="w-full rounded-lg border relative p-4   h-auto">
       <div className="flex mb-8 items-center justify-between">
         <div>
           <p className="text-base lg:text-lg font-bold ">SME Growth </p>
-          <p className="text-sm font-normal ]">
-            Track SME growth and performance
-          </p>
+          <p className="text-sm font-normal ]">Track SME growth and performance</p>
         </div>
         <div className="w-fit">
           <Select>
-            <SelectTrigger className="w-fit border-none">
-              Male Owned
-            </SelectTrigger>
+            <SelectTrigger className="w-fit border-none">Male Owned</SelectTrigger>
             <SelectContent>
               <SelectItem value="Male Owned">Male Owned</SelectItem>
               <SelectItem value="Female Owned">Female Owned</SelectItem>

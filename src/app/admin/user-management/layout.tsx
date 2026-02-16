@@ -1,4 +1,4 @@
-import UserManagementWrapper from './Wrapper';
+import UserManagementWrapper from "./Wrapper";
 
 interface AdminLayoutProps {
   children: React.ReactNode;

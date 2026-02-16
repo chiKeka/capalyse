@@ -1,52 +1,52 @@
-'use client';
+"use client";
 
-import { smeApplicantsColumns } from '@/components/ProgramComponents/pageContent';
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
-import { Card } from '@/components/ui/card';
+import { smeApplicantsColumns } from "@/components/ProgramComponents/pageContent";
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { statusBadge } from '@/components/ui/statusBar';
-import { ReusableTable } from '@/components/ui/table';
-import { useGetAdminProgramApplications } from '@/hooks/useAdmin';
-import { useIndustries } from '@/hooks/useComplianceCatalogs';
-import { GetProgramById } from '@/hooks/usePrograms';
-import { Loader2Icon } from 'lucide-react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { useState } from 'react';
+} from "@/components/ui/select";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import { useGetAdminProgramApplications } from "@/hooks/useAdmin";
+import { useIndustries } from "@/hooks/useComplianceCatalogs";
+import { GetProgramById } from "@/hooks/usePrograms";
+import { Loader2Icon } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
 type Props = {};
 
 const page = (props: Props) => {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [industryFilter, setIndustryFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("all");
   const params = useParams();
-  const { data: program, isLoading: isProgramLoading } = GetProgramById(
-    params?.id as string
+  const { data: program, isLoading: isProgramLoading } = GetProgramById(params?.id as string);
+  const { data: applicants, isLoading: isApplicantsLoading } = useGetAdminProgramApplications(
+    params?.id as string,
   );
-  const { data: applicants, isLoading: isApplicantsLoading } =
-    useGetAdminProgramApplications(params?.id as string);
-  
+
   const { data: industries = [] } = useIndustries();
 
-  const filteredApplicants = applicants?.applications?.filter((applicant: any) => {
-    const matchesSearch =
-      !search ||
-      applicant?.name?.toLowerCase().includes(search.toLowerCase()) ||
-      applicant?.industry?.toLowerCase().includes(search.toLowerCase()) ||
-      applicant?.location?.toLowerCase().includes(search.toLowerCase());
-    const matchesIndustry =
-      industryFilter === 'all' ||
-      applicant?.industry?.toLowerCase() === industryFilter.toLowerCase();
-    return matchesSearch && matchesIndustry;
-  }) || [];
+  const filteredApplicants =
+    applicants?.applications?.filter((applicant: any) => {
+      const matchesSearch =
+        !search ||
+        applicant?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        applicant?.industry?.toLowerCase().includes(search.toLowerCase()) ||
+        applicant?.location?.toLowerCase().includes(search.toLowerCase());
+      const matchesIndustry =
+        industryFilter === "all" ||
+        applicant?.industry?.toLowerCase() === industryFilter.toLowerCase();
+      return matchesSearch && matchesIndustry;
+    }) || [];
 
   // console.log({ applicants, program });
 
@@ -56,7 +56,7 @@ const page = (props: Props) => {
   return (
     <div>
       <p className="font-medium">
-        User Management &gt;{' '}
+        User Management &gt;{" "}
         <Link href={`/admin/program-management`} className="text-green">
           Program Details
         </Link>
@@ -66,18 +66,12 @@ const page = (props: Props) => {
           <span className="text-2xl font-bold text-black">{program?.name}</span>
           <span className="text-gray-500 text-sm">
             {program?.organization?.organizationName ??
-              program?.partners
-                ?.map((partner: any) => partner.name)
-                .join(', ')}{' '}
+              program?.partners?.map((partner: any) => partner.name).join(", ")}{" "}
             {statusBadge(program?.status)}
           </span>
         </div>
         <div className="space-x-3">
-          <Button
-            className="!border-error-300 !text-error-300"
-            variant="secondary"
-            size="small"
-          >
+          <Button className="!border-error-300 !text-error-300" variant="secondary" size="small">
             Close Program
           </Button>
           <Button size="small">Message Organization</Button>

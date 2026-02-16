@@ -25,9 +25,7 @@ const DevOrgDetails = ({ id }: { id: string }) => {
           }}
         />
         <Verification
-          verificationStatus={
-            businessProfile?.devOrgInfo?.verificationStatus ?? "Pending"
-          }
+          verificationStatus={businessProfile?.devOrgInfo?.verificationStatus ?? "Pending"}
         />
       </div>
       <div className="lg:col-span-3 space-y-6">

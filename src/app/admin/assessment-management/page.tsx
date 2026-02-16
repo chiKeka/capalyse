@@ -1,38 +1,30 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   useCreateAssessmentQuestion,
   useDeleteAssessmentQuestion,
   useUpdateAssessmentQuestion,
-} from '@/hooks/admin/assessments';
-import Button from '@/components/ui/Button';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+} from "@/hooks/admin/assessments";
+import Button from "@/components/ui/Button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Trash2, Eye, Pencil } from 'lucide-react';
-import useAssessment from '@/hooks/useAssessment';
-import { FaSpinner } from 'react-icons/fa6';
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Trash2, Eye, Pencil } from "lucide-react";
+import useAssessment from "@/hooks/useAssessment";
+import { FaSpinner } from "react-icons/fa6";
 
 interface AnswerTypeConfigForm {
-  type:
-    | 'string'
-    | 'number'
-    | 'money'
-    | 'file'
-    | 'array<string>'
-    | 'items'
-    | 'date'
-    | 'boolean';
+  type: "string" | "number" | "money" | "file" | "array<string>" | "items" | "date" | "boolean";
   label: string;
   required?: boolean;
   validation?: string;
@@ -52,50 +44,41 @@ interface QuestionFormState {
   answerTypes: AnswerTypeConfigForm[];
 }
 
-type AssessmentCategory =
-  | 'financial'
-  | 'operational'
-  | 'market'
-  | 'compliance'
-  | 'business_info';
+type AssessmentCategory = "financial" | "operational" | "market" | "compliance" | "business_info";
 
 const CATEGORIES: AssessmentCategory[] = [
-  'financial',
-  'operational',
-  'market',
-  'compliance',
-  'business_info',
+  "financial",
+  "operational",
+  "market",
+  "compliance",
+  "business_info",
 ];
 
 function AssessmentManagement() {
   // Get categories
-  const [selectedCategory, setSelectedCategory] = useState<
-    AssessmentCategory | undefined
-  >(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<AssessmentCategory | undefined>(
+    undefined,
+  );
   const { useGetCategories, useGetQuestionsByCategory } = useAssessment();
-  const { data: categoryData, isLoading: categoriesLoading } =
-    useGetCategories();
+  const { data: categoryData, isLoading: categoriesLoading } = useGetCategories();
   const {
     data: questionsData,
     isLoading,
     refetch,
-  } = useGetQuestionsByCategory(
-    selectedCategory as AssessmentCategory,
-    !!selectedCategory
-  );
+  } = useGetQuestionsByCategory(selectedCategory as AssessmentCategory, !!selectedCategory);
   // console.log({ categoryData, questionsData });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [form, setForm] = useState<QuestionFormState>({
-    category: 'financial',
-    title: '',
-    description: '',
+    category: "financial",
+    title: "",
+    description: "",
     isActive: true,
     order: 0,
     required: false,
     weight: 1,
-    answerTypes: [{ type: 'string', label: 'Answer', required: false }],
+    answerTypes: [{ type: "string", label: "Answer", required: false }],
   });
 
   useEffect(() => {
@@ -105,20 +88,20 @@ function AssessmentManagement() {
   }, [categoryData]);
 
   const createMutation = useCreateAssessmentQuestion();
-  const updateMutation = useUpdateAssessmentQuestion(form.id || '');
+  const updateMutation = useUpdateAssessmentQuestion(form.id || "");
 
   const resetForm = () => {
     setForm({
       category: selectedCategory as AssessmentCategory,
-      title: '',
-      description: '',
+      title: "",
+      description: "",
       isActive: true,
       order: 0,
       required: false,
-      validation: '',
+      validation: "",
       validationRules: [],
       weight: 1,
-      answerTypes: [{ type: 'string', label: 'Answer', required: false }],
+      answerTypes: [{ type: "string", label: "Answer", required: false }],
     });
   };
 
@@ -134,26 +117,26 @@ function AssessmentManagement() {
       id: q.id,
       category: q.category,
       title: q.title,
-      description: q.description ?? '',
+      description: q.description ?? "",
       isActive: q.isActive ?? true,
       order: q.order ?? 0,
       required: q.required ?? false,
-      validation: q.validation ?? '',
+      validation: q.validation ?? "",
       validationRules: q.validationRules ?? [],
       weight: q.weight ?? 1,
       answerTypes: Array.isArray(q.answerType)
         ? q.answerType.map((a: any) => ({
-            type: a.type ?? 'string',
-            label: a.label ?? 'Answer',
+            type: a.type ?? "string",
+            label: a.label ?? "Answer",
             required: a.required ?? false,
-            validation: a.validation ?? '',
+            validation: a.validation ?? "",
           }))
         : [
             {
-              type: q.answerType?.type ?? 'string',
-              label: q.answerType?.label ?? 'Answer',
+              type: q.answerType?.type ?? "string",
+              label: q.answerType?.label ?? "Answer",
               required: q.answerType?.required ?? false,
-              validation: q.answerType?.validation ?? '',
+              validation: q.answerType?.validation ?? "",
             },
           ],
     });
@@ -177,8 +160,7 @@ function AssessmentManagement() {
       validation: form.validation,
       validationRules: form.validationRules?.filter((r) => r.key && r.value),
       weight: Number(form.weight ?? 1),
-      answerType:
-        form.answerTypes.length > 1 ? form.answerTypes : form.answerTypes[0],
+      answerType: form.answerTypes.length > 1 ? form.answerTypes : form.answerTypes[0],
     } as any;
     // console.log({ payload });
 
@@ -210,7 +192,7 @@ function AssessmentManagement() {
     deleteMutation.mutateAsync(id).then(() => {
       setForm({
         ...form,
-        id: '',
+        id: "",
       });
       refetch();
     });
@@ -239,7 +221,7 @@ function AssessmentManagement() {
                   key={c}
                   onClick={() => setSelectedCategory(c)}
                   className={`text-left px-4 py-3 hover:bg-green-50 ${
-                    selectedCategory === c ? 'bg-green-100 text-green-900' : ''
+                    selectedCategory === c ? "bg-green-100 text-green-900" : ""
                   }`}
                 >
                   {toLabel(c)}
@@ -267,10 +249,8 @@ function AssessmentManagement() {
                     <span className="font-medium">{q.title}</span>
                     <span className="text-xs text-gray-500">
                       {Array.isArray(q.answerType)
-                        ? `Types: ${q.answerType
-                            .map((a: any) => a.type)
-                            .join(', ')}`
-                        : `Type: ${q.answerType?.type ?? 'string'}`}
+                        ? `Types: ${q.answerType.map((a: any) => a.type).join(", ")}`
+                        : `Type: ${q.answerType?.type ?? "string"}`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -280,11 +260,8 @@ function AssessmentManagement() {
                         setIsViewOpen(true);
                       }}
                       className="h-4 w-4 text-green"
-                    />{' '}
-                    <Pencil
-                      onClick={() => openEdit(q)}
-                      className="h-4 w-4 text-green"
-                    />
+                    />{" "}
+                    <Pencil onClick={() => openEdit(q)} className="h-4 w-4 text-green" />
                     <div>
                       {deleteMutation.isPending && form.id === q.id ? (
                         <FaSpinner className="animate-spin" />
@@ -308,17 +285,13 @@ function AssessmentManagement() {
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-2xl">
-          <DialogTitle>
-            {editing ? 'Update Question' : 'Create Question'}
-          </DialogTitle>
+          <DialogTitle>{editing ? "Update Question" : "Create Question"}</DialogTitle>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
               <Select
                 value={form.category}
-                onValueChange={(v) =>
-                  setForm((s) => ({ ...s, category: v as AssessmentCategory }))
-                }
+                onValueChange={(v) => setForm((s) => ({ ...s, category: v as AssessmentCategory }))}
               >
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select category" />
@@ -338,9 +311,7 @@ function AssessmentManagement() {
               <Input
                 id="title"
                 value={form.title}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, title: e.target.value }))
-                }
+                onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
                 placeholder="Enter question title"
               />
             </div>
@@ -350,9 +321,7 @@ function AssessmentManagement() {
               <Textarea
                 id="description"
                 value={form.description}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, description: e.target.value }))
-                }
+                onChange={(e) => setForm((s) => ({ ...s, description: e.target.value }))}
                 placeholder="Optional description"
               />
             </div>
@@ -363,9 +332,7 @@ function AssessmentManagement() {
                 <input
                   type="checkbox"
                   checked={!!form.isActive}
-                  onChange={(e) =>
-                    setForm((s) => ({ ...s, isActive: e.target.checked }))
-                  }
+                  onChange={(e) => setForm((s) => ({ ...s, isActive: e.target.checked }))}
                 />
                 Active
               </label>
@@ -373,9 +340,7 @@ function AssessmentManagement() {
                 <input
                   type="checkbox"
                   checked={!!form.required}
-                  onChange={(e) =>
-                    setForm((s) => ({ ...s, required: e.target.checked }))
-                  }
+                  onChange={(e) => setForm((s) => ({ ...s, required: e.target.checked }))}
                 />
                 Required
               </label>
@@ -393,7 +358,7 @@ function AssessmentManagement() {
                       ...s,
                       answerTypes: [
                         ...s.answerTypes,
-                        { type: 'string', label: 'Answer', required: false },
+                        { type: "string", label: "Answer", required: false },
                       ],
                     }))
                   }
@@ -424,14 +389,14 @@ function AssessmentManagement() {
                         </SelectTrigger>
                         <SelectContent>
                           {[
-                            'string',
-                            'number',
-                            'money',
-                            'file',
-                            'array<string>',
-                            'items',
-                            'date',
-                            'boolean',
+                            "string",
+                            "number",
+                            "money",
+                            "file",
+                            "array<string>",
+                            "items",
+                            "date",
+                            "boolean",
                           ].map((t) => (
                             <SelectItem key={t} value={t}>
                               {t}
@@ -481,15 +446,13 @@ function AssessmentManagement() {
                         size="small"
                         state={
                           updateMutation.isPending || createMutation.isPending
-                            ? 'disabled'
-                            : 'default'
+                            ? "disabled"
+                            : "default"
                         }
                         onClick={() =>
                           setForm((s) => ({
                             ...s,
-                            answerTypes: s.answerTypes.filter(
-                              (_, i) => i !== idx
-                            ),
+                            answerTypes: s.answerTypes.filter((_, i) => i !== idx),
                           }))
                         }
                       >
@@ -507,9 +470,7 @@ function AssessmentManagement() {
                 id="order"
                 type="number"
                 value={form.order}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, order: Number(e.target.value) }))
-                }
+                onChange={(e) => setForm((s) => ({ ...s, order: Number(e.target.value) }))}
                 min={0}
               />
             </div>
@@ -519,9 +480,7 @@ function AssessmentManagement() {
                 id="weight"
                 type="number"
                 value={form.weight}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, weight: Number(e.target.value) }))
-                }
+                onChange={(e) => setForm((s) => ({ ...s, weight: Number(e.target.value) }))}
                 min={0}
               />
             </div>
@@ -535,13 +494,13 @@ function AssessmentManagement() {
                 disabled={!form.title || form.answerTypes.some((a) => !a.label)}
                 state={
                   updateMutation.isPending || createMutation.isPending
-                    ? 'loading'
+                    ? "loading"
                     : !form.title || form.answerTypes.some((a) => !a.label)
-                    ? 'disabled'
-                    : 'default'
+                      ? "disabled"
+                      : "default"
                 }
               >
-                {editing ? 'Update' : 'Create'}
+                {editing ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -553,23 +512,21 @@ function AssessmentManagement() {
           <DialogTitle>Question Details</DialogTitle>
           <div className="space-y-2 text-sm">
             <div>
-              <span className="text-gray-500">Category:</span>{' '}
-              {toLabel(form.category)}
+              <span className="text-gray-500">Category:</span> {toLabel(form.category)}
             </div>
             <div>
-              <span className="text-gray-500">Title:</span> {form.title || '—'}
+              <span className="text-gray-500">Title:</span> {form.title || "—"}
             </div>
             <div className="text-gray-500">Description</div>
             <div className="rounded border p-3 text-sm min-h-[60px]">
-              {form.description || 'No description'}
+              {form.description || "No description"}
             </div>
             <div className="text-gray-500">Answer Types</div>
             <div className="rounded border p-3 text-sm min-h-[60px]">
               {form.answerTypes.map((a) => (
                 <div key={a.type}>
                   <span>
-                    {a.type} - {a.label} -{' '}
-                    {a.required ? 'Required' : 'Optional'}
+                    {a.type} - {a.label} - {a.required ? "Required" : "Optional"}
                   </span>
                 </div>
               ))}
@@ -582,7 +539,7 @@ function AssessmentManagement() {
 }
 
 function toLabel(key: string) {
-  return key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 export default AssessmentManagement;

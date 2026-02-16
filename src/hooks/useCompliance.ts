@@ -1,6 +1,6 @@
-import api from '@/api/axios';
-import { apiRoutes } from '@/api/endpoints';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api from "@/api/axios";
+import { apiRoutes } from "@/api/endpoints";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export interface CreateComplianceForm {
   country: string;
   productCategory: string;
@@ -10,7 +10,7 @@ export interface CreateComplianceForm {
 
 export const useGetComplianceCases = () => {
   return useQuery({
-    queryKey: ['compliance'],
+    queryKey: ["compliance"],
     queryFn: () => api.get(apiRoutes.compliance.getCases),
   });
 };
@@ -22,7 +22,7 @@ export const useCompliance = () => {
       return api.post(apiRoutes.compliance.createCase, data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['compliance'] });
+      queryClient.invalidateQueries({ queryKey: ["compliance"] });
     },
   });
   const refreshCompliance = useMutation({
@@ -30,7 +30,7 @@ export const useCompliance = () => {
       return api.post(apiRoutes.compliance.refresh(id));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['compliance'] });
+      queryClient.invalidateQueries({ queryKey: ["compliance"] });
     },
   });
   return {

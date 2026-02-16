@@ -1,35 +1,35 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import api from '@/api/axios';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "@/api/axios";
 
 // ============================================================================
 // TYPES AND INTERFACES
 // ============================================================================
 
 export type AssessmentCategory =
-  | 'financial'
-  | 'operational'
-  | 'market'
-  | 'compliance'
-  | 'business_info';
+  | "financial"
+  | "operational"
+  | "market"
+  | "compliance"
+  | "business_info";
 
 export type AnswerType =
-  | 'string'
-  | 'number'
-  | 'money'
-  | 'file'
-  | 'array<string>'
-  | 'items'
-  | 'date'
-  | 'boolean';
+  | "string"
+  | "number"
+  | "money"
+  | "file"
+  | "array<string>"
+  | "items"
+  | "date"
+  | "boolean";
 
 export type AssessmentStatus =
-  | 'not_ready'
-  | 'needs_improvement'
-  | 'almost_ready'
-  | 'ready'
-  | 'excellent';
+  | "not_ready"
+  | "needs_improvement"
+  | "almost_ready"
+  | "ready"
+  | "excellent";
 
-export type RecommendationPriority = 'high' | 'medium' | 'low';
+export type RecommendationPriority = "high" | "medium" | "low";
 
 export interface MoneyAmount {
   amount: number;
@@ -197,14 +197,13 @@ export interface ScoringConfig {
 
 const assessmentEndpoints = {
   // Categories
-  getCategories: '/assessments/categories',
+  getCategories: "/assessments/categories",
 
   // Questions
-  getQuestionsByCategory: (category: AssessmentCategory) =>
-    `/assessments/questions/${category}`,
+  getQuestionsByCategory: (category: AssessmentCategory) => `/assessments/questions/${category}`,
 
   // Responses
-  submitResponse: '/assessments/responses',
+  submitResponse: "/assessments/responses",
   getResponses: (id: string) => `/assessments/responses/${id}`,
 
   // Scoring
@@ -212,19 +211,19 @@ const assessmentEndpoints = {
   getScore: (id: string) => `/assessments/score/${id}`,
 
   // SME Assessment
-  getSmeScore: '/assessments/sme/assessment/score',
-  getSmeScoreHistory: '/assessments/sme/assessment/score/history',
-  getSmeRecommendations: '/assessments/sme/assessment/recommendations',
-  getSmeStatus: '/assessments/sme/assessment/status',
-  retakeAssessment: '/assessments/sme/assessment/retake',
-  exportScore: '/assessments/sme/assessment/score/export',
+  getSmeScore: "/assessments/sme/assessment/score",
+  getSmeScoreHistory: "/assessments/sme/assessment/score/history",
+  getSmeRecommendations: "/assessments/sme/assessment/recommendations",
+  getSmeStatus: "/assessments/sme/assessment/status",
+  retakeAssessment: "/assessments/sme/assessment/retake",
+  exportScore: "/assessments/sme/assessment/score/export",
 
   // Admin endpoints
-  createQuestion: '/admin/assessments/questions',
+  createQuestion: "/admin/assessments/questions",
   updateQuestion: (id: string) => `/admin/assessments/questions/${id}`,
   deleteQuestion: (id: string) => `/admin/assessments/questions/${id}`,
-  getAnalytics: '/admin/assessments/analytics',
-  updateScoringConfig: '/admin/assessments/scoring',
+  getAnalytics: "/admin/assessments/analytics",
+  updateScoringConfig: "/admin/assessments/scoring",
 } as const;
 
 // ============================================================================
@@ -232,20 +231,17 @@ const assessmentEndpoints = {
 // ============================================================================
 
 export const assessmentQueryKeys = {
-  all: ['assessments'] as const,
-  categories: () => [...assessmentQueryKeys.all, 'categories'] as const,
+  all: ["assessments"] as const,
+  categories: () => [...assessmentQueryKeys.all, "categories"] as const,
   questions: (category: AssessmentCategory) =>
-    [...assessmentQueryKeys.all, 'questions', category] as const,
-  responses: (id: string) =>
-    [...assessmentQueryKeys.all, 'responses', id] as const,
-  scores: (id: string) => [...assessmentQueryKeys.all, 'scores', id] as const,
-  smeScore: () => [...assessmentQueryKeys.all, 'sme', 'score'] as const,
-  smeScoreHistory: () =>
-    [...assessmentQueryKeys.all, 'sme', 'score-history'] as const,
-  smeRecommendations: () =>
-    [...assessmentQueryKeys.all, 'sme', 'recommendations'] as const,
-  smeStatus: () => [...assessmentQueryKeys.all, 'sme', 'status'] as const,
-  analytics: () => [...assessmentQueryKeys.all, 'analytics'] as const,
+    [...assessmentQueryKeys.all, "questions", category] as const,
+  responses: (id: string) => [...assessmentQueryKeys.all, "responses", id] as const,
+  scores: (id: string) => [...assessmentQueryKeys.all, "scores", id] as const,
+  smeScore: () => [...assessmentQueryKeys.all, "sme", "score"] as const,
+  smeScoreHistory: () => [...assessmentQueryKeys.all, "sme", "score-history"] as const,
+  smeRecommendations: () => [...assessmentQueryKeys.all, "sme", "recommendations"] as const,
+  smeStatus: () => [...assessmentQueryKeys.all, "sme", "status"] as const,
+  analytics: () => [...assessmentQueryKeys.all, "analytics"] as const,
 } as const;
 
 // ============================================================================
@@ -278,16 +274,11 @@ export function useAssessment() {
   /**
    * Get questions by category
    */
-  const useGetQuestionsByCategory = (
-    category: AssessmentCategory,
-    enabled = true
-  ) => {
+  const useGetQuestionsByCategory = (category: AssessmentCategory, enabled = true) => {
     return useQuery({
       queryKey: assessmentQueryKeys.questions(category),
       queryFn: async (): Promise<AssessmentQuestion[]> => {
-        const response = await api.get(
-          assessmentEndpoints.getQuestionsByCategory(category)
-        );
+        const response = await api.get(assessmentEndpoints.getQuestionsByCategory(category));
         return response.data;
       },
       enabled,
@@ -313,9 +304,9 @@ export function useAssessment() {
    */
   const useGetMyResponses = (enabled = true) => {
     return useQuery({
-      queryKey: assessmentQueryKeys.responses('me'),
+      queryKey: assessmentQueryKeys.responses("me"),
       queryFn: async (): Promise<AssessmentResponse[]> => {
-        const response = await api.get(assessmentEndpoints.getResponses('me'));
+        const response = await api.get(assessmentEndpoints.getResponses("me"));
         return response.data;
       },
       enabled,
@@ -381,20 +372,14 @@ export function useAssessment() {
   const useGetSmeRecommendations = (
     category?: AssessmentCategory,
     priority?: RecommendationPriority,
-    enabled = true
+    enabled = true,
   ) => {
     return useQuery({
-      queryKey: [
-        ...assessmentQueryKeys.smeRecommendations(),
-        { category, priority },
-      ],
+      queryKey: [...assessmentQueryKeys.smeRecommendations(), { category, priority }],
       queryFn: async (): Promise<AssessmentRecommendation[]> => {
-        const response = await api.get(
-          assessmentEndpoints.getSmeRecommendations,
-          {
-            params: { category, priority },
-          }
-        );
+        const response = await api.get(assessmentEndpoints.getSmeRecommendations, {
+          params: { category, priority },
+        });
         return response.data;
       },
       enabled,
@@ -444,10 +429,7 @@ export function useAssessment() {
         answers: AssessmentAnswer[];
         completedAt?: string;
       }): Promise<AssessmentResponse> => {
-        const response = await api.post(
-          assessmentEndpoints.submitResponse,
-          data
-        );
+        const response = await api.post(assessmentEndpoints.submitResponse, data);
         return response.data;
       },
       onSuccess: (data) => {
@@ -456,7 +438,7 @@ export function useAssessment() {
           queryKey: assessmentQueryKeys.responses(data.smeId),
         });
         queryClient.invalidateQueries({
-          queryKey: assessmentQueryKeys.responses('me'),
+          queryKey: assessmentQueryKeys.responses("me"),
         });
         queryClient.invalidateQueries({
           queryKey: assessmentQueryKeys.smeStatus(),
@@ -495,10 +477,7 @@ export function useAssessment() {
   const useRetakeAssessment = () => {
     return useMutation({
       mutationFn: async (): Promise<{ message: string }> => {
-        const response = await api.post(
-          assessmentEndpoints.retakeAssessment,
-          {}
-        );
+        const response = await api.post(assessmentEndpoints.retakeAssessment, {});
         return response.data;
       },
       onSuccess: () => {
@@ -542,10 +521,7 @@ export function useAssessment() {
         order?: number;
         isActive?: boolean;
       }): Promise<AssessmentQuestion> => {
-        const response = await api.post(
-          assessmentEndpoints.createQuestion,
-          data
-        );
+        const response = await api.post(assessmentEndpoints.createQuestion, data);
         return response.data;
       },
       onSuccess: (data) => {
@@ -603,7 +579,7 @@ export function useAssessment() {
       onSuccess: () => {
         // Invalidate all questions queries
         queryClient.invalidateQueries({
-          queryKey: [...assessmentQueryKeys.all, 'questions'],
+          queryKey: [...assessmentQueryKeys.all, "questions"],
         });
       },
     });
@@ -622,10 +598,7 @@ export function useAssessment() {
         weight: number;
         isActive?: boolean;
       }): Promise<ScoringConfig> => {
-        const response = await api.post(
-          assessmentEndpoints.updateScoringConfig,
-          data
-        );
+        const response = await api.post(assessmentEndpoints.updateScoringConfig, data);
         return response.data;
       },
       onSuccess: () => {
@@ -676,18 +649,18 @@ export function useAssessment() {
  */
 export function getStatusColor(status: AssessmentStatus): string {
   switch (status) {
-    case 'excellent':
-      return 'text-green-600 bg-green-50';
-    case 'ready':
-      return 'text-blue-600 bg-blue-50';
-    case 'almost_ready':
-      return 'text-yellow-600 bg-yellow-50';
-    case 'needs_improvement':
-      return 'text-orange-600 bg-orange-50';
-    case 'not_ready':
-      return 'text-red-600 bg-red-50';
+    case "excellent":
+      return "text-green-600 bg-green-50";
+    case "ready":
+      return "text-blue-600 bg-blue-50";
+    case "almost_ready":
+      return "text-yellow-600 bg-yellow-50";
+    case "needs_improvement":
+      return "text-orange-600 bg-orange-50";
+    case "not_ready":
+      return "text-red-600 bg-red-50";
     default:
-      return 'text-gray-600 bg-gray-50';
+      return "text-gray-600 bg-gray-50";
   }
 }
 
@@ -696,18 +669,18 @@ export function getStatusColor(status: AssessmentStatus): string {
  */
 export function getStatusLabel(status: AssessmentStatus): string {
   switch (status) {
-    case 'excellent':
-      return 'Excellent';
-    case 'ready':
-      return 'Ready';
-    case 'almost_ready':
-      return 'Almost Ready';
-    case 'needs_improvement':
-      return 'Needs Improvement';
-    case 'not_ready':
-      return 'Not Ready';
+    case "excellent":
+      return "Excellent";
+    case "ready":
+      return "Ready";
+    case "almost_ready":
+      return "Almost Ready";
+    case "needs_improvement":
+      return "Needs Improvement";
+    case "not_ready":
+      return "Not Ready";
     default:
-      return 'Unknown';
+      return "Unknown";
   }
 }
 
@@ -716,14 +689,14 @@ export function getStatusLabel(status: AssessmentStatus): string {
  */
 export function getPriorityColor(priority: RecommendationPriority): string {
   switch (priority) {
-    case 'high':
-      return 'text-red-600 bg-red-50';
-    case 'medium':
-      return 'text-yellow-600 bg-yellow-50';
-    case 'low':
-      return 'text-green-600 bg-green-50';
+    case "high":
+      return "text-red-600 bg-red-50";
+    case "medium":
+      return "text-yellow-600 bg-yellow-50";
+    case "low":
+      return "text-green-600 bg-green-50";
     default:
-      return 'text-gray-600 bg-gray-50';
+      return "text-gray-600 bg-gray-50";
   }
 }
 
@@ -732,7 +705,7 @@ export function getPriorityColor(priority: RecommendationPriority): string {
  */
 export function calculateCompletionPercentage(
   responses: AssessmentResponse[],
-  totalQuestions: number
+  totalQuestions: number,
 ): number {
   if (totalQuestions === 0) return 0;
   return Math.round((responses.length / totalQuestions) * 100);
@@ -742,8 +715,8 @@ export function calculateCompletionPercentage(
  * Format money amount for display
  */
 export function formatMoneyAmount(amount: MoneyAmount): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
     currency: amount.currency,
   }).format(amount.amount);
 }

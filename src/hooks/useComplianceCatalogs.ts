@@ -1,6 +1,6 @@
-import api from '@/api/axios';
-import { apiRoutes } from '@/api/endpoints';
-import { useQuery } from '@tanstack/react-query';
+import api from "@/api/axios";
+import { apiRoutes } from "@/api/endpoints";
+import { useQuery } from "@tanstack/react-query";
 
 // Types from backend shapes
 export interface CatalogCountry {
@@ -23,14 +23,14 @@ export interface CatalogProductCategory {
 
 // Query keys
 const catalogKeys = {
-  all: ['compliance', 'catalog'] as const,
-  countries: () => [...catalogKeys.all, 'countries'] as const,
-  unions: () => [...catalogKeys.all, 'unions'] as const,
-  productCategories: () => [...catalogKeys.all, 'product-categories'] as const,
-  africanRegions: () => [...catalogKeys.all, 'african-regions'] as const,
-  globalCountries: (scope: 'africa' | 'global') =>
-    [...catalogKeys.all, 'global-countries', scope] as const,
-  industries: () => [...catalogKeys.all, 'industries'] as const,
+  all: ["compliance", "catalog"] as const,
+  countries: () => [...catalogKeys.all, "countries"] as const,
+  unions: () => [...catalogKeys.all, "unions"] as const,
+  productCategories: () => [...catalogKeys.all, "product-categories"] as const,
+  africanRegions: () => [...catalogKeys.all, "african-regions"] as const,
+  globalCountries: (scope: "africa" | "global") =>
+    [...catalogKeys.all, "global-countries", scope] as const,
+  industries: () => [...catalogKeys.all, "industries"] as const,
 };
 
 // Hooks
@@ -62,7 +62,7 @@ export function useIndustries(enabled = true) {
   });
 }
 
-export function useCountries(scope: 'africa' | 'global' = 'global', enabled = true) {
+export function useCountries(scope: "africa" | "global" = "global", enabled = true) {
   return useQuery({
     queryKey: catalogKeys.globalCountries(scope),
     queryFn: async (): Promise<CatalogCountry[]> => {

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Input from '@/components/ui/Inputs';
-import { updateProfile } from '@/hooks/useUpdateProfile';
-import { authAtom, onboardingStepAtom } from '@/lib/atoms/atoms';
-import { PersonalInfoInputs } from '@/lib/uitils/types';
-import { useAtomValue, useSetAtom } from 'jotai';
+import Input from "@/components/ui/Inputs";
+import { updateProfile } from "@/hooks/useUpdateProfile";
+import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
+import { PersonalInfoInputs } from "@/lib/uitils/types";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   Dispatch,
   forwardRef,
@@ -12,196 +12,172 @@ import {
   useEffect,
   useImperativeHandle,
   useState,
-} from 'react';
-import { CountrySelect, StateSelect } from 'react-country-state-city';
-import 'react-country-state-city/dist/react-country-state-city.css';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+} from "react";
+import { CountrySelect, StateSelect } from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 type PersonalInformationFormProps = {
   setLoading: Dispatch<SetStateAction<boolean>>;
   onFinish?: () => void;
 };
-const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>(
-  (props, ref) => {
-    const auth: any = useAtomValue(authAtom);
-    const { personal_information } = updateProfile();
-    const setStep = useSetAtom(onboardingStepAtom);
-    // console.log({ auth });
-    const names = auth?.name?.split?.(' ');
-    const {
-      register,
-      handleSubmit,
-      setValue,
-      getValues,
-      formState: { errors },
-    } = useForm<PersonalInfoInputs>({
-      defaultValues: {
-        firstName: names?.[0] ?? '',
-        lastName: names?.[names?.length - 1] ?? '',
-        email: auth?.email ?? '',
-      },
-    });
+const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>((props, ref) => {
+  const auth: any = useAtomValue(authAtom);
+  const { personal_information } = updateProfile();
+  const setStep = useSetAtom(onboardingStepAtom);
+  // console.log({ auth });
+  const names = auth?.name?.split?.(" ");
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<PersonalInfoInputs>({
+    defaultValues: {
+      firstName: names?.[0] ?? "",
+      lastName: names?.[names?.length - 1] ?? "",
+      email: auth?.email ?? "",
+    },
+  });
 
-    useEffect(() => {
-      props.setLoading(personal_information.isPending);
-    }, [personal_information.isPending, props]);
+  useEffect(() => {
+    props.setLoading(personal_information.isPending);
+  }, [personal_information.isPending, props]);
 
-    useImperativeHandle(ref, () => ({
-      submit: () => {
-        return new Promise((resolve) => {
-          handleSubmit(
-            (values) => {
-              onSubmit(values);
-              resolve(true);
-            },
-            () => {
-              resolve(false);
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      return new Promise((resolve) => {
+        handleSubmit(
+          (values) => {
+            onSubmit(values);
+            resolve(true);
+          },
+          () => {
+            resolve(false);
+          },
+        )();
+      });
+    },
+    isLoading: personal_information.isPending,
+  }));
+
+  const onSubmit = (values: PersonalInfoInputs) => {
+    const { email, ...data } = values;
+    personal_information
+      .mutateAsync(data)
+      .then((res) => {
+        // console.log({ res });
+      })
+      .catch((err) => toast.error(err?.message));
+  };
+
+  const [selectedCountryId, setSelectedCountryId] = useState("");
+  const [selectedCountryName, setSelectedCountryName] = useState("");
+  const [selectedStateName, setSelectedStateName] = useState("");
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="grid md:grid-cols-2 w-full gap-4">
+      <div>
+        <Input
+          label="First Name*"
+          placeholder="Jane"
+          {...register("firstName", { required: "First name is required" })}
+          type="text"
+          name="firstName"
+        />
+        {errors.firstName && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.firstName.message}</span>
+        )}
+      </div>
+      <div>
+        <Input
+          label="Last Name*"
+          placeholder="Earnest"
+          {...register("lastName", { required: "Last name is required" })}
+          type="text"
+          name="lastName"
+        />
+        {errors.lastName && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.lastName.message}</span>
+        )}
+      </div>
+      <div>
+        <Input
+          label="Phone Number*"
+          placeholder="(+234) 8164763794"
+          {...register("phoneNumber", {
+            required: "Phone Number is required",
+          })}
+          type="phone"
+          name="phoneNumber"
+        />
+        {errors.phoneNumber && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.phoneNumber.message}</span>
+        )}
+      </div>
+      <div>
+        <Input
+          label="Email Address*"
+          placeholder="Janeearnest@gmail.com"
+          {...register("email", { required: "Email is required" })}
+          type="email"
+          name="email"
+          readOnly={true}
+        />
+        {errors.email && (
+          <span className="col-span-2 text-[10px]  text-red-500">{errors.email.message}</span>
+        )}
+      </div>
+      <div>
+        <label className="block mb-1 text-sm font-medium">Country Of Residence</label>
+        <CountrySelect
+          value={selectedCountryName}
+          autoComplete="new-country"
+          inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
+          onChange={(country: any) => {
+            // console.log({ country });
+            if (country && typeof country === "object" && "id" in country && "name" in country) {
+              setSelectedCountryId(country.id); // for StateSelect
+              setSelectedCountryName(country.name); // for display
+              setValue("countryOfResidence", country.name); // for form
+              setSelectedStateName("");
+              setValue("stateOfResidence", "");
             }
-          )();
-        });
-      },
-      isLoading: personal_information.isPending,
-    }));
+          }}
+          defaultValue={getValues()?.countryOfResidence as any}
+          onTextChange={(_txt) => setValue("countryOfResidence", _txt.target.value)}
+        />
+        {errors.countryOfResidence && (
+          <span className="col-span-2 text-[10px] border-none  text-red-500">
+            {errors.countryOfResidence.message}
+          </span>
+        )}
+      </div>
 
-    const onSubmit = (values: PersonalInfoInputs) => {
-      const { email, ...data } = values;
-      personal_information
-        .mutateAsync(data)
-        .then((res) => {
-          // console.log({ res });
-        })
-        .catch((err) => toast.error(err?.message));
-    };
-
-    const [selectedCountryId, setSelectedCountryId] = useState('');
-    const [selectedCountryName, setSelectedCountryName] = useState('');
-    const [selectedStateName, setSelectedStateName] = useState('');
-
-    return (
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="grid md:grid-cols-2 w-full gap-4"
-      >
-        <div>
-          <Input
-            label="First Name*"
-            placeholder="Jane"
-            {...register('firstName', { required: 'First name is required' })}
-            type="text"
-            name="firstName"
-          />
-          {errors.firstName && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.firstName.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <Input
-            label="Last Name*"
-            placeholder="Earnest"
-            {...register('lastName', { required: 'Last name is required' })}
-            type="text"
-            name="lastName"
-          />
-          {errors.lastName && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.lastName.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <Input
-            label="Phone Number*"
-            placeholder="(+234) 8164763794"
-            {...register('phoneNumber', {
-              required: 'Phone Number is required',
-            })}
-            type="phone"
-            name="phoneNumber"
-          />
-          {errors.phoneNumber && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.phoneNumber.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <Input
-            label="Email Address*"
-            placeholder="Janeearnest@gmail.com"
-            {...register('email', { required: 'Email is required' })}
-            type="email"
-            name="email"
-            readOnly={true}
-          />
-          {errors.email && (
-            <span className="col-span-2 text-[10px]  text-red-500">
-              {errors.email.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Country Of Residence
-          </label>
-          <CountrySelect
-            value={selectedCountryName}
-            autoComplete="new-country"
-            inputClassName="w-full px-4 py-2 !border-none focus:!ring-0 focus:!border-none"
-            onChange={(country: any) => {
-              // console.log({ country });
-              if (
-                country &&
-                typeof country === 'object' &&
-                'id' in country &&
-                'name' in country
-              ) {
-                setSelectedCountryId(country.id); // for StateSelect
-                setSelectedCountryName(country.name); // for display
-                setValue('countryOfResidence', country.name); // for form
-                setSelectedStateName('');
-                setValue('stateOfResidence', '');
-              }
-            }}
-            defaultValue={getValues()?.countryOfResidence as any}
-            onTextChange={(_txt) =>
-              setValue('countryOfResidence', _txt.target.value)
+      <div>
+        <label className="block mb-1 text-sm font-medium">State of Residence</label>
+        <StateSelect
+          autoComplete="new-state"
+          countryid={Number(selectedCountryId)}
+          value={selectedStateName}
+          inputClassName="w-full px-4 py-2 focus:!border-none focus:!ring-0 !border-none"
+          onChange={(state: any) => {
+            if (state && typeof state === "object" && "name" in state) {
+              setSelectedStateName(state.name);
+              setValue("stateOfResidence", state.name);
             }
-          />
-          {errors.countryOfResidence && (
-            <span className="col-span-2 text-[10px] border-none  text-red-500">
-              {errors.countryOfResidence.message}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            State of Residence
-          </label>
-          <StateSelect
-            autoComplete="new-state"
-            countryid={Number(selectedCountryId)}
-            value={selectedStateName}
-            inputClassName="w-full px-4 py-2 focus:!border-none focus:!ring-0 !border-none"
-            onChange={(state: any) => {
-              if (state && typeof state === 'object' && 'name' in state) {
-                setSelectedStateName(state.name);
-                setValue('stateOfResidence', state.name);
-              }
-            }}
-          />
-          {errors.stateOfResidence && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.stateOfResidence.message}
-            </span>
-          )}
-        </div>
-      </form>
-    );
-  }
-);
+          }}
+        />
+        {errors.stateOfResidence && (
+          <span className="col-span-2 text-[10px] text-red-500">
+            {errors.stateOfResidence.message}
+          </span>
+        )}
+      </div>
+    </form>
+  );
+});
 
 export default PersonalInfoForm;
 

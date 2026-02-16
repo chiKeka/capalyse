@@ -1,37 +1,26 @@
-import useDebounce from '@/hooks/useDebounce';
-import { useIndustries } from '@/hooks/useComplianceCatalogs';
-import { useUserDirectory } from '@/hooks/useDirectories';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { useMemo, useState } from 'react';
-import { SearchForm } from '../search-form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
-import { statusBadge } from '../ui/statusBar';
-import { ReusableTable } from '../ui/table';
+import useDebounce from "@/hooks/useDebounce";
+import { useIndustries } from "@/hooks/useComplianceCatalogs";
+import { useUserDirectory } from "@/hooks/useDirectories";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { useMemo, useState } from "react";
+import { SearchForm } from "../search-form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { statusBadge } from "../ui/statusBar";
+import { ReusableTable } from "../ui/table";
 const typeMap = {
-  SMEs: 'sme',
-  Investors: 'investor',
-  'Development Organization': 'development_org',
+  SMEs: "sme",
+  Investors: "investor",
+  "Development Organization": "development_org",
 };
 const UserManagementTabContents = ({ type }: { type: string | undefined }) => {
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 300);
   const mgtColumns = useMemo(
-    () =>
-      type === 'SMEs'
-        ? columns
-        : type === 'Investors'
-        ? invColumns
-        : devColumns,
-    [type]
+    () => (type === "SMEs" ? columns : type === "Investors" ? invColumns : devColumns),
+    [type],
   );
   const { data, isLoading } = useUserDirectory({
     role: typeMap[type as keyof typeof typeMap],
@@ -116,9 +105,7 @@ const columns = [
             className="rounded-full"
           />
         )}
-        <span className="font-medium text-sm">
-          {row?.smeBusinessInfo?.businessName ?? "-"}
-        </span>
+        <span className="font-medium text-sm">{row?.smeBusinessInfo?.businessName ?? "-"}</span>
       </div>
     ),
   },
@@ -152,14 +139,12 @@ const columns = [
 
 const invColumns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) =>
-      `${row?.personalInfo?.firstName ?? '-'} ${
-        row?.personalInfo?.lastName ?? ''
-      }`,
+      `${row?.personalInfo?.firstName ?? "-"} ${row?.personalInfo?.lastName ?? ""}`,
   },
   {
-    header: 'Company Name',
+    header: "Company Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.investorOrganizationInfo?.logo ? (
@@ -178,26 +163,23 @@ const invColumns = [
     ),
   },
   {
-    header: 'Investor Type',
-    accessor: (row: any) =>
-      row?.investorInvestmentInfo?.investmentTypes?.join(', ') ?? '-',
+    header: "Investor Type",
+    accessor: (row: any) => row?.investorInvestmentInfo?.investmentTypes?.join(", ") ?? "-",
   },
   {
-    header: 'Target Regions',
-    accessor: (row: any) =>
-      row?.investorInvestmentInfo?.targetRegions?.join(', ') ?? '-',
+    header: "Target Regions",
+    accessor: (row: any) => row?.investorInvestmentInfo?.targetRegions?.join(", ") ?? "-",
   },
   {
-    header: 'Target Industries',
-    accessor: (row: any) =>
-      row?.investorInvestmentInfo?.targetIndustries?.join(', ') ?? '-',
+    header: "Target Industries",
+    accessor: (row: any) => row?.investorInvestmentInfo?.targetIndustries?.join(", ") ?? "-",
   },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: any) => statusBadge(row.status),
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/investor/${row.userId}`}
@@ -206,13 +188,13 @@ const invColumns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];
 
 const devColumns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: any) => (
       <div className="flex items-center gap-2">
         {row?.devOrgInfo?.logo ? (
@@ -224,31 +206,28 @@ const devColumns = [
             className="rounded-full"
           />
         ) : null}
-        <span className="font-medium text-sm">
-          {row?.devOrgInfo?.organizationName || '-'}
-        </span>
+        <span className="font-medium text-sm">{row?.devOrgInfo?.organizationName || "-"}</span>
       </div>
     ),
   },
   {
-    header: 'Company Headquarters',
-    accessor: (row: any) => row?.devOrgInfo?.countryHeadquarters ?? '-',
+    header: "Company Headquarters",
+    accessor: (row: any) => row?.devOrgInfo?.countryHeadquarters ?? "-",
   },
   {
-    header: 'Investment Focus',
-    accessor: (row: any) => row?.devOrgInfo?.focusAreas?.join(', ') || '-',
+    header: "Investment Focus",
+    accessor: (row: any) => row?.devOrgInfo?.focusAreas?.join(", ") || "-",
   },
   {
-    header: 'Target Regions',
-    accessor: (row: any) =>
-      row?.devOrgInfo?.operatingRegions?.join(', ') || '-',
+    header: "Target Regions",
+    accessor: (row: any) => row?.devOrgInfo?.operatingRegions?.join(", ") || "-",
   },
   {
-    header: 'Verification Status',
+    header: "Verification Status",
     accessor: (row: any) => statusBadge(row?.devOrgInfo?.verificationStatus),
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
       <Link
         href={`/admin/user-management/dev/${row.userId}`}
@@ -257,6 +236,6 @@ const devColumns = [
         View Profile
       </Link>
     ),
-    className: 'text-green',
+    className: "text-green",
   },
 ];

@@ -1,9 +1,9 @@
-import { ReactNode, useState } from 'react';
-import Button from '../ui/Button';
-import { motion } from 'framer-motion';
-import { Waitlist } from './waitlist';
-import { containerVariants } from '@/lib/animations';
-import { useRouter } from 'next/navigation';
+import { ReactNode, useState } from "react";
+import Button from "../ui/Button";
+import { motion } from "framer-motion";
+import { Waitlist } from "./waitlist";
+import { containerVariants } from "@/lib/animations";
+import { useRouter } from "next/navigation";
 
 type Props = {
   reverse?: boolean;
@@ -21,13 +21,13 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ margin: '-100px' }}
+      viewport={{ margin: "-100px" }}
       className="py-20 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div
           className={`flex max-md:flex-col-reverse  justify-end gap-12 items-center ${
-            reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
+            reverse ? "lg:flex-row-reverse" : "lg:flex-row"
           }`}
         >
           <div className="xl:max-w-[588px] lg:max-w-[450px]">
@@ -37,7 +37,7 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
             </h1>
 
             <p className="mb-8 leading-relaxed">
-              {text?.split('<br/>').map((line, index, arr) => (
+              {text?.split("<br/>").map((line, index, arr) => (
                 <span key={index}>
                   {line}
                   {index !== arr.length - 1 && <br />}
@@ -46,7 +46,7 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
             </p>
 
             <Button
-              onClick={() => router.push('/sme/signup')}
+              onClick={() => router.push("/sme/signup")}
               iconPosition="right"
               className="font-bold"
             >

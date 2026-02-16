@@ -46,8 +46,7 @@ export const useInvestorSavedSMEs = (params?: any) => {
   });
 };
 
-export const getSingleSmeById = async (id: string) =>
-  await api.get(directoryRoutes.publicSmes(id));
+export const getSingleSmeById = async (id: string) => await api.get(directoryRoutes.publicSmes(id));
 
 export const useGetSmeById = (id: string) => {
   return useQuery({
@@ -74,9 +73,7 @@ export const useSmeSaveStatus = (smeId?: string) => {
   return useQuery({
     queryKey: ["smeSaveStatus"],
     queryFn: async () => {
-      const resp = await api.get(
-        apiRoutes.investors.smeSaveStatus(smeId as string)
-      );
+      const resp = await api.get(apiRoutes.investors.smeSaveStatus(smeId as string));
       return resp.data;
     },
     enabled: !!smeId,

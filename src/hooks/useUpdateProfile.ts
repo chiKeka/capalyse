@@ -1,7 +1,7 @@
-import api from '@/api/axios';
-import { profileRoutes } from '@/api/endpoints';
-import { PersonalInfoInputs, SMEsBusinessInfo } from '@/lib/uitils/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import api from "@/api/axios";
+import { profileRoutes } from "@/api/endpoints";
+import { PersonalInfoInputs, SMEsBusinessInfo } from "@/lib/uitils/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface VerifyResponse {
   data: {
@@ -22,7 +22,7 @@ export interface VerifyResponse {
 
 export const getCurrentProfile = () => {
   return useQuery({
-    queryKey: ['current_profile'],
+    queryKey: ["current_profile"],
     queryFn: async () => {
       const response = await api.get(profileRoutes.get);
 
@@ -40,7 +40,7 @@ export const updateProfile = () => {
       return api.put(profileRoutes.updatePersonalInfo, cred);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+      queryClient.invalidateQueries({ queryKey: ["current_profile"] });
     },
   });
 
@@ -54,7 +54,7 @@ export const updateProfile = () => {
       return api.put(profileRoutes.updateSmeBusinessInfo, cred);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+      queryClient.invalidateQueries({ queryKey: ["current_profile"] });
     },
   });
   const investor_investment_info = useMutation({
@@ -73,7 +73,7 @@ export const updateProfile = () => {
       return api.put(profileRoutes.updateBusinessSummary, cred);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+      queryClient.invalidateQueries({ queryKey: ["current_profile"] });
     },
   });
 
@@ -86,7 +86,7 @@ export const updateProfile = () => {
       return api.put(profileRoutes.addTeamMember, cred);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['current_profile'] });
+      queryClient.invalidateQueries({ queryKey: ["current_profile"] });
     },
   });
 

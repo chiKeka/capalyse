@@ -10,11 +10,7 @@ const getRandomThree = (arr: typeof resouresData) => {
   return [...arr].sort(() => 0.5 - Math.random()).slice(0, 3);
 };
 
-export default async function ResourceDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ResourceDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const resource = resouresData.find((r) => r.id === id);
 
@@ -23,15 +19,9 @@ export default async function ResourceDetailsPage({
   const randomThree = getRandomThree(resouresData);
   return (
     <div className="max-w-7xl mx-auto py-20 px-4">
-      <img
-        src={resource.image}
-        alt={resource.header}
-        className="w-full h-auto"
-      />
+      <img src={resource.image} alt={resource.header} className="w-full h-auto" />
       <div className="w-full items-center justify-center flex flex-col">
-        <h1 className="text-[56px] font-bold mb-2 text-center">
-          {resource.header}
-        </h1>
+        <h1 className="text-[56px] font-bold mb-2 text-center">{resource.header}</h1>
         <div className="flex items-center justify-center gap-2">
           <p className="mt-4 text-center">May 19, 2025 </p>
           <p className="mt-4 text-center">6 minutes read</p>

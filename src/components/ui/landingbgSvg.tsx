@@ -22,16 +22,8 @@ const LandingbgSvg = ({ className }: { className?: string }) => {
           colorInterpolationFilters="sRGB"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          />
-          <feGaussianBlur
-            stdDeviation="144.093"
-            result="effect1_foregroundBlur_141_2384"
-          />
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+          <feGaussianBlur stdDeviation="144.093" result="effect1_foregroundBlur_141_2384" />
         </filter>
       </defs>
     </svg>

@@ -29,12 +29,7 @@ export function SearchForm({
           onChange={onChange}
           className={cn("min-h-8 pl-7", inputClassName)}
         />
-        <div
-          className={cn(
-            "absolute size-4 h-full w-7 top-0 rounded-l-md",
-            iconWrapperClassName
-          )}
-        >
+        <div className={cn("absolute size-4 h-full w-7 top-0 rounded-l-md", iconWrapperClassName)}>
           <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none " />
         </div>
       </div>

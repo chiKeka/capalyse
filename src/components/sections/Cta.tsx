@@ -1,9 +1,9 @@
-import { containerVariants, itemVariants } from '@/lib/animations';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import Button from '../ui/Button';
-import { Waitlist } from './waitlist';
-import GetStarted from '../layout/GetStarted';
+import { containerVariants, itemVariants } from "@/lib/animations";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import Button from "../ui/Button";
+import { Waitlist } from "./waitlist";
+import GetStarted from "../layout/GetStarted";
 
 type Props = {
   heading: React.ReactNode;
@@ -26,21 +26,19 @@ const Cta = ({ heading, text, buttonText }: Props) => {
       >
         <div className="absolute inset-0 h-full">
           <img
-            src={'/images/cta-img.png'}
+            src={"/images/cta-img.png"}
             alt="image"
             className="object-cover xl:object-end h-full w-full"
           />
         </div>
         <div className="py-20 relative z-10">
           <h2 className="text-4xl font-bold mb-6">{heading}</h2>
-          <p className="font-normal text-black my-3 text-base ">
-            {text ?? text}
-          </p>
+          <p className="font-normal text-black my-3 text-base ">{text ?? text}</p>
 
           <GetStarted
             component={
               <Button size="medium" iconPosition="right">
-                {buttonText ? 'Explore Opportunities' : 'Get Started'}
+                {buttonText ? "Explore Opportunities" : "Get Started"}
               </Button>
             }
           />

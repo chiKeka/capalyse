@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Button from '@/components/ui/Button';
-import CircularScoreBar from '@/components/ui/CircularScoreBar';
-import { useAllAssessmentQuestions } from '@/hooks/useAssessmentQuestions';
-import { generateAssessmentQuestionsPDF } from '@/lib/generateAssessmentPDF';
-import { ReadinessScoreResponse } from '@/lib/uitils/types';
-import { Download } from 'lucide-react';
-import { useState } from 'react';
-import AssessmentReadiness from '../AssessmentReadiness';
+import Button from "@/components/ui/Button";
+import CircularScoreBar from "@/components/ui/CircularScoreBar";
+import { useAllAssessmentQuestions } from "@/hooks/useAssessmentQuestions";
+import { generateAssessmentQuestionsPDF } from "@/lib/generateAssessmentPDF";
+import { ReadinessScoreResponse } from "@/lib/uitils/types";
+import { Download } from "lucide-react";
+import { useState } from "react";
+import AssessmentReadiness from "../AssessmentReadiness";
 
 type Props = {
   scoreValue?: number;
@@ -23,7 +23,7 @@ function ReadinessScoreCard({
   readinessData,
   isLoading,
   showAssessment,
-  textContent = 'Readiness Score',
+  textContent = "Readiness Score",
   extraContent,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -31,8 +31,7 @@ function ReadinessScoreCard({
   const { refetch: fetchQuestions } = useAllAssessmentQuestions();
 
   // Use readinessData overall score if available, otherwise fall back to scoreValue
-  const displayScore =
-    readinessData?.overallScore?.percentage ?? scoreValue ?? 0;
+  const displayScore = readinessData?.overallScore?.percentage ?? scoreValue ?? 0;
 
   const handleDownloadPDF = async () => {
     setIsDownloading(true);
@@ -42,7 +41,7 @@ function ReadinessScoreCard({
         generateAssessmentQuestionsPDF(data);
       }
     } catch (error) {
-      console.error('Failed to download assessment questions:', error);
+      console.error("Failed to download assessment questions:", error);
     } finally {
       setIsDownloading(false);
     }
@@ -60,11 +59,7 @@ function ReadinessScoreCard({
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
               </div>
             ) : (
-              <CircularScoreBar
-                value={displayScore}
-                size={180}
-                strokeWidth={10}
-              />
+              <CircularScoreBar value={displayScore} size={180} strokeWidth={10} />
             )}
           </div>
         )}
@@ -93,7 +88,7 @@ function ReadinessScoreCard({
                 className="flex items-center gap-2 border border-[#E8E8E8]"
               >
                 <Download size={16} />
-                {isDownloading ? 'Downloading...' : 'Download Questions'}
+                {isDownloading ? "Downloading..." : "Download Questions"}
               </Button>
             </div>
             <AssessmentReadiness isOpen={open} setIsOpen={setOpen} />
@@ -105,4 +100,3 @@ function ReadinessScoreCard({
 }
 
 export default ReadinessScoreCard;
-

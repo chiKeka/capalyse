@@ -1,11 +1,11 @@
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
-import { authAtom } from '@/lib/atoms/atoms';
-import { useAtomValue } from 'jotai';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { authAtom } from "@/lib/atoms/atoms";
+import { useAtomValue } from "jotai";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface PersonalInfoData {
   firstName: string;
@@ -27,12 +27,12 @@ function PersonalInfo({}: Props) {
     reset,
   } = useForm<PersonalInfoData>({
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
-      email: auth?.email ?? '',
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: auth?.email ?? "",
     },
-    mode: 'all',
+    mode: "all",
   });
   // console.log({ auth, details });
 
@@ -40,10 +40,10 @@ function PersonalInfo({}: Props) {
   useEffect(() => {
     if (details?.personalInfo) {
       reset({
-        firstName: details.personalInfo.firstName || '',
-        lastName: details.personalInfo.lastName || '',
-        phoneNumber: details.personalInfo.phoneNumber || '',
-        email: details.personalInfo.email ?? auth?.email ?? '',
+        firstName: details.personalInfo.firstName || "",
+        lastName: details.personalInfo.lastName || "",
+        phoneNumber: details.personalInfo.phoneNumber || "",
+        email: details.personalInfo.email ?? auth?.email ?? "",
       });
     }
   }, [details, reset]);
@@ -53,28 +53,23 @@ function PersonalInfo({}: Props) {
   const onSubmit = async (data: PersonalInfoData) => {
     personal_information.mutate(data as any, {
       onSuccess: () => {
-        toast.success('Profile updated successfully');
+        toast.success("Profile updated successfully");
       },
       onError: (error) => {
-        toast.error(
-          error?.message || 'Failed to update profile. Please try again.'
-        );
+        toast.error(error?.message || "Failed to update profile. Please try again.");
       },
     });
   };
 
   return (
     <div className="border-1 rounded-md p-3 md:p-6 ">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="md:px-6 px-2 pb-12 w-full max-w-150"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="md:px-6 px-2 pb-12 w-full max-w-150">
         <Input
-          {...register('firstName', {
-            required: 'First name is required',
+          {...register("firstName", {
+            required: "First name is required",
             minLength: {
               value: 2,
-              message: 'First name must be at least 2 characters',
+              message: "First name must be at least 2 characters",
             },
           })}
           name="firstName"
@@ -84,17 +79,15 @@ function PersonalInfo({}: Props) {
           placeholder="John"
         />
         {errors.firstName && (
-          <span className="text-[10px] text-red-500">
-            {errors.firstName.message}
-          </span>
+          <span className="text-[10px] text-red-500">{errors.firstName.message}</span>
         )}
 
         <Input
-          {...register('lastName', {
-            required: 'Last name is required',
+          {...register("lastName", {
+            required: "Last name is required",
             minLength: {
               value: 2,
-              message: 'Last name must be at least 2 characters',
+              message: "Last name must be at least 2 characters",
             },
           })}
           name="lastName"
@@ -104,16 +97,14 @@ function PersonalInfo({}: Props) {
           placeholder="Doe"
         />
         {errors.lastName && (
-          <span className="text-[10px] text-red-500">
-            {errors.lastName.message}
-          </span>
+          <span className="text-[10px] text-red-500">{errors.lastName.message}</span>
         )}
 
         <Input
-          {...register('phoneNumber', {
+          {...register("phoneNumber", {
             pattern: {
               value: /^\+?[\d\s\-\(\)]+$/,
-              message: 'Please enter a valid phone number',
+              message: "Please enter a valid phone number",
             },
           })}
           name="phoneNumber"
@@ -123,17 +114,15 @@ function PersonalInfo({}: Props) {
           placeholder="+1234567890"
         />
         {errors.phoneNumber && (
-          <span className="text-[10px] text-red-500">
-            {errors.phoneNumber.message}
-          </span>
+          <span className="text-[10px] text-red-500">{errors.phoneNumber.message}</span>
         )}
 
         <Input
-          {...register('email', {
-            required: 'Email is required',
+          {...register("email", {
+            required: "Email is required",
             pattern: {
               value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: 'Please enter a valid email address',
+              message: "Please enter a valid email address",
             },
           })}
           name="email"
@@ -143,11 +132,7 @@ function PersonalInfo({}: Props) {
           placeholder="johndoe@gmail.com"
           readOnly={true}
         />
-        {errors.email && (
-          <span className="text-[10px] text-red-500">
-            {errors.email.message}
-          </span>
-        )}
+        {errors.email && <span className="text-[10px] text-red-500">{errors.email.message}</span>}
 
         <Button
           variant="primary"
@@ -156,11 +141,11 @@ function PersonalInfo({}: Props) {
           type="submit"
           disabled={personal_information.isPending}
         >
-          {personal_information.isPending ? 'Updating...' : 'Submit'}
+          {personal_information.isPending ? "Updating..." : "Submit"}
         </Button>
         <div className="py-3 px-5 my-6 rounded-[40px] items-center gap-2 w-full bg-[#F4FFFC] inline-flex font-normal text-xs text-[#062039]">
-          <img src={'/icons/circle_warning.svg'} /> PS: Changes made to your
-          profile will be subject to verification
+          <img src={"/icons/circle_warning.svg"} /> PS: Changes made to your profile will be subject
+          to verification
         </div>
       </form>
       <hr className="h-[1px] bg-[] " />
@@ -170,7 +155,7 @@ function PersonalInfo({}: Props) {
           variant="secondary"
           size="medium"
           className="w-full"
-          state={personal_information.isPending ? 'loading' : 'default'}
+          state={personal_information.isPending ? "loading" : "default"}
         >
           Delete Account
         </Button>

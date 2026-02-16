@@ -6,13 +6,7 @@ import { investorsContent, organisationContent, smeContent } from "./HowItWorks"
 const tabs = ["For SMEs", "For Investors", "For Organisations"];
 type Content = { title: string; icon: () => ReactNode; desc: string };
 
-const HowItWorkstoo = ({
-  isSme,
-  isOrg,
-}: {
-  isSme?: boolean;
-  isOrg?: boolean;
-}) => {
+const HowItWorkstoo = ({ isSme, isOrg }: { isSme?: boolean; isOrg?: boolean }) => {
   const [currentTab, setCurrentTab] = useState(tabs[0]);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -37,17 +31,13 @@ const HowItWorkstoo = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-8">
-            How It Works
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-8">How It Works</h2>
         </div>
 
         {/* Content container with responsive behavior */}
         <div className="space-y-8 md:space-y-0 md:relative md:overflow-hidden md:min-h-[400px]">
           {/* SME Content */}
-          {renderContent(
-            isSme ? smeContent : isOrg ? organisationContent : investorsContent
-          )}
+          {renderContent(isSme ? smeContent : isOrg ? organisationContent : investorsContent)}
         </div>
       </div>
     </motion.section>
@@ -68,7 +58,7 @@ const renderContent = (content: Content[]) => {
           transition={{ duration: 0.5, delay: index * 0.1 }}
           className={classNames(
             "border border-primary-green-2 p-4 xl:p-6 transition-all duration-300 rounded-lg",
-            "md:max-w-[19.4169rem]"
+            "md:max-w-[19.4169rem]",
           )}
           key={item.title}
         >

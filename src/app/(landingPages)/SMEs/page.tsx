@@ -1,29 +1,28 @@
-'use client';
-import Cta from '@/components/sections/Cta';
-import Cta2 from '@/components/sections/Cta2';
-import InverstmentReadiness from '@/components/sections/Cta3';
-import HowItWorkstoo from '@/components/sections/HowItWorkstoo';
+"use client";
+import Cta from "@/components/sections/Cta";
+import Cta2 from "@/components/sections/Cta2";
+import InverstmentReadiness from "@/components/sections/Cta3";
+import HowItWorkstoo from "@/components/sections/HowItWorkstoo";
 
-import SMEsHero from '@/components/sections/SMEsHero';
-import { smsEcardsData } from '@/lib/uitils/contentData';
+import SMEsHero from "@/components/sections/SMEsHero";
+import { smsEcardsData } from "@/lib/uitils/contentData";
 
 type Props = {};
 const data = [
-  'Know where you stand before stepping into a room with investors',
-  'Learn what matters, when it matters, for your African business',
-  'Find funders who are already looking for businesses like yours.',
-  'Less paperwork, more deal flow.',
-  'Join a growing ecosystem of funders, and advisors across Africa.',
+  "Know where you stand before stepping into a room with investors",
+  "Learn what matters, when it matters, for your African business",
+  "Find funders who are already looking for businesses like yours.",
+  "Less paperwork, more deal flow.",
+  "Join a growing ecosystem of funders, and advisors across Africa.",
 ];
-function SMEs({ }: Props) {
+function SMEs({}: Props) {
   return (
     <>
       <SMEsHero
         tag="FOR SMES"
         header={
           <>
-            <span className="text-green">Grow your business </span> with
-            structured support and
+            <span className="text-green">Grow your business </span> with structured support and
             <span className="text-green"> capital access.</span>
           </>
         }
@@ -48,11 +47,7 @@ function SMEs({ }: Props) {
       {/* how it works section */}
       <HowItWorkstoo isSme />
       {/* key benefits */}
-      <Cta2
-        data={data}
-        headerTag="Key Benefits"
-        imageSrc="/images/smeBenefit.png"
-      />
+      <Cta2 data={data} headerTag="Key Benefits" imageSrc="/images/smeBenefit.png" />
       {/* call to action */}
       <Cta
         text="Take the free Investment Readiness Assessment and unlock your growth potential."

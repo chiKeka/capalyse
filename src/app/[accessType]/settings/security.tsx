@@ -67,7 +67,7 @@ function Security() {
           toast.error(error?.error?.message || "Failed to change password");
           setIsLoading(false);
         },
-      }
+      },
     );
   };
 
@@ -80,10 +80,7 @@ function Security() {
         </p>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="lg:px-6 pb-12 w-full max-w-150"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="lg:px-6 pb-12 w-full max-w-150">
         <div>
           <Input
             {...register("oldPassword", {
@@ -100,9 +97,7 @@ function Security() {
             placeholder="Input your current password"
           />
           {errors.oldPassword && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.oldPassword.message}
-            </p>
+            <p className="text-red-500 text-sm mt-1">{errors.oldPassword.message}</p>
           )}
         </div>
 
@@ -127,9 +122,7 @@ function Security() {
             placeholder="Input your new password"
           />
           {errors.newPassword && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.newPassword.message}
-            </p>
+            <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>
           )}
         </div>
 
@@ -151,9 +144,7 @@ function Security() {
             placeholder="Confirm your new password"
           />
           {errors.confirmPassword && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.confirmPassword.message}
-            </p>
+            <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
           )}
         </div>
 

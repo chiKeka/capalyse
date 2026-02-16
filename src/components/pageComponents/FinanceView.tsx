@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import Button from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import Button from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { formatCurrency } from '@/lib/uitils/fns';
-import { format as formatDate } from 'date-fns';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { formatCurrency } from "@/lib/uitils/fns";
+import { format as formatDate } from "date-fns";
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -24,27 +24,19 @@ import {
   PointElement,
   Title,
   Tooltip,
-} from 'chart.js';
-import { File, Pen, Trash2 } from 'lucide-react';
-import { Line } from 'react-chartjs-2';
-import { useMemo, useState } from 'react';
-import { UpdateFinancialRecordsSheet } from '@/components/ui/update-financial-records-sheet';
+} from "chart.js";
+import { File, Pen, Trash2 } from "lucide-react";
+import { Line } from "react-chartjs-2";
+import { useMemo, useState } from "react";
+import { UpdateFinancialRecordsSheet } from "@/components/ui/update-financial-records-sheet";
 import {
   useFinancialDocuments,
   useFinancialGrowth,
   useFinancialSummary,
-} from '@/hooks/useFinancials';
-import { formatFileSize } from '@/hooks/useDocument';
+} from "@/hooks/useFinancials";
+import { formatFileSize } from "@/hooks/useDocument";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 type Props = {
   isSme?: boolean;
@@ -61,22 +53,22 @@ const DATA_COUNT = 7;
 const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 };
 
 const labels = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const chartConfig = {
-  type: 'line' as const,
+  type: "line" as const,
   data: [],
   options: {
     responsive: true,
@@ -84,12 +76,12 @@ const chartConfig = {
       y: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: "rgba(0, 0, 0, 0.1)",
         },
       },
       x: {
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)',
+          color: "rgba(0, 0, 0, 0.1)",
         },
       },
     },
@@ -98,7 +90,7 @@ const chartConfig = {
 
 const columns = [
   {
-    header: 'File name',
+    header: "File name",
     accessor: (row: DocumentRow) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -112,9 +104,9 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Date uploaded', accessor: 'date' },
+  { header: "Date uploaded", accessor: "date" },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: DocumentRow) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -122,7 +114,7 @@ const columns = [
     ),
   },
   {
-    header: '',
+    header: "",
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
         <button className="text-gray-400 hover:text-red-600">
@@ -133,7 +125,7 @@ const columns = [
         </button>
       </div>
     ),
-    className: 'text-right',
+    className: "text-right",
   },
 ];
 function FinanceView({ isSme = true }: Props) {
@@ -164,11 +156,11 @@ function FinanceView({ isSme = true }: Props) {
 
   type OverviewCard = {
     id: number;
-    label: 'Revenue' | 'Expenses' | 'Debt';
+    label: "Revenue" | "Expenses" | "Debt";
     amount: number;
     currency: string;
     percentage?: number | null;
-    direction: 'up' | 'down';
+    direction: "up" | "down";
     icon: any;
     icon2: any;
   };
@@ -186,31 +178,31 @@ function FinanceView({ isSme = true }: Props) {
     return [
       {
         id: 1,
-        label: 'Revenue',
+        label: "Revenue",
         amount: overall?.revenue?.amount ?? 0,
-        currency: overall?.revenue?.currency ?? 'NGN',
-        percentage: typeof revPct === 'number' ? revPct : undefined,
-        direction: typeof revPct === 'number' && revPct < 0 ? 'down' : 'up',
+        currency: overall?.revenue?.currency ?? "NGN",
+        percentage: typeof revPct === "number" ? revPct : undefined,
+        direction: typeof revPct === "number" && revPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 2,
-        label: 'Expenses',
+        label: "Expenses",
         amount: overall?.expense?.amount ?? 0,
-        currency: overall?.expense?.currency ?? 'NGN',
-        percentage: typeof expPct === 'number' ? expPct : undefined,
-        direction: typeof expPct === 'number' && expPct < 0 ? 'down' : 'up',
+        currency: overall?.expense?.currency ?? "NGN",
+        percentage: typeof expPct === "number" ? expPct : undefined,
+        direction: typeof expPct === "number" && expPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
       {
         id: 3,
-        label: 'Debt',
+        label: "Debt",
         amount: overall?.debt?.amount ?? 0,
-        currency: overall?.debt?.currency ?? 'NGN',
-        percentage: typeof debtPct === 'number' ? debtPct : undefined,
-        direction: typeof debtPct === 'number' && debtPct < 0 ? 'down' : 'up',
+        currency: overall?.debt?.currency ?? "NGN",
+        percentage: typeof debtPct === "number" ? debtPct : undefined,
+        direction: typeof debtPct === "number" && debtPct < 0 ? "down" : "up",
         icon: CIcons.chars,
         icon2: CIcons.bars,
       },
@@ -225,8 +217,8 @@ function FinanceView({ isSme = true }: Props) {
         datasets: [
           {
             data: [],
-            borderColor: '#047857',
-            backgroundColor: 'rgba(4, 120, 87, 0.1)',
+            borderColor: "#047857",
+            backgroundColor: "rgba(4, 120, 87, 0.1)",
             tension: 0.4,
             fill: true,
           },
@@ -239,8 +231,8 @@ function FinanceView({ isSme = true }: Props) {
       datasets: [
         {
           data: dataPoints,
-          borderColor: '#047857',
-          backgroundColor: 'rgba(4, 120, 87, 0.1)',
+          borderColor: "#047857",
+          backgroundColor: "rgba(4, 120, 87, 0.1)",
           tension: 0.4,
           fill: true,
         },
@@ -253,10 +245,8 @@ function FinanceView({ isSme = true }: Props) {
     return list.map((d) => ({
       name: d.originalName || d.fileName,
       size: formatFileSize(d.size || 0),
-      date: d.uploadedAt
-        ? formatDate(new Date(d.uploadedAt), 'LLL d, yyyy')
-        : '',
-      status: 'Completed',
+      date: d.uploadedAt ? formatDate(new Date(d.uploadedAt), "LLL d, yyyy") : "",
+      status: "Completed",
     }));
   }, [docsData]);
   const documentsCount = docsData?.total ?? documentRows.length;
@@ -265,14 +255,11 @@ function FinanceView({ isSme = true }: Props) {
       <div className="mt-8 flex items-center justify-between w-full">
         <div className=" items-center  gap-2">
           <p className="font-bold text-2xl">SME Financial Dashboard</p>
-          <p className="text-sm text-[#282828]">
-            Last Updated: 20th August, 2025
-          </p>
+          <p className="text-sm text-[#282828]">Last Updated: 20th August, 2025</p>
         </div>
         {isSme && (
           <Button variant="primary" onClick={() => setOpenUpdate(true)}>
-            Update Records{' '}
-            <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
+            Update Records <img className="h-[20px] w-[20px]" src="/icons/upload.svg" />
           </Button>
         )}
       </div>
@@ -284,21 +271,14 @@ function FinanceView({ isSme = true }: Props) {
                 <div className="flex items-center gap-2 justify-between">
                   <div className="flex flex-row gap-2 w-fit items-center rounded-full bg-[#FFFFFF]/50 text-green p-2">
                     {card.icon2()}
-                    <span className="font-medium text-base text-[#7A7A9D]">
-                      {card.label}
-                    </span>
+                    <span className="font-medium text-base text-[#7A7A9D]">{card.label}</span>
                   </div>
                   <Select
                     value={String(summaryMonths)}
-                    onValueChange={(v) =>
-                      setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
-                    }
+                    onValueChange={(v) => setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}
                   >
                     <SelectTrigger className="w-fit rounded-lg">
-                      <SelectValue
-                        placeholder="Range"
-                        defaultValue={String(summaryMonths)}
-                      />
+                      <SelectValue placeholder="Range" defaultValue={String(summaryMonths)} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1">Last month</SelectItem>
@@ -309,23 +289,18 @@ function FinanceView({ isSme = true }: Props) {
 
                 <div className="flex flex-col gap-2 mt-auto">
                   <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">
-                    {card.currency
-                      ? formatCurrency(card.amount, 0, 0, card.currency)
-                      : card.amount}
+                    {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
                   </span>
 
                   <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
                     {card?.percentage !== undefined &&
-                      (card.direction === 'up' ? (
+                      (card.direction === "up" ? (
                         <span className="text-sm text-success-100 font-bold">
                           {card.percentage}%
                         </span>
                       ) : (
                         <span className="text-sm text-red font-bold">
-                          {card.percentage && card.percentage < 0
-                            ? card.percentage
-                            : 0}
-                          %
+                          {card.percentage && card.percentage < 0 ? card.percentage : 0}%
                         </span>
                       ))}
                     {card.icon()}
@@ -341,24 +316,15 @@ function FinanceView({ isSme = true }: Props) {
         <div className="mb-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 w-full gap-4">
             <div className="flex flex-col  gap-2">
-              <p className="font-bold text-lg flex gap-2 items-center text-[#101928]">
-                SME growth
-              </p>
-              <p className="text-[#667185] text-sm font-normal">
-                Track SME growth and performance
-              </p>
+              <p className="font-bold text-lg flex gap-2 items-center text-[#101928]">SME growth</p>
+              <p className="text-[#667185] text-sm font-normal">Track SME growth and performance</p>
             </div>
             <Select
               value={String(growthMonths)}
-              onValueChange={(v) =>
-                setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
-              }
+              onValueChange={(v) => setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}
             >
               <SelectTrigger className="w-full sm:w-fit rounded-lg">
-                <SelectValue
-                  placeholder="Range"
-                  defaultValue={String(growthMonths)}
-                />
+                <SelectValue placeholder="Range" defaultValue={String(growthMonths)} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">Last month</SelectItem>
@@ -383,15 +349,15 @@ function FinanceView({ isSme = true }: Props) {
                     beginAtZero: true,
                     title: {
                       display: true,
-                      text: 'Revenue ',
+                      text: "Revenue ",
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: '#374151',
+                      color: "#374151",
                     },
                     grid: {
-                      color: 'rgba(0, 0, 0, 0.1)',
+                      color: "rgba(0, 0, 0, 0.1)",
                       tickBorderDash: [8, 8],
                       display: true,
                     },
@@ -404,12 +370,12 @@ function FinanceView({ isSme = true }: Props) {
                   x: {
                     title: {
                       display: true,
-                      text: 'Months',
+                      text: "Months",
                       font: {
                         size: 14,
                         // weight: "bold",
                       },
-                      color: '#374151',
+                      color: "#374151",
                     },
                     grid: {
                       display: false,
@@ -467,7 +433,7 @@ function FinanceView({ isSme = true }: Props) {
           ) : docsError ? (
             <EmptyBox
               caption="Failed to load documents"
-              caption2={(docsError as any)?.message ?? 'Please try again.'}
+              caption2={(docsError as any)?.message ?? "Please try again."}
               showButton={false}
             />
           ) : documentRows?.length > 0 ? (
@@ -481,10 +447,7 @@ function FinanceView({ isSme = true }: Props) {
           )}
         </div>
       </DashboardCardLayout>
-      <UpdateFinancialRecordsSheet
-        open={openUpdate}
-        onOpenChange={setOpenUpdate}
-      />
+      <UpdateFinancialRecordsSheet open={openUpdate} onOpenChange={setOpenUpdate} />
     </div>
   );
 }

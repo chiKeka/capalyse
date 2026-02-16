@@ -26,15 +26,7 @@ import { useMemo, useState } from "react";
 import { BarChart } from "./barchart";
 import { PieChart } from "./pieChart";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 type Props = {};
 type OverviewCard = {
@@ -97,19 +89,14 @@ function page({}: Props) {
                 <div className="flex items-center gap-2 justify-between">
                   <div className="flex flex-row gap-2 w-fit items-center rounded-full bg-[#FFFFFF]/50 text-green p-2">
                     {card.icon2()}
-                    <span className="font-medium text-base text-[#7A7A9D]">
-                      {card.label}
-                    </span>
+                    <span className="font-medium text-base text-[#7A7A9D]">{card.label}</span>
                   </div>
                   <Select
                     value={String(summaryMonths)}
                     onValueChange={(v) => setSummaryMonths(Number(v))}
                   >
                     <SelectTrigger className="w-fit border-none rounded-lg">
-                      <SelectValue
-                        placeholder="Range"
-                        defaultValue={String(summaryMonths)}
-                      />
+                      <SelectValue placeholder="Range" defaultValue={String(summaryMonths)} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="30">30 days</SelectItem>
@@ -121,9 +108,7 @@ function page({}: Props) {
                 </div>
 
                 <div className="flex flex-col gap-2 mt-auto">
-                  <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">
-                    {card.amount}
-                  </span>
+                  <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">{card.amount}</span>
 
                   {/* <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
                     {card.icon()}

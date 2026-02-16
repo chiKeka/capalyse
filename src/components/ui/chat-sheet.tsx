@@ -1,7 +1,7 @@
-import { Sheet, SheetContent } from './sheet';
-import { ArrowLeftIcon, UserIcon } from 'lucide-react';
-import Image from 'next/image';
-import { useRef, useEffect, useState } from 'react';
+import { Sheet, SheetContent } from "./sheet";
+import { ArrowLeftIcon, UserIcon } from "lucide-react";
+import Image from "next/image";
+import { useRef, useEffect, useState } from "react";
 
 export interface ChatUser {
   name: string;
@@ -12,7 +12,7 @@ export interface ChatUser {
 
 export interface ChatMessage {
   id: string;
-  sender: 'me' | 'them';
+  sender: "me" | "them";
   text: string;
   time: string;
   avatar?: string;
@@ -28,33 +28,23 @@ interface ChatSheetProps {
   onBack: () => void;
 }
 
-export function ChatSheet({
-  open,
-  onOpenChange,
-  user,
-  messages,
-  onSend,
-  onBack,
-}: ChatSheetProps) {
-  const [input, setInput] = useState('');
+export function ChatSheet({ open, onOpenChange, user, messages, onSend, onBack }: ChatSheetProps) {
+  const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   function handleSend() {
     if (!input.trim()) return;
     onSend(input);
-    setInput('');
+    setInput("");
   }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent
-        side="right"
-        className="p-0 sm:max-w-[31.875rem] w-full flex flex-col h-full"
-      >
+      <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center gap-3 px-6 py-4 border-b">
           <button
@@ -78,9 +68,7 @@ export function ChatSheet({
             </div>
           )}
           <div className="flex flex-col ml-2">
-            <span className="font-semibold text-base leading-tight">
-              {user.name}
-            </span>
+            <span className="font-semibold text-base leading-tight">{user.name}</span>
             <span className="text-xs text-muted-foreground">{user.type}</span>
           </div>
           {user.online && (
@@ -92,15 +80,13 @@ export function ChatSheet({
         </div>
         {/* Chat body */}
         <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-2">
-          <div className="mx-auto my-4 text-xs text-muted-foreground">
-            09:41 AM
-          </div>
+          <div className="mx-auto my-4 text-xs text-muted-foreground">09:41 AM</div>
           {messages.map((msg) =>
             msg.typing ? (
               <div key={msg.id} className="flex items-end gap-2 mb-2">
                 <div className="flex items-center">
                   <Image
-                    src={user.avatar || ''}
+                    src={user.avatar || ""}
                     alt="Typing"
                     width={28}
                     height={28}
@@ -111,18 +97,15 @@ export function ChatSheet({
                   Typing...
                 </div>
               </div>
-            ) : msg.sender === 'me' ? (
-              <div
-                key={msg.id}
-                className="flex items-end justify-end gap-2 mb-2"
-              >
+            ) : msg.sender === "me" ? (
+              <div key={msg.id} className="flex items-end justify-end gap-2 mb-2">
                 <div className="flex flex-col items-end">
                   <div className="bg-emerald-700 text-white px-4 py-2 rounded-2xl text-sm max-w-xs mb-1">
                     {msg.text}
                   </div>
                 </div>
                 <Image
-                  src={user.avatar || ''}
+                  src={user.avatar || ""}
                   alt="Me"
                   width={28}
                   height={28}
@@ -132,7 +115,7 @@ export function ChatSheet({
             ) : (
               <div key={msg.id} className="flex items-end gap-2 mb-2">
                 <Image
-                  src={user.avatar || ''}
+                  src={user.avatar || ""}
                   alt={user.name}
                   width={28}
                   height={28}
@@ -142,7 +125,7 @@ export function ChatSheet({
                   {msg.text}
                 </div>
               </div>
-            )
+            ),
           )}
           <div ref={messagesEndRef} />
         </div>
@@ -174,11 +157,7 @@ export function ChatSheet({
               strokeWidth="2"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 12h14M12 5l7 7-7 7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </button>
         </form>

@@ -1,21 +1,21 @@
-'use client';
-import { SearchForm } from '@/components/search-form';
-import { ProfileSheet } from '@/components/ui/profileSheet';
+"use client";
+import { SearchForm } from "@/components/search-form";
+import { ProfileSheet } from "@/components/ui/profileSheet";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { statusBadge } from '@/components/ui/statusBar';
-import { ReusableTable } from '@/components/ui/table';
-import { useSmeMatches } from '@/hooks/useDirectories';
-import { Loader2Icon } from 'lucide-react';
+} from "@/components/ui/select";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import { useSmeMatches } from "@/hooks/useDirectories";
+import { Loader2Icon } from "lucide-react";
 
-import useDebounce from '@/hooks/useDebounce';
-import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import useDebounce from "@/hooks/useDebounce";
+import Image from "next/image";
+import { useMemo, useState } from "react";
 
 // Example data
 const investors: any = [];
@@ -24,7 +24,7 @@ const investors: any = [];
 
 function InvestorsPage() {
   const [selectedInvestor, setSelectedInvestor] = useState<any | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   const debouncedSearch = useDebounce(search, 300);
@@ -45,28 +45,22 @@ function InvestorsPage() {
 
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
-          <Image
-            src={row.avatar}
-            alt={row.name}
-            width={24}
-            height={24}
-            className="rounded-full"
-          />
+          <Image src={row.avatar} alt={row.name} width={24} height={24} className="rounded-full" />
           <span className="font-medium text-sm">{row.name}</span>
         </div>
       ),
     },
-    { header: 'Investor Type', accessor: 'type' },
-    { header: 'Investment Focus', accessor: 'focus' },
+    { header: "Investor Type", accessor: "type" },
+    { header: "Investment Focus", accessor: "focus" },
     {
-      header: 'Status',
+      header: "Status",
       accessor: (row: any) => statusBadge(row.status),
     },
     {
-      header: 'Action',
+      header: "Action",
       accessor: (row: any) => (
         <button
           className="text-green font-medium hover:underline"
@@ -75,7 +69,7 @@ function InvestorsPage() {
           View Profile
         </button>
       ),
-      className: 'text-green',
+      className: "text-green",
     },
   ];
 

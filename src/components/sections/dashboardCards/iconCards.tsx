@@ -1,5 +1,5 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/uitils/fns';
+import { Card, CardContent } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/uitils/fns";
 
 const IconCards = ({ ...card }) => {
   return (
@@ -12,9 +12,7 @@ const IconCards = ({ ...card }) => {
           </div>
         </div>
         <span className="text-5xl font-bold mt-auto">
-          {card.currency
-            ? formatCurrency(card.amount, 0, 0, card.currency)
-            : card.amount}
+          {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
         </span>
         {card?.extraContent}
       </CardContent>

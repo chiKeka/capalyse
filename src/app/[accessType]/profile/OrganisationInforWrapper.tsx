@@ -1,9 +1,9 @@
-import InvestorOrganisation from '@/app/(auth)/[accessType]/onboarding/investorOrganisation';
-import { getCurrentProfile } from '@/hooks/useUpdateProfile';
+import InvestorOrganisation from "@/app/(auth)/[accessType]/onboarding/investorOrganisation";
+import { getCurrentProfile } from "@/hooks/useUpdateProfile";
 
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import 'react-country-state-city/dist/react-country-state-city.css';
-import { toast } from 'sonner';
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+import "react-country-state-city/dist/react-country-state-city.css";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -31,9 +31,7 @@ const OrganisationInforWrapper = () => {
           }}
           initialData={user}
           isProfile={true}
-          onSuccess={() =>
-            toast.success('Organisation information updated successfully')
-          }
+          onSuccess={() => toast.success("Organisation information updated successfully")}
         />
       </div>
     </div>

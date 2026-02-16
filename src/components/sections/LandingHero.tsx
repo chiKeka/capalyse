@@ -1,10 +1,10 @@
-'use client';
-import Image from 'next/image';
-import { useState } from 'react';
-import GetStarted from '../layout/GetStarted';
-import Button from '../ui/Button';
-import GridSvg from '../ui/gridSvg';
-import { Waitlist } from './waitlist';
+"use client";
+import Image from "next/image";
+import { useState } from "react";
+import GetStarted from "../layout/GetStarted";
+import Button from "../ui/Button";
+import GridSvg from "../ui/gridSvg";
+import { Waitlist } from "./waitlist";
 
 const LandingHero = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -23,8 +23,8 @@ const LandingHero = () => {
               Empower <span className="text-[#ABD2C7]">Growth</span>
             </h1>
             <p className="mb-8 leading-relaxed text-[#F4F6F8]">
-              Capalyse bridges the gap between investment-ready SMEs and
-              value-driven investors across Africa.
+              Capalyse bridges the gap between investment-ready SMEs and value-driven investors
+              across Africa.
             </p>
             <div className="flex  flex-col sm:flex-row gap-4">
               <GetStarted

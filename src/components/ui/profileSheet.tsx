@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useAtomValue, useSetAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { authAtom, messageOpenAtom } from '@/lib/atoms/atoms';
-import { useCreateConversation } from '@/hooks/useMessages';
-import Button from './Button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
+import { useAtomValue, useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { authAtom, messageOpenAtom } from "@/lib/atoms/atoms";
+import { useCreateConversation } from "@/hooks/useMessages";
+import Button from "./Button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
 
 export interface Notification {
   id: string;
@@ -24,12 +24,7 @@ interface NotificationSheetProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-export function ProfileSheet({
-  open,
-  onOpenChange,
-  data,
-  id,
-}: NotificationSheetProps) {
+export function ProfileSheet({ open, onOpenChange, data, id }: NotificationSheetProps) {
   const auth = useAtomValue(authAtom);
   const setMessageOpenState = useSetAtom(messageOpenAtom);
   const router = useRouter();
@@ -37,70 +32,70 @@ export function ProfileSheet({
   const [isCreating, setIsCreating] = useState(false);
 
   const investment = [
-    { name: 'Viaplay Group', icon: '/images/viaPlay.svg' },
-    { name: 'Spotify', icon: '/icons/sportify.svg' },
-    { name: 'VKing Games', icon: '/images/king.svg' },
-    { name: 'DreamHack', icon: '/images/dreamHAck.svg' },
+    { name: "Viaplay Group", icon: "/images/viaPlay.svg" },
+    { name: "Spotify", icon: "/icons/sportify.svg" },
+    { name: "VKing Games", icon: "/images/king.svg" },
+    { name: "DreamHack", icon: "/images/dreamHAck.svg" },
   ];
 
   const contact = [
-    { name: 'Website', icon: '/icons/web.svg' },
-    { name: 'LinkedIn', icon: '/icons/linkedIn.svg' },
-    { name: 'Facebook', icon: '/icons/facebook.svg' },
-    { name: 'X', icon: '/icons/twitter.svg' },
+    { name: "Website", icon: "/icons/web.svg" },
+    { name: "LinkedIn", icon: "/icons/linkedIn.svg" },
+    { name: "Facebook", icon: "/icons/facebook.svg" },
+    { name: "X", icon: "/icons/twitter.svg" },
   ];
   const details = [
     {
-      name: 'Investor Name',
-      activity: data?.name || 'Investor A',
+      name: "Investor Name",
+      activity: data?.name || "Investor A",
     },
     {
-      name: 'Investment Type',
-      activity: data?.type || 'Venture Capital',
+      name: "Investment Type",
+      activity: data?.type || "Venture Capital",
     },
     {
-      name: 'Investment Focus',
-      activity: data?.focus || 'Agribusiness, Fintech',
+      name: "Investment Focus",
+      activity: data?.focus || "Agribusiness, Fintech",
     },
     {
-      name: 'Location',
-      activity: data?.location || 'Kentucky, USA',
+      name: "Location",
+      activity: data?.location || "Kentucky, USA",
     },
   ];
 
   const handleSendMessage = async () => {
     if (!auth?.id) {
-      toast.error('Please log in to send a message');
+      toast.error("Please log in to send a message");
       return;
     }
 
     const investorId = data?._id || data?.id || id;
     if (!investorId) {
-      toast.error('Investor ID not found');
+      toast.error("Investor ID not found");
       return;
     }
 
     if (auth.id === investorId) {
-      toast.error('Cannot create a conversation with yourself');
+      toast.error("Cannot create a conversation with yourself");
       return;
     }
 
     setIsCreating(true);
     try {
       const conversation = await createConversation([auth.id, investorId]);
-      console.log({conversation})
-      toast.success('Conversation created successfully');
+      console.log({ conversation });
+      toast.success("Conversation created successfully");
       setTimeout(() => {
-          setMessageOpenState({
+        setMessageOpenState({
           open: true,
           conversationId: conversation?.data?.id,
-        })
+        });
       }, 2000);
       onOpenChange?.(false);
       // Navigate to messages page or open conversation
       // router.push(`/messages?conversation=${conversation.data.id}`);
     } catch (error: any) {
-      toast.error(error?.message || 'Failed to create conversation');
+      toast.error(error?.message || "Failed to create conversation");
     } finally {
       setIsCreating(false);
     }
@@ -113,14 +108,12 @@ export function ProfileSheet({
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-row gap-2">
-            <img src={'/images/dasboardProfileImg.svg'} />
+            <img src={"/images/dasboardProfileImg.svg"} />
             <div className="h-auto flex flex-col justify-between">
               {details.map((items, i) => (
                 <div key={i}>
-                  {' '}
-                  <p className="font-normal flex-col flex gap-4 text-sm">
-                    {items.name}
-                  </p>
+                  {" "}
+                  <p className="font-normal flex-col flex gap-4 text-sm">{items.name}</p>
                   <p className="font-bold text-sm">{items.activity}</p>
                 </div>
               ))}
@@ -131,9 +124,7 @@ export function ProfileSheet({
           </span>
 
           <div className="my-6">
-            <p className="font-bold mb-4 text-base text-[#0B0B0C]">
-              Past Investments
-            </p>
+            <p className="font-bold mb-4 text-base text-[#0B0B0C]">Past Investments</p>
             <div className="flex flex-wrap w-full p-2 gap-3">
               {investment?.map((items, i) => (
                 <div className="flex flex-col items-center" key={i}>
@@ -162,7 +153,7 @@ export function ProfileSheet({
               onClick={handleSendMessage}
               disabled={isCreating || isLoading}
             >
-              {isCreating || isLoading ? 'Creating...' : 'Send Message'}
+              {isCreating || isLoading ? "Creating..." : "Send Message"}
             </Button>
           </div>
         </div>
@@ -171,12 +162,7 @@ export function ProfileSheet({
   );
 }
 
-export function NetworkProfileSheet({
-  data,
-  id,
-  open,
-  onOpenChange,
-}: NotificationSheetProps) {
+export function NetworkProfileSheet({ data, id, open, onOpenChange }: NotificationSheetProps) {
   const setMessageOpenState = useSetAtom(messageOpenAtom);
   const auth = useAtomValue(authAtom);
   const router = useRouter();
@@ -184,56 +170,56 @@ export function NetworkProfileSheet({
   const [isCreating, setIsCreating] = useState(false);
 
   const colaboration = [
-    'Food & Beverage businesses',
-    'Retail chains',
-    'Export logistics providers',
+    "Food & Beverage businesses",
+    "Retail chains",
+    "Export logistics providers",
   ];
 
   const contact = [
-    { name: 'Website', icon: '/icons/web.svg' },
-    { name: 'LinkedIn', icon: '/icons/linkedIn.svg' },
-    { name: 'Facebook', icon: '/icons/facebook.svg' },
-    { name: 'X', icon: '/icons/twitter.svg' },
+    { name: "Website", icon: "/icons/web.svg" },
+    { name: "LinkedIn", icon: "/icons/linkedIn.svg" },
+    { name: "Facebook", icon: "/icons/facebook.svg" },
+    { name: "X", icon: "/icons/twitter.svg" },
   ];
   const services = [
-    'Biodegradable food containers',
-    'Custom-printed eco-bags',
-    'Bulk packaging supply',
+    "Biodegradable food containers",
+    "Custom-printed eco-bags",
+    "Bulk packaging supply",
   ];
-console.log({ data });
+  console.log({ data });
   const handleSendMessage = async () => {
     if (!auth?.id) {
-      toast.error('Please log in to send a message');
+      toast.error("Please log in to send a message");
       return;
     }
 
-    const smeId = data?.userId
+    const smeId = data?.userId;
     if (!smeId) {
-      toast.error('SME ID not found');
+      toast.error("SME ID not found");
       return;
     }
 
     if (auth.id === smeId) {
-      toast.error('Cannot create a conversation with yourself');
+      toast.error("Cannot create a conversation with yourself");
       return;
     }
 
     setIsCreating(true);
     try {
       const conversation = await createConversation([auth.id, smeId]);
-      console.log('conversation',{conversation})
-      toast.success('Conversation created successfully');
+      console.log("conversation", { conversation });
+      toast.success("Conversation created successfully");
       setTimeout(() => {
-          setMessageOpenState({
+        setMessageOpenState({
           open: true,
           conversationId: conversation?.data?.id,
-        })
+        });
       }, 2000);
       onOpenChange?.(false);
       // Navigate to messages page or open conversation
       // router.push(`/messages?conversation=${conversation.data.id}`);
     } catch (error: any) {
-      toast.error(error?.message || 'Failed to create conversation');
+      toast.error(error?.message || "Failed to create conversation");
     } finally {
       setIsCreating(false);
     }
@@ -247,21 +233,20 @@ console.log({ data });
         <div className="flex-1 overflow-y-auto px-6 py-4">
           <div className="flex flex-row gap-2">
             <img
-              src={data ? data?.logo : '/icons/sportify.svg'}
+              src={data ? data?.logo : "/icons/sportify.svg"}
               className="rounded-full h-21 w-21"
             />
             <div>
               <p className="text-black font-bold text-2xl">
-                {data ? data?.name : 'GreenPack Solutions Ltd'}
+                {data ? data?.name : "GreenPack Solutions Ltd"}
               </p>
               <span className="text-sm font-normal flex-row text-[#71717A] flex tracking-tight items-center  gap-2">
-                <p>{data ? data?.businessType : 'Packaging'}</p>
+                <p>{data ? data?.businessType : "Packaging"}</p>
                 <p className="text-2xl font-medium mb-2">.</p>
-                <p>{data ? data?.location : 'Lagos'}</p>
+                <p>{data ? data?.location : "Lagos"}</p>
               </span>
               <span className="inline-flex mt-2 items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
-                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" />{' '}
-                {data?.status}
+                <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {data?.status}
               </span>
             </div>
           </div>
@@ -321,7 +306,7 @@ console.log({ data });
               onClick={handleSendMessage}
               disabled={isCreating || isLoading}
             >
-              {isCreating || isLoading ? 'Creating...' : 'Send Message'}
+              {isCreating || isLoading ? "Creating..." : "Send Message"}
             </Button>
           </div>
         </div>

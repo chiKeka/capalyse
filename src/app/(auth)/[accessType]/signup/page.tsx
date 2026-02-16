@@ -1,21 +1,21 @@
-'use client';
-import AuthLayout from '@/components/layout/auth';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import PasswordChecker from '@/components/ui/passwordChecker';
-import { authClient } from '@/lib/auth-client';
-import { validateAuthForm } from '@/lib/uitils/fns';
-import { UserType } from '@/lib/utils';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+"use client";
+import AuthLayout from "@/components/layout/auth";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import PasswordChecker from "@/components/ui/passwordChecker";
+import { authClient } from "@/lib/auth-client";
+import { validateAuthForm } from "@/lib/uitils/fns";
+import { UserType } from "@/lib/utils";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { toast } from "sonner";
 export default function SignupPage() {
   const param = useParams();
   const [form, setForm] = useState({
-    email: '',
-    name: '',
-    password: '',
+    email: "",
+    name: "",
+    password: "",
     roles: UserType[param?.accessType as keyof typeof UserType],
   });
   const [errors, setErrors] = useState<{
@@ -24,9 +24,7 @@ export default function SignupPage() {
     name?: string;
   }>({});
   const router = useRouter();
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const [isLoading, setIsLoading] = useState(false);
@@ -40,8 +38,8 @@ export default function SignupPage() {
     authClient.signUp.email(
       {
         ...form,
-        name: form.name || form.email.split('@')[0],
-        roles: form.roles?.toUpperCase(),
+        name: form.name || form.email.split("@")[0],
+        role: form.roles?.toUpperCase(),
         profileCompletionStep: 0,
       },
 
@@ -52,13 +50,13 @@ export default function SignupPage() {
         onSuccess: (ctx) => {
           setIsLoading(false);
           router.push(`/verify?email=${form.email}`);
-          toast.success('Email sent successfully');
+          toast.success("Email sent successfully");
         },
         onError: (ctx) => {
           setIsLoading(false);
           toast.error(ctx.error.message);
         },
-      }
+      },
     );
   };
 
@@ -75,9 +73,7 @@ export default function SignupPage() {
             placeholder="Enter Name"
             value={form.name}
           />
-          {errors.email && (
-            <div className="text-red-500 text-xs mt-1">{errors.name}</div>
-          )}
+          {errors.email && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
           <Input
             name="email"
             onChange={handleChange}
@@ -87,9 +83,7 @@ export default function SignupPage() {
             placeholder="janeearnest@gmail.com"
             value={form.email}
           />
-          {errors.email && (
-            <div className="text-red-500 text-xs mt-1">{errors.email}</div>
-          )}
+          {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
 
           <Input
             name="password"
@@ -102,9 +96,7 @@ export default function SignupPage() {
           />
           {form.password && <PasswordChecker password={form.password} />}
           {errors.password && (
-            <div className="text-red-500 text-xs -mt-1 mb-1">
-              {errors.password}
-            </div>
+            <div className="text-red-500 text-xs -mt-1 mb-1">{errors.password}</div>
           )}
           <Button
             disabled={isLoading}
@@ -112,7 +104,7 @@ export default function SignupPage() {
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={isLoading ? 'loading' : 'default'}
+            state={isLoading ? "loading" : "default"}
           >
             Create Account
           </Button>

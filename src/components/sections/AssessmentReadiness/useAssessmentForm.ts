@@ -1,15 +1,15 @@
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
   useAssessment,
   AssessmentCategory,
   AssessmentQuestion,
   AssessmentAnswer,
-} from '@/hooks/useAssessment';
-import { useDocument } from '@/hooks/useDocument';
-import { useAtomValue } from 'jotai';
-import { authAtom } from '@/lib/atoms/atoms';
-import { usePathname, useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+} from "@/hooks/useAssessment";
+import { useDocument } from "@/hooks/useDocument";
+import { useAtomValue } from "jotai";
+import { authAtom } from "@/lib/atoms/atoms";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export interface SectionData {
   name: string;
@@ -25,29 +25,24 @@ export interface Section {
 
 export function useAssessmentForm(
   categories: AssessmentCategory[],
-  setIsOpen: (x: boolean) => void
+  setIsOpen: (x: boolean) => void,
 ) {
   const auth: any = useAtomValue(authAtom);
   const pathname = usePathname();
   const router = useRouter();
-  const {
-    useGetCategories,
-    useGetQuestionsByCategory,
-    useSubmitResponse,
-    useGetMyResponses,
-  } = useAssessment();
+  const { useGetCategories, useGetQuestionsByCategory, useSubmitResponse, useGetMyResponses } =
+    useAssessment();
 
   const { useGetDocuments } = useDocument();
   const { data: myResponses } = useGetMyResponses();
   const { data: documents } = useGetDocuments();
 
   // Get categories
-  const { data: categoryData, isLoading: categoriesLoading } =
-    useGetCategories();
+  const { data: categoryData, isLoading: categoriesLoading } = useGetCategories();
 
   // Get questions for each category
   const questionsQueries = categories.map((category) =>
-    useGetQuestionsByCategory(category, !!categoryData)
+    useGetQuestionsByCategory(category, !!categoryData),
   );
 
   // Submit mutation
@@ -58,9 +53,7 @@ export function useAssessmentForm(
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [sectionedData, setSectionedData] = useState<Record<string, Section[]>>(
-    {}
-  );
+  const [sectionedData, setSectionedData] = useState<Record<string, Section[]>>({});
   const hasPrefilled = useRef(false);
 
   // Build sections data from API
@@ -70,9 +63,7 @@ export function useAssessmentForm(
     return categories.map((category, index) => {
       const questions = questionsQueries[index].data || [];
       return {
-        name: category
-          .replace('_', ' ')
-          .replace(/\b\w/g, (l) => l.toUpperCase()),
+        name: category.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
         key: category,
         totalQuestions: questions.length,
         questions: questions.sort((a, b) => (a.order || 0) - (b.order || 0)),
@@ -80,13 +71,10 @@ export function useAssessmentForm(
     });
   }, [categoryData, questionsQueries, categories]);
   // Current section and question data
-  const currentSectionData = useMemo(
-    () => sections[currentSection],
-    [currentSection, sections]
-  );
+  const currentSectionData = useMemo(() => sections[currentSection], [currentSection, sections]);
   const currentQuestionData = useMemo(
     () => currentSectionData?.questions[currentQuestion],
-    [currentQuestion, currentSectionData]
+    [currentQuestion, currentSectionData],
   );
   const totalQuestions = useMemo(() => {
     const total = currentSectionData?.questions?.length || 0;
@@ -94,17 +82,16 @@ export function useAssessmentForm(
   }, [currentSectionData, currentSection]);
 
   // Loading states
-  const isLoading =
-    categoriesLoading || questionsQueries.some((q) => q.isLoading);
+  const isLoading = categoriesLoading || questionsQueries.some((q) => q.isLoading);
 
   // Section status helper
   const getSectionStatus = useCallback(
     (sectionIndex: number) => {
-      if (sectionIndex < currentSection) return 'completed';
-      if (sectionIndex === currentSection) return 'active';
-      return 'upcoming';
+      if (sectionIndex < currentSection) return "completed";
+      if (sectionIndex === currentSection) return "active";
+      return "upcoming";
     },
-    [currentSection]
+    [currentSection],
   );
 
   // Input change handler
@@ -124,7 +111,7 @@ export function useAssessmentForm(
         });
       }
     },
-    [currentSection, currentQuestion, errors]
+    [currentSection, currentQuestion, errors],
   );
 
   // Section change handler for multi-section inputs
@@ -139,16 +126,14 @@ export function useAssessmentForm(
           : [currentQuestionData.answerType];
 
         answerTypes.forEach((answerType, index) => {
-          if (answerType.type === 'items') {
+          if (answerType.type === "items") {
             const sectionKey = `${fieldId}-${index}`;
 
             // Update sectioned data
             setSectionedData((prev) => {
               const updatedSections =
                 prev[sectionKey]?.map((section) =>
-                  section.id === sectionId
-                    ? { ...section, [key]: value }
-                    : section
+                  section.id === sectionId ? { ...section, [key]: value } : section,
                 ) || [];
 
               // Also update form data with the items structure
@@ -156,7 +141,7 @@ export function useAssessmentForm(
                 name: section.name,
                 amount: {
                   amount: parseFloat(section.amount) || 0,
-                  currency: section.currency || 'NGN',
+                  currency: section.currency || "NGN",
                 },
               }));
 
@@ -165,7 +150,7 @@ export function useAssessmentForm(
                 [fieldId]: {
                   ...prevFormData[fieldId],
                   [index]: {
-                    type: 'items',
+                    type: "items",
                     value: itemsValue,
                   },
                 },
@@ -180,7 +165,7 @@ export function useAssessmentForm(
         });
       }
     },
-    [currentSection, currentQuestion, currentQuestionData]
+    [currentSection, currentQuestion, currentQuestionData],
   );
 
   // Add section for multi-section inputs
@@ -194,14 +179,14 @@ export function useAssessmentForm(
         : [currentQuestionData.answerType];
 
       answerTypes.forEach((answerType, index) => {
-        if (answerType.type === 'items') {
+        if (answerType.type === "items") {
           const sectionKey = `${fieldId}-${index}`;
           const currentSections = sectionedData[sectionKey] || [];
           const newSection: Section = {
             id: Math.max(...currentSections.map((s) => s.id), 0) + 1,
-            name: '',
-            amount: '',
-            currency: 'NGN',
+            name: "",
+            amount: "",
+            currency: "NGN",
           };
 
           const updatedSections = [...currentSections, newSection];
@@ -217,7 +202,7 @@ export function useAssessmentForm(
             name: section.name,
             amount: {
               amount: parseFloat(section.amount) || 0,
-              currency: section.currency || 'NGN',
+              currency: section.currency || "NGN",
             },
           }));
 
@@ -226,7 +211,7 @@ export function useAssessmentForm(
             [fieldId]: {
               ...prevFormData[fieldId],
               [index]: {
-                type: 'items',
+                type: "items",
                 value: itemsValue,
               },
             },
@@ -246,14 +231,14 @@ export function useAssessmentForm(
         : [currentQuestionData.answerType];
 
       answerTypes.forEach((answerType, index) => {
-        if (answerType.type === 'items') {
+        if (answerType.type === "items") {
           const sectionKey = `${fieldId}-${index}`;
           const currentSections = sectionedData[sectionKey];
 
           if (!currentSections) {
             const initialSections = [
-              { id: 1, name: '', amount: '', currency: 'NGN' },
-              { id: 2, name: '', amount: '', currency: 'NGN' },
+              { id: 1, name: "", amount: "", currency: "NGN" },
+              { id: 2, name: "", amount: "", currency: "NGN" },
             ];
 
             setSectionedData((prev) => ({
@@ -266,7 +251,7 @@ export function useAssessmentForm(
               name: section.name,
               amount: {
                 amount: parseFloat(section.amount) || 0,
-                currency: section.currency || 'NGN',
+                currency: section.currency || "NGN",
               },
             }));
 
@@ -275,7 +260,7 @@ export function useAssessmentForm(
               [fieldId]: {
                 ...prevFormData[fieldId],
                 [index]: {
-                  type: 'items',
+                  type: "items",
                   value: itemsValue,
                 },
               },
@@ -313,92 +298,88 @@ export function useAssessmentForm(
         if (response && response.answers) {
           const answers: any = {};
 
-          response.answers.forEach(
-            (answer: AssessmentAnswer, answerIndex: number) => {
-              switch (answer.type) {
-                case 'money':
-                  answers[answerIndex] = {
-                    type: 'money',
-                    value: answer.value,
-                  };
-                  break;
+          response.answers.forEach((answer: AssessmentAnswer, answerIndex: number) => {
+            switch (answer.type) {
+              case "money":
+                answers[answerIndex] = {
+                  type: "money",
+                  value: answer.value,
+                };
+                break;
 
-                case 'items':
-                  answers[answerIndex] = {
-                    type: 'items',
-                    value: answer.value,
-                  };
+              case "items":
+                answers[answerIndex] = {
+                  type: "items",
+                  value: answer.value,
+                };
 
-                  // Also populate sectionedData for items
-                  const sectionKey = `${fieldId}-${answerIndex}`;
-                  const items = answer.value as any[];
-                  const sections = items.map((item, index) => ({
-                    id: index + 1,
-                    name: item.name || '',
-                    amount: item.amount?.amount?.toString() || '',
-                    currency: item.amount?.currency || 'NGN',
-                  }));
-                  newSectionedData[sectionKey] = sections;
-                  break;
+                // Also populate sectionedData for items
+                const sectionKey = `${fieldId}-${answerIndex}`;
+                const items = answer.value as any[];
+                const sections = items.map((item, index) => ({
+                  id: index + 1,
+                  name: item.name || "",
+                  amount: item.amount?.amount?.toString() || "",
+                  currency: item.amount?.currency || "NGN",
+                }));
+                newSectionedData[sectionKey] = sections;
+                break;
 
-                case 'file':
-                  // Create comprehensive document objects with all available data from API
+              case "file":
+                // Create comprehensive document objects with all available data from API
 
-                  const documentObjects =
-                    answer.documentIds?.map((docId: string) => {
-                      // Find the document in the documents list to get all available data
-                      const document = documents?.find(
-                        (doc) => doc._id === docId
-                      );
+                const documentObjects =
+                  answer.documentIds?.map((docId: string) => {
+                    // Find the document in the documents list to get all available data
+                    const document = documents?.find((doc) => doc._id === docId);
 
-                      if (document) {
-                        // Return comprehensive document object with all API data
-                        const docObject = {
-                          id: docId,
-                          name: document.originalName,
-                          filename: document.fileName,
-                          mimeType: document.mimeType,
-                          size: document.size,
-                          uploadedAt: document.uploadedAt,
-                          updatedAt: document.updatedAt,
-                          userId: document.userId,
-                        };
-                        return docObject;
-                      } else {
-                        // Fallback if document not found in API
-                        const fallbackObject = {
-                          id: docId,
-                          name: `Document ${docId}`,
-                          filename: `document_${docId}`,
-                          mimeType: 'application/octet-stream',
-                          size: 0,
-                          uploadedAt: new Date().toISOString(),
-                          updatedAt: new Date().toISOString(),
-                          userId: auth?.id || '',
-                        };
+                    if (document) {
+                      // Return comprehensive document object with all API data
+                      const docObject = {
+                        id: docId,
+                        name: document.originalName,
+                        filename: document.fileName,
+                        mimeType: document.mimeType,
+                        size: document.size,
+                        uploadedAt: document.uploadedAt,
+                        updatedAt: document.updatedAt,
+                        userId: document.userId,
+                      };
+                      return docObject;
+                    } else {
+                      // Fallback if document not found in API
+                      const fallbackObject = {
+                        id: docId,
+                        name: `Document ${docId}`,
+                        filename: `document_${docId}`,
+                        mimeType: "application/octet-stream",
+                        size: 0,
+                        uploadedAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        userId: auth?.id || "",
+                      };
 
-                        return fallbackObject;
-                      }
-                    }) || [];
+                      return fallbackObject;
+                    }
+                  }) || [];
 
-                  answers[answerIndex] = {
-                    type: 'file',
-                    value: documentObjects,
-                    documentIds: answer.documentIds,
-                    // Also include the original answer value for backward compatibility
-                    originalValue: answer.value,
-                  };
-                  break;
+                answers[answerIndex] = {
+                  type: "file",
+                  value: documentObjects,
+                  documentIds: answer.documentIds,
+                  // Also include the original answer value for backward compatibility
+                  originalValue: answer.value,
+                };
+                break;
 
-                default:
-                  answers[answerIndex] = {
-                    type: answer.type,
-                    value: answer.value,
-                  };
-                  break;
-              }
+              default:
+                answers[answerIndex] = {
+                  type: answer.type,
+                  value: answer.value,
+                };
+                break;
             }
-          );
+          });
 
           newFormData[fieldId] = answers;
         }
@@ -422,21 +403,19 @@ export function useAssessmentForm(
           : [currentQuestionData.answerType];
 
         answerTypes.forEach((answerType, index) => {
-          if (answerType.type === 'items') {
+          if (answerType.type === "items") {
             const sectionKey = `${fieldId}-${index}`;
 
             setSectionedData((prev) => {
               const updatedSections =
-                prev[sectionKey]?.filter(
-                  (section) => section.id !== sectionId
-                ) || [];
+                prev[sectionKey]?.filter((section) => section.id !== sectionId) || [];
 
               // Update form data with items structure
               const itemsValue = updatedSections.map((section) => ({
                 name: section.name,
                 amount: {
                   amount: parseFloat(section.amount) || 0,
-                  currency: section.currency || 'NGN',
+                  currency: section.currency || "NGN",
                 },
               }));
 
@@ -445,7 +424,7 @@ export function useAssessmentForm(
                 [fieldId]: {
                   ...prevFormData[fieldId],
                   [index]: {
-                    type: 'items',
+                    type: "items",
                     value: itemsValue,
                   },
                 },
@@ -460,33 +439,33 @@ export function useAssessmentForm(
         });
       }
     },
-    [currentSection, currentQuestion, currentQuestionData]
+    [currentSection, currentQuestion, currentQuestionData],
   );
 
   // Currency amount change handler
   const handleCurrencyAmountChange = useCallback(
     (value: string) => {
       const fieldId = `${currentSection}-${currentQuestion}`;
-      const currentValue = formData[fieldId] || { currency: 'NGN', amount: '' };
+      const currentValue = formData[fieldId] || { currency: "NGN", amount: "" };
       setFormData((prev) => ({
         ...prev,
         [fieldId]: { ...currentValue, amount: value },
       }));
     },
-    [currentSection, currentQuestion, formData]
+    [currentSection, currentQuestion, formData],
   );
 
   // Currency type change handler
   const handleCurrencyTypeChange = useCallback(
     (value: string) => {
       const fieldId = `${currentSection}-${currentQuestion}`;
-      const currentValue = formData[fieldId] || { currency: 'NGN', amount: '' };
+      const currentValue = formData[fieldId] || { currency: "NGN", amount: "" };
       setFormData((prev) => ({
         ...prev,
         [fieldId]: { ...currentValue, currency: value },
       }));
     },
-    [currentSection, currentQuestion, formData]
+    [currentSection, currentQuestion, formData],
   );
 
   // Navigation handlers
@@ -509,24 +488,22 @@ export function useAssessmentForm(
 
           if (
             !fieldValue ||
-            (answerType.type === 'money' &&
+            (answerType.type === "money" &&
               (!fieldValue.value?.amount || fieldValue.value.amount === 0)) ||
-            (answerType.type === 'file' &&
+            (answerType.type === "file" &&
               !fieldValue?.value &&
               !fieldValue?.documentIds &&
               !fieldValue?.documentId &&
               !fieldValue?.filename) ||
-            (answerType.type === 'items' &&
+            (answerType.type === "items" &&
               (!sectionedData[`${fieldId}-${index}`] ||
                 sectionedData[`${fieldId}-${index}`].length === 0)) ||
-            (answerType.type !== 'money' &&
-              answerType.type !== 'file' &&
-              answerType.type !== 'items' &&
+            (answerType.type !== "money" &&
+              answerType.type !== "file" &&
+              answerType.type !== "items" &&
               !fieldValue?.value)
           ) {
-            console.log(
-              `Validation failed for ${answerType.type} at index ${index}`
-            );
+            console.log(`Validation failed for ${answerType.type} at index ${index}`);
             hasError = true;
           }
         }
@@ -536,7 +513,7 @@ export function useAssessmentForm(
         // console.log('Validation failed, setting error for field:', fieldId);
         setErrors((prev) => ({
           ...prev,
-          [fieldId]: 'Please fill in all required fields',
+          [fieldId]: "Please fill in all required fields",
         }));
         return;
       } else {
@@ -568,15 +545,12 @@ export function useAssessmentForm(
               let answerValue: any;
               let documentIds: string[] = [];
               switch (answerType.type) {
-                case 'money':
+                case "money":
                   answerValue = fieldValue.value;
                   break;
-                case 'file':
+                case "file":
                   // Handle both prefilled data structure and new submissions
-                  if (
-                    fieldValue.documentIds &&
-                    fieldValue.documentIds.length > 0
-                  ) {
+                  if (fieldValue.documentIds && fieldValue.documentIds.length > 0) {
                     // Prefilled data structure: use documentIds array
                     documentIds = fieldValue.documentIds;
                     answerValue = fieldValue.documentIds[0]; // Use first document ID as primary value
@@ -588,26 +562,23 @@ export function useAssessmentForm(
                     // Another legacy structure: filename as document ID
                     documentIds = [fieldValue.filename];
                     answerValue = fieldValue.filename;
-                  } else if (
-                    fieldValue.value &&
-                    Array.isArray(fieldValue.value)
-                  ) {
+                  } else if (fieldValue.value && Array.isArray(fieldValue.value)) {
                     // Prefilled document objects structure
                     documentIds = fieldValue.value.map((doc: any) => doc.id);
-                    answerValue = documentIds[0] || '';
+                    answerValue = documentIds[0] || "";
                   } else {
                     // Fallback
-                    answerValue = fieldValue.value || '';
+                    answerValue = fieldValue.value || "";
                     documentIds = [];
                   }
                   break;
-                case 'items':
+                case "items":
                   answerValue = fieldValue.value; // Use the form data directly
                   break;
-                case 'string':
-                case 'number':
-                case 'boolean':
-                case 'array<string>':
+                case "string":
+                case "number":
+                case "boolean":
+                case "array<string>":
                   answerValue = fieldValue.value;
                   break;
                 default:
@@ -635,7 +606,7 @@ export function useAssessmentForm(
         // console.error('Failed to submit answer:', error);
         setErrors((prev) => ({
           ...prev,
-          [fieldId]: 'Failed to save answer. Please try again.',
+          [fieldId]: "Failed to save answer. Please try again.",
         }));
         return;
       }
@@ -649,11 +620,11 @@ export function useAssessmentForm(
       setCurrentQuestion(0);
     } else {
       // Assessment complete
-      if (pathname?.includes('onboarding')) {
-        router.push('/sme');
+      if (pathname?.includes("onboarding")) {
+        router.push("/sme");
         setIsOpen(false);
       } else {
-        toast.success('Assessment Completed Successfully');
+        toast.success("Assessment Completed Successfully");
         setIsOpen(false);
       }
     }
@@ -686,11 +657,11 @@ export function useAssessmentForm(
       setCurrentQuestion(0);
     } else {
       // Assessment complete
-      if (pathname?.includes('onboarding')) {
-        router.push('/sme');
+      if (pathname?.includes("onboarding")) {
+        router.push("/sme");
         setIsOpen(false);
       } else {
-        toast.success('Assessment Completed Successfully!');
+        toast.success("Assessment Completed Successfully!");
         setIsOpen(false);
       }
     }

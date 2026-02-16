@@ -3,11 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -47,8 +43,7 @@ export function NavMain({
       <SidebarMenu className="gap-4 mt-6">
         {items?.map((item, idx) => {
           // Overview is always the first item, with url exactly `/${param.accessType}`
-          const isOverview =
-            idx === 0 && item?.url === `/${param.accessType || "admin"}`;
+          const isOverview = idx === 0 && item?.url === `/${param.accessType || "admin"}`;
           let isActive;
           if (isOverview) {
             isActive = pathname === item?.url;
@@ -89,9 +84,7 @@ export function NavMain({
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
-                                className={`${
-                                  isSubItemActive ? "bg-muted text-green" : ""
-                                }`}
+                                className={`${isSubItemActive ? "bg-muted text-green" : ""}`}
                                 asChild
                               >
                                 <Link href={subItem?.url}>

@@ -1,10 +1,10 @@
 export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { ChatParticipant } from './types';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { ChatParticipant } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,26 +26,24 @@ export function formatAddress(address: string): string {
  * @returns Formatted number string with commas
  */
 export function addCommasToNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export const getChatHeader = (currentUserId: string, participants: ChatParticipant[]) => {
-  const users = participants?.filter(
-    (participant) => participant.id !== currentUserId
-  );
+  const users = participants?.filter((participant) => participant.id !== currentUserId);
 
   if (!users || users.length === 0) return null;
 
-  const getFirstName = (fullName: string) => fullName?.split?.(' ')?.[0];
+  const getFirstName = (fullName: string) => fullName?.split?.(" ")?.[0];
 
   if (users.length === 1) {
-    return {name:users?.[0].name, img: users?.[0]?.image}; // full name
+    return { name: users?.[0].name, img: users?.[0]?.image }; // full name
   }
 
   if (users.length === 2) {
     return {
-      name:`${getFirstName(users[0].name)} & ${getFirstName(users[1].name)}`, 
-      img: users?.[0]?.image
+      name: `${getFirstName(users[0].name)} & ${getFirstName(users[1].name)}`,
+      img: users?.[0]?.image,
     };
   }
 
@@ -55,5 +53,7 @@ export const getChatHeader = (currentUserId: string, participants: ChatParticipa
   const others = users.length - 2;
 
   return {
-    name:`${first}, ${second} & ${others} others}`, img: users?.[0]?.image}
+    name: `${first}, ${second} & ${others} others}`,
+    img: users?.[0]?.image,
+  };
 };

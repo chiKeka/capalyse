@@ -36,15 +36,7 @@ import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Line } from "react-chartjs-2";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 type Props = {};
 type DocumentRow = {
@@ -260,9 +252,7 @@ function FinancePage({}: Props) {
     return list.map((d) => ({
       name: d.originalName || d.fileName,
       size: formatFileSize(d.size || 0),
-      date: d.uploadedAt
-        ? formatDate(new Date(d.uploadedAt), "LLL d, yyyy")
-        : "",
+      date: d.uploadedAt ? formatDate(new Date(d.uploadedAt), "LLL d, yyyy") : "",
       status: "Completed",
     }));
   }, [docsData]);
@@ -273,9 +263,7 @@ function FinancePage({}: Props) {
       <div className="mt-8 flex items-center justify-between w-full">
         <div className=" items-center  gap-2">
           <p className="font-bold text-2xl">SME Financial Dashboard</p>
-          <p className="text-sm text-[#282828]">
-            Last Updated: 20th August, 2025
-          </p>
+          <p className="text-sm text-[#282828]">Last Updated: 20th August, 2025</p>
         </div>
       </div>
       <div className="w-full">
@@ -286,21 +274,14 @@ function FinancePage({}: Props) {
                 <div className="flex items-center gap-2 justify-between">
                   <div className="flex flex-row gap-2 w-fit items-center rounded-full bg-[#FFFFFF]/50 text-green p-2">
                     {card.icon2()}
-                    <span className="font-medium text-base text-[#7A7A9D]">
-                      {card.label}
-                    </span>
+                    <span className="font-medium text-base text-[#7A7A9D]">{card.label}</span>
                   </div>
                   <Select
                     value={String(summaryMonths)}
-                    onValueChange={(v) =>
-                      setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
-                    }
+                    onValueChange={(v) => setSummaryMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}
                   >
                     <SelectTrigger className="w-fit rounded-lg">
-                      <SelectValue
-                        placeholder="Range"
-                        defaultValue={String(summaryMonths)}
-                      />
+                      <SelectValue placeholder="Range" defaultValue={String(summaryMonths)} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1">Last month</SelectItem>
@@ -311,9 +292,7 @@ function FinancePage({}: Props) {
 
                 <div className="flex flex-col gap-2 mt-auto">
                   <span className="xl:text-5xl lg:text-4xl text-3xl font-bold">
-                    {card.currency
-                      ? formatCurrency(card.amount, 0, 0, card.currency)
-                      : card.amount}
+                    {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
                   </span>
 
                   <div className="flex items-center flex-row gap-1 rounded-full bg-[#F4FFFC] w-fit text-green p-2">
@@ -324,10 +303,7 @@ function FinancePage({}: Props) {
                         </span>
                       ) : (
                         <span className="text-sm text-red font-bold">
-                          {card.percentage && card.percentage < 0
-                            ? card.percentage
-                            : 0}
-                          %
+                          {card.percentage && card.percentage < 0 ? card.percentage : 0}%
                         </span>
                       ))}
                     {card.icon()}
@@ -343,24 +319,15 @@ function FinancePage({}: Props) {
         <div className="mb-4">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 w-full gap-4">
             <div className="flex flex-col  gap-2">
-              <p className="font-bold text-lg flex gap-2 items-center text-[#101928]">
-                SME growth
-              </p>
-              <p className="text-[#667185] text-sm font-normal">
-                Track SME growth and performance
-              </p>
+              <p className="font-bold text-lg flex gap-2 items-center text-[#101928]">SME growth</p>
+              <p className="text-[#667185] text-sm font-normal">Track SME growth and performance</p>
             </div>
             <Select
               value={String(growthMonths)}
-              onValueChange={(v) =>
-                setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)
-              }
+              onValueChange={(v) => setGrowthMonths((Number(v) === 12 ? 12 : 1) as 1 | 12)}
             >
               <SelectTrigger className="w-full sm:w-fit rounded-lg">
-                <SelectValue
-                  placeholder="Range"
-                  defaultValue={String(growthMonths)}
-                />
+                <SelectValue placeholder="Range" defaultValue={String(growthMonths)} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">Last month</SelectItem>
@@ -483,10 +450,7 @@ function FinancePage({}: Props) {
           )}
         </div>
       </DashboardCardLayout>
-      <UpdateFinancialRecordsSheet
-        open={openUpdate}
-        onOpenChange={setOpenUpdate}
-      />
+      <UpdateFinancialRecordsSheet open={openUpdate} onOpenChange={setOpenUpdate} />
     </div>
   );
 }

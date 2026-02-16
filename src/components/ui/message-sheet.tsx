@@ -26,32 +26,29 @@ export interface Message {
 }
 
 interface MessageSheetProps {
-  
   emptyIllustration?: string;
   // messages: Message[];
 }
 
-const conversationToMessage = (
-  conversation: ChatConversation,
-  currentUserId: string
-): Message => {
+const conversationToMessage = (conversation: ChatConversation, currentUserId: string): Message => {
   const otherParticipant =
     conversation.participantsDetails?.find((p) => p.id !== currentUserId) ||
     conversation.participantsDetails?.[0];
   if (!otherParticipant) {
     throw new Error("No other participant found in conversation");
   }
-  const chatHeader = getChatHeader(currentUserId, conversation.participantsDetails as ChatParticipant[]);
+  const chatHeader = getChatHeader(
+    currentUserId,
+    conversation.participantsDetails as ChatParticipant[],
+  );
 
   return {
     id: conversation.id,
     sender: chatHeader?.name as string,
     senderType: otherParticipant.businessName || "Member", // Use businessName as role fallback
-    avatar: chatHeader?.img ??'',
+    avatar: chatHeader?.img ?? "",
     lastUpdated: conversation.updatedAt,
-    time: new Date(
-      conversation.lastMessageAt || conversation.updatedAt
-    ).toLocaleTimeString([], {
+    time: new Date(conversation.lastMessageAt || conversation.updatedAt).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     }),
@@ -64,66 +61,63 @@ const conversationToMessage = (
 export function MessageSheet({
   emptyIllustration = "/icons/empty-messages.svg",
 }: MessageSheetProps) {
-  const [messageOpenState,setMessageOpenState] = useAtom(messageOpenAtom);
+  const [messageOpenState, setMessageOpenState] = useAtom(messageOpenAtom);
   const [isChatOpen, setIsChatOpen] = useState(Boolean(messageOpenState?.conversationId));
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   // Fetch conversations using the API
-  const { conversations, isLoading, refetch, pagination , isFetching} =
-    useGetConversations();
+  const { conversations, isLoading, refetch, pagination, isFetching } = useGetConversations();
 
   // Get current user ID from auth
   const { data: currentUserResponse } = useSession();
   const currentUserId = currentUserResponse?.user?.id! as string;
 
   const messages = conversations.map((conversation) =>
-    conversationToMessage(conversation, currentUserId)
+    conversationToMessage(conversation, currentUserId),
   );
   const hasMessages = messages.length > 0;
 
   function onSelectMessage(conversationId: string) {
-    if(isFetching) {
+    if (isFetching) {
       setTimeout(() => {
-        onSelectMessage(messageOpenState?.conversationId)
+        onSelectMessage(messageOpenState?.conversationId);
       }, 500);
-      return
+      return;
     }
-    const conversation = conversations.find(
-      (conv) => conv.id === conversationId
-    );
-    console.log({conversation})
+    const conversation = conversations.find((conv) => conv.id === conversationId);
+    console.log({ conversation });
     if (conversation) {
       setSelectedMessage(conversationToMessage(conversation, currentUserId));
       setIsChatOpen(true);
-      if(messageOpenState?.conversationId !== conversationId){
-        setMessageOpenState(prev=>({
+      if (messageOpenState?.conversationId !== conversationId) {
+        setMessageOpenState((prev) => ({
           ...prev,
           conversationId: conversationId,
-        }))
+        }));
       }
     }
   }
-  useEffect(()=>{
-    if(messageOpenState?.conversationId){
-     onSelectMessage(messageOpenState?.conversationId)
+  useEffect(() => {
+    if (messageOpenState?.conversationId) {
+      onSelectMessage(messageOpenState?.conversationId);
     }
-  },[messageOpenState?.conversationId])
+  }, [messageOpenState?.conversationId]);
 
   return (
     <Sheet
       open={messageOpenState?.open}
       onOpenChange={(open) => {
-        setMessageOpenState(prev=>({
+        setMessageOpenState((prev) => ({
           ...prev,
           open: open,
-        }))
+        }));
         if (!open) {
           setIsChatOpen(false);
-          setMessageOpenState(prev=>({
-          ...prev,
-          open: open,
-          conversationId: '',
-        }))
+          setMessageOpenState((prev) => ({
+            ...prev,
+            open: open,
+            conversationId: "",
+          }));
         }
       }}
     >
@@ -134,11 +128,11 @@ export function MessageSheet({
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => {
-                    setIsChatOpen(false)
-                    setMessageOpenState(prev=>({
+                    setIsChatOpen(false);
+                    setMessageOpenState((prev) => ({
                       ...prev,
-                      conversationId: '',
-                    }))
+                      conversationId: "",
+                    }));
                   }}
                   aria-label="Back"
                   className="text-emerald-700 hover:bg-emerald-50 rounded-full p-1"
@@ -180,23 +174,19 @@ export function MessageSheet({
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {/* Pagination info */}
-          {pagination && !isChatOpen&& (
+          {pagination && !isChatOpen && (
             <div className="text-xs text-muted-foreground mb-2 px-2">
               {pagination.total > 0
-                ? `Showing ${
-                    (pagination.page - 1) * pagination.limit + 1
-                  }-${Math.min(
+                ? `Showing ${(pagination.page - 1) * pagination.limit + 1}-${Math.min(
                     pagination.page * pagination.limit,
-                    pagination.total
+                    pagination.total,
                   )} of ${pagination.total} conversations`
                 : "No conversations found"}
             </div>
           )}
           {isLoading ? (
             <div className="flex items-center justify-center h-[20vh]">
-              <div className="text-muted-foreground">
-                Loading conversations...
-              </div>
+              <div className="text-muted-foreground">Loading conversations...</div>
             </div>
           ) : hasMessages ? (
             <ul className="divide-y divide-muted-foreground/10">
@@ -215,8 +205,7 @@ export function MessageSheet({
                     role="button"
                     aria-label={`Open chat with ${msg.sender}`}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ")
-                        onSelectMessage(msg.id);
+                      if (e.key === "Enter" || e.key === " ") onSelectMessage(msg.id);
                     }}
                   >
                     {msg.avatar ? (
@@ -233,17 +222,11 @@ export function MessageSheet({
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-base leading-tight">
-                        {msg.sender}
-                      </div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {msg.senderType}
-                      </div>
+                      <div className="font-semibold text-base leading-tight">{msg.sender}</div>
+                      <div className="text-xs text-muted-foreground truncate">{msg.senderType}</div>
                     </div>
                     <div className="flex flex-col items-end gap-1 min-w-[4.5rem]">
-                      <span className="text-xs text-muted-foreground mb-1">
-                        {msg.time}
-                      </span>
+                      <span className="text-xs text-muted-foreground mb-1">{msg.time}</span>
                       {msg.unreadCount && msg.unreadCount > 0 ? (
                         <span className="rounded-full bg-green aspect-square text-white h-[1.0625rem] w-[1.0625rem] flex items-center justify-center font-bold text-[11px]">
                           {msg.unreadCount}
@@ -265,9 +248,8 @@ export function MessageSheet({
               </div>
               <div className="font-semibold text-lg mb-2">No Messages Yet</div>
               <div className="text-muted-foreground text-base mb-6 max-w-[27.25rem] text-center">
-                It looks like you haven't sent or recieved any messages yet.
-                Once you do, they'll appear here to keep you updated on
-                important activities.
+                It looks like you haven't sent or recieved any messages yet. Once you do, they'll
+                appear here to keep you updated on important activities.
               </div>
               <Button
                 variant="tertiary"

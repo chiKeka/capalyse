@@ -1,15 +1,15 @@
-'use client';
-import { PlayCircle } from 'lucide-react';
+"use client";
+import { PlayCircle } from "lucide-react";
 
-import Button from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Button from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+} from "@/components/ui/accordion";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,67 +17,67 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { useParams } from 'next/navigation';
+} from "@/components/ui/breadcrumb";
+import { useParams } from "next/navigation";
 
 const courseData = {
-  title: 'Trading Across Africa: How AfCFTA is Changing the Game',
+  title: "Trading Across Africa: How AfCFTA is Changing the Game",
   instructor: {
-    name: 'Dr. Emily Carter',
-    avatar: '/avatars/01.png',
+    name: "Dr. Emily Carter",
+    avatar: "/avatars/01.png",
   },
   modules: [
     {
-      title: 'Module 1: Introduction to AfCFTA',
+      title: "Module 1: Introduction to AfCFTA",
       lessons: [
-        { title: 'What is AfCFTA?', duration: '12:34', isCompleted: true },
+        { title: "What is AfCFTA?", duration: "12:34", isCompleted: true },
         {
-          title: 'Key Objectives and Benefits',
-          duration: '15:20',
+          title: "Key Objectives and Benefits",
+          duration: "15:20",
           isCompleted: true,
         },
         {
-          title: 'The Role of SMEs in AfCFTA',
-          duration: '10:05',
+          title: "The Role of SMEs in AfCFTA",
+          duration: "10:05",
           isCompleted: false,
           isCurrent: true,
         },
       ],
     },
     {
-      title: 'Module 2: Navigating the Legal Landscape',
+      title: "Module 2: Navigating the Legal Landscape",
       lessons: [
         {
-          title: 'Understanding Rules of Origin',
-          duration: '22:10',
+          title: "Understanding Rules of Origin",
+          duration: "22:10",
           isCompleted: false,
         },
         {
-          title: 'Tariff Concessions and Trade Barriers',
-          duration: '18:45',
+          title: "Tariff Concessions and Trade Barriers",
+          duration: "18:45",
           isCompleted: false,
         },
       ],
     },
     {
-      title: 'Module 3: Financial and Operational Readiness',
+      title: "Module 3: Financial and Operational Readiness",
       lessons: [
         {
-          title: 'Cross-Border Payments and FinTech',
-          duration: '14:55',
+          title: "Cross-Border Payments and FinTech",
+          duration: "14:55",
           isCompleted: false,
         },
         {
-          title: 'Logistics and Supply Chain Management',
-          duration: '20:30',
+          title: "Logistics and Supply Chain Management",
+          duration: "20:30",
           isCompleted: false,
         },
       ],
     },
   ],
   resources: [
-    { title: 'AfCFTA Official Agreement', type: 'PDF' },
-    { title: 'Rules of Origin Manual', type: 'PDF' },
+    { title: "AfCFTA Official Agreement", type: "PDF" },
+    { title: "Rules of Origin Manual", type: "PDF" },
   ],
 };
 
@@ -94,9 +94,7 @@ export default function SingleCoursePage() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/${accessType}/dashboard/learning`}>
-              Resources
-            </BreadcrumbLink>
+            <BreadcrumbLink href={`/${accessType}/dashboard/learning`}>Resources</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -107,9 +105,7 @@ export default function SingleCoursePage() {
       <div className="grid gap-6 md:grid-cols-7">
         {/* Main Content */}
         <div className="md:col-span-4 space-y-6">
-          <h1 className="text-2xl font-bold tracking-tight">
-            {courseData.title}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">{courseData.title}</h1>
           <Card>
             <CardContent className="p-0">
               <AspectRatio ratio={16 / 9}>
@@ -128,28 +124,23 @@ export default function SingleCoursePage() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold tracking-tight text-black-600">
-              Introduction
-            </h2>
+            <h2 className="text-2xl font-bold tracking-tight text-black-600">Introduction</h2>
             <p>
-              Africa is home to over 1.4 billion people and a combined GDP
-              exceeding $3.4 trillion, yet intra-African trade has historically
-              remained below 20%. Fragmented markets, high tariffs, and
-              inconsistent regulations have long stood in the way of seamless
-              economic integration. But the African Continental Free Trade Area
-              (AfCFTA) is set to change that narrative.
+              Africa is home to over 1.4 billion people and a combined GDP exceeding $3.4 trillion,
+              yet intra-African trade has historically remained below 20%. Fragmented markets, high
+              tariffs, and inconsistent regulations have long stood in the way of seamless economic
+              integration. But the African Continental Free Trade Area (AfCFTA) is set to change
+              that narrative.
             </p>
             <p>
-              Launched in 2021, AfCFTA is the largest free trade area in the
-              world by number of countries — 54 African Union members have
-              signed on. It aims to create a single market for goods and
-              services, foster economic integration, and enhance competitiveness
+              Launched in 2021, AfCFTA is the largest free trade area in the world by number of
+              countries — 54 African Union members have signed on. It aims to create a single market
+              for goods and services, foster economic integration, and enhance competitiveness
               across the continent.
             </p>
             <p>
-              In this article, we explore how AfCFTA is transforming the trading
-              landscape across Africa and what it means for entrepreneurs, small
-              businesses, and startups.
+              In this article, we explore how AfCFTA is transforming the trading landscape across
+              Africa and what it means for entrepreneurs, small businesses, and startups.
             </p>
           </div>
         </div>
@@ -161,12 +152,7 @@ export default function SingleCoursePage() {
               <CardTitle>Course Content</CardTitle>
             </CardHeader>
             <CardContent className="px-2.5">
-              <Accordion
-                type="single"
-                collapsible
-                defaultValue="item-0"
-                className="space-y-4"
-              >
+              <Accordion type="single" collapsible defaultValue="item-0" className="space-y-4">
                 {/* box-shadow: 0px 2px 4px 0px #00000040;
                  */}
                 {courseData.modules.map((module, index) => (
@@ -211,22 +197,18 @@ export default function SingleCoursePage() {
                           <li
                             key={lesson.title}
                             className={`flex items-center justify-between p-2 rounded-md ${
-                              lesson.isCurrent ? 'bg-green-100' : ''
+                              lesson.isCurrent ? "bg-green-100" : ""
                             }`}
                           >
                             <div className="flex items-center gap-3">
                               <PlayCircle
                                 className={`h-5 w-5 ${
-                                  lesson.isCompleted
-                                    ? 'text-green-500'
-                                    : 'text-gray-400'
+                                  lesson.isCompleted ? "text-green-500" : "text-gray-400"
                                 }`}
                               />
                               <span className="text-sm">{lesson.title}</span>
                             </div>
-                            <span className="text-xs text-muted-foreground">
-                              {lesson.duration}
-                            </span>
+                            <span className="text-xs text-muted-foreground">{lesson.duration}</span>
                           </li>
                         ))}
                       </ul>

@@ -74,10 +74,7 @@ export const useGetConversation = (conversationId: string) => {
 /**
  * Hook for fetching messages in a conversation
  */
-export const useGetConversationMessages = (
-  conversationId: string,
-  filters?: MessageFilters
-) => {
+export const useGetConversationMessages = (conversationId: string, filters?: MessageFilters) => {
   const queryParams = filters
     ? {
         ...(filters.limit && { limit: filters.limit.toString() }),
@@ -88,12 +85,9 @@ export const useGetConversationMessages = (
   const result = useQuery<ChatMessagesResponse>({
     queryKey: ["conversation-messages", conversationId, filters],
     queryFn: async () => {
-      const response = await api.get(
-        ApiEndPoints.Conversation_Messages(conversationId),
-        {
-          params: queryParams,
-        }
-      );
+      const response = await api.get(ApiEndPoints.Conversation_Messages(conversationId), {
+        params: queryParams,
+      });
       return response.data;
     },
     enabled: !!conversationId,
@@ -123,9 +117,9 @@ export const useMessages = () => {
     CreateConversationRequest
   >({
     mutationFn: async (data) => {
-      const res = await api.post(ApiEndPoints.Messages_Conversations, data)
+      const res = await api.post(ApiEndPoints.Messages_Conversations, data);
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
-      return res?.data
+      return res?.data;
     },
     onSuccess: () => {
       // Invalidate conversations list to refetch
@@ -136,11 +130,7 @@ export const useMessages = () => {
   /**
    * Send a message in a conversation
    */
-  const sendMessage = useMutation<
-    ApiResponse<ChatMessage>,
-    Error,
-    SendMessageRequest
-  >({
+  const sendMessage = useMutation<ApiResponse<ChatMessage>, Error, SendMessageRequest>({
     mutationFn: (data) => api.post(ApiEndPoints.Send_Message, data),
     onSuccess: (response, variables) => {
       // Invalidate conversation messages to refetch
@@ -164,8 +154,7 @@ export const useMessages = () => {
     Error,
     { messageId: string; data: EditMessageRequest }
   >({
-    mutationFn: ({ messageId, data }) =>
-      api.put(ApiEndPoints.Edit_Message(messageId), data),
+    mutationFn: ({ messageId, data }) => api.put(ApiEndPoints.Edit_Message(messageId), data),
     onSuccess: (response) => {
       const message = response.data;
       // Invalidate conversation messages to refetch
@@ -203,8 +192,7 @@ export const useMessages = () => {
     Error,
     { messageId: string; conversationId: string }
   >({
-    mutationFn: ({ messageId }) =>
-      api.patch(ApiEndPoints.Mark_Message_Read(messageId)),
+    mutationFn: ({ messageId }) => api.patch(ApiEndPoints.Mark_Message_Read(messageId)),
     onSuccess: (response, variables) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
@@ -227,8 +215,7 @@ export const useMessages = () => {
     Error,
     string // conversationId
   >({
-    mutationFn: (conversationId) =>
-      api.patch(ApiEndPoints.Mark_Conversation_Read(conversationId)),
+    mutationFn: (conversationId) => api.patch(ApiEndPoints.Mark_Conversation_Read(conversationId)),
     onSuccess: (response, conversationId) => {
       // Invalidate conversation messages to refetch
       queryClient.invalidateQueries({
@@ -251,8 +238,7 @@ export const useMessages = () => {
     Error,
     string // conversationId
   >({
-    mutationFn: (conversationId) =>
-      api.patch(ApiEndPoints.Block_Conversation(conversationId)),
+    mutationFn: (conversationId) => api.patch(ApiEndPoints.Block_Conversation(conversationId)),
     onSuccess: (response, conversationId) => {
       // Invalidate conversations list
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
@@ -271,8 +257,7 @@ export const useMessages = () => {
     Error,
     string // conversationId
   >({
-    mutationFn: (conversationId) =>
-      api.patch(ApiEndPoints.Unblock_Conversation(conversationId)),
+    mutationFn: (conversationId) => api.patch(ApiEndPoints.Unblock_Conversation(conversationId)),
     onSuccess: (response, conversationId) => {
       // Invalidate conversations list
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
@@ -336,7 +321,7 @@ export const useCreateConversation = () => {
       groupName?: string;
       groupDescription?: string;
       groupAdmin?: string;
-    }
+    },
   ) => {
     const request = createConversationRequest(participants, options);
     const validationErrors = validateConversationRequest(request);

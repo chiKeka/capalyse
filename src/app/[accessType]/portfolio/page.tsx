@@ -1,28 +1,25 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { useIndustries } from '@/hooks/useComplianceCatalogs';
-import {
-  useGetInvestorPortfolioSummary,
-  useInvestments,
-} from '@/hooks/useInvestments';
-import { formatCurrency } from '@/lib/uitils/fns';
-import { format } from 'date-fns';
-import { Loader2Icon } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { useIndustries } from "@/hooks/useComplianceCatalogs";
+import { useGetInvestorPortfolioSummary, useInvestments } from "@/hooks/useInvestments";
+import { formatCurrency } from "@/lib/uitils/fns";
+import { format } from "date-fns";
+import { Loader2Icon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 type Props = {};
 
@@ -30,53 +27,45 @@ type Props = {};
 const smes: any[] = [];
 const columns = [
   {
-    header: 'Name',
+    header: "Name",
     accessor: (row: (typeof smes)[0]) => (
       <div className="flex items-center gap-2">
         {row.avatar ? (
-          <Image
-            src={row.avatar}
-            alt={row.name}
-            width={24}
-            height={24}
-            className="rounded-full"
-          />
+          <Image src={row.avatar} alt={row.name} width={24} height={24} className="rounded-full" />
         ) : null}
         <span className="font-medium text-sm">{row.metadata.name}</span>
       </div>
     ),
   },
   {
-    header: 'Industry',
-    accessor: (row: (typeof smes)[0]) => row.metadata.industry ?? '-',
+    header: "Industry",
+    accessor: (row: (typeof smes)[0]) => row.metadata.industry ?? "-",
   },
   {
-    header: 'Country',
-    accessor: (row: (typeof smes)[0]) => row.metadata.location ?? '-',
+    header: "Country",
+    accessor: (row: (typeof smes)[0]) => row.metadata.location ?? "-",
   },
   {
-    header: 'Readiness Score',
-    accessor: (row: (typeof smes)[0]) =>
-      row.metadata.readiness?.overallScore ?? '-',
+    header: "Readiness Score",
+    accessor: (row: (typeof smes)[0]) => row.metadata.readiness?.overallScore ?? "-",
   },
   {
-    header: 'Revenue',
-    accessor: (row: (typeof smes)[0]) => row.metadata.totalRevenue ?? '-',
+    header: "Revenue",
+    accessor: (row: (typeof smes)[0]) => row.metadata.totalRevenue ?? "-",
   },
   {
-    header: 'Team Size',
-    accessor: (row: (typeof smes)[0]) => row.metadata.teamSize ?? '-',
+    header: "Team Size",
+    accessor: (row: (typeof smes)[0]) => row.metadata.teamSize ?? "-",
   },
   {
-    header: 'Last Update',
-    accessor: (row: (typeof smes)[0]) =>
-      format(row.updatedAt, 'MMM dd, yyyy HH:mm a'),
+    header: "Last Update",
+    accessor: (row: (typeof smes)[0]) => format(row.updatedAt, "MMM dd, yyyy HH:mm a"),
   },
 ];
 
 function page({}: Props) {
-  const [search, setSearch] = useState('');
-  const [industryFilter, setIndustryFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("all");
   const router = useRouter();
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
@@ -91,7 +80,7 @@ function page({}: Props) {
       investment?.metadata?.industry?.toLowerCase().includes(search.toLowerCase()) ||
       investment?.metadata?.location?.toLowerCase().includes(search.toLowerCase());
     const matchesIndustry =
-      industryFilter === 'all' ||
+      industryFilter === "all" ||
       investment?.metadata?.industry?.toLowerCase() === industryFilter.toLowerCase();
     return matchesSearch && matchesIndustry;
   });
@@ -100,22 +89,22 @@ function page({}: Props) {
       {
         id: 1,
         icon: CIcons.walletMoney,
-        label: 'Total Amount Invested',
+        label: "Total Amount Invested",
         amount: portfolioSummary?.totalAmountInvested?.amount ?? 0,
-        currency: portfolioSummary?.totalAmountInvested?.currency ?? 'NGN',
+        currency: portfolioSummary?.totalAmountInvested?.currency ?? "NGN",
         percentage: 0,
-        direction: 'up',
+        direction: "up",
       },
       {
         id: 3,
         icon: CIcons.stickyNote,
-        label: 'Total Investments',
+        label: "Total Investments",
         amount: portfolioSummary?.totalInvestments ?? 0,
       },
       {
         id: 2,
         icon: CIcons.profile2,
-        label: 'Active Investment',
+        label: "Active Investment",
         amount: portfolioSummary?.activeInvestments ?? 0,
       },
     ];
@@ -134,22 +123,17 @@ function page({}: Props) {
                 <span className="font-bold">{card.label}</span>
                 <div className="flex items-center justify-between gap-2 mt-auto">
                   <span className="text-5xl font-bold">
-                    {card.currency
-                      ? formatCurrency(card.amount, 0, 0, card.currency)
-                      : card.amount}
+                    {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
                   </span>
                   <div className="text-center">
                     {card?.percentage !== undefined &&
-                      (card.direction === 'up' ? (
+                      (card.direction === "up" ? (
                         <span className="text-sm text-success-100 font-bold">
                           {card.percentage}%
                         </span>
                       ) : (
                         <span className="text-sm text-red font-bold">
-                          {card.percentage && card.percentage < 0
-                            ? card.percentage
-                            : 0}
-                          %
+                          {card.percentage && card.percentage < 0 ? card.percentage : 0}%
                         </span>
                       ))}
                     <div className="text-2xl border border-[#ABD2C7] bg-[#F4FFFC] text-green rounded-md p-2">
@@ -196,9 +180,7 @@ function page({}: Props) {
               }}
             />
           </div>
-          <Button
-            onClick={() => router.push('/investor/profile?tab=investments')}
-          >
+          <Button onClick={() => router.push("/investor/profile?tab=investments")}>
             Quick Actions
           </Button>
         </div>

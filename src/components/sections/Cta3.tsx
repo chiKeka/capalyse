@@ -41,15 +41,7 @@ function InverstmentReadiness({ smsEcardData, header, text, gridType }: Props) {
 
 export default InverstmentReadiness;
 
-const Cards = ({
-  caption,
-  text,
-  index,
-}: {
-  caption: string;
-  text: string;
-  index: number;
-}) => {
+const Cards = ({ caption, text, index }: { caption: string; text: string; index: number }) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: -50 }}

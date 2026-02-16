@@ -30,12 +30,8 @@ function EmptyBox({
         className={`h-[78px]  w-[78px] ${spinner ? "animate-spin" : ""}`}
       />
 
-      <p className="text-base font-bold text-[#282828] text-center">
-        {caption}
-      </p>
-      <p className="font-normal max-w-[206px] text-xs text-[#282828] text-center">
-        {caption2}
-      </p>
+      <p className="text-base font-bold text-[#282828] text-center">{caption}</p>
+      <p className="font-normal max-w-[206px] text-xs text-[#282828] text-center">{caption2}</p>
       {showButton && (
         <div className="w-ful flex items-center justify-center">
           <Button variant="secondary" onClick={() => setOpen(true)}>
@@ -47,9 +43,7 @@ function EmptyBox({
       {actionType === "startAssessment" && (
         <AssessmentReadiness isOpen={open} setIsOpen={setOpen} />
       )}
-      {actionType === "createProgram" && (
-        <CreateProgram isOpen={open} setIsOpen={setOpen} />
-      )}
+      {actionType === "createProgram" && <CreateProgram isOpen={open} setIsOpen={setOpen} />}
     </div>
   );
 }

@@ -89,7 +89,7 @@ export function PieChart() {
     },
   };
 
-const values = data?.items?.map((item: any) => item.amount.amount) || [];
+  const values = data?.items?.map((item: any) => item.amount.amount) || [];
   const min = Math.min(...values);
   const max = Math.max(...values);
 
@@ -100,9 +100,7 @@ const values = data?.items?.map((item: any) => item.amount.amount) || [];
       {
         label: "",
         data: data?.items?.map((item: any) => item.amount?.amount) ?? "",
-        backgroundColor: values?.map((amount: any) =>
-          generateColor(amount, min, max)
-        ),
+        backgroundColor: values?.map((amount: any) => generateColor(amount, min, max)),
         borderWidth: 0,
       },
     ],
@@ -112,9 +110,7 @@ const values = data?.items?.map((item: any) => item.amount.amount) || [];
   return (
     <div className="flex flex-col border rounded-lg p-4 h-full">
       <div className="flex mb-8 items-center justify-between">
-        <div className="text-base lg:text-lg font-bold ">
-          Top Countries for Registered SMEs
-        </div>
+        <div className="text-base lg:text-lg font-bold ">Top Countries for Registered SMEs</div>
       </div>
       <div className="flex-1">
         <Pie options={options} data={pieData} />

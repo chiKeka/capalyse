@@ -31,7 +31,6 @@ export const useInvestorMatches = () => {
   });
 };
 
-
 export const useInvestmentInterestDetails = (id: string) => {
   return useQuery({
     queryKey: ["investments_details"],

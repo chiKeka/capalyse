@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ArrowRightIcon,
@@ -7,9 +7,9 @@ import {
   // CreditCard,
   LogOut,
   Settings,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,23 +26,23 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { useGetNotifications } from '@/hooks/useNotification';
-import { authAtom } from '@/lib/atoms/atoms';
-import { authClient } from '@/lib/auth-client';
-import { useQueryClient } from '@tanstack/react-query';
-import { useAtomValue, useSetAtom } from 'jotai';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import Button from './ui/Button';
-import { NotificationSheet } from './ui/notification-sheet';
+} from "@/components/ui/sidebar";
+import { useGetNotifications } from "@/hooks/useNotification";
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAtomValue, useSetAtom } from "jotai";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import Button from "./ui/Button";
+import { NotificationSheet } from "./ui/notification-sheet";
 
 export function NavUser({
   user,
@@ -69,13 +69,13 @@ export function NavUser({
       onSuccess: () => {
         setAuth(undefined);
         queryClient.clear();
-        router.push('/signin');
+        router.push("/signin");
       },
       onError: (ctx) => {
         // toast.error(ctx.error.message);
         setAuth(undefined);
         queryClient.clear();
-        router.push('/signin');
+        router.push("/signin");
       },
     });
   };
@@ -84,8 +84,8 @@ export function NavUser({
     if (auth) {
       return (
         <>
-          <span className="truncate font-medium">{`${auth?.firstName || ''} ${
-            auth?.name || ''
+          <span className="truncate font-medium">{`${auth?.firstName || ""} ${
+            auth?.name || ""
           }`}</span>
           <span className="truncate text-xs">{auth?.email}</span>
         </>
@@ -115,7 +115,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
+            side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >
@@ -141,11 +141,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
-                <Link
-                  href={`/${
-                    auth?.role === 'admin' ? auth?.role : param?.accessType
-                  }/settings`}
-                >
+                <Link href={`/${auth?.role === "admin" ? auth?.role : param?.accessType}/settings`}>
                   Settings
                 </Link>
               </DropdownMenuItem>
@@ -177,18 +173,14 @@ export function NavUser({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              size="small"
-              variant="secondary"
-              onClick={() => setShowLogout(false)}
-            >
+            <Button size="small" variant="secondary" onClick={() => setShowLogout(false)}>
               Cancel
             </Button>
             <Button
               size="small"
               className="bg-red-600 hover:bg-red-700"
               onClick={handleLogout}
-              state={loading ? 'loading' : 'default'}
+              state={loading ? "loading" : "default"}
             >
               Log out
             </Button>

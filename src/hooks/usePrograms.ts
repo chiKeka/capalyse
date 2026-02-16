@@ -43,16 +43,11 @@ export const GetProgramApplications = (id: string) => {
   });
 };
 
-export const GetProgramApplicationById = (
-  id: string,
-  applicationId: string
-) => {
+export const GetProgramApplicationById = (id: string, applicationId: string) => {
   return useQuery({
     queryKey: ["program-application", id, applicationId],
     queryFn: async () => {
-      const response = await api.get(
-        programsRoutes.applicationStatus(id, applicationId)
-      );
+      const response = await api.get(programsRoutes.applicationStatus(id, applicationId));
       return response.data;
     },
   });
@@ -103,7 +98,7 @@ export const reviewApplication = (id: string, applicationId: string) => {
               action: { ...data }?.action,
               rejectionReason: { ...data }?.rejectionReason,
               reviewNotes: { ...data }?.reviewNotes,
-            }
+            },
       );
       return response.data;
     },
@@ -227,7 +222,7 @@ export const useListMyApplications = (
     limit: string;
     status: string;
   },
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery({
     queryKey: ["list-my-applications", params],

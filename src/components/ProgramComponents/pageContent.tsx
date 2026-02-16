@@ -111,11 +111,7 @@ const programColumns = [
             row.status === "Active" ? "bg-green-500" : "bg-gray-400"
           }`}
         ></div>
-        <span
-          className={`text-sm ${
-            row.status === "Active" ? "text-green-600" : "text-gray-500"
-          }`}
-        >
+        <span className={`text-sm ${row.status === "Active" ? "text-green-600" : "text-gray-500"}`}>
           {row.status}
         </span>
       </div>
@@ -127,16 +123,12 @@ const programColumns = [
   },
   {
     header: "Partner Organization",
-    accessor: (row: any) =>
-      row.partners?.map((partner: any) => partner.name).join(", "),
+    accessor: (row: any) => row.partners?.map((partner: any) => partner.name).join(", "),
   },
   {
     header: "Program Duration",
     accessor: (row: any) =>
-      `${format(row.startDate, "MMM d, yyyy")} - ${format(
-        row.endDate,
-        "MMM d, yyyy"
-      )}`,
+      `${format(row.startDate, "MMM d, yyyy")} - ${format(row.endDate, "MMM d, yyyy")}`,
   },
   {
     header: "Total Applicants",
@@ -177,15 +169,7 @@ const industries = [
   "Manufacturing",
   "Services",
 ];
-const countries = [
-  "Nigeria",
-  "Kenya",
-  "Uganda",
-  "Cameroon",
-  "Niger",
-  "Ghana",
-  "Tanzania",
-];
+const countries = ["Nigeria", "Kenya", "Uganda", "Cameroon", "Niger", "Ghana", "Tanzania"];
 const statuses = ["Assigned", "Pending", "Rejected"];
 
 // Function to generate random SME applicants
@@ -193,10 +177,8 @@ const generateSMEApplicants = (count = 0) => {
   const applicants = [];
 
   for (let i = 1; i <= count; i++) {
-    const randomIndustry =
-      industries[Math.floor(Math.random() * industries.length)];
-    const randomCountry =
-      countries[Math.floor(Math.random() * countries.length)];
+    const randomIndustry = industries[Math.floor(Math.random() * industries.length)];
+    const randomCountry = countries[Math.floor(Math.random() * countries.length)];
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
     const readinessScore = Math.floor(Math.random() * 91) + 10; // 10-100%
 
@@ -267,8 +249,8 @@ const smeApplicantsColumns = [
           row.status === "Assigned"
             ? "bg-green-100 text-green-800"
             : row.status === "Pending"
-            ? "bg-yellow-100 text-yellow-800"
-            : "bg-red-100 text-red-800"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-red-100 text-red-800"
         }`}
       >
         {row.status}
@@ -278,9 +260,7 @@ const smeApplicantsColumns = [
   {
     header: "Action",
     accessor: (row: any) => (
-      <button className="text-green-600 font-medium hover:underline text-sm">
-        Assign
-      </button>
+      <button className="text-green-600 font-medium hover:underline text-sm">Assign</button>
     ),
     className: "text-green-600",
   },

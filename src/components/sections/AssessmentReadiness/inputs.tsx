@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Plus, Trash2 } from 'lucide-react';
-import { CIcons } from '@/components/ui/CIcons';
-import { useState } from 'react';
-import { AssessmentQuestion } from '@/hooks/useAssessment';
-import { useDocument } from '@/hooks/useDocument';
-import { useUnions } from '@/hooks/useComplianceCatalogs';
-import { toast } from 'sonner';
+import { Plus, Trash2 } from "lucide-react";
+import { CIcons } from "@/components/ui/CIcons";
+import { useState } from "react";
+import { AssessmentQuestion } from "@/hooks/useAssessment";
+import { useDocument } from "@/hooks/useDocument";
+import { useUnions } from "@/hooks/useComplianceCatalogs";
+import { toast } from "sonner";
 
 interface InputsProps {
   currentQuestionData: AssessmentQuestion;
@@ -49,7 +49,7 @@ export function Inputs({
   // Handle file upload using useDocument hook
   const handleFileUpload = async (file: File, answerTypeIndex: number) => {
     if (file && file.size > 2000000) {
-      toast.error('File size must be less than 2MB');
+      toast.error("File size must be less than 2MB");
       return;
     }
     const uploadKey = `${fieldId}-${answerTypeIndex}`;
@@ -59,14 +59,14 @@ export function Inputs({
       const uploadedDocument = await uploadMutation.mutateAsync({
         file,
         fileName: file.name,
-        category: 'assessment',
+        category: "assessment",
       });
 
       const currentValue = formData[fieldId] || {};
       const newValue = {
         ...currentValue,
         [answerTypeIndex]: {
-          type: 'file',
+          type: "file",
           value: uploadedDocument._id, // Store the document ID
           documentId: uploadedDocument._id,
           filename: uploadedDocument.originalName,
@@ -74,7 +74,7 @@ export function Inputs({
       };
       handleInputChange(newValue);
     } catch (error) {
-      console.error('File upload failed:', error);
+      console.error("File upload failed:", error);
     } finally {
       setUploading((prev) => ({ ...prev, [uploadKey]: false }));
     }
@@ -83,51 +83,48 @@ export function Inputs({
   // Render money input with currency selection
   const renderMoneyInput = (answerType: any, index: number) => {
     const currentValue = value[index] || {
-      value: { amount: '', currency: 'NGN' },
+      value: { amount: "", currency: "NGN" },
     };
     const isRequired = answerType.required;
     const fieldError =
-      error &&
-      isRequired &&
-      (!currentValue.value?.amount || currentValue.value.amount === '')
+      error && isRequired && (!currentValue.value?.amount || currentValue.value.amount === "")
         ? error
         : null;
 
     return (
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {answerType.label}{' '}
-          {isRequired && <span className="text-red-500">*</span>}
+          {answerType.label} {isRequired && <span className="text-red-500">*</span>}
         </label>
         <div className="relative">
           <input
             type="number"
             placeholder={answerType.label}
-            value={currentValue.value?.amount || ''}
+            value={currentValue.value?.amount || ""}
             onChange={(e) => {
               const newValue = {
                 ...value,
                 [index]: {
-                  type: 'money',
+                  type: "money",
                   value: {
                     amount: parseFloat(e.target.value) || 0,
-                    currency: currentValue.value?.currency || 'NGN',
+                    currency: currentValue.value?.currency || "NGN",
                   },
                 },
               };
               handleInputChange(newValue);
             }}
             className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-              fieldError ? 'border-red-500' : 'border-gray-300'
+              fieldError ? "border-red-500" : "border-gray-300"
             }`}
           />
           <select
-            value={currentValue.value?.currency || 'NGN'}
+            value={currentValue.value?.currency || "NGN"}
             onChange={(e) => {
               const newValue = {
                 ...value,
                 [index]: {
-                  type: 'money',
+                  type: "money",
                   value: {
                     amount: currentValue.value?.amount || 0,
                     currency: e.target.value,
@@ -154,21 +151,19 @@ export function Inputs({
     const currentValue = value[index];
     const isRequired = answerType.required;
     const uploadKey = `${fieldId}-${index}`;
-    const fieldError =
-      error && isRequired && !currentValue?.value ? error : null;
+    const fieldError = error && isRequired && !currentValue?.value ? error : null;
 
     return (
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {answerType.label}{' '}
-          {isRequired && <span className="text-red-500">*</span>}
+          {answerType.label} {isRequired && <span className="text-red-500">*</span>}
         </label>
         <label className="flex items-center justify-between border border-gray-300 rounded px-4 py-3 cursor-pointer hover:bg-gray-50">
           <span className="flex items-center gap-2 text-gray-700">
             <span className="flex items-center justify-center">
               <CIcons.uploadIcon />
             </span>
-            {uploading[uploadKey] ? 'Uploading...' : 'Upload document'}
+            {uploading[uploadKey] ? "Uploading..." : "Upload document"}
           </span>
           <span className="text-gray-500 text-xl">+</span>
           <input
@@ -184,13 +179,9 @@ export function Inputs({
         </label>
         {/* Show uploaded file name if present */}
         {currentValue?.filename && (
-          <div className="text-xs text-green-700 mt-2">
-            Uploaded: {currentValue.filename}
-          </div>
+          <div className="text-xs text-green-700 mt-2">Uploaded: {currentValue.filename}</div>
         )}
-        <p className="text-xs text-gray-400 mt-2">
-          Format include: PNG, PDF, Word, JPG
-        </p>
+        <p className="text-xs text-gray-400 mt-2">Format include: PNG, PDF, Word, JPG</p>
         {fieldError && <p className="text-red-500 text-sm">{fieldError}</p>}
       </div>
     );
@@ -200,16 +191,14 @@ export function Inputs({
   const renderItemsInput = (answerType: any, index: number) => {
     const currentSections = sectionedData[`${fieldId}-${index}`] || [];
     const isRequired = answerType.required;
-    const fieldError =
-      error && isRequired && currentSections.length === 0 ? error : null;
+    const fieldError = error && isRequired && currentSections.length === 0 ? error : null;
 
     // Initialize sections if none exist
     if (currentSections.length === 0) {
       return (
         <div className="space-y-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {answerType.label}{' '}
-            {isRequired && <span className="text-red-500">*</span>}
+            {answerType.label} {isRequired && <span className="text-red-500">*</span>}
           </label>
           <p className="text-gray-500">Loading sections...</p>
         </div>
@@ -219,8 +208,7 @@ export function Inputs({
     return (
       <div className="space-y-4">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {answerType.label}{' '}
-          {isRequired && <span className="text-red-500">*</span>}
+          {answerType.label} {isRequired && <span className="text-red-500">*</span>}
         </label>
         {currentSections.map((section) => (
           <div key={section.id} className="grid grid-cols-2 gap-4">
@@ -230,10 +218,8 @@ export function Inputs({
               </label>
               <input
                 type="text"
-                value={section.name || ''}
-                onChange={(e) =>
-                  handleSectionChange(section.id, 'name', e.target.value)
-                }
+                value={section.name || ""}
+                onChange={(e) => handleSectionChange(section.id, "name", e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 placeholder="Enter name"
               />
@@ -245,18 +231,14 @@ export function Inputs({
               <div className="relative">
                 <input
                   type="number"
-                  value={section.amount || ''}
-                  onChange={(e) =>
-                    handleSectionChange(section.id, 'amount', e.target.value)
-                  }
+                  value={section.amount || ""}
+                  onChange={(e) => handleSectionChange(section.id, "amount", e.target.value)}
                   className="w-full p-3 pr-20 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   placeholder="Enter amount"
                 />
                 <select
                   value={section.currency}
-                  onChange={(e) =>
-                    handleSectionChange(section.id, 'currency', e.target.value)
-                  }
+                  onChange={(e) => handleSectionChange(section.id, "currency", e.target.value)}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-none text-sm font-medium text-gray-600 focus:outline-none cursor-pointer"
                 >
                   <option value="NGN">NGN</option>
@@ -304,24 +286,22 @@ export function Inputs({
       <div className="space-y-6">
         {answerTypes.map((answerType, index) => {
           switch (answerType.type) {
-            case 'money':
+            case "money":
               return renderMoneyInput(answerType, index);
-            case 'file':
+            case "file":
               return renderFileInput(answerType, index);
-            case 'items':
+            case "items":
               return renderItemsInput(answerType, index);
-            case 'string':
+            case "string":
               return (
                 <div key={index} className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {answerType.label}{' '}
-                    {answerType.required && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    {answerType.label}{" "}
+                    {answerType.required && <span className="text-red-500">*</span>}
                   </label>
                   <input
                     type="text"
-                    value={value[index]?.value || ''}
+                    value={value[index]?.value || ""}
                     onChange={(e) => {
                       const newValue = {
                         ...value,
@@ -333,25 +313,23 @@ export function Inputs({
                       handleInputChange(newValue);
                     }}
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                      error ? 'border-red-500' : 'border-gray-300'
+                      error ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder={answerType.label}
                   />
                   {error && <p className="text-red-500 text-sm">{error}</p>}
                 </div>
               );
-            case 'number':
+            case "number":
               return (
                 <div key={index} className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {answerType.label}{' '}
-                    {answerType.required && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    {answerType.label}{" "}
+                    {answerType.required && <span className="text-red-500">*</span>}
                   </label>
                   <input
                     type="number"
-                    value={value[index]?.value || ''}
+                    value={value[index]?.value || ""}
                     onChange={(e) => {
                       const newValue = {
                         ...value,
@@ -363,27 +341,22 @@ export function Inputs({
                       handleInputChange(newValue);
                     }}
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                      error ? 'border-red-500' : 'border-gray-300'
+                      error ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder={answerType.label}
                   />
                   {error && <p className="text-red-500 text-sm">{error}</p>}
                 </div>
               );
-            case 'boolean':
+            case "boolean":
               return (
                 <div key={index} className="space-y-3">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {answerType.label}{' '}
-                    {answerType.required && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    {answerType.label}{" "}
+                    {answerType.required && <span className="text-red-500">*</span>}
                   </label>
-                  {['Yes', 'No'].map((option) => (
-                    <label
-                      key={option}
-                      className="flex items-center space-x-3 cursor-pointer"
-                    >
+                  {["Yes", "No"].map((option) => (
+                    <label key={option} className="flex items-center space-x-3 cursor-pointer">
                       <input
                         type="radio"
                         name={`${fieldId}-${index}`}
@@ -404,38 +377,31 @@ export function Inputs({
                       <span className="text-gray-700">{option}</span>
                     </label>
                   ))}
-                  {error && (
-                    <p className="text-red-500 text-sm mt-2">{error}</p>
-                  )}
+                  {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                 </div>
               );
-            case 'array<string>': {
+            case "array<string>": {
               const unionCodes = unionsCatalog.length
                 ? unionsCatalog.map((u) => u.id)
-                : ['afcfta', 'ecowas', 'sadc', 'eac'];
+                : ["afcfta", "ecowas", "sadc", "eac"];
 
               return (
                 <div key={index} className="space-y-3">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {answerType.label}{' '}
-                    {answerType.required && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    {answerType.label}{" "}
+                    {answerType.required && <span className="text-red-500">*</span>}
                   </label>
                   <div className="flex gap-3 flex-wrap">
                     {unionCodes.map((code) => {
                       const label = code.toUpperCase();
-                      const selected = (value[index]?.value || []).includes(
-                        code
-                      );
+                      const selected = (value[index]?.value || []).includes(code);
                       return (
                         <button
                           key={code}
                           type="button"
                           disabled={unionsLoading}
                           onClick={() => {
-                            const currentSelections: string[] =
-                              value[index]?.value || [];
+                            const currentSelections: string[] = value[index]?.value || [];
                             const exists = currentSelections.includes(code);
                             const newSelections = exists
                               ? currentSelections.filter((o) => o !== code)
@@ -452,8 +418,8 @@ export function Inputs({
                           }}
                           className={`px-6 py-2 rounded-full border transition ${
                             selected
-                              ? 'bg-primary-green-6 text-white border-primary-green-6'
-                              : 'bg-white text-gray-500 border-gray-300'
+                              ? "bg-primary-green-6 text-white border-primary-green-6"
+                              : "bg-white text-gray-500 border-gray-300"
                           } focus:outline-none focus:ring-2 focus:ring-green-500`}
                         >
                           {label}
@@ -469,14 +435,12 @@ export function Inputs({
               return (
                 <div key={index} className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    {answerType.label}{' '}
-                    {answerType.required && (
-                      <span className="text-red-500">*</span>
-                    )}
+                    {answerType.label}{" "}
+                    {answerType.required && <span className="text-red-500">*</span>}
                   </label>
                   <input
                     type="text"
-                    value={value[index]?.value || ''}
+                    value={value[index]?.value || ""}
                     onChange={(e) => {
                       const newValue = {
                         ...value,
@@ -488,7 +452,7 @@ export function Inputs({
                       handleInputChange(newValue);
                     }}
                     className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent ${
-                      error ? 'border-red-500' : 'border-gray-300'
+                      error ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder={answerType.label}
                   />

@@ -1,76 +1,72 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
+import { SearchForm } from "@/components/search-form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { useGetSupport } from '@/hooks/useSupport';
-import { useState } from 'react';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { classNames } from '@/lib/uitils';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { useGetSupport } from "@/hooks/useSupport";
+import { useState } from "react";
+import Link from "next/link";
+import { format } from "date-fns";
+import { classNames } from "@/lib/uitils";
 
 const statusMap = {
-  open: 'not treated',
-  closed: 'Unresolved',
-  resolved: 'Resolved',
-  in_progress: 'Pending',
+  open: "not treated",
+  closed: "Unresolved",
+  resolved: "Resolved",
+  in_progress: "Pending",
 };
 
 // Support/Disputes table columns
 const supportColumns = [
   {
-    header: 'Reason for Dispute',
+    header: "Reason for Dispute",
     accessor: (row: any) => row?.subject,
-    className: 'font-medium',
+    className: "font-medium",
   },
   {
-    header: 'Ticket No',
+    header: "Ticket No",
     accessor: (row: any) => row?.ticketNumber || `SP-${row?.id}`,
   },
   {
-    header: 'Reporter',
-    accessor: (row: any) =>
-      row?.reporter?.name || row?.user?.name || 'James Ifeanyi',
+    header: "Reporter",
+    accessor: (row: any) => row?.reporter?.name || row?.user?.name || "James Ifeanyi",
   },
   {
-    header: 'Email',
-    accessor: (row: any) =>
-      row?.reporter?.email || row?.user?.email || 'jamesifeanyi@gmail.com',
+    header: "Email",
+    accessor: (row: any) => row?.reporter?.email || row?.user?.email || "jamesifeanyi@gmail.com",
   },
   {
-    header: 'Date',
+    header: "Date",
     accessor: (row: any) =>
-      row?.createdAt
-        ? format(new Date(row.createdAt), 'MMM d, yyyy')
-        : 'Jan 4, 2022',
+      row?.createdAt ? format(new Date(row.createdAt), "MMM d, yyyy") : "Jan 4, 2022",
   },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: any) => {
-      const status = row?.status || 'Processing';
+      const status = row?.status || "Processing";
       const statusColors = {
-        in_progress: 'bg-yellow-500',
-        open: 'bg-red-500',
-        resolved: 'bg-green-500',
-        Pending: 'bg-yellow-500',
-        Active: 'bg-green-500',
-        Closed: 'bg-gray-500',
+        in_progress: "bg-yellow-500",
+        open: "bg-red-500",
+        resolved: "bg-green-500",
+        Pending: "bg-yellow-500",
+        Active: "bg-green-500",
+        Closed: "bg-gray-500",
       };
 
       return (
         <div className="flex items-center gap-2">
           <div
             className={`w-2 h-2 rounded-full ${
-              statusColors[status as keyof typeof statusColors] || 'bg-gray-500'
+              statusColors[status as keyof typeof statusColors] || "bg-gray-500"
             }`}
           ></div>
-          <span className={classNames('text-sm capitalize')}>
+          <span className={classNames("text-sm capitalize")}>
             {statusMap[status as keyof typeof statusMap]?.toLowerCase()}
           </span>
         </div>
@@ -78,16 +74,13 @@ const supportColumns = [
     },
   },
   {
-    header: 'Action',
+    header: "Action",
     accessor: (row: any) => (
-      <Link
-        href={`/admin/support/${row.id}`}
-        className="text-green font-medium hover:underline"
-      >
+      <Link href={`/admin/support/${row.id}`} className="text-green font-medium hover:underline">
         View details
       </Link>
     ),
-    className: 'text-green-600',
+    className: "text-green-600",
   },
 ];
 
@@ -95,8 +88,8 @@ type Props = {};
 
 function Page({}: Props) {
   const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   const { data: supportData, isLoading } = useGetSupport();
   // console.log({ supportData });
@@ -105,8 +98,7 @@ function Page({}: Props) {
   const filteredData =
     supportData?.tickets?.filter((ticket: any) => {
       const matchesStatus =
-        statusFilter === 'all' ||
-        ticket?.status?.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === "all" || ticket?.status?.toLowerCase() === statusFilter.toLowerCase();
       const matchesSearch =
         !search ||
         ticket?.subject?.toLowerCase().includes(search.toLowerCase()) ||

@@ -46,9 +46,7 @@ const StatusChangeModal = ({
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   const icon = {
@@ -75,12 +73,12 @@ const StatusChangeModal = ({
               modalType === "success"
                 ? "text-green"
                 : modalType === "error"
-                ? "text-red-500"
-                : modalType === "warning"
-                ? "text-[#D3931C]"
-                : modalType === "info"
-                ? "text-blue-500"
-                : "text-green"
+                  ? "text-red-500"
+                  : modalType === "warning"
+                    ? "text-[#D3931C]"
+                    : modalType === "info"
+                      ? "text-blue-500"
+                      : "text-green"
             }`}
           >
             {title}
@@ -100,10 +98,8 @@ const StatusChangeModal = ({
           <span className="text-gray-700 text-sm text-center">
             Didn’t receive a mail?{" "}
             <span className="font-bold">
-              <button className="px-0  hover:cursor  text-green mx-0">
-                Resend
-              </button>{" "}
-              in <span className="text-[#DC2626]">{formatTime(timeLeft)}</span>
+              <button className="px-0  hover:cursor  text-green mx-0">Resend</button> in{" "}
+              <span className="text-[#DC2626]">{formatTime(timeLeft)}</span>
             </span>
           </span>
         )}

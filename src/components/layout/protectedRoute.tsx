@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { authAtom } from '@/lib/atoms/atoms';
-import { useSession } from '@/lib/auth-client';
-import { useAtomValue } from 'jotai';
-import { Loader2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { authAtom } from "@/lib/atoms/atoms";
+import { useSession } from "@/lib/auth-client";
+import { useAtomValue } from "jotai";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface ProtectedDashboardProps {
   children: React.ReactNode;
@@ -17,10 +17,10 @@ export function ProtectedDashboard({ children }: ProtectedDashboardProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!auth?.roles) {
-      router.push('/signin');
+    if (!auth?.role) {
+      router.push("/signin");
     }
-    if (auth?.roles && !session) {
+    if (auth?.role && !session) {
       refetch();
     }
   }, [auth, router]);

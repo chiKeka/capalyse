@@ -1,33 +1,26 @@
-'use client';
+"use client";
 
-import Button from '@/components/ui/Button';
-import { Card } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
-import { Label } from '@/components/ui/label';
+import Button from "@/components/ui/Button";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  CreateComplianceForm,
-  useCompliance,
-  useGetComplianceCases,
-} from '@/hooks/useCompliance';
-import { useDocument } from '@/hooks/useDocument';
-import { complianceAttachment } from '@/lib/uitils/types';
-import {
-  useAfricanCountries,
-  useProductCategories,
-} from '@/hooks/useComplianceCatalogs';
-import { Loader } from 'lucide-react';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { CreateComplianceForm, useCompliance, useGetComplianceCases } from "@/hooks/useCompliance";
+import { useDocument } from "@/hooks/useDocument";
+import { complianceAttachment } from "@/lib/uitils/types";
+import { useAfricanCountries, useProductCategories } from "@/hooks/useComplianceCatalogs";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 function CompliancePage() {
   const [fileUploadLoading, setFileUploadLoading] = useState(false);
@@ -59,16 +52,14 @@ function CompliancePage() {
 
   const onSubmit = (data: CreateComplianceForm) => {
     if (createCompliance?.data?.data?.data?.case?._id) {
-      refreshCompliance
-        .mutateAsync(createCompliance?.data?.data?.data?.case?._id)
-        .then(() => {
-          toast.success('Compliance refreshed successfully');
-          // reset();
-          // console.log({ data });
-        });
+      refreshCompliance.mutateAsync(createCompliance?.data?.data?.data?.case?._id).then(() => {
+        toast.success("Compliance refreshed successfully");
+        // reset();
+        // console.log({ data });
+      });
     } else {
       createCompliance.mutateAsync(data).then(() => {
-        toast.success('Compliance submitted successfully');
+        toast.success("Compliance submitted successfully");
         // reset();
         // console.log({ data });
       });
@@ -79,15 +70,15 @@ function CompliancePage() {
     const file = e.target.files[0];
     // check if file size is greater than 2MB
     if (file && file.size > 2000000) {
-      toast.error('File size must be less than 2MB');
+      toast.error("File size must be less than 2MB");
       return;
     }
     if (file) {
       uploadDocument.mutateAsync(
         {
           file: e.target.files[0],
-          fileName: getValues('imageDocumentId') || file.name,
-          category: 'compliance',
+          fileName: getValues("imageDocumentId") || file.name,
+          category: "compliance",
         },
         {
           onSuccess: (res) => {
@@ -99,12 +90,12 @@ function CompliancePage() {
                 mimeType: res?.mimeType,
               },
             ]);
-            setValue('imageDocumentId', res?._id);
+            setValue("imageDocumentId", res?._id);
           },
           onError(error: any) {
             toast.error(error?.response?.data?.message);
           },
-        }
+        },
       );
     }
   };
@@ -117,29 +108,24 @@ function CompliancePage() {
           <div className="space-y-6 pb-6 w-full">
             <div className="border rounded-lg border-[#ABD2C7] bg-[#F4FFFC] px-6 py-3 text-center">
               <div>
-                <h6 className="text-[#2E3034] font-semibold text-xl">
-                  Compliance Hub
-                </h6>
+                <h6 className="text-[#2E3034] font-semibold text-xl">Compliance Hub</h6>
               </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Select Country</Label>
                 <Select
-                  onValueChange={(val) => setValue('country', val)}
-                  disabled={
-                    countriesLoading ||
-                    (!!countriesError && countries.length === 0)
-                  }
+                  onValueChange={(val) => setValue("country", val)}
+                  disabled={countriesLoading || (!!countriesError && countries.length === 0)}
                 >
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder={
                         countriesLoading
-                          ? 'Loading countries...'
+                          ? "Loading countries..."
                           : countriesError
-                          ? 'Failed to load countries'
-                          : 'Select Country'
+                            ? "Failed to load countries"
+                            : "Select Country"
                       }
                       className="placeholder:text-[#D1D1D1]"
                     />
@@ -161,20 +147,17 @@ function CompliancePage() {
               <div className="space-y-2">
                 <Label htmlFor="reason">Select Product Category</Label>
                 <Select
-                  onValueChange={(val) => setValue('productCategory', val)}
-                  disabled={
-                    categoriesLoading ||
-                    (!!categoriesError && categories.length === 0)
-                  }
+                  onValueChange={(val) => setValue("productCategory", val)}
+                  disabled={categoriesLoading || (!!categoriesError && categories.length === 0)}
                 >
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder={
                         categoriesLoading
-                          ? 'Loading categories...'
+                          ? "Loading categories..."
                           : categoriesError
-                          ? 'Failed to load categories'
-                          : 'Select Category'
+                            ? "Failed to load categories"
+                            : "Select Category"
                       }
                       className="placeholder:text-[#D1D1D1]"
                     />
@@ -197,8 +180,8 @@ function CompliancePage() {
               <div className="space-y-2">
                 <Label htmlFor="description">Describe your product</Label>
                 <Textarea
-                  {...register('description', {
-                    required: 'business Registration number is required',
+                  {...register("description", {
+                    required: "business Registration number is required",
                   })}
                   id="description"
                   placeholder="Enter Message"
@@ -212,9 +195,7 @@ function CompliancePage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="upload">
-                  Upload Pictures or videos (Optional)
-                </Label>
+                <Label htmlFor="upload">Upload Pictures or videos (Optional)</Label>
                 <div className="flex items-center justify-center w-full">
                   <Label
                     htmlFor="upload"
@@ -225,15 +206,11 @@ function CompliancePage() {
                         <>
                           <CIcons.documentUpload />
 
-                          <p className=" text-sm text-[#52575C]">
-                            Click to add image/Video
-                          </p>
+                          <p className=" text-sm text-[#52575C]">Click to add image/Video</p>
                           <p className="text-xs text-gray-400 mt-2">
                             Accepted formats: PNG, JPG, JPEG
                           </p>
-                          <p className="text-xs text-gray-400 mt-2">
-                            max file size: 2MB each
-                          </p>
+                          <p className="text-xs text-gray-400 mt-2">max file size: 2MB each</p>
                         </>
                       ) : (
                         <Loader className="animate-spin h-8 w-8 " />
@@ -262,7 +239,7 @@ function CompliancePage() {
               <Button
                 type="submit"
                 disabled={createCompliance.isPending || fileUploadLoading}
-                state={createCompliance.isPending ? 'loading' : undefined}
+                state={createCompliance.isPending ? "loading" : undefined}
                 size="big"
                 className="w-full"
               >
@@ -275,16 +252,14 @@ function CompliancePage() {
 
         {/* Dispute History */}
         <div className="space-y-6 col-span-2">
-          <h6 className="text-[#2E3034] font-bold text-xl">
-            Compliance Result
-          </h6>
+          <h6 className="text-[#2E3034] font-bold text-xl">Compliance Result</h6>
 
           {result?.case && (
             <>
               <div className="flex flex-col space-y-4">
                 <span>Status</span>
                 <div className="p-4 bg-[#F4FFFC] rounded-full w-max">
-                  {result?.case?.status?.replace('_', ' ')}
+                  {result?.case?.status?.replace("_", " ")}
                 </div>
               </div>
               <div>

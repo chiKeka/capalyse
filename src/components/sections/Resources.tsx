@@ -1,10 +1,10 @@
-'use client';
-import Link from 'next/link';
-import Button from '../ui/Button';
-import { motion } from 'framer-motion';
-import { itemVariants } from '@/lib/animations';
-import { ResourceCardSkeleton } from './ResourceCard';
-import { useGetRandomResources } from '@/hooks/waitlistQueries';
+"use client";
+import Link from "next/link";
+import Button from "../ui/Button";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
+import { ResourceCardSkeleton } from "./ResourceCard";
+import { useGetRandomResources } from "@/hooks/waitlistQueries";
 
 export type Data = {
   title: string;
@@ -30,7 +30,7 @@ const Resources = () => {
               Empower Your Growth With the Right Tools
             </h2>
           </div>
-          <Link href={'/resources'}>
+          <Link href={"/resources"}>
             <Button
               iconPosition="right"
               size="big"
@@ -52,7 +52,7 @@ const Resources = () => {
                   key={item.id}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ margin: '-100px' }}
+                  viewport={{ margin: "-100px" }}
                   variants={itemVariants}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="max-w-[384px] bg-[#FCFCFC] rounded-2xl overflow-hidden border border-black-50"
@@ -60,7 +60,7 @@ const Resources = () => {
                   <Link href={item.link} className="">
                     <div className="h-[284px]">
                       <img
-                        src={item?.image || '/images/resource.png'}
+                        src={item?.image || "/images/resource.png"}
                         alt="Success story"
                         className="w-auto h-full object-cover"
                       />

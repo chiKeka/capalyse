@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import Button from '@/components/ui/Button';
-import { CIcons } from '@/components/ui/CIcons';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import Button from "@/components/ui/Button";
+import { CIcons } from "@/components/ui/CIcons";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import useDocument from '@/hooks/useDocument';
-import { useGetSupport, useSupports } from '@/hooks/useSupport';
-import { CreateSupportForm } from '@/lib/uitils/types';
-import { Loader } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import useDocument from "@/hooks/useDocument";
+import { useGetSupport, useSupports } from "@/hooks/useSupport";
+import { CreateSupportForm } from "@/lib/uitils/types";
+import { Loader } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const SupportPage = () => {
   const { createSupport } = useSupports();
@@ -48,14 +48,14 @@ const SupportPage = () => {
         description,
       })
       .then(() => {
-        toast.success('Ticket submitted successfully');
+        toast.success("Ticket submitted successfully");
         reset();
       });
   };
   const handleFileUpload = async (e: any) => {
     const file = e.target.files[0];
     if (file && file.size > 2000000) {
-      toast.error('File size must be less than 2MB');
+      toast.error("File size must be less than 2MB");
       return;
     }
     if (file) {
@@ -63,7 +63,7 @@ const SupportPage = () => {
         {
           file: e.target.files[0],
           fileName: file.name,
-          category: 'support',
+          category: "support",
         },
         {
           onSuccess: (res) => {
@@ -79,7 +79,7 @@ const SupportPage = () => {
           onError(error: any) {
             toast.error(error?.response?.data?.message);
           },
-        }
+        },
       );
     }
   };
@@ -91,20 +91,17 @@ const SupportPage = () => {
           <div className="space-y-6 pb-6">
             <div className="border rounded-lg border-[#ABD2C7] bg-[#F4FFFC] px-6 py-3 text-center">
               <div>
-                <h6 className="text-[#2E3034] font-semibold text-xl">
-                  Make a complaint
-                </h6>
+                <h6 className="text-[#2E3034] font-semibold text-xl">Make a complaint</h6>
                 <div className="text-[#36394D] text-sm">
-                  Please fill out the following form with your complaint. We
-                  will review your request and follow up with you as soon as
-                  possible.
+                  Please fill out the following form with your complaint. We will review your
+                  request and follow up with you as soon as possible.
                 </div>
               </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="reason">Reason for Complaint</Label>
-                <Select onValueChange={(val) => setValue('subject', val)}>
+                <Select onValueChange={(val) => setValue("subject", val)}>
                   <SelectTrigger id="reason">
                     <SelectValue
                       placeholder="Select Reason"
@@ -115,9 +112,7 @@ const SupportPage = () => {
                     <SelectItem value="technical">Technical Issue</SelectItem>
                     <SelectItem value="billing">Billing Inquiry</SelectItem>
                     <SelectItem value="account">Service Quality</SelectItem>
-                    <SelectItem value="feature_request">
-                      Features Request
-                    </SelectItem>
+                    <SelectItem value="feature_request">Features Request</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
@@ -131,8 +126,8 @@ const SupportPage = () => {
               <div className="space-y-2">
                 <Label htmlFor="description">Detailed Description</Label>
                 <Textarea
-                  {...register('description', {
-                    required: 'business Registration number is required',
+                  {...register("description", {
+                    required: "business Registration number is required",
                   })}
                   id="description"
                   placeholder="Enter Message"
@@ -146,9 +141,7 @@ const SupportPage = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="upload">
-                  Upload Relevant Pictures or Document (Optional)
-                </Label>
+                <Label htmlFor="upload">Upload Relevant Pictures or Document (Optional)</Label>
                 <div className="flex items-center justify-center w-full">
                   <Label
                     htmlFor="upload"
@@ -159,15 +152,11 @@ const SupportPage = () => {
                         <>
                           <CIcons.documentUpload />
 
-                          <p className="mb-2 text-sm text-[#52575C]">
-                            Click to add image/Video
-                          </p>
+                          <p className="mb-2 text-sm text-[#52575C]">Click to add image/Video</p>
                           <p className="text-xs text-gray-400 mt-2">
                             Accepted formats: PNG, PDF, DOC, DOCX, JPG, JPEG
                           </p>
-                          <p className="text-xs text-gray-400 mt-2">
-                            max file size: 2MB each
-                          </p>
+                          <p className="text-xs text-gray-400 mt-2">max file size: 2MB each</p>
                         </>
                       ) : (
                         <Loader className="animate-spin h-8 w-8 " />
@@ -196,7 +185,7 @@ const SupportPage = () => {
               <Button
                 type="submit"
                 disabled={createSupport.isPending || fileUploadLoading}
-                state={createSupport.isPending ? 'loading' : undefined}
+                state={createSupport.isPending ? "loading" : undefined}
                 size="big"
                 className="w-full"
               >
@@ -214,9 +203,7 @@ const SupportPage = () => {
             <div className="space-y-6">
               {supportTicket?.tickets?.map((item: any, index: number) => (
                 <div
-                  onClick={() =>
-                    router.push(`/${params.accessType}/support/${item?.id}`)
-                  }
+                  onClick={() => router.push(`/${params.accessType}/support/${item?.id}`)}
                   key={index}
                   className="flex cursor-pointer items-center justify-between"
                 >
@@ -225,23 +212,17 @@ const SupportPage = () => {
                     <div>
                       <p className="text-sm">
                         <strong>Ticket No:</strong>
-                        <span>{item?.id.slice(0, -8) + '...'}</span>
+                        <span>{item?.id.slice(0, -8) + "..."}</span>
                       </p>
                       <p className=" text-[#9EA5B1] text-sm">{item?.subject}</p>
                     </div>
                   </div>
                   <div className="text-left">
                     <Badge
-                      variant={
-                        item.status as
-                          | 'resolved'
-                          | 'in_progress'
-                          | 'open'
-                          | 'closed'
-                      }
+                      variant={item.status as "resolved" | "in_progress" | "open" | "closed"}
                       className="capitalize mb-2"
                     >
-                      {item.status.replace(/([A-Z])/g, ' $1')}
+                      {item.status.replace(/([A-Z])/g, " $1")}
                     </Badge>
                     <p className="text-xs text-gray-500">
                       {item.date} {item.time}

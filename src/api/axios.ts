@@ -1,8 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 // import { headers } from "next/headers";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.example.com";
 const AUTH_API_BASE_URL = process.env.NEXT_PUBLIC_BETTER_AUTH_URL;
 // Helper to check if the token is expired
 // export const isTokenExpired = (): boolean => {
@@ -109,7 +108,7 @@ api.interceptors.response.use(
       return Promise.reject(error.response.data);
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
@@ -126,5 +125,5 @@ apiWithAuth.interceptors.response.use(
       return Promise.reject(error.response.data);
     }
     return Promise.reject(error);
-  }
+  },
 );

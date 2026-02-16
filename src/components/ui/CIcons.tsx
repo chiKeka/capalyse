@@ -1,12 +1,6 @@
 export const CIcons = {
   badgeCheck: () => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M10.7489 2.44982C11.4389 1.85982 12.5689 1.85982 13.2689 2.44982L14.8489 3.80982C15.1489 4.06982 15.7089 4.27982 16.1089 4.27982H17.8089C18.8689 4.27982 19.7389 5.14982 19.7389 6.20982V7.90982C19.7389 8.29982 19.9489 8.86982 20.2089 9.16983L21.5689 10.7498C22.1589 11.4398 22.1589 12.5698 21.5689 13.2698L20.2089 14.8498C19.9489 15.1498 19.7389 15.7098 19.7389 16.1098V17.8098C19.7389 18.8698 18.8689 19.7398 17.8089 19.7398H16.1089C15.7189 19.7398 15.1489 19.9498 14.8489 20.2098L13.2689 21.5698C12.5789 22.1598 11.4489 22.1598 10.7489 21.5698L9.16891 20.2098C8.86891 19.9498 8.30891 19.7398 7.90891 19.7398H6.17891C5.11891 19.7398 4.24891 18.8698 4.24891 17.8098V16.0998C4.24891 15.7098 4.03891 15.1498 3.78891 14.8498L2.43891 13.2598C1.85891 12.5698 1.85891 11.4498 2.43891 10.7598L3.78891 9.16983C4.03891 8.86982 4.24891 8.30982 4.24891 7.91982V6.19982C4.24891 5.13982 5.11891 4.26982 6.17891 4.26982H7.90891C8.29891 4.26982 8.86891 4.05982 9.16891 3.79982L10.7489 2.44982Z"
         fill="#CCEEDB"
@@ -21,21 +15,8 @@ export const CIcons = {
     </svg>
   ),
   createAccount: () => (
-    <svg
-      width="44"
-      height="44"
-      viewBox="0 0 44 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="0.25"
-        y="0.25"
-        width="43.5"
-        height="43.5"
-        rx="7.75"
-        fill="#F4FFFC"
-      />
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.25" y="0.25" width="43.5" height="43.5" rx="7.75" fill="#F4FFFC" />
       <rect
         x="0.25"
         y="0.25"
@@ -69,21 +50,8 @@ export const CIcons = {
     </svg>
   ),
   investment: () => (
-    <svg
-      width="45"
-      height="44"
-      viewBox="0 0 45 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="0.916656"
-        y="0.25"
-        width="43.5"
-        height="43.5"
-        rx="7.75"
-        fill="#F4FFFC"
-      />
+    <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.916656" y="0.25" width="43.5" height="43.5" rx="7.75" fill="#F4FFFC" />
       <rect
         x="0.916656"
         y="0.25"
@@ -124,21 +92,8 @@ export const CIcons = {
     </svg>
   ),
   discovered: () => (
-    <svg
-      width="45"
-      height="44"
-      viewBox="0 0 45 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="0.583374"
-        y="0.25"
-        width="43.5"
-        height="43.5"
-        rx="7.75"
-        fill="#F4FFFC"
-      />
+    <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.583374" y="0.25" width="43.5" height="43.5" rx="7.75" fill="#F4FFFC" />
       <rect
         x="0.583374"
         y="0.25"
@@ -186,21 +141,8 @@ export const CIcons = {
     </svg>
   ),
   engage: () => (
-    <svg
-      width="45"
-      height="44"
-      viewBox="0 0 45 44"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect
-        x="0.583496"
-        y="0.25"
-        width="43.5"
-        height="43.5"
-        rx="7.75"
-        fill="#F4FFFC"
-      />
+    <svg width="45" height="44" viewBox="0 0 45 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.583496" y="0.25" width="43.5" height="43.5" rx="7.75" fill="#F4FFFC" />
       <rect
         x="0.583496"
         y="0.25"
@@ -235,13 +177,7 @@ export const CIcons = {
     </svg>
   ),
   engine: () => (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M14.1667 31.6666H25.8333C29.7167 31.6666 31.6667 29.7166 31.6667 25.8333V14.1666C31.6667 10.2833 29.7167 8.33325 25.8333 8.33325H14.1667C10.2833 8.33325 8.33333 10.2833 8.33333 14.1666V25.8333C8.33333 29.7166 10.2833 31.6666 14.1667 31.6666Z"
         stroke="#047857"
@@ -290,13 +226,7 @@ export const CIcons = {
     </svg>
   ),
   verified: () => (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M17.4833 3.71685L9.16667 6.85018C7.25 7.56685 5.68333 9.83351 5.68333 11.8668V24.2502C5.68333 26.2168 6.98333 28.8002 8.56667 29.9835L15.7333 35.3335C18.0833 37.1002 21.95 37.1002 24.3 35.3335L31.4667 29.9835C33.05 28.8002 34.35 26.2168 34.35 24.2502V11.8668C34.35 9.81684 32.7833 7.55018 30.8667 6.83351L22.55 3.71685C21.1333 3.20018 18.8667 3.20018 17.4833 3.71685Z"
         stroke="#047857"
@@ -314,13 +244,7 @@ export const CIcons = {
     </svg>
   ),
   insights: () => (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M31.05 11.9164C31.1167 12.9331 31.0333 14.0831 30.8333 15.3664L29.6167 23.1831C28.5833 29.6997 25.5667 31.8997 19.05 30.8831L11.2333 29.6497C8.98334 29.2997 7.25001 28.6997 5.98334 27.7997C3.56668 26.1164 2.86668 23.3497 3.53334 19.0831L4.76668 11.2664C5.80001 4.74975 8.81668 2.54975 15.3333 3.56641L23.15 4.79975C28.3833 5.61641 30.8333 7.74975 31.05 11.9164Z"
         stroke="#047857"
@@ -345,13 +269,7 @@ export const CIcons = {
     </svg>
   ),
   africaFocused: () => (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6.03333 14.1499C9.31666 -0.283411 30.7 -0.266744 33.9667 14.1666C35.8833 22.6333 30.6167 29.7999 26 34.2333C22.65 37.4666 17.35 37.4666 13.9833 34.2333C9.38333 29.7999 4.11666 22.6166 6.03333 14.1499Z"
         stroke="#047857"
@@ -367,13 +285,7 @@ export const CIcons = {
     </svg>
   ),
   uploadIcon: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         opacity="0.4"
         d="M6.50879 2.16699H13.4922C14.9094 2.16703 15.9801 2.58768 16.6953 3.30371C17.3658 3.97504 17.776 4.95813 17.8213 6.24609L17.8252 6.50684V13.4922C17.8252 14.9092 17.4047 15.9799 16.6885 16.6963C15.9721 17.4127 14.9006 17.834 13.4834 17.834H6.50879C5.09157 17.834 4.02002 17.4135 3.30371 16.6963C2.58734 15.979 2.16699 14.9051 2.16699 13.4834V6.50879C2.16699 5.09156 2.58734 4.02009 3.30371 3.30371C4.02009 2.58734 5.09156 2.16699 6.50879 2.16699Z"
@@ -392,13 +304,7 @@ export const CIcons = {
     </svg>
   ),
   presentationChartIcon: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.0833 14.791H4.91666C2.98333 14.791 1.875 13.6827 1.875 11.7494V1.66602C1.875 1.32435 2.15833 1.04102 2.5 1.04102H17.5C17.8417 1.04102 18.125 1.32435 18.125 1.66602V11.7494C18.125 13.6827 17.0167 14.791 15.0833 14.791ZM3.125 2.29102V11.7494C3.125 12.991 3.67499 13.541 4.91666 13.541H15.075C16.3167 13.541 16.8667 12.991 16.8667 11.7494V2.29102H3.125Z"
         fill="#282828"
@@ -422,13 +328,7 @@ export const CIcons = {
     </svg>
   ),
   financialModelIcon: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M7.9165 11.4575C7.9165 12.2659 8.54152 12.9159 9.30818 12.9159H10.8748C11.5415 12.9159 12.0832 12.3492 12.0832 11.6409C12.0832 10.8825 11.7498 10.6076 11.2582 10.4326L8.74984 9.55755C8.25817 9.38255 7.92485 9.11588 7.92485 8.34922C7.92485 7.64922 8.4665 7.07422 9.13316 7.07422H10.6998C11.4665 7.07422 12.0915 7.72422 12.0915 8.53255"
         stroke="#282828"
@@ -467,13 +367,7 @@ export const CIcons = {
     </svg>
   ),
   userCircleIcon: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M10.0994 10.6497C10.0411 10.6414 9.96611 10.6414 9.89945 10.6497C8.43278 10.5997 7.26611 9.39974 7.26611 7.92474C7.26611 6.41641 8.48278 5.19141 9.99945 5.19141C11.5078 5.19141 12.7328 6.41641 12.7328 7.92474C12.7244 9.39974 11.5661 10.5997 10.0994 10.6497Z"
         stroke="#282828"
@@ -499,13 +393,7 @@ export const CIcons = {
   ),
   // Sidebar Icons
   overview: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.7522 10.5H10.502V15.7502H15.7522V10.5Z"
         stroke="currentColor"
@@ -537,13 +425,7 @@ export const CIcons = {
     </svg>
   ),
   readiness: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M5.16162 13.6151V12.0625"
         stroke="currentColor"
@@ -585,13 +467,7 @@ export const CIcons = {
     </svg>
   ),
   learning: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1448_5079)">
         <path
           d="M10.5017 1.50195H4.50152C4.10368 1.50195 3.72214 1.65999 3.44082 1.94131C3.15951 2.22262 3.00146 2.60417 3.00146 3.00201V15.0025C3.00146 15.4003 3.15951 15.7818 3.44082 16.0632C3.72214 16.3445 4.10368 16.5025 4.50152 16.5025H13.5019C13.8997 16.5025 14.2812 16.3445 14.5626 16.0632C14.8439 15.7818 15.0019 15.4003 15.0019 15.0025V6.00212L10.5017 1.50195Z"
@@ -642,13 +518,7 @@ export const CIcons = {
     </svg>
   ),
   compliance: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.752 5.25405V12.7543C15.752 15.0044 14.6269 16.5045 12.0018 16.5045H6.00161C3.37651 16.5045 2.25146 15.0044 2.25146 12.7543V5.25405C2.25146 3.00396 3.37651 1.50391 6.00161 1.50391H12.0018C14.6269 1.50391 15.752 3.00396 15.752 5.25405Z"
         stroke="currentColor"
@@ -684,13 +554,7 @@ export const CIcons = {
     </svg>
   ),
   networking: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.5021 5.37405C13.4571 5.36655 13.4046 5.36655 13.3596 5.37405C12.3245 5.33655 11.4995 4.48902 11.4995 3.43898C11.4995 2.36644 12.362 1.50391 13.4346 1.50391C14.5071 1.50391 15.3697 2.37394 15.3697 3.43898C15.3622 4.48902 14.5371 5.33655 13.5021 5.37405Z"
         stroke="currentColor"
@@ -736,13 +600,7 @@ export const CIcons = {
     </svg>
   ),
   profile2: () => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M9.15957 10.87C9.05957 10.86 8.93957 10.86 8.82957 10.87C6.44957 10.79 4.55957 8.84 4.55957 6.44C4.55957 3.99 6.53957 2 8.99957 2C11.4496 2 13.4396 3.99 13.4396 6.44C13.4296 8.84 11.5396 10.79 9.15957 10.87Z"
         stroke="#047857"
@@ -774,13 +632,7 @@ export const CIcons = {
     </svg>
   ),
   support: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.5019 14.1497H12.9319C12.3318 14.1497 11.7618 14.3822 11.3418 14.8022L10.0593 16.0698C9.47424 16.6473 8.5217 16.6473 7.93668 16.0698L6.65413 14.8022C6.23411 14.3822 5.65659 14.1497 5.06407 14.1497H4.50155C3.2565 14.1497 2.25146 13.1522 2.25146 11.9221V3.73928C2.25146 2.50923 3.2565 1.51172 4.50155 1.51172H13.5019C14.7469 1.51172 15.752 2.50923 15.752 3.73928V11.9221C15.752 13.1447 14.7469 14.1497 13.5019 14.1497Z"
         stroke="currentColor"
@@ -806,13 +658,7 @@ export const CIcons = {
     </svg>
   ),
   documentUpload: () => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M9.00977 17V11L7.00977 13"
         stroke="#292D32"
@@ -844,13 +690,7 @@ export const CIcons = {
     </svg>
   ),
   carbonReport: () => (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M10.2622 18.166H17.9247V20.0817H10.2622V18.166ZM10.2622 13.377H21.756V15.2926H10.2622V13.377ZM10.2622 22.9551H15.0513V24.8708H10.2622V22.9551Z"
         fill="#047857"
@@ -862,13 +702,7 @@ export const CIcons = {
     </svg>
   ),
   messageMinus: () => (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 17 17"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M11.1766 1.83398H5.84326C3.1766 1.83398 1.84326 3.16732 1.84326 5.83398V14.5007C1.84326 14.8673 2.14326 15.1673 2.50993 15.1673H11.1766C13.8433 15.1673 15.1766 13.834 15.1766 11.1673V5.83398C15.1766 3.16732 13.8433 1.83398 11.1766 1.83398Z"
         stroke="#707A8D"
@@ -887,13 +721,7 @@ export const CIcons = {
     </svg>
   ),
   filter: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M18.333 5.41602H13.333"
         stroke="#047857"
@@ -945,13 +773,7 @@ export const CIcons = {
     </svg>
   ),
   messageBadge: () => (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M22 10V13C22 17 20 19 16 19H15.5C15.19 19 14.89 19.15 14.7 19.4L13.2 21.4C12.54 22.28 11.46 22.28 10.8 21.4L9.3 19.4C9.14 19.18 8.77 19 8.5 19H8C4 19 2 18 2 13V8C2 4 4 2 8 2H14"
         stroke="#707A8D"
@@ -992,13 +814,7 @@ export const CIcons = {
     </svg>
   ),
   portfolioIcon: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6.00174 16.5024H12.002C15.0171 16.5024 15.5571 15.2949 15.7146 13.8248L16.2771 7.82458C16.4796 5.99451 15.9546 4.50195 12.752 4.50195H5.25171C2.04909 4.50195 1.52407 5.99451 1.72658 7.82458L2.2891 13.8248C2.44661 15.2949 2.98663 16.5024 6.00174 16.5024Z"
         stroke="currentColor"
@@ -1042,13 +858,7 @@ export const CIcons = {
     </svg>
   ),
   heartTick: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M16.5025 12.9029C16.5025 13.5779 16.315 14.2154 15.9775 14.7554C15.355 15.7979 14.2149 16.503 12.9024 16.503C11.5898 16.503 10.4423 15.7979 9.82726 14.7554C9.49725 14.2154 9.30225 13.5779 9.30225 12.9029C9.30225 10.9153 10.9148 9.30273 12.9024 9.30273C14.89 9.30273 16.5025 10.9153 16.5025 12.9029Z"
         stroke="#282828"
@@ -1074,13 +884,7 @@ export const CIcons = {
     </svg>
   ),
   messageProgramming: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6.37653 14.227H6.00151C3.0014 14.227 1.50134 13.477 1.50134 9.72687V5.97673C1.50134 2.97662 3.0014 1.47656 6.00151 1.47656H12.0017C15.0019 1.47656 16.5019 2.97662 16.5019 5.97673V9.72687C16.5019 12.727 15.0019 14.227 12.0017 14.227H11.6267C11.3942 14.227 11.1692 14.3396 11.0267 14.5271L9.90167 16.0271C9.40665 16.6872 8.5966 16.6872 8.10158 16.0271L6.97654 14.5271C6.85653 14.3621 6.58653 14.227 6.37653 14.227Z"
         stroke="currentColor"
@@ -1116,13 +920,7 @@ export const CIcons = {
     </svg>
   ),
   walletMoney: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8.06523 12.6484V14.171C8.06523 15.4611 6.86518 16.5036 5.38763 16.5036C3.91007 16.5036 2.70251 15.4611 2.70251 14.171V12.6484C2.70251 13.9385 3.90257 14.8535 5.38763 14.8535C6.86518 14.8535 8.06523 13.931 8.06523 12.6484Z"
         stroke="currentColor"
@@ -1161,13 +959,7 @@ export const CIcons = {
     </svg>
   ),
   delete: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M2.5 4.99935H4.16667M4.16667 4.99935H17.5M4.16667 4.99935V16.666C4.16667 17.108 4.34226 17.532 4.65482 17.8445C4.96738 18.1571 5.39131 18.3327 5.83333 18.3327H14.1667C14.6087 18.3327 15.0326 18.1571 15.3452 17.8445C15.6577 17.532 15.8333 17.108 15.8333 16.666V4.99935H4.16667ZM6.66667 4.99935V3.33268C6.66667 2.89065 6.84226 2.46673 7.15482 2.15417C7.46738 1.84161 7.89131 1.66602 8.33333 1.66602H11.6667C12.1087 1.66602 12.5326 1.84161 12.8452 2.15417C13.1577 2.46673 13.3333 2.89065 13.3333 3.33268V4.99935M8.33333 9.16602V14.166M11.6667 9.16602V14.166"
         stroke="#DC2626"
@@ -1178,13 +970,7 @@ export const CIcons = {
     </svg>
   ),
   message: () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M7.08317 15.8327H6.6665C3.33317 15.8327 1.6665 14.9993 1.6665 10.8327V6.66602C1.6665 3.33268 3.33317 1.66602 6.6665 1.66602H13.3332C16.6665 1.66602 18.3332 3.33268 18.3332 6.66602V10.8327C18.3332 14.166 16.6665 15.8327 13.3332 15.8327H12.9165C12.6582 15.8327 12.4082 15.9577 12.2498 16.166L10.9998 17.8327C10.4498 18.566 9.54984 18.566 8.99984 17.8327L7.74984 16.166C7.6165 15.9827 7.30817 15.8327 7.08317 15.8327Z"
         stroke="#667085"
@@ -1210,13 +996,7 @@ export const CIcons = {
     </svg>
   ),
   stickyNote: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6.00159 1.50391V3.75399"
         stroke="#282828"
@@ -1267,13 +1047,7 @@ export const CIcons = {
     </svg>
   ),
   linearGraph: () => (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.7419 9.00455C15.692 9.00455 16.502 8.25452 15.782 5.79443C15.2944 4.13687 13.8694 2.71181 12.2118 2.22429C9.75174 1.50427 9.00171 2.3143 9.00171 4.26437V6.42445C9.00171 8.25452 9.75174 9.00455 11.2518 9.00455H13.7419Z"
         stroke="#282828"
@@ -1405,12 +1179,7 @@ export const CIcons = {
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M17 12H3"
-        stroke="#047857"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M17 12H3" stroke="#047857" strokeLinecap="round" strokeLinejoin="round" />
       <path
         d="M21.6427 11.7856L18.2116 9.72696C17.6784 9.40703 17 9.79112 17 10.413V13.587C17 14.2089 17.6784 14.593 18.2116 14.273L21.6427 12.2144C21.8045 12.1173 21.8045 11.8827 21.6427 11.7856Z"
         fill="#047857"
@@ -1445,13 +1214,7 @@ export const CIcons = {
 
   chars: () => {
     return (
-      <svg
-        width="12"
-        height="9"
-        viewBox="0 0 12 9"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M2.64645 5.97983C2.45118 6.17509 2.45118 6.49167 2.64645 6.68693C2.84171 6.88219 3.15829 6.88219 3.35355 6.68693L5.03388 5.0066L5.68373 5.53731C5.88793 5.70407 6.18653 5.68363 6.36609 5.4906L8.00142 3.73262L8.63523 4.40868C8.8241 4.61014 9.14051 4.62035 9.34197 4.43148C9.54343 4.24262 9.55363 3.9262 9.36477 3.72474L8.36477 2.65808C8.27001 2.557 8.13757 2.49978 7.99903 2.50005C7.86049 2.50032 7.72827 2.55806 7.63391 2.65949L5.95319 4.46627L5.31627 3.94611C5.11744 3.78374 4.82796 3.79831 4.64645 3.97983L2.64645 5.97983Z"
           fill="#036B26"
@@ -1484,13 +1247,7 @@ export const CIcons = {
 
   facebook: () => {
     return (
-      <svg
-        width="8"
-        height="16"
-        viewBox="0 0 8 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M1.98714 16V8.49234H0.00195312V5.78922H1.98714V3.4804C1.98714 1.66611 3.15979 0 5.86184 0C6.95586 0 7.76483 0.10488 7.76483 0.10488L7.70109 2.62914C7.70109 2.62914 6.87606 2.6211 5.97576 2.6211C5.00136 2.6211 4.84525 3.07014 4.84525 3.81544V5.78922H7.77854L7.65091 8.49234H4.84525V16H1.98714Z"
           fill="#121212"
@@ -1545,13 +1302,7 @@ export const CIcons = {
   },
 
   eye: () => (
-    <svg
-      width="20"
-      height="21"
-      viewBox="0 0 20 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12.9833 10.499C12.9833 12.149 11.6499 13.4823 9.99993 13.4823C8.34993 13.4823 7.0166 12.149 7.0166 10.499C7.0166 8.84896 8.34993 7.51562 9.99993 7.51562C11.6499 7.51562 12.9833 8.84896 12.9833 10.499Z"
         stroke="#047857"
@@ -1570,13 +1321,7 @@ export const CIcons = {
   ),
 
   edit: () => (
-    <svg
-      width="20"
-      height="21"
-      viewBox="0 0 20 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M11.0502 3.50002L4.20854 10.7417C3.9502 11.0167 3.7002 11.5584 3.6502 11.9334L3.34187 14.6334C3.23354 15.6084 3.93354 16.275 4.9002 16.1084L7.58354 15.65C7.95854 15.5834 8.48354 15.3084 8.74187 15.025L15.5835 7.78335C16.7669 6.53335 17.3002 5.10835 15.4585 3.36668C13.6252 1.64168 12.2335 2.25002 11.0502 3.50002Z"
         stroke="#047857"
@@ -1604,13 +1349,7 @@ export const CIcons = {
     </svg>
   ),
   applicants: () => (
-    <svg
-      width="20"
-      height="21"
-      viewBox="0 0 20 21"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.1169 18.5156C14.3835 18.7323 13.5169 18.8323 12.5002 18.8323H7.50021C6.48354 18.8323 5.61688 18.7323 4.88354 18.5156C5.06688 16.349 7.29188 14.6406 10.0002 14.6406C12.7085 14.6406 14.9335 16.349 15.1169 18.5156Z"
         stroke="#047857"
@@ -1636,13 +1375,7 @@ export const CIcons = {
   ),
 
   document: () => (
-    <svg
-      width="21"
-      height="20"
-      viewBox="0 0 21 20"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M11.3257 1.66797H5.49235C5.05032 1.66797 4.6264 1.84356 4.31384 2.15612C4.00128 2.46868 3.82568 2.89261 3.82568 3.33464V16.668C3.82568 17.11 4.00128 17.5339 4.31384 17.8465C4.6264 18.159 5.05032 18.3346 5.49235 18.3346H15.4923C15.9344 18.3346 16.3583 18.159 16.6709 17.8465C16.9834 17.5339 17.159 17.11 17.159 16.668V7.5013M11.3257 1.66797L17.159 7.5013M11.3257 1.66797V7.5013H17.159"
         stroke="#047857"
@@ -1654,13 +1387,7 @@ export const CIcons = {
   ),
 
   indicator: () => (
-    <svg
-      width="25"
-      height="25"
-      viewBox="0 0 25 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12.4619 22.5C17.9848 22.5 22.4619 18.0228 22.4619 12.5C22.4619 6.97715 17.9848 2.5 12.4619 2.5C6.93907 2.5 2.46191 6.97715 2.46191 12.5C2.46191 18.0228 6.93907 22.5 12.4619 22.5Z"
         stroke="#047857"
@@ -1679,6 +1406,4 @@ export const CIcons = {
       />
     </svg>
   ),
-
-  
 };

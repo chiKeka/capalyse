@@ -1,4 +1,4 @@
-import { User } from 'lucide-react';
+import { User } from "lucide-react";
 
 const ContactDetails = ({ data }: { data?: any }) => {
   return data ? (
@@ -25,9 +25,7 @@ const ContactDetails = ({ data }: { data?: any }) => {
 
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">Phone Number</span>
-          <span className="font-semibold text-gray-900">
-            {data?.phoneNumber ?? "N/A"}
-          </span>
+          <span className="font-semibold text-gray-900">{data?.phoneNumber ?? "N/A"}</span>
         </div>
 
         <div className="flex justify-between items-center gap-2">
@@ -39,9 +37,7 @@ const ContactDetails = ({ data }: { data?: any }) => {
 
         <div className="flex justify-between items-center gap-2">
           <span className="text-gray-600">State</span>
-          <span className="font-semibold text-gray-900">
-            {data?.stateOfResidence ?? "N/A"}
-          </span>
+          <span className="font-semibold text-gray-900">{data?.stateOfResidence ?? "N/A"}</span>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ A comprehensive React hook for managing assessment-related functionality in the 
 The hook is already included in the project. Import it directly:
 
 ```typescript
-import { useAssessment } from '@/hooks/useAssessment';
+import { useAssessment } from "@/hooks/useAssessment";
 ```
 
 ## Basic Usage
@@ -59,7 +59,7 @@ const { data: categories } = useGetCategories();
 Get questions for a specific category.
 
 ```typescript
-const { data: questions, isLoading } = useGetQuestionsByCategory('financial');
+const { data: questions, isLoading } = useGetQuestionsByCategory("financial");
 ```
 
 #### `useGetResponses(id, enabled?)`
@@ -67,7 +67,7 @@ const { data: questions, isLoading } = useGetQuestionsByCategory('financial');
 Get all responses for an SME.
 
 ```typescript
-const { data: responses } = useGetResponses('sme-id');
+const { data: responses } = useGetResponses("sme-id");
 ```
 
 #### `useGetScore(id, enabled?)`
@@ -75,7 +75,7 @@ const { data: responses } = useGetResponses('sme-id');
 Get the latest score for an SME.
 
 ```typescript
-const { data: score } = useGetScore('sme-id');
+const { data: score } = useGetScore("sme-id");
 ```
 
 ### SME-Specific Queries
@@ -102,7 +102,7 @@ const { data: history } = useGetSmeScoreHistory(10, 0);
 Get personalized recommendations.
 
 ```typescript
-const { data: recommendations } = useGetSmeRecommendations('financial', 'high');
+const { data: recommendations } = useGetSmeRecommendations("financial", "high");
 ```
 
 #### `useGetSmeStatus(enabled?)`
@@ -135,14 +135,14 @@ Submit an assessment response.
 const submitMutation = useSubmitResponse();
 
 submitMutation.mutate({
-  smeId: 'user-id',
-  questionId: 'question-id',
+  smeId: "user-id",
+  questionId: "question-id",
   answers: [
     {
-      type: 'money',
-      value: { amount: 100000, currency: 'USD' }
-    }
-  ]
+      type: "money",
+      value: { amount: 100000, currency: "USD" },
+    },
+  ],
 });
 ```
 
@@ -153,7 +153,7 @@ Trigger scoring calculation for an SME.
 ```typescript
 const triggerMutation = useTriggerScoring();
 
-triggerMutation.mutate('sme-id');
+triggerMutation.mutate("sme-id");
 ```
 
 #### `useRetakeAssessment()`
@@ -186,17 +186,17 @@ Create a new assessment question (admin only).
 const createMutation = useCreateQuestion();
 
 createMutation.mutate({
-  category: 'financial',
-  title: 'What is your annual revenue?',
-  description: 'Please provide your annual revenue',
+  category: "financial",
+  title: "What is your annual revenue?",
+  description: "Please provide your annual revenue",
   required: true,
   answerType: {
-    type: 'money',
-    label: 'Annual Revenue',
-    required: true
+    type: "money",
+    label: "Annual Revenue",
+    required: true,
   },
   weight: 1,
-  order: 1
+  order: 1,
 });
 ```
 
@@ -208,9 +208,9 @@ Update an existing question (admin only).
 const updateMutation = useUpdateQuestion();
 
 updateMutation.mutate({
-  id: 'question-id',
-  category: 'financial',
-  title: 'Updated question title',
+  id: "question-id",
+  category: "financial",
+  title: "Updated question title",
   // ... other fields
 });
 ```
@@ -222,7 +222,7 @@ Delete a question (admin only).
 ```typescript
 const deleteMutation = useDeleteQuestion();
 
-deleteMutation.mutate('question-id');
+deleteMutation.mutate("question-id");
 ```
 
 #### `useUpdateScoringConfig()`
@@ -233,10 +233,10 @@ Update scoring configuration (admin only).
 const configMutation = useUpdateScoringConfig();
 
 configMutation.mutate({
-  category: 'financial',
-  formula: 'sum(answers) * weight',
+  category: "financial",
+  formula: "sum(answers) * weight",
   maxScore: 100,
-  weight: 1.5
+  weight: 1.5,
 });
 ```
 
@@ -245,10 +245,18 @@ configMutation.mutate({
 ### Core Types
 
 ```typescript
-type AssessmentCategory = 'financial' | 'operational' | 'market' | 'compliance' | 'business_info';
-type AnswerType = 'string' | 'number' | 'money' | 'file' | 'array<string>' | 'items' | 'date' | 'boolean';
-type AssessmentStatus = 'not_ready' | 'needs_improvement' | 'almost_ready' | 'ready' | 'excellent';
-type RecommendationPriority = 'high' | 'medium' | 'low';
+type AssessmentCategory = "financial" | "operational" | "market" | "compliance" | "business_info";
+type AnswerType =
+  | "string"
+  | "number"
+  | "money"
+  | "file"
+  | "array<string>"
+  | "items"
+  | "date"
+  | "boolean";
+type AssessmentStatus = "not_ready" | "needs_improvement" | "almost_ready" | "ready" | "excellent";
+type RecommendationPriority = "high" | "medium" | "low";
 ```
 
 ### Key Interfaces
@@ -287,25 +295,30 @@ interface AssessmentScore {
 ### Status and Formatting
 
 ```typescript
-import { getStatusColor, getStatusLabel, getPriorityColor, formatMoneyAmount } from '@/hooks/useAssessment';
+import {
+  getStatusColor,
+  getStatusLabel,
+  getPriorityColor,
+  formatMoneyAmount,
+} from "@/hooks/useAssessment";
 
 // Get CSS classes for status styling
-const statusClasses = getStatusColor('ready'); // 'text-blue-600 bg-blue-50'
+const statusClasses = getStatusColor("ready"); // 'text-blue-600 bg-blue-50'
 
 // Get human-readable status labels
-const statusLabel = getStatusLabel('ready'); // 'Ready'
+const statusLabel = getStatusLabel("ready"); // 'Ready'
 
 // Get priority styling
-const priorityClasses = getPriorityColor('high'); // 'text-red-600 bg-red-50'
+const priorityClasses = getPriorityColor("high"); // 'text-red-600 bg-red-50'
 
 // Format money amounts
-const formattedAmount = formatMoneyAmount({ amount: 100000, currency: 'USD' }); // '$100,000.00'
+const formattedAmount = formatMoneyAmount({ amount: 100000, currency: "USD" }); // '$100,000.00'
 ```
 
 ### Calculations
 
 ```typescript
-import { calculateCompletionPercentage } from '@/hooks/useAssessment';
+import { calculateCompletionPercentage } from "@/hooks/useAssessment";
 
 const completionPercentage = calculateCompletionPercentage(responses, totalQuestions);
 ```
@@ -315,14 +328,14 @@ const completionPercentage = calculateCompletionPercentage(responses, totalQuest
 The hook exports query keys for external cache management:
 
 ```typescript
-import { assessmentQueryKeys } from '@/hooks/useAssessment';
+import { assessmentQueryKeys } from "@/hooks/useAssessment";
 
 // Invalidate all assessment queries
 queryClient.invalidateQueries({ queryKey: assessmentQueryKeys.all });
 
 // Invalidate specific category questions
 queryClient.invalidateQueries({
-  queryKey: assessmentQueryKeys.questions('financial')
+  queryKey: assessmentQueryKeys.questions("financial"),
 });
 ```
 
@@ -391,10 +404,10 @@ If migrating from the old assessment hooks:
 
 ```typescript
 // Old way
-import { useAssessmentMutations, useGetSmeAssesments } from '@/hooks/useAssessments';
+import { useAssessmentMutations, useGetSmeAssesments } from "@/hooks/useAssessments";
 
 // New way
-import { useAssessment } from '@/hooks/useAssessment';
+import { useAssessment } from "@/hooks/useAssessment";
 
 const { useSubmitResponse, useGetSmeScore } = useAssessment();
 ```

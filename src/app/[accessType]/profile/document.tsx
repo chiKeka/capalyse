@@ -1,8 +1,8 @@
-import { ReusableTable } from '@/components/ui/table';
-import useDocument, { Document as DocumentType } from '@/hooks/useDocument';
-import { File, Loader2, Trash2 } from 'lucide-react';
-import { format } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { ReusableTable } from "@/components/ui/table";
+import useDocument, { Document as DocumentType } from "@/hooks/useDocument";
+import { File, Loader2, Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import { useMemo, useState } from "react";
 
 type Props = {};
 
@@ -20,7 +20,7 @@ export default function Document({}: Props) {
   const columns = useMemo(() => {
     return [
       {
-        header: 'File name',
+        header: "File name",
         accessor: (row: DocumentType) => (
           <div className="flex items-center gap-2">
             <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -28,27 +28,25 @@ export default function Document({}: Props) {
             </div>
 
             <div>
-              <div className="font-medium text-sm text-[#101828]">
-                {row.originalName}
-              </div>
+              <div className="font-medium text-sm text-[#101828]">{row.originalName}</div>
               <div className="text-xs text-gray-400">{row.size}</div>
             </div>
           </div>
         ),
       },
       {
-        header: 'Date uploaded',
-        accessor: (row: DocumentType) => format(row.uploadedAt, 'MMM dd, yyyy'),
+        header: "Date uploaded",
+        accessor: (row: DocumentType) => format(row.uploadedAt, "MMM dd, yyyy"),
       },
       {
-        header: 'Category',
-        accessor: 'category',
+        header: "Category",
+        accessor: "category",
       },
       {
-        header: '',
+        header: "",
         accessor: (row: DocumentType) => (
           <div className="flex gap-4 items-end justify-end">
-            {row.category !== 'assessment' && (
+            {row.category !== "assessment" && (
               <button
                 onClick={() => handleDelete(row._id)}
                 className="text-gray-400 hover:text-red-600"
@@ -65,7 +63,7 @@ export default function Document({}: Props) {
             </button> */}
           </div>
         ),
-        className: 'text-right',
+        className: "text-right",
       },
     ];
   }, [documents]);

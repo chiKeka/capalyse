@@ -8,14 +8,9 @@ export default function InvestmentOpportunitiesCard({
   investmentData: any;
   caption: string;
 }) {
-  const allZero = investmentData?.breakdown?.every(
-    (entry: any) => entry.value === 0
-  );
+  const allZero = investmentData?.breakdown?.every((entry: any) => entry.value === 0);
   const emptyTrackColor = "#E6F9ED"; // light green for empty state
-  const total = investmentData?.totals?.reduce(
-    (sum: number, entry: any) => sum + entry.value,
-    0
-  );
+  const total = investmentData?.totals?.reduce((sum: number, entry: any) => sum + entry.value, 0);
   return (
     <DashboardCardLayout caption={caption}>
       <div className="flex flex-col items-center justify-center h-full py-6">
@@ -46,19 +41,15 @@ export default function InvestmentOpportunitiesCard({
                 {allZero ? (
                   <Cell fill={emptyTrackColor} />
                 ) : (
-                  investmentData?.totals?.[0]?.map(
-                    (entry: any, idx: number) => (
-                      <Cell key={`cell-${idx}`} fill={entry.color} />
-                    )
-                  )
+                  investmentData?.totals?.[0]?.map((entry: any, idx: number) => (
+                    <Cell key={`cell-${idx}`} fill={entry.color} />
+                  ))
                 )}
               </Pie>
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-gray-800">
-              ₦{formatNumberShort(total)}
-            </span>
+            <span className="text-3xl font-bold text-gray-800">₦{formatNumberShort(total)}</span>
             <span className="text-gray-400 text-base">Total</span>
           </div>
         </div>

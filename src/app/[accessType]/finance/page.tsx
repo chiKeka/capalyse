@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import FinanceView from '@/components/pageComponents/FinanceView';
+import FinanceView from "@/components/pageComponents/FinanceView";
 
 function FinancePage() {
   return <FinanceView />;

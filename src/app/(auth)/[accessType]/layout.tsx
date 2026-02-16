@@ -1,5 +1,5 @@
-import { UserType } from '@/lib/utils';
-import { notFound } from 'next/navigation';
+import { UserType } from "@/lib/utils";
+import { notFound } from "next/navigation";
 
 const validTypes = Object.keys(UserType);
 

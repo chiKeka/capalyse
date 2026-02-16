@@ -1,9 +1,9 @@
-
 import QueryProvider from "@/hooks/QueryProvider";
 import { QueryClient } from "@tanstack/react-query";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import RoleSelectionModal from "@/components/auth/RoleSelectionModal";
 import "./globals.css";
 
 const queryClient = new QueryClient();
@@ -19,7 +19,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Capalyse - Empowering Growth",
-  description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+  description:
+    "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
   keywords: [
     "Capalyse",
     "Empowering Growth",
@@ -53,7 +54,8 @@ export const metadata: Metadata = {
   applicationName: "Capalyse",
   openGraph: {
     title: "Capalyse - Empowering Growth",
-    description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+    description:
+      "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
     type: "website",
     locale: "en_US",
     siteName: "Capalyse",
@@ -69,7 +71,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: "Capalyse - Empowering Growth",
-    description: "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
+    description:
+      "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
     card: "summary_large_image",
     site: "@capalyse",
     creator: "@capalyse",
@@ -81,7 +84,7 @@ export const metadata: Metadata = {
         alt: "Capalyse - Empowering Growth",
       },
     ],
-  },  
+  },
 };
 
 export default function RootLayout({
@@ -91,11 +94,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <QueryProvider>
           {children}
+          <RoleSelectionModal />
           <Toaster richColors position="top-right" />
         </QueryProvider>
       </body>

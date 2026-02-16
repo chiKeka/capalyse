@@ -1,10 +1,6 @@
 import Input from "@/components/ui/Inputs";
 import { useAfricanCountries, useIndustries } from "@/hooks/useComplianceCatalogs";
-import {
-  createProgram,
-  ProgramFormData,
-  updateProgram,
-} from "@/hooks/usePrograms";
+import { createProgram, ProgramFormData, updateProgram } from "@/hooks/usePrograms";
 import { format } from "date-fns";
 import { Loader, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,13 +17,7 @@ import {
   MultiSelectValue,
 } from "./multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
 
 // Type definitions
@@ -109,14 +99,14 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
           name: program.name || "",
           objectives: (Array.isArray(program?.objectives)
             ? program.objectives.map((obj: string | { value: string }) =>
-                typeof obj === "string" ? { value: obj } : obj
+                typeof obj === "string" ? { value: obj } : obj,
               )
             : program?.objectives
-            ? String(program.objectives)
-                .split(",")
-                .map((s: string) => ({ value: s.trim() }))
-                .filter((o: { value: string }) => o.value.length > 0)
-            : []) || [{ value: "" }],
+              ? String(program.objectives)
+                  .split(",")
+                  .map((s: string) => ({ value: s.trim() }))
+                  .filter((o: { value: string }) => o.value.length > 0)
+              : []) || [{ value: "" }],
           description: program.description || "",
           startDate: program.startDate || "",
           endDate: program.endDate || "",
@@ -238,9 +228,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent side="right" className="   sm:max-w-[31.875rem] w-full">
           <SheetHeader className="flex flex-row items-center justify-between border-b px-6 py-4">
-            <SheetTitle className="text-lg font-semibold">
-              Create Program
-            </SheetTitle>
+            <SheetTitle className="text-lg font-semibold">Create Program</SheetTitle>
           </SheetHeader>
 
           <form
@@ -251,9 +239,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
           >
             <div className="flex flex-col p-1 gap-6 max-h-[calc(100vh-200px)] no-scrollbar h-full overflow-y-scroll">
               <div>
-                <Label className="text-sm font-medium text-foreground">
-                  Program Name
-                </Label>
+                <Label className="text-sm font-medium text-foreground">Program Name</Label>
                 <Input
                   placeholder="Program Name"
                   type="text"
@@ -262,16 +248,10 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                     required: "Program name is required",
                   })}
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.name.message}
-                  </p>
-                )}
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
               </div>
               <div>
-                <Label className="text-sm font-medium text-foreground">
-                  Overview/Description
-                </Label>
+                <Label className="text-sm font-medium text-foreground">Overview/Description</Label>
                 <Input
                   placeholder="Overview/Description"
                   type="textarea"
@@ -281,16 +261,12 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                   })}
                 />
                 {errors.description && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.description.message}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>
                 )}
               </div>
               <div>
                 <div className="flex items-center   justify-between">
-                  <Label className="text-sm font-medium text-foreground">
-                    Program Objectives
-                  </Label>
+                  <Label className="text-sm font-medium text-foreground">Program Objectives</Label>
                   <button
                     type="button"
                     onClick={() => append({ value: "" })}
@@ -302,10 +278,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 </div>
                 <div className="mt-2 w-full flex flex-col gap-2">
                   {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="flex w-full items-center gap-2"
-                    >
+                    <div key={field.id} className="flex w-full items-center gap-2">
                       <Input
                         placeholder={`Objective ${index + 1}`}
                         type="text"
@@ -327,14 +300,10 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                     </div>
                   ))}
                 </div>
-                <p className="font-normal text-xs mt-1">
-                  Click Add to include more objectives.
-                </p>
+                <p className="font-normal text-xs mt-1">Click Add to include more objectives.</p>
               </div>
               <div className="flex flex-col gap-2">
-                <Label className="text-sm font-medium text-foreground">
-                  Duration
-                </Label>
+                <Label className="text-sm font-medium text-foreground">Duration</Label>
                 <div className="grid grid-cols-2 gap-2">
                   <Controller
                     name="startDate"
@@ -353,9 +322,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                               className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-70 pointer-events-none"
                             />
                             <span className="text-foreground/80">
-                              {range?.from
-                                ? format(range?.from, "PPP")
-                                : "Start Date"}
+                              {range?.from ? format(range?.from, "PPP") : "Start Date"}
                             </span>
                           </button>
                         </PopoverTrigger>
@@ -365,9 +332,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                             selected={range?.from}
                             onSelect={(date) => {
                               setRange((prev) => ({ ...prev, from: date }));
-                              field.onChange(
-                                date ? format(date, "yyyy-MM-dd") : ""
-                              );
+                              field.onChange(date ? format(date, "yyyy-MM-dd") : "");
                             }}
                             numberOfMonths={1}
                           />
@@ -392,9 +357,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                               className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-70 pointer-events-none"
                             />
                             <span className="text-foreground/80">
-                              {range?.to
-                                ? format(range?.to, "PPP")
-                                : "End Date"}
+                              {range?.to ? format(range?.to, "PPP") : "End Date"}
                             </span>
                           </button>
                         </PopoverTrigger>
@@ -404,9 +367,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                             selected={range?.to}
                             onSelect={(date) => {
                               setRange((prev) => ({ ...prev, to: date }));
-                              field.onChange(
-                                date ? format(date, "yyyy-MM-dd") : ""
-                              );
+                              field.onChange(date ? format(date, "yyyy-MM-dd") : "");
                             }}
                             numberOfMonths={1}
                           />
@@ -430,9 +391,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                     onValueChange={(value) => field.onChange([value])}
                     value={field.value[0] || ""}
                   >
-                    <Label className="text-sm font-medium text-foreground">
-                      SME Stage
-                    </Label>
+                    <Label className="text-sm font-medium text-foreground">SME Stage</Label>
                     <SelectTrigger>
                       <SelectValue placeholder="SME Stage" />
                     </SelectTrigger>
@@ -446,9 +405,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 )}
               />
               {errors.smeStage && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.smeStage.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.smeStage.message}</p>
               )}
               <div>
                 {countriesLoading && <Loader className="animate-spin" />}
@@ -472,19 +429,14 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                         <MultiSelectTrigger
                           selectedItems={field.value}
                           onRemoveItem={(value) => {
-                            field.onChange(
-                              field.value.filter((v) => v !== value)
-                            );
+                            field.onChange(field.value.filter((v) => v !== value));
                           }}
                         >
                           <MultiSelectValue placeholder="Eligible Countries" />
                         </MultiSelectTrigger>
                         <MultiSelectContent>
                           {countries.map((country) => (
-                            <MultiSelectItem
-                              key={country.code}
-                              value={country.name}
-                            >
+                            <MultiSelectItem key={country.code} value={country.name}>
                               {country.name}
                             </MultiSelectItem>
                           ))}
@@ -494,13 +446,9 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                   />
                 )}
                 {errors.eligibleCountries && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.eligibleCountries.message}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.eligibleCountries.message}</p>
                 )}
-                <p className="font-normal text-xs mt-1">
-                  Press Enter to add countries.
-                </p>
+                <p className="font-normal text-xs mt-1">Press Enter to add countries.</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 col-span-1">
@@ -531,9 +479,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                     )}
                   />
                   {errors.industryFocus && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.industryFocus.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.industryFocus.message}</p>
                   )}
                 </div>
 
@@ -551,9 +497,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                     })}
                   />
                   {errors.maxParticipants && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.maxParticipants.message}
-                    </p>
+                    <p className="text-red-500 text-xs mt-1">{errors.maxParticipants.message}</p>
                   )}
                 </div>
               </div>
@@ -563,9 +507,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 rules={{ required: "At least one support type is required" }}
                 render={({ field }) => (
                   <div>
-                    <Label className="text-sm font-medium text-foreground">
-                      Types of support
-                    </Label>
+                    <Label className="text-sm font-medium text-foreground">Types of support</Label>
                     <div className="flex mt-2 flex-row gap-2 flex-wrap">
                       {[
                         { label: "Resource Guides", value: "resource_guides" },
@@ -600,9 +542,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 )}
               />
               {errors.supportTypes && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.supportTypes.message}
-                </p>
+                <p className="text-red-500 text-xs mt-1">{errors.supportTypes.message}</p>
               )}
 
               <Controller
@@ -610,9 +550,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                 control={control}
                 render={({ field }) => (
                   <div>
-                    <Label className="text-sm font-medium text-foreground">
-                      Partners
-                    </Label>
+                    <Label className="text-sm font-medium text-foreground">Partners</Label>
                     <Input
                       name="partners"
                       placeholder="Partners (separate with commas)"
@@ -638,9 +576,7 @@ function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
                         field.onChange(partnersArray);
                       }}
                     />
-                    <p className="font-normal text-xs mt-1">
-                      Use comma to add more partners.
-                    </p>
+                    <p className="font-normal text-xs mt-1">Use comma to add more partners.</p>
                   </div>
                 )}
               />

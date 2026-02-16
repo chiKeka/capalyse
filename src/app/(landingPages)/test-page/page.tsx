@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import AssessmentReadiness from '@/components/sections/AssessmentReadiness';
-import Button from '@/components/ui/Button';
-import { useState } from 'react';
+import AssessmentReadiness from "@/components/sections/AssessmentReadiness";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
 
 const Test = () => {
   const [open, setOpen] = useState(false);

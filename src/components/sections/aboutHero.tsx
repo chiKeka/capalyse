@@ -1,6 +1,6 @@
 type Props = {};
 
-function AboutHero({ }: Props) {
+function AboutHero({}: Props) {
   return (
     <section className=" py-15 lg:py-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -12,10 +12,9 @@ function AboutHero({ }: Props) {
               <span className="text-green"> Ideas and Smart Investment </span>
             </h1>
             <p className="mb-8 leading-relaxed text-base font-normal max-w-3xl">
-              Capalyse was born from the realization that African SMEs often
-              lack access to structured funding due to investor confidence gaps.
-              We created a platform to close that gap; offering tools, insights,
-              and connections to scale impact.
+              Capalyse was born from the realization that African SMEs often lack access to
+              structured funding due to investor confidence gaps. We created a platform to close
+              that gap; offering tools, insights, and connections to scale impact.
             </p>
           </div>
         </div>
@@ -23,19 +22,16 @@ function AboutHero({ }: Props) {
           <div className="lg:max-w-md md:max-w-xs mb-3 md:absolute lg:top-40">
             <p className="text-green font-normal text-sm my-4 ">WHY WE EXIST</p>
             <p className="lg:text-lg text-sm font-bold ">
-              To empower African SMEs with the tools and connections needed to
-              become investment-ready and thrive.
+              To empower African SMEs with the tools and connections needed to become
+              investment-ready and thrive.
             </p>
           </div>
 
           <img className="w-full h-auto bg-cover" src="/images/about.png" />
           <div className="lg:max-w-md md:max-w-xs md:absolute bottom-40 lg:bottom-50 right-0">
-            <p className="text-green font-normal text-sm my-4">
-              WHAT WE ARE BUILDING
-            </p>
+            <p className="text-green font-normal text-sm my-4">WHAT WE ARE BUILDING</p>
             <p className="lg:text-lg text-sm font-bold ">
-              A future where equitable access to capital powers sustainable
-              growth across Africa.
+              A future where equitable access to capital powers sustainable growth across Africa.
             </p>
           </div>
         </div>

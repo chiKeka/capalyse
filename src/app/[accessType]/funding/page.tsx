@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { GetDevOrgAnalytics } from '@/hooks/devOrg/devOrgsAnalytics';
-import { useIndustries } from '@/hooks/useComplianceCatalogs';
-import { formatCurrency } from '@/lib/uitils/fns';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { GetDevOrgAnalytics } from "@/hooks/devOrg/devOrgsAnalytics";
+import { useIndustries } from "@/hooks/useComplianceCatalogs";
+import { formatCurrency } from "@/lib/uitils/fns";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 type Props = {};
 
 // Example data
 
 function page({}: Props) {
-  const [search, setSearch] = useState('');
-  const [industryFilter, setIndustryFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("all");
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
   const { data: industries = [] } = useIndustries();
   const smes: any = [];
@@ -37,13 +37,12 @@ function page({}: Props) {
       sme?.industry?.toLowerCase().includes(search.toLowerCase()) ||
       sme?.country?.toLowerCase().includes(search.toLowerCase());
     const matchesIndustry =
-      industryFilter === 'all' ||
-      sme?.industry?.toLowerCase() === industryFilter.toLowerCase();
+      industryFilter === "all" || sme?.industry?.toLowerCase() === industryFilter.toLowerCase();
     return matchesSearch && matchesIndustry;
   });
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: (typeof smes)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -59,13 +58,13 @@ function page({}: Props) {
         </div>
       ),
     },
-    { header: 'Industry', accessor: 'industry' },
-    { header: 'Country', accessor: 'country' },
-    { header: 'Readiness Score', accessor: 'readinessPct' },
-    { header: 'Revenue', accessor: 'totalRevenue' },
-    { header: 'Team Size', accessor: 'teamSize' },
+    { header: "Industry", accessor: "industry" },
+    { header: "Country", accessor: "country" },
+    { header: "Readiness Score", accessor: "readinessPct" },
+    { header: "Revenue", accessor: "totalRevenue" },
+    { header: "Team Size", accessor: "teamSize" },
     {
-      header: 'Action',
+      header: "Action",
       accessor: (row: (typeof smes)[0]) => (
         <Link
           href={`/investor/sme-directory/${row.id}`}
@@ -74,29 +73,29 @@ function page({}: Props) {
           View Profile
         </Link>
       ),
-      className: 'text-green',
+      className: "text-green",
     },
   ];
   const overviewCards = [
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: 'Total Amount Invested',
+      label: "Total Amount Invested",
       amount: devOrgAnalytics?.applications?.total ?? 0,
-      currency: 'NGN',
+      currency: "NGN",
       percentage: 0,
-      direction: 'up',
+      direction: "up",
     },
     {
       id: 3,
       icon: CIcons.stickyNote,
-      label: 'Total Investments',
+      label: "Total Investments",
       amount: 0,
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: 'Active Investment',
+      label: "Active Investment",
       amount: 0,
     },
   ];
@@ -109,22 +108,15 @@ function page({}: Props) {
               <span className="font-bold">{card.label}</span>
               <div className="flex items-center justify-between gap-2 mt-auto">
                 <span className="text-5xl font-bold">
-                  {card.currency
-                    ? formatCurrency(card.amount, 0, 0, card.currency)
-                    : card.amount}
+                  {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
-                    (card.direction === 'up' ? (
-                      <span className="text-sm text-success-100 font-bold">
-                        {card.percentage}%
-                      </span>
+                    (card.direction === "up" ? (
+                      <span className="text-sm text-success-100 font-bold">{card.percentage}%</span>
                     ) : (
                       <span className="text-sm text-red font-bold">
-                        {card.percentage && card.percentage < 0
-                          ? card.percentage
-                          : 0}
-                        %
+                        {card.percentage && card.percentage < 0 ? card.percentage : 0}%
                       </span>
                     ))}
                   <div className="text-2xl border border-[#ABD2C7] bg-[#F4FFFC] text-green rounded-md p-2">

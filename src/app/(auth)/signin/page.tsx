@@ -1,41 +1,35 @@
-'use client';
-import AuthLayout from '@/components/layout/auth';
-import GetStarted from '@/components/layout/GetStarted';
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import PasswordChecker from '@/components/ui/passwordChecker';
-import { useGetProfileNextStep } from '@/hooks/useProfileManagement';
-import { authAtom } from '@/lib/atoms/atoms';
-import { authClient, useSession } from '@/lib/auth-client';
-import { getKeyByValue, validateAuthForm } from '@/lib/uitils/fns';
-import { onboardingSteps, UserType } from '@/lib/utils';
-import { useSetAtom } from 'jotai';
-import { useRouter } from 'next/navigation';
-import React, { Suspense, useState } from 'react';
-import { toast } from 'sonner';
+"use client";
+import AuthLayout from "@/components/layout/auth";
+import GetStarted from "@/components/layout/GetStarted";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import PasswordChecker from "@/components/ui/passwordChecker";
+import { useGetProfileNextStep } from "@/hooks/useProfileManagement";
+import { authAtom } from "@/lib/atoms/atoms";
+import { authClient, useSession } from "@/lib/auth-client";
+import { getKeyByValue, validateAuthForm } from "@/lib/uitils/fns";
+import { onboardingSteps, UserType } from "@/lib/utils";
+import { useSetAtom } from "jotai";
+import { useRouter } from "next/navigation";
+import React, { Suspense, useState } from "react";
+import { toast } from "sonner";
 type Props = {};
 
 function SignIn({}: Props) {
-  const [form, setForm] = useState({ email: '', password: '', role: 'SME' });
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
+  const [form, setForm] = useState({ email: "", password: "", role: "sme" });
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const setAuth = useSetAtom(authAtom);
   const router = useRouter();
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const [isLoading, setIsLoading] = useState(false);
   const { data: profileNextStep } = useGetProfileNextStep();
   const sessionData = useSession();
-  
+
   const isIncompleteStep =
     profileNextStep?.completedSteps?.length! <
-    onboardingSteps.find(
-      (step) => step.role === sessionData?.data?.user?.roles!
-    )?.steps?.length!;
+    onboardingSteps.find((step) => step.role === sessionData?.data?.user?.role!)?.steps?.length!;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,40 +56,39 @@ function SignIn({}: Props) {
               if (!data?.user?.emailVerified) {
                 authClient.emailOtp.sendVerificationOtp({
                   email: form?.email,
-                  type: 'email-verification',
+                  type: "email-verification",
                 });
                 router.push(`/verify?email=${data?.user?.email}`);
                 return;
               }
-              if (data?.user?.roles?.toLocaleUpperCase() === 'ADMIN') {
+              if (data?.user?.role?.toLowerCase() === "admin") {
                 router.push(`/admin`);
                 return;
               } else {
-                const rootRoute = getKeyByValue(UserType, data?.user?.roles);
+                const rootRoute = getKeyByValue(UserType, data?.user?.role);
 
                 if (rootRoute && isIncompleteStep) {
                   router?.push(`/${rootRoute}/onboarding`);
+                } else {
+                  router.push(
+                    // @ts-ignore
+                    routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root ?? "/dashboard",
+                  );
                 }
-                // else {
-                //   router.push(
-                //     routes?.[rootRoute?.toLowerCase() as keyof typeof routes]
-                //       ?.root
-                //   );
-                // }
               }
             } else {
-              throw new Error('Signin faled no session found');
+              throw new Error("Signin faled no session found");
             }
           });
           setIsLoading(false);
-          toast.success('Sign in successful');
+          toast.success("Sign in successful");
         },
         onError: (ctx) => {
           // console.log({ ctx });
           setIsLoading(false);
           toast.error(ctx.error.message);
         },
-      }
+      },
     );
   };
 
@@ -112,9 +105,7 @@ function SignIn({}: Props) {
             placeholder="janeearnest@gmail.com"
             value={form.email}
           />
-          {errors.email && (
-            <div className="text-red-500 text-xs mt-1">{errors.email}</div>
-          )}
+          {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
 
           <Input
             name="password"
@@ -127,15 +118,13 @@ function SignIn({}: Props) {
           />
           {form.password && <PasswordChecker password={form.password} />}
           {errors.password && (
-            <div className="text-red-500 text-xs -mt-1 mb-1">
-              {errors.password}
-            </div>
+            <div className="text-red-500 text-xs -mt-1 mb-1">{errors.password}</div>
           )}
 
           <div className="mb-12">
-            Forgot password?{' '}
+            Forgot password?{" "}
             <Button
-              onClick={() => router.push('/forgot_password')}
+              onClick={() => router.push("/forgot_password")}
               variant="tertiary"
               size="small"
               className="text-green hover:bg-transparent"
@@ -149,7 +138,7 @@ function SignIn({}: Props) {
             size="medium"
             variant="primary"
             className="font-bold w-full"
-            state={isLoading ? 'loading' : 'default'}
+            state={isLoading ? "loading" : "default"}
           >
             Sign in
           </Button>
@@ -158,11 +147,7 @@ function SignIn({}: Props) {
               Don't have an account ?.
               <GetStarted
                 component={
-                  <Button
-                    variant="ghost"
-                    className="text-green !px-0.5"
-                    size="medium"
-                  >
+                  <Button variant="ghost" className="text-green !px-0.5" size="medium">
                     Create account
                   </Button>
                 }

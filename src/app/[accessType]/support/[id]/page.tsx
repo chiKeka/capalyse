@@ -40,10 +40,7 @@ function SupportDetailsPage({}: Props) {
                   <p className="font-bold">Date</p>
                   <p>
                     {ticketData?.ticket?.createdAt
-                      ? format(
-                          new Date(ticketData?.ticket?.createdAt),
-                          "MMM d, yyyy"
-                        )
+                      ? format(new Date(ticketData?.ticket?.createdAt), "MMM d, yyyy")
                       : "N/A"}
                   </p>
                 </div>
@@ -54,38 +51,34 @@ function SupportDetailsPage({}: Props) {
             </div>
             <div className="border min-h-20 rounded-lg px-6 py-3 items- justify-center flex flex-col">
               <p className="text-xs font-normal">Description</p>
-              <p className="text-sm font-normal">
-                {ticketData?.ticket?.description}
-              </p>
+              <p className="text-sm font-normal">{ticketData?.ticket?.description}</p>
             </div>
 
             <div className="border min-h-30 rounded-lg px-6 py-3">
               <p className="text-sm font-bold mb-4">Documents</p>
               <div className="space-y-3">
-                {ticketData?.ticket?.images?.map(
-                  (image: any, index: number) => (
-                    <div
-                      key={image}
-                      className="flex items-center gap-4 p-3 border border-[#E8E8E8] rounded-lg"
-                    >
-                      <div className="w-10 h-10 bg-[#F4FFFC] rounded-full flex items-center justify-center">
-                        <CIcons.document />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-gray-900">
-                          IMG-{String(index + 1).padStart(5, "0")}.PNG
-                        </p>
-                        <p className="text-xs text-gray-500">200 KB</p>
-                      </div>
-                      <button
-                        onClick={() => handleViewDocument(image)}
-                        className="text-sm text-[#16B679] hover:text-green-700 font-medium cursor-pointer"
-                      >
-                        View Image
-                      </button>
+                {ticketData?.ticket?.images?.map((image: any, index: number) => (
+                  <div
+                    key={image}
+                    className="flex items-center gap-4 p-3 border border-[#E8E8E8] rounded-lg"
+                  >
+                    <div className="w-10 h-10 bg-[#F4FFFC] rounded-full flex items-center justify-center">
+                      <CIcons.document />
                     </div>
-                  )
-                )}
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-900">
+                        IMG-{String(index + 1).padStart(5, "0")}.PNG
+                      </p>
+                      <p className="text-xs text-gray-500">200 KB</p>
+                    </div>
+                    <button
+                      onClick={() => handleViewDocument(image)}
+                      className="text-sm text-[#16B679] hover:text-green-700 font-medium cursor-pointer"
+                    >
+                      View Image
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -101,10 +94,7 @@ function SupportDetailsPage({}: Props) {
               <p className="text-sm font-bold">Dispute Raised</p>
               <span className="text-xs font-normal">
                 {ticketData?.ticket?.createdAt
-                  ? format(
-                      new Date(ticketData?.ticket?.createdAt),
-                      "MMM d, yyyy, hh:mm a"
-                    )
+                  ? format(new Date(ticketData?.ticket?.createdAt), "MMM d, yyyy, hh:mm a")
                   : "N/A"}{" "}
               </span>
             </div>

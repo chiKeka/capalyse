@@ -1,7 +1,7 @@
-import { containerVariants } from '@/lib/animations';
-import Button from '../ui/Button';
-import Input from '../ui/Inputs';
-import { motion } from 'framer-motion';
+import { containerVariants } from "@/lib/animations";
+import Button from "../ui/Button";
+import Input from "../ui/Inputs";
+import { motion } from "framer-motion";
 
 type Props = {};
 
@@ -11,7 +11,7 @@ function Contact({}: Props) {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ margin: '-100px' }}
+      viewport={{ margin: "-100px" }}
       className=" py-20 relative"
     >
       <div className="max-w-7xl lg:flex-row flex flex-col  justify-between mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -22,8 +22,8 @@ function Contact({}: Props) {
           </h1>
 
           <p>
-            Got any questions or concerns about any of our services? We really
-            can't wait to hear from you!
+            Got any questions or concerns about any of our services? We really can't wait to hear
+            from you!
           </p>
         </div>
         <div className="w-full lg:max-w-xl">

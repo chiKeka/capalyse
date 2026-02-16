@@ -36,10 +36,7 @@ export const useAddToWatchlist = () => {
 
   return useMutation({
     mutationFn: async (data: AddToWatchlistData) => {
-      const response = await api.post(
-        matchingRoutes.watchList(data.smeId),
-        data
-      );
+      const response = await api.post(matchingRoutes.watchList(data.smeId), data);
       return response.data;
     },
     onSuccess: () => {

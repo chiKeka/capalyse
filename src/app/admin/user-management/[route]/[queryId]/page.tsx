@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import DevOrgDetails from '@/components/useManagementComponents.tsx/DevOrgDetails';
-import InvestorDetails from '@/components/useManagementComponents.tsx/InvestorDetails';
-import SMEDetails from '@/components/useManagementComponents.tsx/SMEDetails';
-import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import DevOrgDetails from "@/components/useManagementComponents.tsx/DevOrgDetails";
+import InvestorDetails from "@/components/useManagementComponents.tsx/InvestorDetails";
+import SMEDetails from "@/components/useManagementComponents.tsx/SMEDetails";
+import Link from "next/link";
+import { notFound, useParams } from "next/navigation";
 
 const SingleMgtProfilePage = () => {
   const params = useParams();
@@ -12,11 +12,11 @@ const SingleMgtProfilePage = () => {
   return (
     <div>
       <p className="font-medium">
-        User Management &gt;{' '}
+        User Management &gt;{" "}
         <Link
           href={
-            params?.route === 'sme'
-              ? '/admin/user-management'
+            params?.route === "sme"
+              ? "/admin/user-management"
               : `/admin/user-management/${params?.route}`
           }
           className="text-green"
@@ -24,11 +24,11 @@ const SingleMgtProfilePage = () => {
           Business Profile
         </Link>
       </p>
-      {params?.route === 'investor' ? (
+      {params?.route === "investor" ? (
         <InvestorDetails id={params?.queryId as string} />
-      ) : params?.route === 'dev' ? (
+      ) : params?.route === "dev" ? (
         <DevOrgDetails id={params?.queryId as string} />
-      ) : params?.route === 'sme' ? (
+      ) : params?.route === "sme" ? (
         <SMEDetails id={params?.queryId as string} />
       ) : (
         notFound()

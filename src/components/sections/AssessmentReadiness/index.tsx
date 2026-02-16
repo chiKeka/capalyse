@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { XIcon } from 'lucide-react';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Sidebar } from './Sidebar';
-import { ProgressBar } from './ProgressBar';
-import { Navigation } from './Navigation';
-import { Inputs } from './inputs';
-import { useAssessmentForm } from './useAssessmentForm';
-import { AssessmentCategory } from '@/hooks/useAssessment';
+import { XIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Sidebar } from "./Sidebar";
+import { ProgressBar } from "./ProgressBar";
+import { Navigation } from "./Navigation";
+import { Inputs } from "./inputs";
+import { useAssessmentForm } from "./useAssessmentForm";
+import { AssessmentCategory } from "@/hooks/useAssessment";
 
 const AssessmentReadiness = ({
   isOpen,
@@ -18,11 +18,11 @@ const AssessmentReadiness = ({
 }) => {
   // Define the assessment categories to fetch
   const categories: AssessmentCategory[] = [
-    'financial',
-    'business_info',
-    'operational',
-    'market',
-    'compliance',
+    "financial",
+    "business_info",
+    "operational",
+    "market",
+    "compliance",
   ];
 
   const {
@@ -80,9 +80,7 @@ const AssessmentReadiness = ({
           <DialogTitle className="sr-only">Assessment Readiness</DialogTitle>
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <p className="text-red-600 mb-4">
-                Failed to load assessment questions
-              </p>
+              <p className="text-red-600 mb-4">Failed to load assessment questions</p>
               <button
                 onClick={() => setIsOpen(false)}
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
@@ -121,9 +119,7 @@ const AssessmentReadiness = ({
               <div className="text-black-300 text-xs font-normal md:hidden">
                 Step {currentSection + 1} of {sections.length}
               </div>
-              <h2 className="text-center text-green md:hidden">
-                {currentSectionData?.name}
-              </h2>
+              <h2 className="text-center text-green md:hidden">{currentSectionData?.name}</h2>
               <div className="flex justify-end md:ml-auto">
                 <button
                   onClick={() => setIsOpen(false)}
@@ -148,9 +144,7 @@ const AssessmentReadiness = ({
                 </h1>
 
                 {currentQuestionData?.description && (
-                  <p className="text-gray-600 mb-6">
-                    {currentQuestionData.description}
-                  </p>
+                  <p className="text-gray-600 mb-6">{currentQuestionData.description}</p>
                 )}
 
                 <div className="space-y-6">
@@ -180,9 +174,7 @@ const AssessmentReadiness = ({
                   totalQuestions={totalQuestions}
                   sections={sections}
                   loading={submitMutation.isPending}
-                  isCurrentQuestionRequired={
-                    currentQuestionData?.required || false
-                  }
+                  isCurrentQuestionRequired={currentQuestionData?.required || false}
                 />
               </div>
             </div>

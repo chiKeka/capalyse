@@ -1,62 +1,54 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import FinanceView from '@/components/pageComponents/FinanceView';
-import CategoryBreakdown from '@/components/sections/dashboardCards/categoryBreakdown';
-import IconCards from '@/components/sections/dashboardCards/iconCards';
-import ReadinessScoreCard from '@/components/sections/dashboardCards/readinessScoreCard';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from '@/components/ui/breadcrumb';
-import Button from '@/components/ui/Button';
-import { Card } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { statusBadge } from '@/components/ui/statusBar';
-import { ReusableTable } from '@/components/ui/table';
-import {
-  useGetSmeById,
-  useSmeDirectoryMutations,
-  useSmeSaveStatus,
-} from '@/hooks/useDirectories';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import FinanceView from "@/components/pageComponents/FinanceView";
+import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
+import IconCards from "@/components/sections/dashboardCards/iconCards";
+import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
+import Button from "@/components/ui/Button";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { statusBadge } from "@/components/ui/statusBar";
+import { ReusableTable } from "@/components/ui/table";
+import { useGetSmeById, useSmeDirectoryMutations, useSmeSaveStatus } from "@/hooks/useDirectories";
 
-import { useGetReadinessScore } from '@/hooks/useReadiness';
-import { ChevronRight, File } from 'lucide-react';
-import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import React from 'react';
+import { useGetReadinessScore } from "@/hooks/useReadiness";
+import { ChevronRight, File } from "lucide-react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import React from "react";
 
 type Props = {};
 
 const documents = [
   {
-    id: '1',
-    name: 'CAC Registration.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    id: "1",
+    name: "CAC Registration.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    id: '2',
-    name: 'Pitch Deck.pptx',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    id: "2",
+    name: "Pitch Deck.pptx",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
   {
-    id: '3',
-    name: 'Financial Statement.pdf',
-    size: '200 KB',
-    date: 'Jan 4, 2022',
-    status: 'Completed',
+    id: "3",
+    name: "Financial Statement.pdf",
+    size: "200 KB",
+    date: "Jan 4, 2022",
+    status: "Completed",
   },
 ];
 
 const columns = [
   {
-    header: 'File name',
+    header: "File name",
     accessor: (row: (typeof documents)[0]) => (
       <div className="flex items-center gap-2">
         <div className="items-center w-6 h-6  flex bg-[#F4FFFC] rounded-full">
@@ -70,9 +62,9 @@ const columns = [
       </div>
     ),
   },
-  { header: 'Date uploaded', accessor: 'date' },
+  { header: "Date uploaded", accessor: "date" },
   {
-    header: 'Status',
+    header: "Status",
     accessor: (row: (typeof documents)[0]) => (
       <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
         <div className="w-2 h-2 bg-[#22C55E]  rounded-full" /> {row.status}
@@ -80,39 +72,32 @@ const columns = [
     ),
   },
   {
-    header: '',
+    header: "",
     accessor: () => (
       <div className="flex gap-4 items-end justify-end">
-        <button className="text-success-100 font-medium border-none">
-          View Document
-        </button>
+        <button className="text-success-100 font-medium border-none">View Document</button>
       </div>
     ),
-    className: 'text-right',
+    className: "text-right",
   },
 ];
 
 const businessProfile = {
-  name: 'GreenPack Solutions Ltd',
-  logo: '/icons/sportify.svg',
-  industry: 'Packaging',
-  country: 'Nigeria',
-  status: 'Connected',
+  name: "GreenPack Solutions Ltd",
+  logo: "/icons/sportify.svg",
+  industry: "Packaging",
+  country: "Nigeria",
+  status: "Connected",
 };
 
 export default function SingleSMEDirectoryPage({}: Props) {
   // Fetch readiness score data for the SME
-  const { data: readinessData, isLoading: isReadinessLoading } =
-    useGetReadinessScore();
+  const { data: readinessData, isLoading: isReadinessLoading } = useGetReadinessScore();
 
-  const [activeTab, setActiveTab] = React.useState<'overview' | 'financial'>(
-    'overview'
-  );
+  const [activeTab, setActiveTab] = React.useState<"overview" | "financial">("overview");
 
   const [open, setOpen] = React.useState(false);
-  const [selectedDoc, setSelectedDoc] = React.useState<
-    (typeof documents)[0] | null
-  >(null);
+  const [selectedDoc, setSelectedDoc] = React.useState<(typeof documents)[0] | null>(null);
 
   console.log({ selectedDoc });
 
@@ -122,27 +107,26 @@ export default function SingleSMEDirectoryPage({}: Props) {
   }
   const { id, accessType } = useParams();
 
-  const { data: smeData, isLoading: isSmeLoading } = useGetSmeById(
-    id as string
+  const { data: smeData, isLoading: isSmeLoading } = useGetSmeById(id as string);
+  const { data: smeSaveStatus, isLoading: isSmeSaveStatusLoading } = useSmeSaveStatus(
+    accessType === "investor" ? (id as string) : undefined,
   );
-  const { data: smeSaveStatus, isLoading: isSmeSaveStatusLoading } =
-    useSmeSaveStatus(accessType === 'investor' ? (id as string) : undefined);
   const { saveSme } = useSmeDirectoryMutations();
   // console.log({ smeData, smeSaveStatus });
   const overviewCards = [
     {
       id: 1,
       icon: CIcons.walletMoney,
-      label: 'Revenue',
+      label: "Revenue",
       amount: smeData?.totalRevenue || 0,
-      currency: 'NGN',
+      currency: "NGN",
       percentage: 152000,
-      direction: 'up',
+      direction: "up",
     },
     {
       id: 2,
       icon: CIcons.profile2,
-      label: 'Team Size',
+      label: "Team Size",
       amount: smeData?.teamSize || 0,
     },
   ];
@@ -152,18 +136,18 @@ export default function SingleSMEDirectoryPage({}: Props) {
       return [
         {
           value: 0,
-          label: 'Strong foundation in place',
-          caption: 'Foundational',
+          label: "Strong foundation in place",
+          caption: "Foundational",
         },
         {
           value: 0,
-          label: 'Moderate financial stability',
-          caption: 'Financial Health',
+          label: "Moderate financial stability",
+          caption: "Financial Health",
         },
         {
           value: 0,
-          label: 'Significant gaps in compliance',
-          caption: 'Compliance',
+          label: "Significant gaps in compliance",
+          caption: "Compliance",
         },
       ];
     }
@@ -177,10 +161,10 @@ export default function SingleSMEDirectoryPage({}: Props) {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 80) return 'Excellent foundation in place';
-    if (score >= 60) return 'Good progress made';
-    if (score >= 40) return 'Moderate improvements needed';
-    return 'Significant gaps identified';
+    if (score >= 80) return "Excellent foundation in place";
+    if (score >= 60) return "Good progress made";
+    if (score >= 40) return "Moderate improvements needed";
+    return "Significant gaps identified";
   };
 
   const checklist = getCategoryBreakdown();
@@ -194,12 +178,12 @@ export default function SingleSMEDirectoryPage({}: Props) {
           <BreadcrumbItem>
             <BreadcrumbLink
               onClick={(e) => {
-                if (activeTab !== 'overview') {
+                if (activeTab !== "overview") {
                   e.preventDefault();
-                  setActiveTab('overview');
+                  setActiveTab("overview");
                 }
               }}
-              href={activeTab === 'overview' ? '/investor/sme-directory' : '#'}
+              href={activeTab === "overview" ? "/investor/sme-directory" : "#"}
             >
               Investment Ready Business
             </BreadcrumbLink>
@@ -208,18 +192,16 @@ export default function SingleSMEDirectoryPage({}: Props) {
               className="text-green"
               onClick={(e) => {
                 e.preventDefault();
-                activeTab !== 'financial' ? setActiveTab('financial') : null;
+                activeTab !== "financial" ? setActiveTab("financial") : null;
               }}
             >
-              {activeTab === 'overview'
-                ? 'Business Profile'
-                : 'Financial Dashboard'}
+              {activeTab === "overview" ? "Business Profile" : "Financial Dashboard"}
             </BreadcrumbLink>
           </BreadcrumbItem>
         </Breadcrumb>
       </div>
       {/* Business Profile Header */}
-      {activeTab === 'overview' ? (
+      {activeTab === "overview" ? (
         <>
           <Card className="flex items-center gap-5 p-8 mb-2 shadow-none justify-between">
             <div className="flex items-center gap-5">
@@ -235,40 +217,32 @@ export default function SingleSMEDirectoryPage({}: Props) {
                   {smeData?.businessName ?? smeData?.name}
                 </span>
                 <span className="text-gray-500 text-sm">
-                  {businessProfile.industry} <span className="mx-2">•</span>{' '}
-                  {smeData?.countryOfOperation?.join(', ') ||
-                    smeData?.location ||
-                    'Not specified'}
+                  {businessProfile.industry} <span className="mx-2">•</span>{" "}
+                  {smeData?.countryOfOperation?.join(", ") || smeData?.location || "Not specified"}
                 </span>
-                <div className="mt-2">
-                  {statusBadge(businessProfile.status)}
-                </div>
+                <div className="mt-2">{statusBadge(businessProfile.status)}</div>
               </div>
             </div>
             <div className="flex flex-col items-end gap-2">
-              {accessType === 'investor' && (
+              {accessType === "investor" && (
                 <Button
                   className="text-green"
-                  iconPosition={!smeSaveStatus?.isSaved ? 'file' : undefined}
-                  state={saveSme.isPending ? 'loading' : 'default'}
-                  onClick={() =>
-                    smeSaveStatus?.isSaved
-                      ? null
-                      : saveSme.mutate({ smeId: id })
-                  }
+                  iconPosition={!smeSaveStatus?.isSaved ? "file" : undefined}
+                  state={saveSme.isPending ? "loading" : "default"}
+                  onClick={() => (smeSaveStatus?.isSaved ? null : saveSme.mutate({ smeId: id }))}
                 >
                   {saveSme.isPending
-                    ? 'Saving...'
+                    ? "Saving..."
                     : smeSaveStatus?.isSaved
-                    ? 'SME Saved'
-                    : 'Save SME'}
+                      ? "SME Saved"
+                      : "Save SME"}
                 </Button>
               )}
               <Button
                 variant="ghost"
                 iconPosition="right"
                 className="text-green !px-0"
-                onClick={() => setActiveTab('financial')}
+                onClick={() => setActiveTab("financial")}
               >
                 View Financial Dashboard
               </Button>
@@ -317,7 +291,7 @@ export default function SingleSMEDirectoryPage({}: Props) {
             </div>
             <ReusableTable
               columns={columns.map((col) =>
-                col.header === ''
+                col.header === ""
                   ? {
                       ...col,
                       accessor: (row: (typeof documents)[0]) => (
@@ -360,7 +334,7 @@ export default function SingleSMEDirectoryPage({}: Props) {
                         </Dialog>
                       ),
                     }
-                  : col
+                  : col,
               )}
               data={smeData?.documents || []}
             />

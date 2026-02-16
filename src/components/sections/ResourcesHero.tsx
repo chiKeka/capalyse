@@ -1,6 +1,6 @@
-'use client';
-import { useResources } from '@/hooks/waitlistQueries';
-import ResourceCard, { ResourceCardSkeleton } from './ResourceCard';
+"use client";
+import { useResources } from "@/hooks/waitlistQueries";
+import ResourceCard, { ResourceCardSkeleton } from "./ResourceCard";
 
 type Data = {
   title: string;
@@ -18,15 +18,13 @@ export const ResourcesHero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid gap-12 items-center text-black-500 ">
           <div className="flex flex-col items-center text-center max-w-[39.75rem] mx-auto">
-            <p className="text-green font-normal text-sm my-4">
-              RESOURCE LIBRARY
-            </p>
+            <p className="text-green font-normal text-sm my-4">RESOURCE LIBRARY</p>
             <h1 className="lg:text-5xl text-3xl  font-bold leading-tight mb-6">
               Empower Your Growth With the Right Tools
             </h1>
             <p className="mb-8 leading-relaxed text-base font-normal ">
-              From compliance to investor readiness, access learning tools,
-              score systems, and guides designed for African SMEs and investors.
+              From compliance to investor readiness, access learning tools, score systems, and
+              guides designed for African SMEs and investors.
             </p>
           </div>
         </div>
@@ -38,9 +36,7 @@ export const ResourcesHero = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10 justify-items-center">
           {isLoading
-            ? Array.from({ length: 6 }, (_, index) => (
-                <ResourceCardSkeleton key={index} />
-              ))
+            ? Array.from({ length: 6 }, (_, index) => <ResourceCardSkeleton key={index} />)
             : data?.resources?.map((item: Data, index: number) => (
                 <ResourceCard
                   key={item?.link}

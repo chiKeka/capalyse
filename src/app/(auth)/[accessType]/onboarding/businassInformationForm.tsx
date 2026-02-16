@@ -13,10 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  useAfricanCountries,
-  useIndustries,
-} from "@/hooks/useComplianceCatalogs";
+import { useAfricanCountries, useIndustries } from "@/hooks/useComplianceCatalogs";
 import { updateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
@@ -39,143 +36,136 @@ type BusinassInformationFormProps = {
   onFinish?: () => void;
   onSuccess?: () => void;
 };
-const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
-  (props, ref) => {
-    const [selectedCountryName, setSelectedCountryName] = useState("");
-    const { smes_bussiness_info } = updateProfile();
-    const authState: any = useAtomValue(authAtom);
-    const setStep = useSetAtom(onboardingStepAtom);
-    const {
-      register,
-      handleSubmit,
-      setValue,
-      setError,
-      formState: { errors },
-    } = useForm<SMEsBusinessInfo>();
-    const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
-    const { data: countries = [], isLoading: countriesLoading } =
-      useAfricanCountries();
-    const { data: industries = [] } = useIndustries();
+const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>((props, ref) => {
+  const [selectedCountryName, setSelectedCountryName] = useState("");
+  const { smes_bussiness_info } = updateProfile();
+  const authState: any = useAtomValue(authAtom);
+  const setStep = useSetAtom(onboardingStepAtom);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors },
+  } = useForm<SMEsBusinessInfo>();
+  const [selectedCountry, setSelectedCountry] = useState<string[]>([]);
+  const { data: countries = [], isLoading: countriesLoading } = useAfricanCountries();
+  const { data: industries = [] } = useIndustries();
 
-    useEffect(() => {
-      props.setLoading(smes_bussiness_info.isPending);
-    }, [smes_bussiness_info.isPending, props]);
+  useEffect(() => {
+    props.setLoading(smes_bussiness_info.isPending);
+  }, [smes_bussiness_info.isPending, props]);
 
-    useEffect(() => {
-      if (smes_bussiness_info.error) {
-        const error = smes_bussiness_info.error as any;
-        console.log("Business info error:", error);
-        
-        if (error?.error?.issues) {
-          error.error.issues.forEach((issue: any) => {
-            const fieldName = issue.path[0];
-            if (fieldName) {
-              setError(fieldName as any, {
-                type: 'manual',
-                message: issue.message,
-              });
-            }
-          });
-        } else if (error?.message) {
-          setError('root', {
-            type: 'manual',
-            message: error.message,
-          });
-        }
-      }
-    }, [smes_bussiness_info.error, setError]);
-    
-    useImperativeHandle(ref, () => ({
-      submit: () => {
-        return new Promise((resolve) => {
-          handleSubmit(
-            (values) => {
-              onSubmit(values);
-              resolve(true);
-            },
-            () => {
-              resolve(false);
-            }
-          )();
-        });
-      },
-      isLoading: smes_bussiness_info.isPending,
-    }));
-    
-    const router = useRouter();
-    const onSubmit = (data: SMEsBusinessInfo) => {
-      const cleanedData = {
-        ...data,
-        website: data.website?.trim() || undefined,
-        industry: data.industry || undefined,
-      };
+  useEffect(() => {
+    if (smes_bussiness_info.error) {
+      const error = smes_bussiness_info.error as any;
+      console.log("Business info error:", error);
 
-      smes_bussiness_info.mutateAsync(cleanedData, {
-        onSuccess: () => {
-          if (props.onSuccess) {
-            props.onSuccess();
+      if (error?.error?.issues) {
+        error.error.issues.forEach((issue: any) => {
+          const fieldName = issue.path[0];
+          if (fieldName) {
+            setError(fieldName as any, {
+              type: "manual",
+              message: issue.message,
+            });
           }
-        },
-        onError: (error) => {
-          // console.log(error)
-        },
+        });
+      } else if (error?.message) {
+        setError("root", {
+          type: "manual",
+          message: error.message,
+        });
+      }
+    }
+  }, [smes_bussiness_info.error, setError]);
+
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      return new Promise((resolve) => {
+        handleSubmit(
+          (values) => {
+            onSubmit(values);
+            resolve(true);
+          },
+          () => {
+            resolve(false);
+          },
+        )();
       });
+    },
+    isLoading: smes_bussiness_info.isPending,
+  }));
+
+  const router = useRouter();
+  const onSubmit = (data: SMEsBusinessInfo) => {
+    const cleanedData = {
+      ...data,
+      website: data.website?.trim() || undefined,
+      industry: data.industry || undefined,
     };
 
-    const handleBusinessStageChange = (value: string) => {
-      const newCountry = selectedCountry.includes(value)
-        ? selectedCountry.filter((item) => item !== value)
-        : [...selectedCountry, value];
+    smes_bussiness_info.mutateAsync(cleanedData, {
+      onSuccess: () => {
+        if (props.onSuccess) {
+          props.onSuccess();
+        }
+      },
+      onError: (error) => {
+        // console.log(error)
+      },
+    });
+  };
 
-      setSelectedCountry(newCountry);
-      setValue("countryOfOperation", newCountry);
-    };
+  const handleBusinessStageChange = (value: string) => {
+    const newCountry = selectedCountry.includes(value)
+      ? selectedCountry.filter((item) => item !== value)
+      : [...selectedCountry, value];
 
-    const handleRemoveBusinessStage = (value: string) => {
-      const newCountry = selectedCountry.filter((item) => item !== value);
-      setSelectedCountry(newCountry);
-      setValue("countryOfOperation", newCountry);
-    };
+    setSelectedCountry(newCountry);
+    setValue("countryOfOperation", newCountry);
+  };
 
-    return (
-      <form
-        className="grid md:grid-cols-2 w-full gap-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div>
-          <Input
-            className=""
-            label="Business Name"
-            placeholder="Input business name"
-            type="text"
-            {...register("businessName", {
-              required: "Business Name is required",
-            })}
-          />
-          {errors.businessName && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.businessName.message}
-            </span>
-          )}
-        </div>
+  const handleRemoveBusinessStage = (value: string) => {
+    const newCountry = selectedCountry.filter((item) => item !== value);
+    setSelectedCountry(newCountry);
+    setValue("countryOfOperation", newCountry);
+  };
 
-        <div>
-          <Input
-            className=""
-            label="Business registration number"
-            placeholder="Earnest"
-            type="text"
-            {...register("registrationNumber", {
-              required: "business Registration number is required",
-            })}
-          />
-          {errors.registrationNumber && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.registrationNumber.message}
-            </span>
-          )}
-        </div>
-        {/*
+  return (
+    <form className="grid md:grid-cols-2 w-full gap-4" onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <Input
+          className=""
+          label="Business Name"
+          placeholder="Input business name"
+          type="text"
+          {...register("businessName", {
+            required: "Business Name is required",
+          })}
+        />
+        {errors.businessName && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.businessName.message}</span>
+        )}
+      </div>
+
+      <div>
+        <Input
+          className=""
+          label="Business registration number"
+          placeholder="Earnest"
+          type="text"
+          {...register("registrationNumber", {
+            required: "business Registration number is required",
+          })}
+        />
+        {errors.registrationNumber && (
+          <span className="col-span-2 text-[10px] text-red-500">
+            {errors.registrationNumber.message}
+          </span>
+        )}
+      </div>
+      {/*
         <div>
           <label className="block mb-1 text-sm font-medium">
             Country of Operation
@@ -197,109 +187,95 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>(
           />
         </div> */}
 
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Country of Operation
-          </label>
-          <MultiSelect
+      <div>
+        <label className="block mb-1 text-sm font-medium">Country of Operation</label>
+        <MultiSelect selectedItems={selectedCountry} onValueChange={handleBusinessStageChange}>
+          <MultiSelectTrigger
             selectedItems={selectedCountry}
-            onValueChange={handleBusinessStageChange}
+            onRemoveItem={handleRemoveBusinessStage}
           >
-            <MultiSelectTrigger
-              selectedItems={selectedCountry}
-              onRemoveItem={handleRemoveBusinessStage}
-            >
-              <MultiSelectValue placeholder="Select business stage" />
-            </MultiSelectTrigger>
-            <MultiSelectContent>
-              {countries.map((c) => (
-                <MultiSelectItem key={c.code} value={c.name}>
-                  {c.name}
-                </MultiSelectItem>
-              ))}
-            </MultiSelectContent>
-          </MultiSelect>
-          {errors.businessStage && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.businessStage.message}
-            </span>
-          )}
-        </div>
+            <MultiSelectValue placeholder="Select business stage" />
+          </MultiSelectTrigger>
+          <MultiSelectContent>
+            {countries.map((c) => (
+              <MultiSelectItem key={c.code} value={c.name}>
+                {c.name}
+              </MultiSelectItem>
+            ))}
+          </MultiSelectContent>
+        </MultiSelect>
+        {errors.businessStage && (
+          <span className="col-span-2 text-[10px] text-red-500">
+            {errors.businessStage.message}
+          </span>
+        )}
+      </div>
 
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Business Stage*
-          </label>
-          <Select
-            // value={watch("businessStage")}
-            onValueChange={(val) => setValue("businessStage", val)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select business stage" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Idea">Idea</SelectItem>
-              <SelectItem value="Startup">Startup</SelectItem>
-              <SelectItem value="Growth">Growth</SelectItem>
-              <SelectItem value="Mature">Mature</SelectItem>
-            </SelectContent>
-          </Select>
-          {errors.businessStage && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.businessStage.message}
-            </span>
-          )}
-        </div>
-        <div>
-          <label className="block mb-1 text-sm font-medium">
-            Industry (Optional)
-          </label>
-          <Select onValueChange={(val) => setValue("industry", val)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Industry" />
-            </SelectTrigger>
-            <SelectContent>
-              {industries.map((industry) => (
-                <SelectItem key={industry} value={industry}>
-                  {industry}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.industry && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.industry.message}
-            </span>
-          )}
-        </div>
+      <div>
+        <label className="block mb-1 text-sm font-medium">Business Stage*</label>
+        <Select
+          // value={watch("businessStage")}
+          onValueChange={(val) => setValue("businessStage", val)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select business stage" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Idea">Idea</SelectItem>
+            <SelectItem value="Startup">Startup</SelectItem>
+            <SelectItem value="Growth">Growth</SelectItem>
+            <SelectItem value="Mature">Mature</SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.businessStage && (
+          <span className="col-span-2 text-[10px] text-red-500">
+            {errors.businessStage.message}
+          </span>
+        )}
+      </div>
+      <div>
+        <label className="block mb-1 text-sm font-medium">Industry (Optional)</label>
+        <Select onValueChange={(val) => setValue("industry", val)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Industry" />
+          </SelectTrigger>
+          <SelectContent>
+            {industries.map((industry) => (
+              <SelectItem key={industry} value={industry}>
+                {industry}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.industry && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.industry.message}</span>
+        )}
+      </div>
 
-        <div>
-          <Input
-            className=""
-            label="Business website (Optional)"
-            placeholder="Input your website link"
-            type="text"
-            {...register("website", {
-              setValueAs: (v) => {
-                if (!v || !String(v).trim()) return undefined;
-                const value = String(v).trim();
-                return /^https?:\/\//i.test(value) ? value : `https://${value}`;
-              },
-              pattern: {
-                value:
-                  /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
-                message: "Please enter a valid URL",
-              },
-            })}
-          />
-          {errors.website && (
-            <span className="col-span-2 text-[10px] text-red-500">
-              {errors.website.message}
-            </span>
-          )}
-        </div>
-      </form>
-    );
-  }
-);
+      <div>
+        <Input
+          className=""
+          label="Business website (Optional)"
+          placeholder="Input your website link"
+          type="text"
+          {...register("website", {
+            setValueAs: (v) => {
+              if (!v || !String(v).trim()) return undefined;
+              const value = String(v).trim();
+              return /^https?:\/\//i.test(value) ? value : `https://${value}`;
+            },
+            pattern: {
+              value:
+                /^(https?:\/\/)?([\w\-])+\.{1}([a-zA-Z]{2,63})([\/\w\-.~:?#[\]@!$&'()*+,;=]*)*\/?$/,
+              message: "Please enter a valid URL",
+            },
+          })}
+        />
+        {errors.website && (
+          <span className="col-span-2 text-[10px] text-red-500">{errors.website.message}</span>
+        )}
+      </div>
+    </form>
+  );
+});
 export default BusinassInformationForm;

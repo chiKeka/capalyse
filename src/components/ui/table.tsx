@@ -80,11 +80,7 @@ export function ReusableTable<T extends object>({
           ) : data.length === 0 ? (
             <tr>
               <td colSpan={columns.length}>
-                <EmptyBox
-                  showButton={false}
-                  caption2={noDataText}
-                  caption={noDataCaption}
-                />
+                <EmptyBox showButton={false} caption2={noDataText} caption={noDataCaption} />
               </td>
             </tr>
           ) : null}
@@ -93,13 +89,10 @@ export function ReusableTable<T extends object>({
             data?.map((row, ridx) => (
               <tr key={ridx} className="hover:bg-gray-50 border">
                 {columns.map((col: any, cidx: number) => (
-                  <td
-                    key={cidx}
-                    className={`px-4 py-3 text-sm ${col.className || ""}`}
-                  >
+                  <td key={cidx} className={`px-4 py-3 text-sm ${col.className || ""}`}>
                     {typeof col.accessor === "function"
                       ? col.accessor(row)
-                      : (row as any)[col.accessor] ?? "-"}
+                      : ((row as any)[col.accessor] ?? "-")}
                   </td>
                 ))}
               </tr>

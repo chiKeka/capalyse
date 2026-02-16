@@ -1,26 +1,17 @@
 import { useGetConversationMessages, useMessages } from "@/hooks/useMessages";
 import { useSession } from "@/lib/auth-client";
-import {
-  ChatMessage,
-  createSendMessageRequest,
-  validateMessageRequest,
-} from "@/lib/uitils/types";
+import { ChatMessage, createSendMessageRequest, validateMessageRequest } from "@/lib/uitils/types";
 import { UserIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "../ui/message-sheet";
 
-const formatMessageForDisplay = (
-  apiMessage: ChatMessage,
-  currentUserId: string
-) => {
+const formatMessageForDisplay = (apiMessage: ChatMessage, currentUserId: string) => {
   const isFromCurrentUser = apiMessage.senderId === currentUserId;
   return {
     id: apiMessage.id,
-    sender: isFromCurrentUser
-      ? "me"
-      : `${apiMessage.senderDetails.name}`,
+    sender: isFromCurrentUser ? "me" : `${apiMessage.senderDetails.name}`,
     text: apiMessage.content,
     time: new Date(apiMessage.createdAt).toLocaleTimeString([], {
       hour: "2-digit",
@@ -34,7 +25,7 @@ const formatMessageForDisplay = (
 
 export default function ChatPage({
   chatUser,
-  currentUserId
+  currentUserId,
 }: {
   chatUser: Message;
   currentUserId: string;
@@ -43,7 +34,6 @@ export default function ChatPage({
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  
   // Get conversation messages
   const conversationId = chatUser.id; // The conversation ID
   const {
@@ -69,10 +59,7 @@ export default function ChatPage({
     if (!input.trim()) return;
 
     // Create and validate the message request
-    const messageRequest = createSendMessageRequest(
-      conversationId,
-      input.trim()
-    );
+    const messageRequest = createSendMessageRequest(conversationId, input.trim());
     const validationErrors = validateMessageRequest(messageRequest);
 
     if (validationErrors.length > 0) {
@@ -114,10 +101,7 @@ export default function ChatPage({
         ) : (
           messages.map((msg, idx) =>
             msg.sender === "me" ? (
-              <div
-                key={msg.id}
-                className="flex items-end justify-end gap-2 mb-2"
-              >
+              <div key={msg.id} className="flex items-end justify-end gap-2 mb-2">
                 <div className="flex flex-col items-end">
                   <div className="bg-emerald-700 text-white px-4 py-2 rounded-2xl text-sm max-w-xs mb-1">
                     {msg.text}
@@ -156,7 +140,7 @@ export default function ChatPage({
                   {msg.text}
                 </div>
               </div>
-            )
+            ),
           )
         )}
         <div ref={messagesEndRef} />
@@ -208,11 +192,7 @@ export default function ChatPage({
                 strokeWidth="2"
                 viewBox="0 0 24 24"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 12h14M12 5l7 7-7 7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             )}
           </button>

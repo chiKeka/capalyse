@@ -1,14 +1,7 @@
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  updateProgramStatus,
-  useListMyApplications,
-} from "@/hooks/usePrograms";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { updateProgramStatus, useListMyApplications } from "@/hooks/usePrograms";
 import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useAtomValue } from "jotai";
@@ -32,12 +25,7 @@ type Props = {
   setEditProgram?: (editProgram: boolean) => void;
 };
 
-function Programs({
-  status = "active",
-  program,
-  editProgram,
-  setEditProgram,
-}: Props) {
+function Programs({ status = "active", program, editProgram, setEditProgram }: Props) {
   const [isStatusPopoverOpen, setIsStatusPopoverOpen] = useState(false);
   const params = useParams();
   const {
@@ -46,18 +34,16 @@ function Programs({
     isLoading,
   } = useListMyApplications(
     undefined, // Try without parameters first
-    params.accessType === "sme" || params.accessType === "investor"
+    params.accessType === "sme" || params.accessType === "investor",
   );
 
   const auth = useAtomValue(authAtom);
   // Check if user has applied to this program
   const hasAppliedToProgram = myApplications?.applications?.some(
-    (application: any) => application.programId === program.id
+    (application: any) => application.programId === program.id,
   );
 
-  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
-    program.id
-  );
+  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(program.id);
   let bg = "#DCFCE7";
   let color = "#22C55E";
 
@@ -113,14 +99,11 @@ function Programs({
           className="flex items-center rounded-[40px] h-[28px] w-fit gap-3 p-2"
           style={{ backgroundColor: bg }}
         >
-          <div
-            className="rounded-full h-2 w-2 font-medium"
-            style={{ backgroundColor: color }}
-          />
-          {(params.accessType === "investor" || params.accessType === "sme") &&
-            label()}
-          {(params.accessType === "development" ||
-            params.accessType === "admin") && <div>{label()}</div>}
+          <div className="rounded-full h-2 w-2 font-medium" style={{ backgroundColor: color }} />
+          {(params.accessType === "investor" || params.accessType === "sme") && label()}
+          {(params.accessType === "development" || params.accessType === "admin") && (
+            <div>{label()}</div>
+          )}
         </div>
 
         {/* {params.accessType === admin || } */}
@@ -153,19 +136,13 @@ function Programs({
 
       <p className="font-bold text-lg text-green">{program?.name}</p>
       <div className="flex items-center  gap-2">
-        <img
-          src="/icons/partnerBadge.png"
-          className="max-h-4  h-auto w-auto max-w-4"
-        />
+        <img src="/icons/partnerBadge.png" className="max-h-4  h-auto w-auto max-w-4" />
         <div className="flex flex-wrap gap-2">
-          Hosted by{" "}
-          {program?.partners?.map((partner: any) => partner?.name).join(", ")}
+          Hosted by {program?.partners?.map((partner: any) => partner?.name).join(", ")}
         </div>
       </div>
 
-      <p className="text-sm text-[#52575C] font-normal">
-        {program?.description}
-      </p>
+      <p className="text-sm text-[#52575C] font-normal">{program?.description}</p>
       <div className="flex flex-col lg:flex-row justify-between gap-0">
         <div className="flex flex-wrap gap-4">
           {" "}
@@ -183,43 +160,32 @@ function Programs({
           </div>
           <div className="flex gap-2 items-center w-fit">
             <img className="w-4 h-4" src="/icons/star.svg" />
-            <p className="text-xs font-normal text-[#0F2501]">
-              {program?.smeStage?.join(", ")}
-            </p>
+            <p className="text-xs font-normal text-[#0F2501]">{program?.smeStage?.join(", ")}</p>
           </div>
         </div>
 
         <div className="w-full items-end flex justify-end ">
-          {(params.accessType === "sme" ||
-            params.accessType === "investor") && (
+          {(params.accessType === "sme" || params.accessType === "investor") && (
             <Button
               // disabled={myApplications?.applications?.some((application: any) => application.programId === program.id)}
               onClick={() => {
                 if (hasAppliedToProgram) {
-                  router.push(
-                    `/${params.accessType}/programs/${program.id}?view=true`
-                  );
+                  router.push(`/${params.accessType}/programs/${program.id}?view=true`);
                 } else {
-                  router.push(
-                    `/${params.accessType}/programs/${program.id}?apply=true`
-                  );
+                  router.push(`/${params.accessType}/programs/${program.id}?apply=true`);
                 }
               }}
               variant="ghost"
               className="text-sm text-green hover:text-green font-bold "
             >
-              {hasAppliedToProgram
-                ? "Already Applied (Click to View)"
-                : "Apply Now"}
+              {hasAppliedToProgram ? "Already Applied (Click to View)" : "Apply Now"}
             </Button>
           )}
 
           {params.accessType === "development" && (
             <div>
               <Button
-                onClick={() =>
-                  router.push(`/${params.accessType}/programs/${program.id}`)
-                }
+                onClick={() => router.push(`/${params.accessType}/programs/${program.id}`)}
                 variant="ghost"
                 className="text-green text-sm hover:text-green"
                 size="small"

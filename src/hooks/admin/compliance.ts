@@ -24,17 +24,11 @@ export const useAdminCompliances = (params: AdminComplianceQuery) => {
   });
 };
 
-export const useApproveAdminCompliance = (
-  caseId: string,
-  docLinkId: string
-) => {
+export const useApproveAdminCompliance = (caseId: string, docLinkId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: { notes: string }) => {
-      const res = await api.post(
-        adminRoutes.approveAdminCompliance(caseId, docLinkId),
-        data
-      );
+      const res = await api.post(adminRoutes.approveAdminCompliance(caseId, docLinkId), data);
       return res.data;
     },
     onSuccess: () => {
@@ -47,10 +41,7 @@ export const useRejectAdminCompliance = (caseId: string, docLinkId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: { notes: string }) => {
-      const res = await api.post(
-        adminRoutes.rejectAdminCompliance(caseId, docLinkId),
-        data
-      );
+      const res = await api.post(adminRoutes.rejectAdminCompliance(caseId, docLinkId), data);
       return res.data;
     },
     onSuccess: () => {

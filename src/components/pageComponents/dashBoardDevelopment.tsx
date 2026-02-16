@@ -31,15 +31,15 @@ export default function DevelopmentDashBoard() {
   const { data: devOrgAnalytics } = GetDevOrgAnalytics();
   const { data: programs } = GetPrograms(filterParams);
   const { data: profile } = ProfileData();
-    const auth = useAtomValue(authAtom);
+  const auth = useAtomValue(authAtom);
   const filteredPrograms = programs?.programs?.filter((p: any) => {
     // First filter by current user's programs
     const isMyProgram = p.developmentOrgId === auth?.id;
     return isMyProgram;
   });
-    const [isOpen, setIsOpen] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [selectedProgram, setSelectedProgram] = useState<any>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<any>(null);
   const overviewCards = [
     {
       id: 3,
@@ -81,22 +81,15 @@ export default function DevelopmentDashBoard() {
               <span className="font-bold">{card.label}</span>
               <div className="flex items-center justify-between gap-2 mt-auto">
                 <span className="text-5xl font-bold">
-                  {card.currency
-                    ? formatCurrency(card.amount, 0, 0, card.currency)
-                    : card.amount}
+                  {card.currency ? formatCurrency(card.amount, 0, 0, card.currency) : card.amount}
                 </span>
                 <div className="text-center">
                   {card?.percentage !== undefined &&
                     (card.direction === "up" ? (
-                      <span className="text-sm text-success-100 font-bold">
-                        {card.percentage}%
-                      </span>
+                      <span className="text-sm text-success-100 font-bold">{card.percentage}%</span>
                     ) : (
                       <span className="text-sm text-red font-bold">
-                        {card.percentage && card.percentage < 0
-                          ? card.percentage
-                          : 0}
-                        %
+                        {card.percentage && card.percentage < 0 ? card.percentage : 0}%
                       </span>
                     ))}
                   <div className="text-2xl border border-[#ABD2C7] bg-[#F4FFFC] text-green rounded-md p-2">

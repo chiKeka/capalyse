@@ -1,4 +1,4 @@
-import StraightBar from '@/components/ui/straightBar';
+import StraightBar from "@/components/ui/straightBar";
 
 type Props = { caption?: string; label?: string; value?: number };
 

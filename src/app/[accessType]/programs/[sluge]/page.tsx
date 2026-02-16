@@ -4,16 +4,8 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
 import CreateProgram from "@/components/ui/createProgram";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  applyToProgram,
-  GetProgramById,
-  updateProgramStatus,
-} from "@/hooks/usePrograms";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { applyToProgram, GetProgramById, updateProgramStatus } from "@/hooks/usePrograms";
 import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useAtomValue } from "jotai";
@@ -35,12 +27,8 @@ function page() {
   const { data: program } = GetProgramById(params.sluge as string);
   const router = useRouter();
   const dateRange = `${program?.startDate} – ${program?.endDate}`;
-  const { mutateAsync: applyToPtograms } = applyToProgram(
-    params.sluge as string
-  );
-  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(
-    params.sluge as string
-  );
+  const { mutateAsync: applyToPtograms } = applyToProgram(params.sluge as string);
+  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(params.sluge as string);
   const auth = useAtomValue(authAtom);
   let bg = "#DCFCE7";
   let color = "#22C55E";
@@ -99,47 +87,39 @@ function page() {
     <div>
       <div className="flex my-4 justify-between w-full">
         <div className="inline-flex my-3 md:text-sm text-xs lg:text-base">
-          <p>Program {'>'}</p>
+          <p>Program {">"}</p>
           <p className="font-medium text-green ">{program?.name}</p>
         </div>
-        {params?.accessType === 'development' &&
-          program?.developmentOrgId === auth?.id && (
-            <div className="flex items-center gap-2">
-              <Button
-                onClick={() =>
-                  router.push(
-                    `/${params.accessType}/programs/${params.sluge}/applicants`
-                  )
-                }
-                className="text-green w-fit"
-                variant="tertiary"
-              >
-                {CIcons?.applicants()}
-                View Applicants
-              </Button>
-              <Button
-                className="text-green w-fit"
-                variant="tertiary"
-                onClick={() => {
-                  setIsOpen(true);
-                  setIsEdit(true);
-                }}
-              >
-                {CIcons?.edit()}
-                Edit
-              </Button>
-            </div>
-          )}
+        {params?.accessType === "development" && program?.developmentOrgId === auth?.id && (
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() =>
+                router.push(`/${params.accessType}/programs/${params.sluge}/applicants`)
+              }
+              className="text-green w-fit"
+              variant="tertiary"
+            >
+              {CIcons?.applicants()}
+              View Applicants
+            </Button>
+            <Button
+              className="text-green w-fit"
+              variant="tertiary"
+              onClick={() => {
+                setIsOpen(true);
+                setIsEdit(true);
+              }}
+            >
+              {CIcons?.edit()}
+              Edit
+            </Button>
+          </div>
+        )}
 
-        {searchParams.get('apply') === 'true' &&
-          (params?.accessType === 'sme' ||
-            params?.accessType === 'investor') && (
+        {searchParams.get("apply") === "true" &&
+          (params?.accessType === "sme" || params?.accessType === "investor") && (
             <div className="flex items-center gap-2">
-              <Button
-                className="text-green w-fit"
-                variant="primary"
-                onClick={handleApplyToProgram}
-              >
+              <Button className="text-green w-fit" variant="primary" onClick={handleApplyToProgram}>
                 Apply Now
               </Button>
             </div>
@@ -149,20 +129,12 @@ function page() {
       <DashboardCardLayout>
         <div className="flex flex-col gap-6">
           <div className="py-3 flex flex-col gap-2">
-            <p className="lg:text-4xl text-2xl text-green font-bold ">
-              {program?.name}
-            </p>
+            <p className="lg:text-4xl text-2xl text-green font-bold ">{program?.name}</p>
             <div className="flex items-center space-x-6">
               <div className="flex items-center  gap-2">
-                <img
-                  src="/icons/partnerBadge.png"
-                  className="max-h-4  h-auto w-auto max-w-4"
-                />
+                <img src="/icons/partnerBadge.png" className="max-h-4  h-auto w-auto max-w-4" />
                 <div className="flex flex-wrap gap-2">
-                  Hosted by{' '}
-                  {program?.partners
-                    ?.map((partner: any) => partner?.name)
-                    .join(', ')}
+                  Hosted by {program?.partners?.map((partner: any) => partner?.name).join(", ")}
                 </div>
               </div>
               <div
@@ -173,18 +145,11 @@ function page() {
                   className="rounded-full h-2 w-2 font-medium"
                   style={{ backgroundColor: color }}
                 />
-                {(params.accessType === 'investor' ||
-                  params.accessType === 'sme') &&
-                  label()}
-                {(params.accessType === 'development' ||
-                  params.accessType === 'admin') && (
+                {(params.accessType === "investor" || params.accessType === "sme") && label()}
+                {(params.accessType === "development" || params.accessType === "admin") && (
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="small"
-                        className="text-xs font-medium"
-                      >
+                      <Button variant="ghost" size="small" className="text-xs font-medium">
                         {label()}
                       </Button>
                     </PopoverTrigger>
@@ -218,40 +183,29 @@ function page() {
             </div>
             <div>
               <p className="font-bold text-base">Program Duration</p>
-              <p className="font-normal text-base">
-                {formatDateRange(dateRange as string)}
-              </p>
+              <p className="font-normal text-base">{formatDateRange(dateRange as string)}</p>
             </div>
             <div>
               <p className="font-bold text-normal">Target Region</p>
-              <p className="font-normal text-base">
-                {program?.eligibleCountries?.join(', ')}
-              </p>
+              <p className="font-normal text-base">{program?.eligibleCountries?.join(", ")}</p>
             </div>
             <div>
               <p className="font-normal text-base">Support Provided:</p>
               <ol className="list-disc font-normal text-base ml-5">
                 {program?.supportTypes?.map((item: string, index: number) => (
-                  <li key={index}>{item?.replace('_', ' ')}</li>
+                  <li key={index}>{item?.replace("_", " ")}</li>
                 ))}
               </ol>
             </div>
             <div>
               <p className="font-bold text-base">Partners:</p>
               <p className="font-normal text-base">
-                {program?.partners
-                  ?.map((partner: any) => partner?.name)
-                  .join(', ')}
+                {program?.partners?.map((partner: any) => partner?.name).join(", ")}
               </p>
             </div>
           </div>
         </div>
-        <CreateProgram
-          program={program}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isEdit={isEdit}
-        />
+        <CreateProgram program={program} isOpen={isOpen} setIsOpen={setIsOpen} isEdit={isEdit} />
       </DashboardCardLayout>
     </div>
   );

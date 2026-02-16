@@ -1,12 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 
-export function formatCurrency(
-  value: number,
-  minFD = 2,
-  maxFD = 2,
-  currency: string
-) {
+export function formatCurrency(value: number, minFD = 2, maxFD = 2, currency: string) {
   return new Intl.NumberFormat("en", {
     style: "currency",
     currency: currency ?? "NGN",
@@ -17,8 +12,7 @@ export function formatCurrency(
 
 export function validateAuthForm(form: { email: string; password: string }) {
   const errors: { email?: string; password?: string } = {};
-  const passwordPattern =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   if (!form.email) {
     errors.email = "Email is required";
   } else if (!/\S+@\S+\.\S+/.test(form.email)) {
@@ -36,26 +30,18 @@ export function validateAuthForm(form: { email: string; password: string }) {
 export function getKeyByValue(obj: any, value: string) {
   const lowercasedValue = value?.toLowerCase();
   const lowercasedObj = Object?.fromEntries(
-    Object?.entries(obj)?.map(([key, val]) => [key, String(val)?.toLowerCase()])
+    Object?.entries(obj)?.map(([key, val]) => [key, String(val)?.toLowerCase()]),
   );
-  const foundKey = Object?.keys(obj)?.find(
-    (key) => lowercasedObj[key] === lowercasedValue
-  );
+  const foundKey = Object?.keys(obj)?.find((key) => lowercasedObj[key] === lowercasedValue);
   return foundKey ? foundKey.toLowerCase() : undefined;
 }
 
 export const uploadUrl = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-export const handleImageUpload = async (
-  file: File,
-  onSuccess?: (x: string) => void
-) => {
+export const handleImageUpload = async (file: File, onSuccess?: (x: string) => void) => {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append(
-    "upload_preset",
-    process.env.NEXT_PUBLIC_CLOUDINARY_PRESET as string
-  );
+  formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET as string);
   await axios
     .post(uploadUrl, formData)
     .then(({ data }) => {
@@ -150,7 +136,6 @@ export function formatDateRange(dateRange: string): string {
     return dateRange; // Return original string if there's an error
   }
 }
-
 
 export function generateColor(amount: number, min: number, max: number): string {
   // Clamp amount between min and max

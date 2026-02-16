@@ -1,8 +1,8 @@
-import { FileText } from 'lucide-react';
+import { FileText } from "lucide-react";
 
 const Documents = ({ data }: { data?: any }) => {
   const handleViewDocument = (document: string) => {
-    window.open(document, '_blank');
+    window.open(document, "_blank");
   };
   return (
     <div className="mt-8">
@@ -10,10 +10,7 @@ const Documents = ({ data }: { data?: any }) => {
 
       <div className="space-y-4">
         {data?.map((doc: any) => (
-          <div
-            className="flex items-center justify-between py-3"
-            key={doc.document}
-          >
+          <div className="flex items-center justify-between py-3" key={doc.document}>
             <div className="flex items-center space-x-3">
               <FileText className="w-8 h-8 text-green-600" />
               <div>

@@ -1,9 +1,5 @@
 import api from "@/api/axios";
-import {
-  ApiEndPoints,
-  investorsAnalytics,
-  profileRoutes,
-} from "@/api/endpoints";
+import { ApiEndPoints, investorsAnalytics, profileRoutes } from "@/api/endpoints";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetProfileNextStep = () => {

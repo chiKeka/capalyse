@@ -25,7 +25,7 @@ const ProgramManagement = () => {
     limit: 20,
     q: debouncedSearch || undefined,
   });
-  
+
   const { data: industries = [] } = useIndustries();
 
   // console.log({ data });

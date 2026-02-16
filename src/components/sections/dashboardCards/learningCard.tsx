@@ -13,7 +13,6 @@ interface Props {
   onClick?: () => void;
 }
 function LearningCard({ header, text, image, href, index, onClick }: Props) {
-
   return (
     <motion.div
       initial="hidden"
@@ -29,12 +28,8 @@ function LearningCard({ header, text, image, href, index, onClick }: Props) {
           <p className="py-[2px] px-2 rounded-[40px] bg-[#FEF9C3] text-[#713F12] text-xs font-normal w-fit">
             Business Strategy
           </p>
-          <p className="text-2xl text-start font-bold text-[#121212]">
-            {header}
-          </p>
-          <p className="text-[#121212] font-normal text-base text-start">
-            {text}
-          </p>
+          <p className="text-2xl text-start font-bold text-[#121212]">{header}</p>
+          <p className="text-[#121212] font-normal text-base text-start">{text}</p>
           <div className="w-full flex flex-col ">
             <div className="items-center w-full text-xs font-normal text-[#18181B] flex justify-between">
               <p>Progress</p>

@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import api from '@/api/axios';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "@/api/axios";
 
 // ============================================================================
 // TYPES AND INTERFACES
@@ -48,8 +48,8 @@ export interface UploadProgress {
 // ============================================================================
 
 const documentEndpoints = {
-  upload: '/documents/upload',
-  getAll: '/documents',
+  upload: "/documents/upload",
+  getAll: "/documents",
   download: (id: string) => `/documents/${id}/download`,
   delete: (id: string) => `/documents/${id}`,
 } as const;
@@ -59,12 +59,10 @@ const documentEndpoints = {
 // ============================================================================
 
 export const documentQueryKeys = {
-  all: ['documents'] as const,
-  lists: (category?: string) =>
-    [...documentQueryKeys.all, 'list', { category }] as const,
-  list: (filters: string) =>
-    [...documentQueryKeys.lists(), { filters }] as const,
-  details: () => [...documentQueryKeys.all, 'detail'] as const,
+  all: ["documents"] as const,
+  lists: (category?: string) => [...documentQueryKeys.all, "list", { category }] as const,
+  list: (filters: string) => [...documentQueryKeys.lists(), { filters }] as const,
+  details: () => [...documentQueryKeys.all, "detail"] as const,
   detail: (id: string) => [...documentQueryKeys.details(), id] as const,
 } as const;
 
@@ -76,27 +74,25 @@ export const documentQueryKeys = {
  * Format file size for display
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return "0 Bytes";
 
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const sizes = ["Bytes", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
 /**
  * Get file type icon based on MIME type
  */
 export function getFileTypeIcon(mimeType: string): string {
-  if (mimeType.startsWith('image/')) return '🖼️';
-  if (mimeType.includes('pdf')) return '📄';
-  if (mimeType.includes('word') || mimeType.includes('document')) return '📝';
-  if (mimeType.includes('excel') || mimeType.includes('spreadsheet'))
-    return '📊';
-  if (mimeType.includes('powerpoint') || mimeType.includes('presentation'))
-    return '📈';
-  return '📁';
+  if (mimeType.startsWith("image/")) return "🖼️";
+  if (mimeType.includes("pdf")) return "📄";
+  if (mimeType.includes("word") || mimeType.includes("document")) return "📝";
+  if (mimeType.includes("excel") || mimeType.includes("spreadsheet")) return "📊";
+  if (mimeType.includes("powerpoint") || mimeType.includes("presentation")) return "📈";
+  return "📁";
 }
 
 /**
@@ -104,10 +100,10 @@ export function getFileTypeIcon(mimeType: string): string {
  */
 export function isValidFileType(
   file: File,
-  allowedTypes: string[] = ['image/*', 'application/pdf']
+  allowedTypes: string[] = ["image/*", "application/pdf"],
 ): boolean {
   return allowedTypes.some((type) => {
-    if (type.endsWith('/*')) {
+    if (type.endsWith("/*")) {
       return file.type.startsWith(type.slice(0, -1));
     }
     return file.type === type;
@@ -143,9 +139,7 @@ export function useDocument() {
     return useQuery({
       queryKey: documentQueryKeys.lists(),
       queryFn: async (): Promise<Document[]> => {
-        const response = await api.get<DocumentListResponse>(
-          documentEndpoints.getAll
-        );
+        const response = await api.get<DocumentListResponse>(documentEndpoints.getAll);
         return response.data.data;
       },
       enabled,
@@ -159,14 +153,11 @@ export function useDocument() {
     return useQuery({
       queryKey: documentQueryKeys.lists(category),
       queryFn: async (): Promise<Document[]> => {
-        const response = await api.get<DocumentListResponse>(
-          documentEndpoints.getAll,
-          {
-            params: {
-              category,
-            },
-          }
-        );
+        const response = await api.get<DocumentListResponse>(documentEndpoints.getAll, {
+          params: {
+            category,
+          },
+        });
         return response.data.data;
       },
       enabled,
@@ -180,12 +171,10 @@ export function useDocument() {
     return useQuery({
       queryKey: documentQueryKeys.detail(id),
       queryFn: async (): Promise<Document> => {
-        const response = await api.get<DocumentListResponse>(
-          documentEndpoints.getAll
-        );
+        const response = await api.get<DocumentListResponse>(documentEndpoints.getAll);
         const document = response.data.data.find((doc) => doc._id === id);
         if (!document) {
-          throw new Error('Document not found');
+          throw new Error("Document not found");
         }
         return document;
       },
@@ -212,10 +201,10 @@ export function useDocument() {
         category?: string;
       }): Promise<Document> => {
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('fileName', fileName);
+        formData.append("file", file);
+        formData.append("fileName", fileName);
         if (category) {
-          formData.append('category', category);
+          formData.append("category", category);
         }
 
         const response = await api.post<DocumentUploadResponse>(
@@ -223,18 +212,16 @@ export function useDocument() {
           formData,
           {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
             onUploadProgress: (progressEvent) => {
               if (progressEvent.total) {
-                const percentage = Math.round(
-                  (progressEvent.loaded * 100) / progressEvent.total
-                );
+                const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                 // You can use this for progress tracking if needed
                 // console.log(`Upload progress: ${percentage}%`);
               }
             },
-          }
+          },
         );
 
         return response.data.data;
@@ -268,9 +255,9 @@ export function useDocument() {
       }): Promise<Document[]> => {
         const uploadPromises = files.map(async (file) => {
           const formData = new FormData();
-          formData.append('file', file);
+          formData.append("file", file);
           if (category) {
-            formData.append('category', category);
+            formData.append("category", category);
           }
 
           const response = await api.post<DocumentUploadResponse>(
@@ -278,9 +265,9 @@ export function useDocument() {
             formData,
             {
               headers: {
-                'Content-Type': 'multipart/form-data',
+                "Content-Type": "multipart/form-data",
               },
-            }
+            },
           );
 
           return response.data.data;
@@ -296,10 +283,7 @@ export function useDocument() {
 
         // Add new documents to the cache
         data.forEach((document) => {
-          queryClient.setQueryData(
-            documentQueryKeys.detail(document._id),
-            document
-          );
+          queryClient.setQueryData(documentQueryKeys.detail(document._id), document);
         });
       },
       onError: (error) => {
@@ -314,16 +298,11 @@ export function useDocument() {
   const useDeleteDocument = () => {
     return useMutation({
       mutationFn: async (id: string): Promise<DocumentDeleteResponse> => {
-        const response = await api.delete<DocumentDeleteResponse>(
-          documentEndpoints.delete(id)
-        );
-        queryClient.setQueryData<Document[]>(
-          documentQueryKeys.lists(),
-          (oldData) => {
-            if (!oldData) return oldData;
-            return oldData.filter((doc) => doc._id !== id);
-          }
-        );
+        const response = await api.delete<DocumentDeleteResponse>(documentEndpoints.delete(id));
+        queryClient.setQueryData<Document[]>(documentQueryKeys.lists(), (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.filter((doc) => doc._id !== id);
+        });
 
         // Remove from detail cache
         queryClient.removeQueries({
@@ -347,21 +326,19 @@ export function useDocument() {
     return useMutation({
       mutationFn: async (id: string): Promise<Blob> => {
         const response = await api.get(documentEndpoints.download(id), {
-          responseType: 'blob',
+          responseType: "blob",
         });
         return response.data;
       },
       onSuccess: (blob, id) => {
         // Get document details to use original filename
-        const docData = queryClient.getQueryData<Document>(
-          documentQueryKeys.detail(id)
-        );
+        const docData = queryClient.getQueryData<Document>(documentQueryKeys.detail(id));
 
         const filename = docData?.originalName || `document-${id}`;
 
         // Create download link
         const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = url;
         link.download = filename;
         document.body.appendChild(link);
@@ -392,28 +369,26 @@ export function useDocument() {
         onProgress?: (progress: UploadProgress) => void;
       }): Promise<Document> => {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
         const response = await api.post<DocumentUploadResponse>(
           documentEndpoints.upload,
           formData,
           {
             headers: {
-              'Content-Type': 'multipart/form-data',
+              "Content-Type": "multipart/form-data",
             },
             onUploadProgress: (progressEvent) => {
               if (progressEvent.total && onProgress) {
                 const progress: UploadProgress = {
                   loaded: progressEvent.loaded,
                   total: progressEvent.total,
-                  percentage: Math.round(
-                    (progressEvent.loaded * 100) / progressEvent.total
-                  ),
+                  percentage: Math.round((progressEvent.loaded * 100) / progressEvent.total),
                 };
                 onProgress(progress);
               }
             },
-          }
+          },
         );
 
         return response.data.data;
@@ -434,9 +409,7 @@ export function useDocument() {
     return useMutation({
       mutationFn: async (ids: string[]): Promise<DocumentDeleteResponse[]> => {
         const deletePromises = ids.map(async (id) => {
-          const response = await api.delete<DocumentDeleteResponse>(
-            documentEndpoints.delete(id)
-          );
+          const response = await api.delete<DocumentDeleteResponse>(documentEndpoints.delete(id));
           return response.data;
         });
 
@@ -444,13 +417,10 @@ export function useDocument() {
       },
       onSuccess: (data, ids) => {
         // Remove from documents list cache
-        queryClient.setQueryData<Document[]>(
-          documentQueryKeys.lists(),
-          (oldData) => {
-            if (!oldData) return oldData;
-            return oldData.filter((doc) => !ids.includes(doc._id));
-          }
-        );
+        queryClient.setQueryData<Document[]>(documentQueryKeys.lists(), (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.filter((doc) => !ids.includes(doc._id));
+        });
 
         // Remove from detail cache
         ids.forEach((id) => {
@@ -494,31 +464,23 @@ export function useDocumentUpload() {
   const { useUploadDocumentWithProgress } = useDocument();
   const uploadMutation = useUploadDocumentWithProgress();
 
-  const handleFileUpload = async (
-    file: File,
-    onProgress?: (progress: UploadProgress) => void
-  ) => {
+  const handleFileUpload = async (file: File, onProgress?: (progress: UploadProgress) => void) => {
     // Validate file type
     if (!isValidFileType(file)) {
-      throw new Error('Invalid file type. Only images and PDFs are allowed.');
+      throw new Error("Invalid file type. Only images and PDFs are allowed.");
     }
 
     // Validate file size (10MB default)
     if (!isValidFileSize(file, 10)) {
-      throw new Error('File size too large. Maximum size is 10MB.');
+      throw new Error("File size too large. Maximum size is 10MB.");
     }
 
     return uploadMutation.mutateAsync({ file, onProgress });
   };
 
-  const handleDrop = async (
-    files: FileList,
-    onProgress?: (progress: UploadProgress) => void
-  ) => {
+  const handleDrop = async (files: FileList, onProgress?: (progress: UploadProgress) => void) => {
     const fileArray = Array.from(files);
-    const uploadPromises = fileArray.map((file) =>
-      handleFileUpload(file, onProgress)
-    );
+    const uploadPromises = fileArray.map((file) => handleFileUpload(file, onProgress));
     return Promise.all(uploadPromises);
   };
 
@@ -535,8 +497,7 @@ export function useDocumentUpload() {
  * Hook for document management with filtering and sorting
  */
 export function useDocumentManagement() {
-  const { useGetDocuments, useDeleteDocument, useBulkDeleteDocuments } =
-    useDocument();
+  const { useGetDocuments, useDeleteDocument, useBulkDeleteDocuments } = useDocument();
 
   const { data: documents, isLoading, error } = useGetDocuments();
   const deleteMutation = useDeleteDocument();

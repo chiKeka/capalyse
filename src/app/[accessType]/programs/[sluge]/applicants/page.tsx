@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import DashboardCardLayout from '@/components/layout/dashboardCardLayout';
-import { SearchForm } from '@/components/search-form';
-import Button from '@/components/ui/Button';
+import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
+import { SearchForm } from "@/components/search-form";
+import Button from "@/components/ui/Button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ReusableTable } from '@/components/ui/table';
-import { useIndustries } from '@/hooks/useComplianceCatalogs';
-import { GetProgramApplications, GetProgramById } from '@/hooks/usePrograms';
-import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+} from "@/components/ui/select";
+import { ReusableTable } from "@/components/ui/table";
+import { useIndustries } from "@/hooks/useComplianceCatalogs";
+import { GetProgramApplications, GetProgramById } from "@/hooks/usePrograms";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {};
 
 function page({}: Props) {
-  const [search, setSearch] = useState('');
-  const [industryFilter, setIndustryFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [industryFilter, setIndustryFilter] = useState("all");
   const params = useParams();
   const { data: program } = GetProgramApplications(params.sluge as string);
   const { data: programDetails } = GetProgramById(params.sluge as string);
@@ -36,7 +36,7 @@ function page({}: Props) {
       applicant?.industry?.toLowerCase().includes(search.toLowerCase()) ||
       applicant?.location?.toLowerCase().includes(search.toLowerCase());
     const matchesIndustry =
-      industryFilter === 'all' ||
+      industryFilter === "all" ||
       applicant?.industry?.toLowerCase() === industryFilter.toLowerCase();
     return matchesSearch && matchesIndustry;
   });
@@ -44,7 +44,7 @@ function page({}: Props) {
   // console.log({ program });
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: (typeof applicants)[0]) => (
         <div className="flex items-center gap-2">
           {row.avatar ? (
@@ -56,37 +56,34 @@ function page({}: Props) {
               className="rounded-full"
             />
           ) : null}
-          <span className="font-medium text-sm">
-            {row.sme?.smeBusinessInfo?.businessName}
-          </span>
+          <span className="font-medium text-sm">{row.sme?.smeBusinessInfo?.businessName}</span>
         </div>
       ),
     },
     {
-      header: 'Industry',
+      header: "Industry",
+      accessor: (row: (typeof applicants)[0]) => row.sme?.smeBusinessInfo?.industry,
+    },
+    {
+      header: "Country",
       accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.industry,
+        row.sme?.smeBusinessInfo?.countryOfOperation?.join(", "),
     },
     {
-      header: 'Country',
-      accessor: (row: (typeof applicants)[0]) =>
-        row.sme?.smeBusinessInfo?.countryOfOperation?.join(', '),
+      header: "Readiness Score",
+      accessor: (row: (typeof applicants)[0]) => row.sme?.readinessPct ?? "-",
     },
     {
-      header: 'Readiness Score',
-      accessor: (row: (typeof applicants)[0]) => row.sme?.readinessPct ?? '-',
+      header: "Revenue",
+      accessor: (row: (typeof applicants)[0]) => row.sme?.revenueTTM ?? "-",
     },
     {
-      header: 'Revenue',
-      accessor: (row: (typeof applicants)[0]) => row.sme?.revenueTTM ?? '-',
-    },
-    {
-      header: 'Team Size',
-      accessor: (row: (typeof applicants)[0]) => row.sme?.teamSize ?? '-',
+      header: "Team Size",
+      accessor: (row: (typeof applicants)[0]) => row.sme?.teamSize ?? "-",
     },
 
     {
-      header: 'Action',
+      header: "Action",
       accessor: (row: (typeof applicants)[0]) => (
         <div className="flex flex-row gap-3">
           <Button
@@ -94,9 +91,7 @@ function page({}: Props) {
               router.push(
                 `/${params.accessType}/programs/${params.sluge}/applicants/${
                   row.smeId
-                }?applicationId=${row.id}&status=${encodeURIComponent(
-                  row.status
-                )}`
+                }?applicationId=${row.id}&status=${encodeURIComponent(row.status)}`,
               )
             }
             variant="tertiary"
@@ -113,10 +108,10 @@ function page({}: Props) {
     <div>
       <div className="inline-flex my-3 md:text-sm text-xs lg:text-base">
         <p>
-          Program {'>'} {programDetails?.name} {'>'}
-          {'  '}
+          Program {">"} {programDetails?.name} {">"}
+          {"  "}
         </p>
-        <p className="font-medium text-green ">{'Applicants'}</p>
+        <p className="font-medium text-green ">{"Applicants"}</p>
       </div>
       <DashboardCardLayout>
         <div className="flex items-center my-8 justify-between max-lg:flex-wrap">

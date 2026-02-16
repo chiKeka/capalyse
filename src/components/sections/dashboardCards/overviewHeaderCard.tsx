@@ -1,6 +1,6 @@
-import Button, { ButtonProps } from '@/components/ui/Button';
-import StraightBar from '@/components/ui/straightBar';
-import { useRouter } from 'next/navigation';
+import Button, { ButtonProps } from "@/components/ui/Button";
+import StraightBar from "@/components/ui/straightBar";
+import { useRouter } from "next/navigation";
 
 type Props = {
   value: number;
@@ -10,7 +10,7 @@ type Props = {
   showProgress?: boolean;
   showButton?: boolean;
   buttonText?: string;
-  buttonVariant?: 'primary' | 'secondary' | 'tertiary';
+  buttonVariant?: "primary" | "secondary" | "tertiary";
   buttonProps?: Partial<ButtonProps>;
 };
 
@@ -19,9 +19,9 @@ export function OverviewHeaderCard({
   link,
   user,
   showProgress,
-  textContent = 'Here’s a snapshot of your progress.',
+  textContent = "Here’s a snapshot of your progress.",
   showButton = false,
-  buttonText = 'Complete Profile',
+  buttonText = "Complete Profile",
   buttonProps,
 }: Props) {
   const router = useRouter();
@@ -44,11 +44,7 @@ export function OverviewHeaderCard({
           </div>
         )}
         {showButton && (
-          <Button
-            className="flex-1"
-            {...(buttonProps || {})}
-            onClick={() => router.push(link)}
-          >
+          <Button className="flex-1" {...(buttonProps || {})} onClick={() => router.push(link)}>
             {buttonText}
           </Button>
         )}

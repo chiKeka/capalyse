@@ -1,9 +1,9 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './sheet';
-import { CIcons } from './CIcons';
-import { RefreshCcwIcon } from 'lucide-react';
-import Button from './Button';
-import { useAtomValue } from 'jotai';
-import { notificationAtom } from '@/lib/atoms/atoms';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./sheet";
+import { CIcons } from "./CIcons";
+import { RefreshCcwIcon } from "lucide-react";
+import Button from "./Button";
+import { useAtomValue } from "jotai";
+import { notificationAtom } from "@/lib/atoms/atoms";
 
 export interface Notification {
   id: string;
@@ -19,20 +19,14 @@ interface NotificationSheetProps {
   notifications: Notification[];
 }
 
-export function NotificationSheet({
-  open,
-  onOpenChange,
-  notifications,
-}: NotificationSheetProps) {
+export function NotificationSheet({ open, onOpenChange, notifications }: NotificationSheetProps) {
   const hasNotifications = notifications?.length > 0;
-  
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="p-0 sm:max-w-[31.875rem] w-full">
         <SheetHeader className="flex flex-row items-center justify-between border-b px-6 py-4">
-          <SheetTitle className="text-lg font-semibold">
-            Notifications
-          </SheetTitle>
+          <SheetTitle className="text-lg font-semibold">Notifications</SheetTitle>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {hasNotifications ? (
@@ -54,9 +48,7 @@ export function NotificationSheet({
                       )} */}
                       {n.title}
                     </div>
-                    <div className="text-[0.625rem] text-muted-foreground mt-1">
-                      {n.message}
-                    </div>
+                    <div className="text-[0.625rem] text-muted-foreground mt-1">{n.message}</div>
                   </div>
                 </li>
               ))}
@@ -70,13 +62,10 @@ export function NotificationSheet({
                   className="mx-auto h-full w-auto object-cover"
                 />
               </div>
-              <div className="font-semibold text-lg mb-2">
-                No Notifications Yet
-              </div>
+              <div className="font-semibold text-lg mb-2">No Notifications Yet</div>
               <div className="text-muted-foreground text-base mb-6 max-w-[27.25rem] text-center">
-                It looks like you haven't received any notifications yet. Once
-                you do, they'll appear here to keep you updated on important
-                activities.
+                It looks like you haven't received any notifications yet. Once you do, they'll
+                appear here to keep you updated on important activities.
               </div>
               <Button
                 variant="tertiary"

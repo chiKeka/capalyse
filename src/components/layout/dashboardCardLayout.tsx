@@ -19,9 +19,7 @@ function DashboardCardLayout({
   linkName,
 }: Props) {
   return (
-    <div
-      className={`w-full p-4 ${height} rounded-md border-1 items-center border-[#E4E4E7]`}
-    >
+    <div className={`w-full p-4 ${height} rounded-md border-1 items-center border-[#E4E4E7]`}>
       <div className="flex flex-row items-start justify-between">
         <div className="flex items-center gap-2">
           {icon && <Image src={icon} alt="icon" width={20} height={20} />}

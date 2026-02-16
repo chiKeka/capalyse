@@ -1,56 +1,54 @@
-'use client';
+"use client";
 
-import { SearchForm } from '@/components/search-form';
-import EmptyBox from '@/components/sections/dashboardCards/emptyBox';
-import ResourceCard from '@/components/sections/dashboardCards/ResourceCard';
-import { Card } from '@/components/ui/card';
-import { CIcons } from '@/components/ui/CIcons';
+import { SearchForm } from "@/components/search-form";
+import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
+import ResourceCard from "@/components/sections/dashboardCards/ResourceCard";
+import { Card } from "@/components/ui/card";
+import { CIcons } from "@/components/ui/CIcons";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useGetResources } from '@/hooks/useResources';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+} from "@/components/ui/select";
+import { useGetResources } from "@/hooks/useResources";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function ResourcesPage() {
   const router = useRouter();
-  const [search, setSearch] = useState('');
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
 
   const { data: resources } = useGetResources({
     page: 1,
     limit: 10,
     status: undefined,
     sortBy: undefined,
-    sortOrder: 'asc',
+    sortOrder: "asc",
     categoryId: undefined,
     type: undefined,
     difficulty: undefined,
   });
   console.log(resources);
   // Filter resources based on search and type
-  const filteredResources = resources?.resources?.filter((resource: any) => {
-    const matchesSearch =
-      !search ||
-      resource?.title?.toLowerCase().includes(search.toLowerCase()) ||
-      resource?.category?.toLowerCase().includes(search.toLowerCase());
-    const matchesType =
-      typeFilter === 'all' ||
-      resource?.type?.toLowerCase() === typeFilter.toLowerCase();
-    return matchesSearch && matchesType;
-  }) || [];
+  const filteredResources =
+    resources?.resources?.filter((resource: any) => {
+      const matchesSearch =
+        !search ||
+        resource?.title?.toLowerCase().includes(search.toLowerCase()) ||
+        resource?.category?.toLowerCase().includes(search.toLowerCase());
+      const matchesType =
+        typeFilter === "all" || resource?.type?.toLowerCase() === typeFilter.toLowerCase();
+      return matchesSearch && matchesType;
+    }) || [];
 
   // Group filtered resources by category
   const resourcesByCategory =
     resources?.categories?.reduce((acc: any, category: any) => {
       const categoryResources =
-        filteredResources?.filter(
-          (resource: any) => resource.category === category.name
-        ) || [];
+        filteredResources?.filter((resource: any) => resource.category === category.name) || [];
 
       acc[category.name] = categoryResources;
       return acc;
@@ -107,7 +105,7 @@ export default function ResourcesPage() {
                       id={resource.id}
                       title={resource.title}
                       category={resource.category}
-                      image={resource.image || '/images/resource.png'}
+                      image={resource.image || "/images/resource.png"}
                       progress={resource.progress || 0}
                     />
                   ))
@@ -130,19 +128,19 @@ export default function ResourcesPage() {
 const kits = [
   {
     id: 1,
-    title: 'Business Plan Template',
+    title: "Business Plan Template",
     icon: CIcons.userCircleIcon,
     progress: 0,
   },
   {
     id: 2,
-    title: 'Investor Pitch Deck Guide',
+    title: "Investor Pitch Deck Guide",
     icon: CIcons.presentationChartIcon,
     progress: 0,
   },
   {
     id: 3,
-    title: 'Financial Model Spreadsheet',
+    title: "Financial Model Spreadsheet",
     icon: CIcons.financialModelIcon,
     progress: 0,
   },

@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaFacebookF, FaGithub, FaInstagram, FaTwitter } from 'react-icons/fa6';
+import Image from "next/image";
+import Link from "next/link";
+import { FaFacebookF, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -8,13 +8,8 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <Link href={'/'} className="flex items-center space-x-2 mb-6">
-              <Image
-                src={'/logo-white.png'}
-                width={185.88}
-                height={44.43}
-                alt="Capalyse"
-              />
+            <Link href={"/"} className="flex items-center space-x-2 mb-6">
+              <Image src={"/logo-white.png"} width={185.88} height={44.43} alt="Capalyse" />
             </Link>
 
             <div className="flex space-x-4">
@@ -80,17 +75,17 @@ const Footer = () => {
 export default Footer;
 
 const company = [
-  { url: '#', text: 'About' },
-  { url: '/SMEs', text: 'For SMEs' },
-  { url: '/investors', text: 'For Investors' },
-  { url: '#', text: 'Contact' },
+  { url: "#", text: "About" },
+  { url: "/SMEs", text: "For SMEs" },
+  { url: "/investors", text: "For Investors" },
+  { url: "#", text: "Contact" },
 ];
 const resources = [
-  { url: '#', text: 'Trade Compliance' },
-  { url: '#', text: 'Readiness Toolkit' },
-  { url: '#', text: 'Investment Toolkit' },
+  { url: "#", text: "Trade Compliance" },
+  { url: "#", text: "Readiness Toolkit" },
+  { url: "#", text: "Investment Toolkit" },
 ];
 const help = [
-  { url: '#', text: 'Terms & Conditions' },
-  { url: '#', text: 'Privacy Policy' },
+  { url: "#", text: "Terms & Conditions" },
+  { url: "#", text: "Privacy Policy" },
 ];

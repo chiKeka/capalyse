@@ -21,8 +21,7 @@ export default function SmeDashBoard() {
   const ProfileDetails = getCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
   // Fetch readiness score data
-  const { data: readinessScore, isLoading: isReadinessLoading } =
-    useGetReadinessScore();
+  const { data: readinessScore, isLoading: isReadinessLoading } = useGetReadinessScore();
   const learningCards: any[] = [];
 
   const { data: programs } = GetPrograms({ page: 1, limit: 10 });
@@ -34,7 +33,7 @@ export default function SmeDashBoard() {
   const completedSections = assessmentsProgress?.completedSections || [];
 
   const nextSectionName = completedSections.find(
-    (section: string) => sectionCompletion[section] !== true
+    (section: string) => sectionCompletion[section] !== true,
   );
   const { data: investorMatches } = useSmeMatches({
     page: 1,
@@ -45,8 +44,7 @@ export default function SmeDashBoard() {
     {
       icon: "/icons/profile.svg",
       label: "Complete profile",
-      status:
-        (user?.completedSteps?.length / user?.totalSteps) * 100 || undefined,
+      status: (user?.completedSteps?.length / user?.totalSteps) * 100 || undefined,
     },
     {
       icon: "/icons/presentation.svg",
@@ -70,9 +68,7 @@ export default function SmeDashBoard() {
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
       <OverviewHeaderCard
-        value={Math.round(
-          (user?.completedSteps?.length / user?.totalSteps) * 100
-        )}
+        value={Math.round((user?.completedSteps?.length / user?.totalSteps) * 100)}
         link={`/${params.accessType}/profile`}
         user={{ name: user?.personalInfo?.firstName }}
         showProgress={true}
@@ -112,14 +108,10 @@ export default function SmeDashBoard() {
           </DashboardCardLayout>
         </div>
         <div className="w-full h-full justify-between flex flex-1 gap-4 flex-col">
-          <DashboardCardLayout
-            icon={"/images/bulb.svg"}
-            caption="Quick Tip"
-            height="h-full"
-          >
+          <DashboardCardLayout icon={"/images/bulb.svg"} caption="Quick Tip" height="h-full">
             <p className="text-sm my-7 font-normal w-[244px]">
-              Keep your profile and documents updated to boost your readiness
-              score and attract investors.
+              Keep your profile and documents updated to boost your readiness score and attract
+              investors.
             </p>
           </DashboardCardLayout>
           <DashboardCardLayout
@@ -147,11 +139,7 @@ export default function SmeDashBoard() {
                 />
               ) : (
                 learningCards?.map((card, idx) => (
-                  <LearningCard
-                    href={card?.href}
-                    header={card?.header}
-                    key={idx}
-                  />
+                  <LearningCard href={card?.href} header={card?.header} key={idx} />
                 ))
               )}
             </div>
@@ -168,8 +156,8 @@ export default function SmeDashBoard() {
                         assessmentsProgress?.completionPercentage ?? 0
                       }% done with your Investment readiness assement, click the button below to continue`
                     : assessmentsProgress?.isComplete
-                    ? "Assessment Complete awaiting investor matches"
-                    : ""
+                      ? "Assessment Complete awaiting investor matches"
+                      : ""
                 }
                 buttonText={
                   assessmentsProgress?.completionPercentage > 0
@@ -192,11 +180,7 @@ export default function SmeDashBoard() {
             <div className="flex my-8 flex-col gap-3">
               {suggestedConnections?.length > 0 ? (
                 suggestedConnections.map((item) => (
-                  <SuggestedConnection
-                    key={item.id}
-                    icon={item.icon}
-                    name={item.name}
-                  />
+                  <SuggestedConnection key={item.id} icon={item.icon} name={item.name} />
                 ))
               ) : (
                 <EmptyBox
@@ -217,10 +201,7 @@ export default function SmeDashBoard() {
           >
             {programs?.programs?.length > 0 ? (
               <div className="my-8">
-                <Programs
-                  status={programs.programs[0].status}
-                  program={programs.programs[0]}
-                />
+                <Programs status={programs.programs[0].status} program={programs.programs[0]} />
               </div>
             ) : (
               <EmptyBox

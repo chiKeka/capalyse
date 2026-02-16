@@ -1,11 +1,11 @@
-import api from '@/api/axios';
-import { apiRoutes } from '@/api/endpoints';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getSingleSmeById } from './useDirectories';
+import api from "@/api/axios";
+import { apiRoutes } from "@/api/endpoints";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getSingleSmeById } from "./useDirectories";
 
 export const useInvestments = () => {
   return useQuery({
-    queryKey: ['investments'],
+    queryKey: ["investments"],
     queryFn: async () => {
       const resp = await api.get(apiRoutes.investments.getInvestments);
       return resp.data?.items;
@@ -15,11 +15,9 @@ export const useInvestments = () => {
 
 export const useGetInvestorPortfolioSummary = () => {
   return useQuery({
-    queryKey: ['portfolio'],
+    queryKey: ["portfolio"],
     queryFn: async () => {
-      const resp = await api.get(
-        apiRoutes.investments.getInvestorPortfolioSummary
-      );
+      const resp = await api.get(apiRoutes.investments.getInvestorPortfolioSummary);
       return resp.data;
     },
   });
@@ -38,14 +36,11 @@ export const useInvestmentMutations = () => {
         },
       };
 
-      const resp = await api.post(
-        apiRoutes.investments.createInvestment,
-        newPayload
-      );
+      const resp = await api.post(apiRoutes.investments.createInvestment, newPayload);
       return resp.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investments'] });
+      queryClient.invalidateQueries({ queryKey: ["investments"] });
     },
   });
   const updateInvestment = useMutation({
@@ -61,14 +56,11 @@ export const useInvestmentMutations = () => {
         },
       };
 
-      const resp = await api.patch(
-        apiRoutes.investments.updateInvestment(id),
-        newPayload
-      );
+      const resp = await api.patch(apiRoutes.investments.updateInvestment(id), newPayload);
       return resp.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['investments'] });
+      queryClient.invalidateQueries({ queryKey: ["investments"] });
     },
   });
   return {

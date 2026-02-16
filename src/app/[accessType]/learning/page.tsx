@@ -14,10 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GetPrograms } from "@/hooks/usePrograms";
-import {
-  useGetResourceCategories,
-  useGetResources,
-} from "@/hooks/useResources";
+import { useGetResourceCategories, useGetResources } from "@/hooks/useResources";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -67,11 +64,7 @@ export default function ResourcesPage() {
     isLoading: categoriesLoading,
     error: categoriesError,
   } = resourceCategory;
-  const {
-    data: program,
-    isLoading: programsLoading,
-    error: programsError,
-  } = programs;
+  const { data: program, isLoading: programsLoading, error: programsError } = programs;
   // console.log({ program, programsLoading, programsError });
   return (
     <div className="space-y-8">
@@ -79,9 +72,7 @@ export default function ResourcesPage() {
       <Card className="bg-green min-h-[11.25rem] text-white p-8 rounded-xl relative overflow-hidden flex justify-between">
         <div className="relative z-10">
           <p className="text-sm mb-2">RECOMMENDATION</p>
-          <h2 className="text-2xl font-bold mb-4">
-            Your Financial Health Needs Improvement
-          </h2>
+          <h2 className="text-2xl font-bold mb-4">Your Financial Health Needs Improvement</h2>
           <Button variant="secondary" className="bg-white text-green">
             Take Course Now
           </Button>
@@ -90,11 +81,7 @@ export default function ResourcesPage() {
           <img src="/images/big-bg.png" alt="waves" />
         </div>
         <div className="absolute right-0 top-0 bottom-0 h-[180px]">
-          <img
-            src="/images/small-bg.png"
-            alt="waves"
-            className="object-cover h-full"
-          />
+          <img src="/images/small-bg.png" alt="waves" className="object-cover h-full" />
         </div>
       </Card>
 
@@ -121,9 +108,7 @@ export default function ResourcesPage() {
             inputClassName="h-11 pl-9"
             iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
             value={searchTerm}
-            onChange={(e) =>
-              setSearchTerm((e.target as HTMLInputElement).value)
-            }
+            onChange={(e) => setSearchTerm((e.target as HTMLInputElement).value)}
           />
         </div>
       </div>
@@ -160,8 +145,7 @@ export default function ResourcesPage() {
 
         {!isLoading &&
           !error &&
-          (!resource?.data?.resources ||
-            resource?.data?.resources.length === 0) && (
+          (!resource?.data?.resources || resource?.data?.resources.length === 0) && (
             <div className="w-max max-w-full mx-auto">
               <EmptyBox
                 showButton={false}
@@ -185,9 +169,7 @@ export default function ResourcesPage() {
                     <p className="text-sm bg-yellow-100 text-yellow-900 mb-2 w-max rounded-full px-2 py-0.5">
                       {track.category}
                     </p>
-                    <h4 className="font-medium text-black-600 mb-4">
-                      {track.title}
-                    </h4>
+                    <h4 className="font-medium text-black-600 mb-4">{track.title}</h4>
                     <div className="flex flex-col">
                       <div className="flex-1">
                         <p className="flex justify-between text-sm">
@@ -198,9 +180,7 @@ export default function ResourcesPage() {
                           <div
                             className="h-full bg-green rounded-full"
                             style={{
-                              width: `${
-                                1.5 > track.progress ? 1.5 : track.progress
-                              }%`,
+                              width: `${1.5 > track.progress ? 1.5 : track.progress}%`,
                             }}
                           />
                         </div>
@@ -209,11 +189,7 @@ export default function ResourcesPage() {
                         variant="tertiary"
                         iconPosition="right"
                         className="text-green ml-auto"
-                        onClick={() =>
-                          router.push(
-                            `/${params.accessType}/learning/${track.id}`
-                          )
-                        }
+                        onClick={() => router.push(`/${params.accessType}/learning/${track.id}`)}
                       >
                         Take Course
                       </Button>
@@ -255,9 +231,7 @@ export default function ResourcesPage() {
             )}
           </div>
 
-          {(programsLoading ||
-            programsError ||
-            program?.programs?.length === 0) && (
+          {(programsLoading || programsError || program?.programs?.length === 0) && (
             <div className="w-max max-w-full mx-auto">
               <EmptyBox
                 showButton={false}
@@ -268,22 +242,20 @@ export default function ResourcesPage() {
             </div>
           )}
 
-          {!programsLoading &&
-            !programsError &&
-            program?.programs?.length > 0 && (
-              <div className="w-full  space-y-2 max-w-full mx-auto">
-                {program?.programs?.slice(0, 2).map((program: any) => {
-                  return (
-                    <Programs
-                      program={program}
-                      status={program.status as "active" | "closed" | "draft"}
-                      // label={program.label as any}
-                      key={program.id}
-                    />
-                  );
-                })}
-              </div>
-            )}
+          {!programsLoading && !programsError && program?.programs?.length > 0 && (
+            <div className="w-full  space-y-2 max-w-full mx-auto">
+              {program?.programs?.slice(0, 2).map((program: any) => {
+                return (
+                  <Programs
+                    program={program}
+                    status={program.status as "active" | "closed" | "draft"}
+                    // label={program.label as any}
+                    key={program.id}
+                  />
+                );
+              })}
+            </div>
+          )}
         </Card>
       </div>
     </div>

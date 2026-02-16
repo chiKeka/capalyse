@@ -1,17 +1,17 @@
-import { Data } from '@/components/sections/Resources';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { toast } from 'sonner';
+import { Data } from "@/components/sections/Resources";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 if (!BASE_URL) {
-  throw new Error('NEXT_PUBLIC_API_URL is not set');
+  throw new Error("NEXT_PUBLIC_API_URL is not set");
 }
 
 // ========== GET: Waitlist Count ==========
 export const useWaitlistCount = () => {
   return useQuery({
-    queryKey: ['waitlistCount'],
+    queryKey: ["waitlistCount"],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/waitlist/count`);
       return res?.data.count;
@@ -29,7 +29,7 @@ export const useCreateWaitlist = () => {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['waitlistCount'] });
+      queryClient.invalidateQueries({ queryKey: ["waitlistCount"] });
     },
   });
 };
@@ -37,14 +37,14 @@ export const useCreateWaitlist = () => {
 // ========== GET: Resources ==========
 export const useResources = () => {
   return useQuery({
-    queryKey: ['resources'],
+    queryKey: ["resources"],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/resources`);
       return res?.data.resources;
     },
     throwOnError: (e) => {
       console.log({ e });
-      toast.error('Failed to fetch resources');
+      toast.error("Failed to fetch resources");
       return false;
     },
   });
@@ -56,7 +56,7 @@ const getRandomThree = (arr: Data[]): Data[] => {
 // ========== GET: Resources ==========
 export const useGetRandomResources = () => {
   return useQuery({
-    queryKey: ['resources'],
+    queryKey: ["resources"],
     queryFn: async () => {
       const res = await axios.get(`${BASE_URL}/resources`);
       return res?.data.resources;

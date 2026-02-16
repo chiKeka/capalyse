@@ -23,12 +23,7 @@ interface SettingsTabProps {
   onClick: () => void;
 }
 
-const SettingsTab: React.FC<SettingsTabProps> = ({
-  label,
-  icon,
-  isActive,
-  onClick,
-}) => {
+const SettingsTab: React.FC<SettingsTabProps> = ({ label, icon, isActive, onClick }) => {
   return (
     <div
       onClick={onClick}
@@ -37,9 +32,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
       } border-b-1 p-2 gap-2`}
     >
       <img className="w-4 h-4 lg:w-5 lg:h-5" src={icon} alt={`${label} icon`} />
-      <p className="lg:font-medium font-normal text-[10px] lg:text-xs">
-        {label}
-      </p>
+      <p className="lg:font-medium font-normal text-[10px] lg:text-xs">{label}</p>
     </div>
   );
 };
@@ -108,8 +101,8 @@ export default function page({}: Props) {
     return param.accessType === "sme"
       ? smeTabOptions
       : param.accessType === "development"
-      ? developmentTabOptions
-      : investorTabOptions;
+        ? developmentTabOptions
+        : investorTabOptions;
   }, [param.accessType]);
 
   // Get tab from URL params, default to first tab if not found
@@ -150,9 +143,7 @@ export default function page({}: Props) {
           <div className="gsp-4 flex flex-col">
             <p className=" text-base font-bold ">
               {auth?.name ??
-                `${user?.personalInfo?.firstName ?? ""} ${
-                  user?.personalInfo?.lastName ?? ""
-                }`}
+                `${user?.personalInfo?.firstName ?? ""} ${user?.personalInfo?.lastName ?? ""}`}
             </p>
             <p className="text-xs font-normal">
               {user?.email ?? user?.personalInfo?.email ?? auth?.email}
@@ -163,18 +154,11 @@ export default function page({}: Props) {
           <div className="w-full flex flex-1 flex-col ">
             <div className="items-center w-full text-sm font-normal text-[#18181B] flex justify-between">
               <p>Profile Completion</p>
-              <p>
-                {Math.round(
-                  (user?.completedSteps?.length / user?.totalSteps) * 100
-                )}
-                %
-              </p>
+              <p>{Math.round((user?.completedSteps?.length / user?.totalSteps) * 100)}%</p>
             </div>
 
             <StraightBar
-              value={Math.round(
-                (user?.completedSteps?.length / user?.totalSteps) * 100
-              )}
+              value={Math.round((user?.completedSteps?.length / user?.totalSteps) * 100)}
             />
           </div>
           <Button

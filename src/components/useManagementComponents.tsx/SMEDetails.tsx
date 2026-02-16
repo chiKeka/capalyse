@@ -1,18 +1,18 @@
-import { Card } from '../ui/card';
-import { statusBadge } from '../ui/statusBar';
-import BusinessDetails from './BusinessDetails';
-import ContactDetails from './ContactDetails';
-import Verification from './Verification';
-import { useGetSmeById } from '@/hooks/useAdmin';
-import { Loader2Icon } from 'lucide-react';
-import { toast } from 'sonner';
-import { notFound } from 'next/navigation';
+import { Card } from "../ui/card";
+import { statusBadge } from "../ui/statusBar";
+import BusinessDetails from "./BusinessDetails";
+import ContactDetails from "./ContactDetails";
+import Verification from "./Verification";
+import { useGetSmeById } from "@/hooks/useAdmin";
+import { Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { notFound } from "next/navigation";
 const businessProfile = {
-  name: 'GreenPack Solutions Ltd',
-  logo: '/icons/sportify.svg',
-  industry: 'Packaging',
-  country: 'Nigeria',
-  status: 'Connected',
+  name: "GreenPack Solutions Ltd",
+  logo: "/icons/sportify.svg",
+  industry: "Packaging",
+  country: "Nigeria",
+  status: "Connected",
 };
 const SMEDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetSmeById(id);
@@ -40,13 +40,10 @@ const SMEDetails = ({ id }: { id: string }) => {
             {businessProfile.smeBusinessInfo.businessName}
           </span>
           <span className="text-gray-500 text-sm">
-            {businessProfile.smeBusinessInfo.industry}{' '}
-            <span className="mx-2">•</span>{' '}
-            {businessProfile?.smeBusinessInfo?.countryOfOperation?.join(', ')}
+            {businessProfile.smeBusinessInfo.industry} <span className="mx-2">•</span>{" "}
+            {businessProfile?.smeBusinessInfo?.countryOfOperation?.join(", ")}
           </span>
-          <div className="mt-2">
-            {statusBadge(businessProfile.currentStep?.toLowerCase())}
-          </div>
+          <div className="mt-2">{statusBadge(businessProfile.currentStep?.toLowerCase())}</div>
         </div>
       </Card>
 
@@ -59,9 +56,7 @@ const SMEDetails = ({ id }: { id: string }) => {
         <div className="space-y-6 lg:col-span-2">
           <ContactDetails data={businessProfile.personalInfo} />
           <Verification
-            verificationStatus={
-              businessProfile?.smeBusinessInfo?.verificationStatus ?? 'Pending'
-            }
+            verificationStatus={businessProfile?.smeBusinessInfo?.verificationStatus ?? "Pending"}
           />
         </div>
       </div>

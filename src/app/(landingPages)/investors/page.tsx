@@ -1,24 +1,22 @@
-'use client';
-import Cta from '@/components/sections/Cta';
-import Cta2 from '@/components/sections/Cta2';
-import InverstmentReadiness from '@/components/sections/Cta3';
-import HowItWorkstoo from '@/components/sections/HowItWorkstoo';
-import SMEsHero from '@/components/sections/SMEsHero';
-import { data, investorCardData } from '@/lib/uitils/contentData';
+"use client";
+import Cta from "@/components/sections/Cta";
+import Cta2 from "@/components/sections/Cta2";
+import InverstmentReadiness from "@/components/sections/Cta3";
+import HowItWorkstoo from "@/components/sections/HowItWorkstoo";
+import SMEsHero from "@/components/sections/SMEsHero";
+import { data, investorCardData } from "@/lib/uitils/contentData";
 
 type Props = {};
 
-function Investors({ }: Props) {
+function Investors({}: Props) {
   return (
     <>
       <SMEsHero
         tag="FOR INVESTORS"
         header={
           <>
-            <span className="text-green">
-              Discover high-potential African SMEs{' '}
-            </span>{' '}
-            ready for investment.
+            <span className="text-green">Discover high-potential African SMEs </span> ready for
+            investment.
           </>
         }
         text="Capalyse is a data-driven platform that connects investors with vetted, investment-ready African SMEs. We simplify sourcing, reduce risk, and support smarter capital allocation across fast-growing markets. <br/> Whether you're a VC, impact investor, family office, or institutional fund, Capalyse gives you the tools to evaluate, track, and connect with founders aligned to your thesis."

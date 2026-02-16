@@ -70,9 +70,7 @@ export default function SingleCoursePage() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/${accessType}/resources`}>
-              Resources
-            </BreadcrumbLink>
+            <BreadcrumbLink href={`/${accessType}/resources`}>Resources</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -92,9 +90,7 @@ export default function SingleCoursePage() {
               className="w-full object-cover h-auto max-h-[278px]"
             />
           </Card>
-          <h1 className="text-2xl font-bold tracking-tight text-center">
-            {course?.title}
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-center">{course?.title}</h1>
           <div className="text-center flex items-center gap-2 justify-center">
             <span>May 19, 2025</span>{" "}
             <span className="inline-block h-1 w-1 rounded-full bg-black my-auto"></span>
@@ -102,28 +98,23 @@ export default function SingleCoursePage() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold tracking-tight text-black-600">
-              Introduction
-            </h2>
+            <h2 className="text-2xl font-bold tracking-tight text-black-600">Introduction</h2>
             <p>
-              Africa is home to over 1.4 billion people and a combined GDP
-              exceeding $3.4 trillion, yet intra-African trade has historically
-              remained below 20%. Fragmented markets, high tariffs, and
-              inconsistent regulations have long stood in the way of seamless
-              economic integration. But the African Continental Free Trade Area
-              (AfCFTA) is set to change that narrative.
+              Africa is home to over 1.4 billion people and a combined GDP exceeding $3.4 trillion,
+              yet intra-African trade has historically remained below 20%. Fragmented markets, high
+              tariffs, and inconsistent regulations have long stood in the way of seamless economic
+              integration. But the African Continental Free Trade Area (AfCFTA) is set to change
+              that narrative.
             </p>
             <p>
-              Launched in 2021, AfCFTA is the largest free trade area in the
-              world by number of countries — 54 African Union members have
-              signed on. It aims to create a single market for goods and
-              services, foster economic integration, and enhance competitiveness
+              Launched in 2021, AfCFTA is the largest free trade area in the world by number of
+              countries — 54 African Union members have signed on. It aims to create a single market
+              for goods and services, foster economic integration, and enhance competitiveness
               across the continent.
             </p>
             <p>
-              In this article, we explore how AfCFTA is transforming the trading
-              landscape across Africa and what it means for entrepreneurs, small
-              businesses, and startups.
+              In this article, we explore how AfCFTA is transforming the trading landscape across
+              Africa and what it means for entrepreneurs, small businesses, and startups.
             </p>
           </div>
         </div>

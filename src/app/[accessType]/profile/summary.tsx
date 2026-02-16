@@ -1,9 +1,9 @@
-import Button from '@/components/ui/Button';
-import Input from '@/components/ui/Inputs';
-import { getCurrentProfile, updateProfile } from '@/hooks/useUpdateProfile';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Inputs";
+import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -24,18 +24,18 @@ export default function Summary({}: Props) {
     reset,
   } = useForm<SummaryFormData>({
     defaultValues: {
-      shortPitch: '',
-      missionStatement: '',
-      visionStatement: '',
+      shortPitch: "",
+      missionStatement: "",
+      visionStatement: "",
     },
   });
 
   useEffect(() => {
     if (user) {
       reset({
-        shortPitch: user?.businessSummary?.shortPitch || '',
-        missionStatement: user?.businessSummary?.missionStatement || '',
-        visionStatement: user?.businessSummary?.visionStatement || '',
+        shortPitch: user?.businessSummary?.shortPitch || "",
+        missionStatement: user?.businessSummary?.missionStatement || "",
+        visionStatement: user?.businessSummary?.visionStatement || "",
       });
     }
   }, [user, reset]);
@@ -43,7 +43,7 @@ export default function Summary({}: Props) {
     update_business_summary
       .mutateAsync(data)
       .then((res) => {
-        toast.success('Business Summary updated successfully');
+        toast.success("Business Summary updated successfully");
       })
       .catch((err) => toast.error(err?.msg));
   };
@@ -55,11 +55,11 @@ export default function Summary({}: Props) {
     >
       <div className="w-full grid grid-col-1 lg:w-[85%]">
         <Input
-          {...register('shortPitch', {
-            required: 'Short pitch is required',
+          {...register("shortPitch", {
+            required: "Short pitch is required",
             minLength: {
               value: 10,
-              message: 'Short pitch must be at least 10 characters',
+              message: "Short pitch must be at least 10 characters",
             },
           })}
           type="text"
@@ -68,20 +68,18 @@ export default function Summary({}: Props) {
           placeholder="Input short business description"
         />
         {errors.shortPitch && (
-          <span className="text-[10px] text-red-500">
-            {errors.shortPitch.message}
-          </span>
+          <span className="text-[10px] text-red-500">{errors.shortPitch.message}</span>
         )}
       </div>
 
       <div className="grid grid-cols-1 gap-2 lg:w-[80%] w-full lg:grid-cols-2">
         <div>
           <Input
-            {...register('missionStatement', {
-              required: 'Mission statement is required',
+            {...register("missionStatement", {
+              required: "Mission statement is required",
               minLength: {
                 value: 10,
-                message: 'Mission statement must be at least 10 characters',
+                message: "Mission statement must be at least 10 characters",
               },
             })}
             type="text"
@@ -90,18 +88,16 @@ export default function Summary({}: Props) {
             placeholder="Enter Mission Statement"
           />
           {errors.missionStatement && (
-            <span className="text-[10px] text-red-500">
-              {errors.missionStatement.message}
-            </span>
+            <span className="text-[10px] text-red-500">{errors.missionStatement.message}</span>
           )}
         </div>
         <div>
           <Input
-            {...register('visionStatement', {
-              required: 'Vision statement is required',
+            {...register("visionStatement", {
+              required: "Vision statement is required",
               minLength: {
                 value: 10,
-                message: 'Vision statement must be at least 10 characters',
+                message: "Vision statement must be at least 10 characters",
               },
             })}
             type="text"
@@ -110,9 +106,7 @@ export default function Summary({}: Props) {
             placeholder="Enter Vision Statement"
           />
           {errors.visionStatement && (
-            <span className="text-[10px] text-red-500">
-              {errors.visionStatement.message}
-            </span>
+            <span className="text-[10px] text-red-500">{errors.visionStatement.message}</span>
           )}
         </div>
       </div>
@@ -121,7 +115,7 @@ export default function Summary({}: Props) {
         <Button
           variant="primary"
           type="submit"
-          state={update_business_summary.isPending ? 'loading' : undefined}
+          state={update_business_summary.isPending ? "loading" : undefined}
         >
           Submit
         </Button>

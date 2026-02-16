@@ -9,10 +9,7 @@ function SuggestedConnection({ icon, name, category, location }: Props) {
   return (
     <div className="items-center h-[46px] w-full  flex flex-row gap-4 justify-center">
       <div className="flex items-center  w-full gap-3">
-        <img
-          src="/icons/sportify.svg"
-          className="h-[36px] w-[36px] rounded-full "
-        />
+        <img src="/icons/sportify.svg" className="h-[36px] w-[36px] rounded-full " />
         <div className="flex-col flex">
           <p className="font-bold text-[#18181B] text-sm">Name of Business</p>
           <div className="font-normal text-[#71717A] gap-2 items-center justify-center text-sm flex">

@@ -1,13 +1,13 @@
-import { Loader2Icon } from 'lucide-react';
-import EmptyBox from '../sections/dashboardCards/emptyBox';
-import Button from '../ui/Button';
-import { Card } from '../ui/card';
-import ContactDetails from './ContactDetails';
-import Documents from './Documents';
-import Verification from './Verification';
-import { useGetInvestorById } from '@/hooks/useAdmin';
-import { toast } from 'sonner';
-import { notFound } from 'next/navigation';
+import { Loader2Icon } from "lucide-react";
+import EmptyBox from "../sections/dashboardCards/emptyBox";
+import Button from "../ui/Button";
+import { Card } from "../ui/card";
+import ContactDetails from "./ContactDetails";
+import Documents from "./Documents";
+import Verification from "./Verification";
+import { useGetInvestorById } from "@/hooks/useAdmin";
+import { toast } from "sonner";
+import { notFound } from "next/navigation";
 
 const InvestorDetails = ({ id }: { id: string }) => {
   const { data: businessProfile, isLoading, error } = useGetInvestorById(id);
@@ -23,8 +23,7 @@ const InvestorDetails = ({ id }: { id: string }) => {
         <ContactDetails data={businessProfile?.personalInfo} />
         <Verification
           verificationStatus={
-            businessProfile?.investorOrganizationInfo?.verificationStatus ??
-            'Pending'
+            businessProfile?.investorOrganizationInfo?.verificationStatus ?? "Pending"
           }
         />
       </div>
@@ -44,7 +43,7 @@ const InvestorDetails = ({ id }: { id: string }) => {
             </p>
             <Button variant="primary">
               Message Investor
-              <img className="w-[20px] h-[20px]" src={'/icons/message.svg'} />
+              <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
             </Button>
           </div>
           <EmptyBox

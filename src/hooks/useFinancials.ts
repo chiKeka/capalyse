@@ -44,10 +44,7 @@ export function useDefaultCurrency(enabled = true) {
   });
 }
 
-export function useFinancialSummary(
-  params?: { from?: string; to?: string },
-  enabled = true
-) {
+export function useFinancialSummary(params?: { from?: string; to?: string }, enabled = true) {
   return useQuery({
     queryKey: [...keys.summary(), params?.from ?? null, params?.to ?? null],
     queryFn: async () => {
@@ -61,10 +58,7 @@ export function useFinancialSummary(
   });
 }
 
-export function useFinancialGrowth(
-  params?: { from?: string; to?: string },
-  enabled = true
-) {
+export function useFinancialGrowth(params?: { from?: string; to?: string }, enabled = true) {
   return useQuery({
     queryKey: [...keys.growth(), params?.from ?? null, params?.to ?? null],
     queryFn: async () => {
@@ -81,7 +75,7 @@ export function useFinancialGrowth(
 export function useOverviewFinancialSummary(
   userId: string,
   params?: { from?: string; to?: string },
-  enabled = true
+  enabled = true,
 ) {
   return useQuery({
     queryKey: [...keys.summary(), params?.from ?? null, params?.to ?? null],
@@ -99,7 +93,7 @@ export function useOverviewFinancialSummary(
 export function useOverviewFinancialGrowth(
   userId: string,
   params?: { from?: string; to?: string },
-  enabled = true
+  enabled = true,
 ) {
   return useQuery({
     queryKey: [...keys.growth(), params?.from ?? null, params?.to ?? null],
@@ -165,10 +159,7 @@ export interface FinancialDocumentsResponse {
   total: number;
 }
 
-export function useFinancialDocuments(
-  params?: { page?: number; limit?: number },
-  enabled = true
-) {
+export function useFinancialDocuments(params?: { page?: number; limit?: number }, enabled = true) {
   return useQuery({
     queryKey: [...keys.documents(), params?.page ?? 1, params?.limit ?? 10],
     queryFn: async (): Promise<FinancialDocumentsResponse> => {
@@ -185,7 +176,7 @@ export function useFinancialDocuments(
 export function useOverviewFinancialDocuments(
   userId: string,
   params?: { page?: number; limit?: number },
-  enabled = true
+  enabled = true,
 ) {
   return useQuery({
     queryKey: [...keys.documents(), params?.page ?? 1, params?.limit ?? 10],

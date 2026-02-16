@@ -31,8 +31,7 @@ function NetworkingPage() {
   });
 
   const networking = data?.items;
-  const [selectedProfile, setSelectedProfile] =
-    useState<NetworkingProfile | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<NetworkingProfile | null>(null);
 
   const totalPages = useMemo(() => {
     const metaTotalPages = (data as any)?.meta?.totalPages;
@@ -67,9 +66,7 @@ function NetworkingPage() {
               className="rounded-full"
             />
           )}
-          <span className="font-medium text-sm">
-            {row?.businessName ?? row?.name ?? "N/A"}
-          </span>
+          <span className="font-medium text-sm">{row?.businessName ?? row?.name ?? "N/A"}</span>
         </div>
       ),
     },
@@ -77,8 +74,7 @@ function NetworkingPage() {
     { header: "Business Type", accessor: "businessType" },
     {
       header: "Service Offered",
-      accessor: (row: NetworkingProfile) =>
-        row?.serviceOffered?.join(",") ?? "N/A",
+      accessor: (row: NetworkingProfile) => row?.serviceOffered?.join(",") ?? "N/A",
     },
     {
       header: "Status",

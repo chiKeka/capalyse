@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { ReusableTable } from '@/components/ui/table';
+import { ReusableTable } from "@/components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -9,106 +9,106 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import Button from '@/components/ui/Button';
-import { CIcons } from '@/components/ui/CIcons';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/pagination";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import Button from "@/components/ui/Button";
+import { CIcons } from "@/components/ui/CIcons";
+import { cn } from "@/lib/utils";
 
 const connections = [
   {
-    name: 'GreenPack Solutions Ltd.',
-    avatar: '/avatars/01.png',
-    industry: 'Packaging',
-    businessType: 'Starter',
-    serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
-    status: 'Connected',
+    name: "GreenPack Solutions Ltd.",
+    avatar: "/avatars/01.png",
+    industry: "Packaging",
+    businessType: "Starter",
+    serviceOffered: "Telemedicine Consultations, Health Insurance Plans",
+    status: "Connected",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/02.png',
-    industry: 'Retail',
-    businessType: 'Registered',
-    serviceOffered: 'E-commerce Store, Delivery Services',
-    status: 'Shortlisted',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/02.png",
+    industry: "Retail",
+    businessType: "Registered",
+    serviceOffered: "E-commerce Store, Delivery Services",
+    status: "Shortlisted",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/03.png',
-    industry: 'Agriculture',
-    businessType: 'Starter',
-    serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
-    status: 'Viewed',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/03.png",
+    industry: "Agriculture",
+    businessType: "Starter",
+    serviceOffered: "Farm Produce Supply, Irrigation System Installations",
+    status: "Viewed",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/04.png',
-    industry: 'HealthTech',
-    businessType: 'Registered',
-    serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
-    status: 'Completed',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/04.png",
+    industry: "HealthTech",
+    businessType: "Registered",
+    serviceOffered: "Telemedicine Consultations, Health Insurance Plans",
+    status: "Completed",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/05.png',
-    industry: 'Retail',
-    businessType: 'Starter',
-    serviceOffered: 'E-commerce Store, Delivery Services',
-    status: 'Shortlisted',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/05.png",
+    industry: "Retail",
+    businessType: "Starter",
+    serviceOffered: "E-commerce Store, Delivery Services",
+    status: "Shortlisted",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/01.png',
-    industry: 'Agriculture',
-    businessType: 'Starter',
-    serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
-    status: 'Viewed',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/01.png",
+    industry: "Agriculture",
+    businessType: "Starter",
+    serviceOffered: "Farm Produce Supply, Irrigation System Installations",
+    status: "Viewed",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/02.png',
-    industry: 'HealthTech',
-    businessType: 'Registered',
-    serviceOffered: 'Telemedicine Consultations, Health Insurance Plans',
-    status: 'Completed',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/02.png",
+    industry: "HealthTech",
+    businessType: "Registered",
+    serviceOffered: "Telemedicine Consultations, Health Insurance Plans",
+    status: "Completed",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/03.png',
-    industry: 'Retail',
-    businessType: 'Starter',
-    serviceOffered: 'E-commerce Store, Delivery Services',
-    status: 'Shortlisted',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/03.png",
+    industry: "Retail",
+    businessType: "Starter",
+    serviceOffered: "E-commerce Store, Delivery Services",
+    status: "Shortlisted",
   },
   {
-    name: 'Food&Beverage Co.',
-    avatar: '/avatars/04.png',
-    industry: 'Agriculture',
-    businessType: 'Registered',
-    serviceOffered: 'Farm Produce Supply, Irrigation System Installations',
-    status: 'Viewed',
+    name: "Food&Beverage Co.",
+    avatar: "/avatars/04.png",
+    industry: "Agriculture",
+    businessType: "Registered",
+    serviceOffered: "Farm Produce Supply, Irrigation System Installations",
+    status: "Viewed",
   },
 ];
 
 const getStatusClass = (status: string) => {
   switch (status) {
-    case 'Connected':
-    case 'Completed':
-      return 'bg-green-100 text-green-800';
-    case 'Shortlisted':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'Viewed':
-      return 'bg-blue-100 text-blue-800';
+    case "Connected":
+    case "Completed":
+      return "bg-green-100 text-green-800";
+    case "Shortlisted":
+      return "bg-yellow-100 text-yellow-800";
+    case "Viewed":
+      return "bg-blue-100 text-blue-800";
     default:
-      return 'bg-gray-100 text-gray-800';
+      return "bg-gray-100 text-gray-800";
   }
 };
 
 const ConnectionsPage = () => {
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       accessor: (row: any) => (
         <div className="flex items-center gap-3">
           <Avatar>
@@ -119,20 +119,17 @@ const ConnectionsPage = () => {
         </div>
       ),
     },
-    { header: 'Industry', accessor: 'industry' },
-    { header: 'Business Type', accessor: 'businessType' },
-    { header: 'Service Offered', accessor: 'serviceOffered' },
+    { header: "Industry", accessor: "industry" },
+    { header: "Business Type", accessor: "businessType" },
+    { header: "Service Offered", accessor: "serviceOffered" },
     {
-      header: 'Status',
+      header: "Status",
       accessor: (row: any) => (
-        <Badge
-          variant="status"
-          className={cn('capitalize', getStatusClass(row.status))}
-        >
+        <Badge variant="status" className={cn("capitalize", getStatusClass(row.status))}>
           <span
             className={cn(
-              'mr-2 h-2 w-2 rounded-full',
-              getStatusClass(row.status).replace('text', 'bg')
+              "mr-2 h-2 w-2 rounded-full",
+              getStatusClass(row.status).replace("text", "bg"),
             )}
           />
           {row.status}
@@ -140,7 +137,7 @@ const ConnectionsPage = () => {
       ),
     },
     {
-      header: 'Action',
+      header: "Action",
       accessor: () => <Button variant="tertiary">View Profile</Button>,
     },
   ];
