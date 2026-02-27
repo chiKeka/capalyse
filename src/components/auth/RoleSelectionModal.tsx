@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient, useSession } from "@/lib/auth-client";
+import api from "@/api/axios";
 import {
   Dialog,
   DialogContent,
@@ -40,7 +41,7 @@ export default function RoleSelectionModal() {
     if (!selectedRole) return;
     setIsLoading(true);
     try {
-      await authClient.updateUser({
+      await api.post("/api/v1/profile/set-role", {
         role: selectedRole.toLowerCase(),
       });
       // Refresh session to get the new role

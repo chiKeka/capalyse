@@ -9,6 +9,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import api from "@/api/axios";
 
 interface AuthLayoutProps {
   title?: string;
@@ -112,26 +113,23 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     if (!savedRole) return;
 
     roleUpdateInFlight.current = true;
-    authClient.updateUser(
-      { role: savedRole.toLowerCase() },
-      {
-        onSuccess: () => {
-          removeCookie(LOGIN_OPTION_COOKIE_KEY);
-          removeCookie(USER_TYPE_COOKIE_KEY);
-          authClient.getSession().then((session) => {
-            setAuth(session?.data?.user);
-          });
-          const onboardRootRoute = getKeyByValue(UserType, savedRole);
-          router.push(`/${onboardRootRoute}/onboarding`);
-        },
-        onError: () => {
-          roleUpdateInFlight.current = false;
-        },
-        onSettled: () => {
-          roleUpdateInFlight.current = false;
-        },
-      },
-    );
+    api
+      .post("/api/v1/profile/set-role", { role: savedRole.toLowerCase() })
+      .then(() => {
+        removeCookie(LOGIN_OPTION_COOKIE_KEY);
+        removeCookie(USER_TYPE_COOKIE_KEY);
+        authClient.getSession().then((session) => {
+          setAuth(session?.data?.user);
+        });
+        const onboardRootRoute = getKeyByValue(UserType, savedRole);
+        router.push(`/${onboardRootRoute}/onboarding`);
+      })
+      .catch(() => {
+        roleUpdateInFlight.current = false;
+      })
+      .finally(() => {
+        roleUpdateInFlight.current = false;
+      });
   }, [computePreferredRole, sessionData?.data?.user, setAuth]);
 
   useEffect(() => {
