@@ -114,7 +114,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
 
     roleUpdateInFlight.current = true;
     api
-      .post("/api/v1/profile/set-role", { role: savedRole.toLowerCase() })
+      .post("/profile/set-role", { role: savedRole.toLowerCase() })
       .then(() => {
         removeCookie(LOGIN_OPTION_COOKIE_KEY);
         removeCookie(USER_TYPE_COOKIE_KEY);

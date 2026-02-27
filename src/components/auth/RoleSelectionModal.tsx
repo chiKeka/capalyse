@@ -41,7 +41,7 @@ export default function RoleSelectionModal() {
     if (!selectedRole) return;
     setIsLoading(true);
     try {
-      await api.post("/api/v1/profile/set-role", {
+      await api.post("/profile/set-role", {
         role: selectedRole.toLowerCase(),
       });
       // Refresh session to get the new role
