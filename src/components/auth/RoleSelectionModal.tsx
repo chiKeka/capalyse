@@ -10,6 +10,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Button from "@/components/ui/Button";
 import { UserType } from "@/lib/utils";
 import { toast } from "sonner";
@@ -18,21 +25,23 @@ export default function RoleSelectionModal() {
   const { data: session, isPending } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
-    if (!isPending && session?.user && !session.user.role) {
+    if (!isPending && session?.user && (!session.user.role || session.user.role === "user")) {
       setIsOpen(true);
     } else {
       setIsOpen(false);
     }
   }, [session, isPending]);
 
-  const handleSelectRole = async (role: string) => {
+  const handleContinue = async () => {
+    if (!selectedRole) return;
     setIsLoading(true);
     try {
       await authClient.updateUser({
-        role: role.toLowerCase(),
+        role: selectedRole.toLowerCase(),
       });
       // Refresh session to get the new role
       await authClient.getSession();
@@ -42,10 +51,11 @@ export default function RoleSelectionModal() {
 
       // Redirect to onboarding
       const userType = Object.keys(UserType).find(
-        (key) => UserType[key as keyof typeof UserType].toLowerCase() === role.toLowerCase(),
+        (key) =>
+          UserType[key as keyof typeof UserType].toLowerCase() === selectedRole.toLowerCase(),
       );
       if (userType) {
-        router.push(`/${UserType[userType as keyof typeof UserType].toUpperCase()}/onboarding`);
+        router.push(`/${userType}/onboarding`);
       } else {
         router.refresh();
       }
@@ -63,55 +73,35 @@ export default function RoleSelectionModal() {
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent
         hideIcon={true}
-        className="sm:max-w-md"
+        className="sm:max-w-[425px] md:max-w-[425px] lg:max-w-[425px]"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Select your role</DialogTitle>
+          <DialogTitle>What best describes you?</DialogTitle>
           <DialogDescription>
             Please tell us how you plan to use Capalyse. This cannot be changed later.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
+          <Select onValueChange={setSelectedRole} value={selectedRole}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select your role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sme">SME</SelectItem>
+              <SelectItem value="investor">Investor</SelectItem>
+              <SelectItem value="development_org">Development Organization</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Button
             variant="primary"
             className="w-full justify-center"
-            onClick={() => handleSelectRole("sme")}
-            disabled={isLoading}
+            onClick={handleContinue}
+            disabled={isLoading || !selectedRole}
           >
-            I am an SME
-          </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or</span>
-            </div>
-          </div>
-          <Button
-            className="w-full justify-center"
-            onClick={() => handleSelectRole("investor")}
-            disabled={isLoading}
-          >
-            I am an Investor
-          </Button>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or</span>
-            </div>
-          </div>
-          <Button
-            variant="secondary"
-            className="w-full justify-center"
-            onClick={() => handleSelectRole("development_org")}
-            disabled={isLoading}
-          >
-            I am a Development Organization
+            {isLoading ? "Updating..." : "Continue"}
           </Button>
         </div>
       </DialogContent>

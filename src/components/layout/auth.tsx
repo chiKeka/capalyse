@@ -102,7 +102,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
     const loginOption = Cookies.get(LOGIN_OPTION_COOKIE_KEY);
     if (loginOption !== "google") return;
 
-    if (sessionUser.role) {
+    if (sessionUser.role && sessionUser.role !== "user") {
       removeCookie(LOGIN_OPTION_COOKIE_KEY);
       return;
     }
