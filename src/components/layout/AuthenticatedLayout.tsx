@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { AppSidebar } from "../app-sidebar";
 import { SiteHeader } from "../site-header";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
+import { useAuthSync } from "@/hooks/useAuthSync";
 
 const AuthenticatedLayout = ({
   children,
@@ -25,6 +26,9 @@ const AuthenticatedLayout = ({
   const params = useParams();
   const [loading, setLoading] = useState(true);
   const setAuth = useSetAtom(authAtom);
+
+  // Keep local auth atom in sync with the live session
+  useAuthSync();
 
   const checkAccess = () => {
     const rootRoute = getKeyByValue(UserType, session?.user?.role as string);

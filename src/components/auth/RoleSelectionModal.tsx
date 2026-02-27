@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient, useSession } from "@/lib/auth-client";
+import { authAtom } from "@/lib/atoms/atoms";
+import { useSetAtom } from "jotai";
 import api from "@/api/axios";
 import {
   Dialog,
@@ -28,6 +30,7 @@ export default function RoleSelectionModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string>("");
   const router = useRouter();
+  const setAuth = useSetAtom(authAtom);
 
   useEffect(() => {
     if (!isPending && session?.user && (!session.user.role || session.user.role === "user")) {
@@ -45,7 +48,9 @@ export default function RoleSelectionModal() {
         role: selectedRole.toLowerCase(),
       });
       // Refresh session to get the new role
-      await authClient.getSession();
+      const updatedSession = await authClient.getSession();
+      // Update local storage atom with new user data
+      setAuth(updatedSession?.data?.user);
 
       setIsOpen(false);
       toast.success("Role updated successfully");
