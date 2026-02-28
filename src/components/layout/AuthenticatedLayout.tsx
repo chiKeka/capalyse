@@ -81,9 +81,7 @@ const AuthenticatedLayout = ({
           <AppSidebar isAdmin={isAdmin} />
           <SidebarInset>
             <div className="flex flex-1 flex-col gap-4 p-4">
-              <div className="bg-white min-h-[100vh] flex-1 rounded-xl md:min-h-min">
-                {children}
-              </div>
+              <div className="bg-white min-h-screen flex-1 rounded-xl md:min-h-min">{children}</div>
             </div>
           </SidebarInset>
         </div>

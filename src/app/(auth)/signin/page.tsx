@@ -159,7 +159,7 @@ function SignIn({}: Props) {
               Don't have an account ?.
               <GetStarted
                 component={
-                  <Button variant="ghost" className="text-green !px-0.5" size="medium">
+                  <Button variant="ghost" className="text-green px-0.5!" size="medium">
                     Create account
                   </Button>
                 }

@@ -199,7 +199,7 @@ function CompliancePage() {
                 <div className="flex items-center justify-center w-full">
                   <Label
                     htmlFor="upload"
-                    className="flex flex-col items-center justify-center w-full min-h-[5.0625rem] border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
+                    className="flex flex-col items-center justify-center w-full min-h-20.25 border-2 border-dashed border-green cursor-pointer bg-gray-50 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center  ">
                       {!fileUploadLoading ? (

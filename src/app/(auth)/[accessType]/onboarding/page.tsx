@@ -270,7 +270,7 @@ const Page = () => {
                 ? `Welcome ${authState?.name}! You have successfully created your account. We're reviewing your details. You'll get an email once verification is complete.`
                 : "We're reviewing your details. You'll get an email once verification is complete."}
           </DialogDescription>
-          <DialogFooter className="!flex w-full max-w-sm !flex-col">
+          <DialogFooter className="flex! w-full max-w-sm flex-col!">
             <Button variant="primary" onClick={() => router.push(dashboardUrl)}>
               Go to Dashboard
             </Button>
