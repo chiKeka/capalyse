@@ -32,17 +32,7 @@ const AuthenticatedLayout = ({
 
   const checkAccess = () => {
     const rootRoute = getKeyByValue(UserType, session?.user?.role as string);
-
-    if (
-      session?.user?.role === "ADMIN" &&
-      params.accessType
-      // &&
-      // params.accessType !== "admin"
-    ) {
-      router.push("/admin");
-      setLoading(false);
-    }
-    if (session?.user?.role !== "ADMIN" && rootRoute !== params.accessType) {
+    if (session?.user?.role.toUpperCase() !== "ADMIN" && rootRoute !== params.accessType) {
       toast.error("You are not authorized to access this page");
       authClient.signOut(undefined, {
         onSuccess: () => {

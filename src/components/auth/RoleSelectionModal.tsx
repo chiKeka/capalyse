@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { authClient, useSession } from "@/lib/auth-client";
 import { authAtom } from "@/lib/atoms/atoms";
 import { useSetAtom } from "jotai";
 import api from "@/api/axios";
+import Cookies from "js-cookie";
 import {
   Dialog,
   DialogContent,
@@ -31,14 +32,49 @@ export default function RoleSelectionModal() {
   const [selectedRole, setSelectedRole] = useState<string>("");
   const router = useRouter();
   const setAuth = useSetAtom(authAtom);
+  const hasAutoAttempted = useRef(false);
 
   useEffect(() => {
     if (!isPending && session?.user && (!session.user.role || session.user.role === "user")) {
-      setIsOpen(true);
+      const cookieRole = Cookies.get("capalyze_auth_user_type");
+      if (cookieRole && !hasAutoAttempted.current) {
+        hasAutoAttempted.current = true;
+        const autoSetRole = async () => {
+          setIsLoading(true);
+          try {
+            await api.post("/profile/set-role", {
+              role: cookieRole.toLowerCase(),
+            });
+            const updatedSession = await authClient.getSession();
+            setAuth(updatedSession?.data?.user);
+            Cookies.remove("capalyze_auth_user_type", { path: "/" });
+            toast.success("Role configured successfully");
+            const userType = Object.keys(UserType).find(
+              (key) =>
+                UserType[key as keyof typeof UserType].toLowerCase() === cookieRole.toLowerCase(),
+            );
+            if (userType) {
+              router.push(`/${userType}/onboarding`);
+            } else {
+              router.refresh();
+            }
+          } catch (error) {
+            console.error("Failed to auto-update role:", error);
+            setIsOpen(true);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        autoSetRole();
+      } else {
+        if (!cookieRole || hasAutoAttempted.current) {
+          setIsOpen(true);
+        }
+      }
     } else {
       setIsOpen(false);
     }
-  }, [session, isPending]);
+  }, [session, isPending, router, setAuth]);
 
   const handleContinue = async () => {
     if (!selectedRole) return;

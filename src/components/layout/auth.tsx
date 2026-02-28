@@ -133,9 +133,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   }, [computePreferredRole, sessionData?.data?.user, setAuth]);
 
   useEffect(() => {
-    // if (isAuth?.user && !isAuthLoading) {
-    //   setAuth(isAuth?.user as any);
-    // }
     const getSession = async () => {
       const session = await authClient.getSession();
       setAuth(session?.data?.user);
@@ -144,14 +141,20 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
       getSession();
     }
 
-    if (!noRedirect && auth && rootRoute) {
-      if (isIncompleteStep) {
-        router?.push(`/${rootRoute}/onboarding`);
-      } else {
-        router?.push(routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root);
+    if (!noRedirect && auth) {
+      if (auth.role?.toUpperCase() === "ADMIN") {
+        router?.push("/admin");
+        return;
+      }
+      if (rootRoute) {
+        if (isIncompleteStep) {
+          router?.push(`/${rootRoute}/onboarding`);
+        } else {
+          router?.push(routes?.[rootRoute?.toLowerCase() as keyof typeof routes]?.root);
+        }
       }
     }
-  }, [isAuth, isIncompleteStep, rootRoute, routes, router, isAuthLoading]);
+  }, [isAuth, isIncompleteStep, rootRoute, routes, router, isAuthLoading, auth, noRedirect]);
 
   return (
     <div className="min-h-screen flex flex-col w-full items-center justify-center bg-[#EEF6F4]  px-4">
