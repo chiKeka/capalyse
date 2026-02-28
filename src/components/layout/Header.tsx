@@ -166,10 +166,10 @@ const navlinks = [
     text: "For Investors",
     url: "/investors",
   },
-  {
-    text: "For Organisations",
-    url: "/organisations",
-  },
+  // {
+  //   text: "For Organisations",
+  //   url: "/organizations",
+  // },
   {
     text: "Resources",
     url: "/resources",
