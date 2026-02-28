@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Capalyse - Empowering Growth",
+  title: "Capalyse - Empowering Growth, Investor Readiness for African MSMEs",
   description:
     "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
   keywords: [
@@ -47,13 +47,15 @@ export const metadata: Metadata = {
     "Data-Backed Decisions",
     "Sustainable Impact",
     "Business Readiness",
+    "African MSMEs",
+    "Investor Readiness",
   ],
   icons: {
     icon: "/favicon.ico",
   },
   applicationName: "Capalyse",
   openGraph: {
-    title: "Capalyse - Empowering Growth",
+    title: "Capalyse - Empowering Growth, Investor Readiness for African MSMEs",
     description:
       "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
     type: "website",
@@ -65,12 +67,12 @@ export const metadata: Metadata = {
         url: "https://capalyse.com/images/landing-hero.png",
         width: 1200,
         height: 630,
-        alt: "Capalyse - Empowering Growth",
+        alt: "Capalyse - Empowering Growth, Investor Readiness for African MSMEs",
       },
     ],
   },
   twitter: {
-    title: "Capalyse - Empowering Growth",
+    title: "Capalyse - Empowering Growth, Investor Readiness for African MSMEs",
     description:
       "Capalyse bridges the gap between investment-ready SMEs and value-driven investors across Africa.",
     card: "summary_large_image",
@@ -81,7 +83,7 @@ export const metadata: Metadata = {
         url: "https://capalyse.com/images/landing-hero.png",
         width: 1200,
         height: 630,
-        alt: "Capalyse - Empowering Growth",
+        alt: "Capalyse - Empowering Growth, Investor Readiness for African MSMEs",
       },
     ],
   },

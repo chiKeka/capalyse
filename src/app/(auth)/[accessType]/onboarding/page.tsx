@@ -17,6 +17,7 @@ import { onboardingSteps, UserType } from "@/lib/utils";
 import { useAtomValue } from "jotai";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import BusinassInformationForm from "./businassInformationForm";
 import DevelopmentOrganisation from "./developmentOrganisation";
@@ -203,6 +204,17 @@ const Page = () => {
       </div>
 
       <div className="w-full">
+        <div className="text-xs text-gray-500 text-center mb-4 mt-2">
+          By signing up in to capalyse.com, you agree to our{" "}
+          <Link href="/terms" className="text-green hover:underline">
+            Terms and Conditions
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy" className="text-green hover:underline">
+            Privacy Policy
+          </Link>
+          .
+        </div>
         <div
           className={`grid ${!profileNextStep?.isCompleted && "md:grid-cols-2"}  w-full gap-4 mt-4`}
         >

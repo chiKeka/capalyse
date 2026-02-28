@@ -59,13 +59,17 @@ const Footer = () => {
             <ul className="space-y-3">
               {help?.map((item) => (
                 <li key={item.text}>
-                  <a href={item.url} className="text-teal-100 hover:text-white">
+                  <Link href={item.url} className="text-teal-100 hover:text-white">
                     {item.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-green-800/50 text-center text-teal-100 text-sm">
+          <p>&copy; 2026 Capalyse. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -75,10 +79,11 @@ const Footer = () => {
 export default Footer;
 
 const company = [
-  { url: "#", text: "About" },
+  { url: "/about", text: "About" },
   { url: "/SMEs", text: "For SMEs" },
   { url: "/investors", text: "For Investors" },
-  { url: "#", text: "Contact" },
+  { url: "/organizations", text: "For Organizations" },
+  { url: "/contact", text: "Contact" },
 ];
 const resources = [
   { url: "#", text: "Trade Compliance" },
@@ -86,6 +91,6 @@ const resources = [
   { url: "#", text: "Investment Toolkit" },
 ];
 const help = [
-  { url: "#", text: "Terms & Conditions" },
-  { url: "#", text: "Privacy Policy" },
+  { url: "/terms", text: "Terms & Conditions" },
+  { url: "/privacy", text: "Privacy Policy" },
 ];

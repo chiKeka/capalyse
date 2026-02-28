@@ -1,5 +1,6 @@
 "use client";
 import AuthLayout from "@/components/layout/auth";
+import Link from "next/link";
 import GetStarted from "@/components/layout/GetStarted";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
@@ -131,6 +132,17 @@ function SignIn({}: Props) {
             >
               Reset password
             </Button>
+          </div>
+          <div className="text-xs text-gray-500 text-center mb-4 mt-2">
+            By signing in to capalyse.com, you agree to our{" "}
+            <Link href="/terms" className="text-green hover:underline">
+              Terms and Conditions
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-green hover:underline">
+              Privacy Policy
+            </Link>
+            .
           </div>
           <Button
             disabled={isLoading}

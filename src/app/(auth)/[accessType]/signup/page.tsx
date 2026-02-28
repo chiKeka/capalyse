@@ -98,6 +98,17 @@ export default function SignupPage() {
           {errors.password && (
             <div className="text-red-500 text-xs -mt-1 mb-1">{errors.password}</div>
           )}
+          <div className="text-xs text-gray-500 text-center mb-4 mt-2">
+            By signing up to capalyse.com, you agree to our{" "}
+            <Link href="/terms" className="text-green hover:underline">
+              Terms and Conditions
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-green hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </div>
           <Button
             disabled={isLoading}
             type="submit"
