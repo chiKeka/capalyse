@@ -68,12 +68,14 @@ export function NavUser({
     authClient.signOut(undefined, {
       onSuccess: () => {
         setAuth(undefined);
+        localStorage.removeItem("auth");
         queryClient.clear();
         router.push("/signin");
       },
       onError: (ctx) => {
         // toast.error(ctx.error.message);
         setAuth(undefined);
+        localStorage.removeItem("auth");
         queryClient.clear();
         router.push("/signin");
       },
@@ -165,7 +167,7 @@ export function NavUser({
         />
       </SidebarMenuItem>
       <Dialog open={showLogout} onOpenChange={setShowLogout}>
-        <DialogContent className="sm:!max-w-[425px]" hideIcon>
+        <DialogContent className="sm:max-w-[425px]!" hideIcon>
           <DialogHeader>
             <DialogTitle className="text-center">Log out</DialogTitle>
             <DialogDescription className="text-center py-6 font-medium">

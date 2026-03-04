@@ -37,11 +37,15 @@ const AuthenticatedLayout = ({
       authClient.signOut(undefined, {
         onSuccess: () => {
           setLoading(false);
+          setAuth(undefined);
+          localStorage.removeItem("auth");
           router.push("/signin");
         },
         onError: (ctx) => {
           toast.error(ctx.error.message);
           setLoading(false);
+          setAuth(undefined);
+          localStorage.removeItem("auth");
         },
       });
     } else {
@@ -51,6 +55,8 @@ const AuthenticatedLayout = ({
 
   useEffect(() => {
     if (!isPending && !session?.user) {
+      setAuth(undefined);
+      localStorage.removeItem("auth");
       router.push("/signin");
       return;
     } else {
