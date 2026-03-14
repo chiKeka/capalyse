@@ -60,6 +60,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.readiness,
       },
       {
+        title: "Investment Interests",
+        url: routes.sme.investmentInterests,
+        icon: CIcons.portfolioIcon,
+      },
+      {
         title: "Resources & Learning",
         url: routes.sme.learning,
         icon: CIcons.learning,
@@ -74,6 +79,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: "Networking",
         url: routes.sme.networking,
         icon: CIcons.networking,
+      },
+      {
+        title: "Messages",
+        url: routes.sme.messages,
+        icon: CIcons.engage,
       },
       {
         title: "Support",
@@ -103,10 +113,20 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.portfolioIcon,
       },
       {
+        title: "Investment Interests",
+        url: routes.investor.investmentInterests,
+        icon: CIcons.walletMoney,
+      },
+      {
         title: "Resources & Insights",
         url: routes.investor.resources,
         icon: CIcons.learning,
         // badge: '12',
+      },
+      {
+        title: "Messages",
+        url: routes.investor.messages,
+        icon: CIcons.engage,
       },
       {
         title: "Support",
@@ -139,6 +159,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: "Funding & Disbursement",
         url: routes.development.funding,
         icon: CIcons.walletMoney,
+      },
+      {
+        title: "Messages",
+        url: routes.development.messages,
+        icon: CIcons.engage,
       },
       {
         title: "Support",
