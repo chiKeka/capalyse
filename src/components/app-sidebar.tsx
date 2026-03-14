@@ -55,6 +55,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.readiness,
       },
       {
+        title: "Readiness Analytics",
+        url: routes.sme.readinessAnalytics,
+        icon: CIcons.linearGraph,
+      },
+      {
         title: "Investor Matches",
         url: routes.sme.investors,
         icon: CIcons.readiness,
@@ -84,6 +89,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: "Messages",
         url: routes.sme.messages,
         icon: CIcons.engage,
+      },
+      {
+        title: "Notifications",
+        url: routes.sme.notifications,
+        icon: CIcons.messageBadge,
       },
       {
         title: "Support",
@@ -129,6 +139,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.engage,
       },
       {
+        title: "Notifications",
+        url: routes.investor.notifications,
+        icon: CIcons.messageBadge,
+      },
+      {
         title: "Support",
         url: routes.investor.support,
         icon: CIcons.support,
@@ -166,6 +181,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.engage,
       },
       {
+        title: "Notifications",
+        url: routes.development.notifications,
+        icon: CIcons.messageBadge,
+      },
+      {
         title: "Support",
         url: routes.development.support,
         icon: CIcons.support,
@@ -191,6 +211,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         title: "Assessment Management",
         url: routes.admin.assessmentManagement,
         icon: CIcons.linearGraph,
+      },
+      {
+        title: "Compliance Management",
+        url: routes.admin.complianceManagement,
+        icon: CIcons.compliance,
       },
       // {
       //   title: "Content & Communication",
