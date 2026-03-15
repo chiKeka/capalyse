@@ -8,7 +8,6 @@ import {
   CircleDotIcon,
   ClockIcon,
   CheckCircle2Icon,
-  TimerIcon,
   SendIcon,
   UserPlusIcon,
   ChevronDownIcon,
