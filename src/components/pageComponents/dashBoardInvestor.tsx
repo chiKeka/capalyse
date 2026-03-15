@@ -8,10 +8,12 @@ import { routes } from "@/lib/routes";
 import { formatCurrency, formatInvestmentData } from "@/lib/uitils/fns";
 import { useParams, useRouter } from "next/navigation";
 import EmptyBox from "../sections/dashboardCards/emptyBox";
+import { OnboardingBanner } from "../sections/dashboardCards/onboardingBanner";
 import ResourceCard from "../sections/dashboardCards/ResourceCard";
 import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
 import InvestmentOpportunitiesCard from "../InvesmentOpportunitiesCard";
+import AIAssistantsSection from "@/components/ui/ai-assistants-section";
 
 export default function InvestorDashBoard() {
   const router = useRouter();
@@ -48,6 +50,7 @@ export default function InvestorDashBoard() {
   ];
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
+      <OnboardingBanner />
       <OverviewHeaderCard
         value={30}
         link={routes.investor.smeDirectory}
@@ -116,6 +119,15 @@ export default function InvestorDashBoard() {
           </DashboardCardLayout>
         </div>
       </div>
+
+      {/* AI Assistants */}
+      <AIAssistantsSection
+        segment="smb_operational"
+        prioritize={[
+          "market_analysis",
+          "advisor_connect",
+        ]}
+      />
     </div>
   );
 }

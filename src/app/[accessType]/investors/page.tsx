@@ -17,11 +17,6 @@ import useDebounce from "@/hooks/useDebounce";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
-// Example data
-const investors: any = [];
-
-// Table columns
-
 function InvestorsPage() {
   const [selectedInvestor, setSelectedInvestor] = useState<any | null>(null);
   const [search, setSearch] = useState("");
@@ -29,11 +24,13 @@ function InvestorsPage() {
 
   const debouncedSearch = useDebounce(search, 300);
 
-  const { data: user, isLoading } = useSmeMatches({
+  const { data: matchesData, isLoading } = useSmeMatches({
     page,
     limit: 20,
     q: debouncedSearch || undefined,
   });
+
+  const items = matchesData?.items ?? [];
 
   const handleViewProfile = (investor: any) => {
     setSelectedInvestor(investor);
@@ -48,7 +45,9 @@ function InvestorsPage() {
       header: "Name",
       accessor: (row: any) => (
         <div className="flex items-center gap-2">
-          <Image src={row.avatar} alt={row.name} width={24} height={24} className="rounded-full" />
+          {row.avatar ? (
+            <Image src={row.avatar} alt={row.name} width={24} height={24} className="rounded-full" />
+          ) : null}
           <span className="font-medium text-sm">{row.name}</span>
         </div>
       ),
@@ -74,16 +73,16 @@ function InvestorsPage() {
   ];
 
   const totalPages = useMemo(() => {
-    const metaTotalPages = (user as any)?.meta?.totalPages;
+    const metaTotalPages = matchesData?.meta?.totalPages;
     if (metaTotalPages) return metaTotalPages;
     const totalItems =
-      (user as any)?.meta?.total ??
-      (user as any)?.total ??
-      (user as any)?.count ??
-      (user as any)?.items?.length ??
+      matchesData?.meta?.total ??
+      matchesData?.total ??
+      matchesData?.count ??
+      items.length ??
       0;
     return totalItems ? Math.ceil(totalItems / 20) : 1;
-  }, [user]);
+  }, [matchesData, items.length]);
 
   return (
     <div>
@@ -93,7 +92,7 @@ function InvestorsPage() {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Investor Matches
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {user?.items?.length}
+              {items.length}
             </span>
           </p>
         </div>
@@ -104,8 +103,6 @@ function InvestorsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="course">Courses</SelectItem>
-              <SelectItem value="webinar">Webinars</SelectItem>
             </SelectContent>
           </Select>
           <div className="flex items-center gap-2">
@@ -120,10 +117,6 @@ function InvestorsPage() {
               iconWrapperClassName="bg-[#F9F9FA] border border-black-50 w-8"
             />
           </div>
-          {/* <Button variant="primary">
-            Message Investor
-            <img className="w-[20px] h-[20px]" src={"/icons/message.svg"} />
-          </Button> */}
         </div>
       </div>
 
@@ -134,7 +127,7 @@ function InvestorsPage() {
       ) : (
         <ReusableTable
           columns={columns}
-          data={(user as any)?.items ?? []}
+          data={items}
           loading={isLoading}
           page={page}
           setPage={setPage}

@@ -4,6 +4,7 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CategoryBreakdown from "@/components/sections/dashboardCards/categoryBreakdown";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
+import InlineAgentCTA from "@/components/ui/inline-agent-cta";
 import { ReusableTable } from "@/components/ui/table";
 import { Document, useDocument } from "@/hooks/useDocument";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
@@ -187,6 +188,14 @@ function page({}: Props) {
           </DashboardCardLayout>
         </div>
       )}
+
+      {/* AI Funding Readiness Agent */}
+      <InlineAgentCTA
+        agentName="funding_readiness"
+        title="Funding Readiness Agent"
+        description="Let AI analyze your readiness score and suggest specific improvements to attract investors."
+        segment="smb_formation"
+      />
 
       <DashboardCardLayout>
         <div className="myb-4">

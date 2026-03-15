@@ -7,13 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Waitlist } from "../sections/waitlist";
 import Button from "../ui/Button";
 import GetStarted from "./GetStarted";
 
 const Header = () => {
   const router = useRouter();
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -142,12 +140,6 @@ const Header = () => {
           </div>
         </div>
       )}
-      <Waitlist
-        isOpen={waitlistOpen}
-        setIsOpen={setWaitlistOpen}
-        title="Don't Miss Out, Join the Waitlist"
-        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
-      />
     </motion.nav>
   );
 };

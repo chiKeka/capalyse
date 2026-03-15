@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.github
+.claude
+.env*
+.DS_Store
+*.md
+docker-compose*.yml
+Dockerfile
+.dockerignore
+.vercel
+certificates
+coverage
+npm-debug.log*
+yarn-debug.log*

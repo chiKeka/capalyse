@@ -1,8 +1,6 @@
 import { containerVariants, itemVariants } from "@/lib/animations";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import Button from "../ui/Button";
-import { Waitlist } from "./waitlist";
 import GetStarted from "../layout/GetStarted";
 
 type Props = {
@@ -12,7 +10,6 @@ type Props = {
 };
 
 const Cta = ({ heading, text, buttonText }: Props) => {
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
       variants={containerVariants}
@@ -44,12 +41,6 @@ const Cta = ({ heading, text, buttonText }: Props) => {
           />
         </div>
       </motion.div>
-      <Waitlist
-        isOpen={waitlistOpen}
-        setIsOpen={setWaitlistOpen}
-        title="Don’t Miss Out, Join the Waitlist"
-        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
-      />
     </motion.section>
   );
 };

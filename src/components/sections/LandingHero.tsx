@@ -1,13 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
 import GetStarted from "../layout/GetStarted";
 import Button from "../ui/Button";
 import GridSvg from "../ui/gridSvg";
-import { Waitlist } from "./waitlist";
 
 const LandingHero = () => {
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   // console.log(data)
   return (
     <section className="py-20 relative bg-[#01281D] bg-no-repeat xl:bg-contain bg-[position:360%_center]">
@@ -63,12 +60,6 @@ const LandingHero = () => {
           </div>
         </div>
       </div>
-      <Waitlist
-        isOpen={waitlistOpen}
-        setIsOpen={setWaitlistOpen}
-        title="Don’t Miss Out, Join the Waitlist"
-        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
-      />
     </section>
   );
 };

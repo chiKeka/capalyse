@@ -37,5 +37,24 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Suppress telemetry during CI builds
           NEXT_TELEMETRY_DISABLED: 1
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'https://capalyse-api-v1.apps.ikem.dev' }}
+          NEXT_PUBLIC_BETTER_AUTH_URL: ${{ secrets.NEXT_PUBLIC_BETTER_AUTH_URL || 'https://capalyse-api-v1.apps.ikem.dev' }}
+
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://capalyse-api-v1.apps.ikem.dev' }} \
+            --build-arg NEXT_PUBLIC_BETTER_AUTH_URL=${{ secrets.NEXT_PUBLIC_BETTER_AUTH_URL || 'https://capalyse-api-v1.apps.ikem.dev' }} \
+            -t capalyse-app:${{ github.sha }} \
+            -t capalyse-app:latest \
+            .

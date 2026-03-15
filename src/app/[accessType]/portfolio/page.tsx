@@ -21,57 +21,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
-type Props = {};
-
-// Example data
-const smes: any[] = [];
-const columns = [
-  {
-    header: "Name",
-    accessor: (row: (typeof smes)[0]) => (
-      <div className="flex items-center gap-2">
-        {row.avatar ? (
-          <Image src={row.avatar} alt={row.name} width={24} height={24} className="rounded-full" />
-        ) : null}
-        <span className="font-medium text-sm">{row.metadata.name}</span>
-      </div>
-    ),
-  },
-  {
-    header: "Industry",
-    accessor: (row: (typeof smes)[0]) => row.metadata.industry ?? "-",
-  },
-  {
-    header: "Country",
-    accessor: (row: (typeof smes)[0]) => row.metadata.location ?? "-",
-  },
-  {
-    header: "Readiness Score",
-    accessor: (row: (typeof smes)[0]) => row.metadata.readiness?.overallScore ?? "-",
-  },
-  {
-    header: "Revenue",
-    accessor: (row: (typeof smes)[0]) => row.metadata.totalRevenue ?? "-",
-  },
-  {
-    header: "Team Size",
-    accessor: (row: (typeof smes)[0]) => row.metadata.teamSize ?? "-",
-  },
-  {
-    header: "Last Update",
-    accessor: (row: (typeof smes)[0]) => format(row.updatedAt, "MMM dd, yyyy HH:mm a"),
-  },
-];
-
-function page({}: Props) {
+function PortfolioPage() {
   const [search, setSearch] = useState("");
   const [industryFilter, setIndustryFilter] = useState("all");
   const router = useRouter();
   const { data: portfolioSummary, isLoading: isPortfolioSummaryLoading } =
     useGetInvestorPortfolioSummary();
-  const { data: investments = [], isLoading, error } = useInvestments();
+  const { data: investments = [], isLoading } = useInvestments();
   const { data: industries = [] } = useIndustries();
-  // console.log({ portfolioSummary });
 
   const filteredInvestments = investments.filter((investment: any) => {
     const matchesSearch =
@@ -84,6 +41,46 @@ function page({}: Props) {
       investment?.metadata?.industry?.toLowerCase() === industryFilter.toLowerCase();
     return matchesSearch && matchesIndustry;
   });
+
+  const columns = [
+    {
+      header: "Name",
+      accessor: (row: any) => (
+        <div className="flex items-center gap-2">
+          {row.avatar ? (
+            <Image src={row.avatar} alt={row.metadata?.name} width={24} height={24} className="rounded-full" />
+          ) : null}
+          <span className="font-medium text-sm">{row.metadata?.name ?? "-"}</span>
+        </div>
+      ),
+    },
+    {
+      header: "Industry",
+      accessor: (row: any) => row.metadata?.industry ?? "-",
+    },
+    {
+      header: "Country",
+      accessor: (row: any) => row.metadata?.location ?? "-",
+    },
+    {
+      header: "Readiness Score",
+      accessor: (row: any) => row.metadata?.readiness?.overallScore ?? "-",
+    },
+    {
+      header: "Revenue",
+      accessor: (row: any) => row.metadata?.totalRevenue ?? "-",
+    },
+    {
+      header: "Team Size",
+      accessor: (row: any) => row.metadata?.teamSize ?? "-",
+    },
+    {
+      header: "Last Update",
+      accessor: (row: any) =>
+        row.updatedAt ? format(new Date(row.updatedAt), "MMM dd, yyyy HH:mm a") : "-",
+    },
+  ];
+
   const overviewCards = useMemo(() => {
     return [
       {
@@ -109,6 +106,7 @@ function page({}: Props) {
       },
     ];
   }, [portfolioSummary]);
+
   return (
     <div>
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-6">
@@ -151,7 +149,7 @@ function page({}: Props) {
           <p className="font-bold whitespace-nowrap text-base flex gap-2 items-center text-[#18181B]">
             Portfolio Summary
             <span className="px-2 py-0.5 block text-xs font-normal rounded-[16px] bg-[#F4FFFC] text-green">
-              {smes.length}
+              {filteredInvestments.length}
             </span>
           </p>
         </div>
@@ -188,11 +186,11 @@ function page({}: Props) {
       <ReusableTable
         columns={columns}
         data={filteredInvestments}
-        totalPages={Math.ceil(filteredInvestments?.length / 4)}
+        totalPages={Math.ceil(filteredInvestments.length / 4) || 1}
         loading={isLoading}
       />
     </div>
   );
 }
 
-export default page;
+export default PortfolioPage;

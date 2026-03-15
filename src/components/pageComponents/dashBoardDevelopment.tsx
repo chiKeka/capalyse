@@ -13,7 +13,9 @@ import { Card, CardContent } from "../ui/card";
 import { CIcons } from "../ui/CIcons";
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/lib/atoms/atoms";
+import { OnboardingBanner } from "../sections/dashboardCards/onboardingBanner";
 import CreateProgram from "../ui/createProgram";
+import AIAssistantsSection from "@/components/ui/ai-assistants-section";
 import { useState } from "react";
 
 export default function DevelopmentDashBoard() {
@@ -65,6 +67,7 @@ export default function DevelopmentDashBoard() {
   ];
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
+      <OnboardingBanner />
       <OverviewHeaderCard
         value={30}
         link={routes.investor.smeDirectory}
@@ -144,6 +147,17 @@ export default function DevelopmentDashBoard() {
           </DashboardCardLayout>
         </div>
       )}
+
+      {/* AI Assistants */}
+      <AIAssistantsSection
+        segment="dev_agency"
+        prioritize={[
+          "donor_report",
+          "capacity_building",
+          "me_data",
+          "partner_management",
+        ]}
+      />
 
       <CreateProgram
         isOpen={isOpen}

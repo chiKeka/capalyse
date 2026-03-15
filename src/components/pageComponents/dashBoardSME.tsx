@@ -3,10 +3,12 @@ import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import CheckListProgressCard from "@/components/sections/dashboardCards/checkListProgressCard";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import LearningCard from "@/components/sections/dashboardCards/learningCard";
+import { OnboardingBanner } from "@/components/sections/dashboardCards/onboardingBanner";
 import { OverviewHeaderCard } from "@/components/sections/dashboardCards/overviewHeaderCard";
 import Programs from "@/components/sections/dashboardCards/programs";
 import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessScoreCard";
 import SuggestedConnection from "@/components/sections/dashboardCards/suggestedConnection";
+import AIAssistantsSection from "@/components/ui/ai-assistants-section";
 import { useSmeMatches } from "@/hooks/useDirectories";
 import { GetPrograms } from "@/hooks/usePrograms";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
@@ -67,6 +69,7 @@ export default function SmeDashBoard() {
 
   return (
     <div className="flex flex-col w-full gap-6 h-auto">
+      <OnboardingBanner />
       <OverviewHeaderCard
         value={Math.round((user?.completedSteps?.length / user?.totalSteps) * 100)}
         link={`/${params.accessType}/profile`}
@@ -213,6 +216,17 @@ export default function SmeDashBoard() {
           </DashboardCardLayout>
         </div>
       </div>
+
+      {/* AI Assistants */}
+      <AIAssistantsSection
+        segment="smb_formation"
+        prioritize={[
+          "business_plan",
+          "market_analysis",
+          "funding_readiness",
+          "startup_financial_model",
+        ]}
+      />
     </div>
   );
 }

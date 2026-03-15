@@ -1,9 +1,4 @@
 export const ApiEndPoints = {
-  // Wait list
-  Waitlist_Count: "/waitlist",
-  wait_list: "/waitlist",
-  Get_Waitlist: (email: string) => `waitlist/status/${email}`,
-
   //Resources
 
   //Watchlist
@@ -107,15 +102,6 @@ export const ApiEndPoints = {
  * Moved from routes.ts for centralized endpoint management.
  */
 export const apiRoutes = {
-  /**
-   * Waitlist management endpoints.
-   */
-  waitlist: {
-    join: "/waitlist",
-    count: "/waitlist/count",
-    status: (email: string) => `/waitlist/status/${email}`,
-  },
-
   /**
    * Resource management endpoints (e.g., articles, learning materials).
    */
@@ -290,6 +276,16 @@ export const apiRoutes = {
     createInvestment: "/investments",
     updateInvestment: (id: string) => `/investments/${id}`,
     getInvestorPortfolioSummary: "/portfolio/investor/me/summary",
+    // Deal flow pipeline
+    moveStage: (id: string) => `/investments/${id}/stage`,
+    // Due diligence room
+    getDueDiligenceRoom: (id: string) => `/investments/${id}/due-diligence`,
+    getDueDiligenceDocuments: (id: string) => `/investments/${id}/due-diligence/documents`,
+    uploadDueDiligenceDocument: (id: string) => `/investments/${id}/due-diligence/documents`,
+    updateDueDiligenceDocStatus: (id: string, docId: string) =>
+      `/investments/${id}/due-diligence/documents/${docId}`,
+    getDueDiligenceChecklist: (id: string) => `/investments/${id}/due-diligence/checklist`,
+    getDueDiligenceActivity: (id: string) => `/investments/${id}/due-diligence/activity`,
   },
 
   /**

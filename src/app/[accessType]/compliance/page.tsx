@@ -17,6 +17,7 @@ import { CreateComplianceForm, useCompliance, useGetComplianceCases } from "@/ho
 import { useDocument } from "@/hooks/useDocument";
 import { complianceAttachment } from "@/lib/uitils/types";
 import { useAfricanCountries, useProductCategories } from "@/hooks/useComplianceCatalogs";
+import InlineAgentCTA from "@/components/ui/inline-agent-cta";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -102,6 +103,14 @@ function CompliancePage() {
   const result = createCompliance?.data?.data?.data;
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-gray-50/50">
+      {/* AI Regulatory Check Agent */}
+      <InlineAgentCTA
+        agentName="regulatory_check"
+        title="Regulatory Check Agent"
+        description="Let AI check your regulatory requirements and identify compliance gaps automatically."
+        segment="smb_formation"
+      />
+
       <Card className="grid gap-8 md:grid-cols-5 p-6 w-full">
         {/* Make a Complaint Form */}
         <div className="flex gap-6 col-span-3">

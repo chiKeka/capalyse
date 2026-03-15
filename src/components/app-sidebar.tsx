@@ -35,6 +35,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
   const navs = {
     sme: [
       {
+        title: "Get Started",
+        url: routes.sme.onboarding,
+        icon: CIcons.badgeCheck,
+      },
+      {
         title: "Analytics & Finance",
         url: routes.sme.root,
         icon: CIcons.overview,
@@ -103,9 +108,19 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
     ],
     investor: [
       {
+        title: "Get Started",
+        url: routes.investor.onboarding,
+        icon: CIcons.badgeCheck,
+      },
+      {
         title: "Overview",
         url: routes.investor.root,
         icon: CIcons.overview,
+      },
+      {
+        title: "Analytics",
+        url: routes.investor.analytics,
+        icon: CIcons.linearGraph,
       },
       {
         title: "SME Directory",
@@ -128,10 +143,24 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         icon: CIcons.walletMoney,
       },
       {
+        title: "Deal Flow",
+        url: routes.investor.dealFlow,
+        icon: CIcons.linearGraph,
+      },
+      {
+        title: "Financial",
+        url: routes.investor.finance,
+        icon: CIcons.carbonReport,
+      },
+      {
+        title: "Connections",
+        url: routes.investor.connections,
+        icon: CIcons.networking,
+      },
+      {
         title: "Resources & Insights",
         url: routes.investor.resources,
         icon: CIcons.learning,
-        // badge: '12',
       },
       {
         title: "Messages",
@@ -150,6 +179,11 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
       },
     ],
     development: [
+      {
+        title: "Get Started",
+        url: routes.development.onboarding,
+        icon: CIcons.badgeCheck,
+      },
       {
         title: "Overview",
         url: routes.development.root,
@@ -217,14 +251,19 @@ const getSideBarLinks = (type: string, isAdmin?: boolean) => {
         url: routes.admin.complianceManagement,
         icon: CIcons.compliance,
       },
-      // {
-      //   title: "Content & Communication",
-      //   url: routes.admin.contentCommunication,
-      //   icon: CIcons.learning,
-      // },
+      {
+        title: "Content & Communication",
+        url: routes.admin.contentCommunication,
+        icon: CIcons.learning,
+      },
       {
         title: "Support",
         url: routes.admin.support,
+        icon: CIcons.support,
+      },
+      {
+        title: "Settings",
+        url: routes.admin.settings,
         icon: CIcons.support,
       },
     ],

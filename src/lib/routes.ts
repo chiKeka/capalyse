@@ -9,6 +9,7 @@
 export const routes = {
   sme: {
     root: "/sme",
+    onboarding: "/sme/onboarding",
     readiness: "/sme/readiness",
     readinessAnalytics: "/sme/readiness-analytics",
     investors: "/sme/investors",
@@ -26,10 +27,13 @@ export const routes = {
   },
   investor: {
     root: "/investor",
+    onboarding: "/investor/onboarding",
     smeDirectory: "/investor/sme-directory",
     savedSmes: "/investor/saved-smes",
     portfolio: "/investor/portfolio",
     investmentInterests: "/investor/investment-interests",
+    dealFlow: "/investor/deal-flow",
+    dueDiligence: (dealId: string) => `/investor/due-diligence/${dealId}`,
     resources: "/investor/resources",
     connections: "/investor/connections",
     messages: "/investor/messages",
@@ -42,6 +46,7 @@ export const routes = {
   },
   development: {
     root: "/development",
+    onboarding: "/development/onboarding",
     programs: "/development/programs",
     smeDirectory: "/development/sme-directory",
     impactTracking: "/development/impact-tracking",

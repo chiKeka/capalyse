@@ -1,7 +1,6 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import Button from "../ui/Button";
 import { motion } from "framer-motion";
-import { Waitlist } from "./waitlist";
 import { containerVariants } from "@/lib/animations";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +14,6 @@ type Props = {
 
 function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
   const router = useRouter();
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
   return (
     <motion.section
       variants={containerVariants}
@@ -63,12 +61,6 @@ function SMEsHero({ reverse, text, header, tag, headerImage }: Props) {
           </div>
         </div>
       </div>
-      <Waitlist
-        isOpen={waitlistOpen}
-        setIsOpen={setWaitlistOpen}
-        title="Don’t Miss Out, Join the Waitlist"
-        desc="Join our waitlist to secure your spot and get early access. Be part of the growing community of businesses preparing to unlock the full experience."
-      />
     </motion.section>
   );
 }
