@@ -1,44 +1,71 @@
 "use client";
 import { useState } from "react";
+import { Lock, Settings, Sliders, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 import PersonalInfo from "./personalInfo";
 import Security from "./security";
+import PlatformConfig from "./platformConfig";
+
+type AdminSettingsTab = "personal" | "security" | "platform";
+
+interface TabConfig {
+  id: AdminSettingsTab;
+  label: string;
+  icon: React.ElementType;
+}
+
+const tabs: TabConfig[] = [
+  { id: "personal", label: "Personal Info", icon: User },
+  { id: "security", label: "Security", icon: Lock },
+  { id: "platform", label: "Platform Config", icon: Sliders },
+];
 
 const SettingsPage = () => {
-  const [formState, setFormState] = useState("personal");
+  const [activeTab, setActiveTab] = useState<AdminSettingsTab>("personal");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "personal":
+        return <PersonalInfo />;
+      case "security":
+        return <Security />;
+      case "platform":
+        return <PlatformConfig />;
+      default:
+        return <PersonalInfo />;
+    }
+  };
 
   return (
     <div className="flex flex-col items-start gap-8">
       <div className="rounded-md border-[#E8E8E8] gap-8 border-1 flex flex-col py-9 px-8 w-full h-auto items-start justify-between">
         <div className="flex items-center gap-2">
-          <img src={"/icons/settings.svg"} />
-          <p className="text-green font-bold text-base">Settings</p>
+          <Settings className="w-5 h-5 text-[#008060]" />
+          <p className="text-green font-bold text-base">Admin Settings</p>
         </div>
-        <div className=" flex gap-0 w-full">
-          <div
-            onClick={() => setFormState("personal")}
-            className={`flex items-center cursor-pointer ${
-              formState === "personal"
-                ? "text-green border-green"
-                : "text-[#8A8A8A] border-[#EAEAEA]"
-            } border-b-1  p-2 gap-2`}
-          >
-            <img src={"/icons/profile2.svg"} />
-            <p className="font-medium text-xs">Personal Info</p>
-          </div>
-          <div
-            onClick={() => setFormState("security")}
-            className={`flex items-center cursor-pointer ${
-              formState != "personal"
-                ? "text-green border-green"
-                : "text-[#8A8A8A] border-[#EAEAEA]"
-            } p-2 gap-2 border-b-1 `}
-          >
-            <img src={"/icons/lock.svg"} />
-            <p className=" font-medium text-xs">Security</p>
-          </div>
+        <div className="flex gap-0 w-full overflow-x-auto">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <div
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex items-center cursor-pointer whitespace-nowrap border-b-2 p-2 gap-2 transition-colors duration-200",
+                  isActive
+                    ? "text-green border-green"
+                    : "text-[#8A8A8A] border-[#EAEAEA] hover:text-[#008060]/70",
+                )}
+              >
+                <Icon className="w-4 h-4" />
+                <p className="font-medium text-xs">{tab.label}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
-      <div className="w-full">{formState === "personal" ? <PersonalInfo /> : <Security />}</div>
+      <div className="w-full">{renderContent()}</div>
     </div>
   );
 };
