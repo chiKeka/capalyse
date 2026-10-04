@@ -144,7 +144,7 @@ export default function SignupPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validateAuthForm(form);
+    const validationErrors: typeof errors = validateAuthForm(form);
 
     // Additional validations
     if (form.confirmPassword && form.password !== form.confirmPassword) {

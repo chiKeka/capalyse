@@ -25,9 +25,9 @@ const ConfirmationModal = ({
         <div className="mb-6">
           <p className="text-gray-700 mb-4">
             You are about to change this business{" "}
-            <span className="font-semibold">"Business Name"</span> verification status from{" "}
-            <span className="font-semibold">"In-Review"</span> to{" "}
-            <span className="font-semibold">"{selectedStatus}"</span>
+            <span className="font-semibold">&quot;Business Name&quot;</span> verification status from{" "}
+            <span className="font-semibold">&quot;In-Review&quot;</span> to{" "}
+            <span className="font-semibold">&quot;{selectedStatus}&quot;</span>
           </p>
           <p className="text-gray-700">Do you want to proceed?</p>
         </div>

@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCountries } from "@/hooks/useComplianceCatalogs";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { investorOrg } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -28,7 +28,7 @@ type InvestmentPreferenceormProps = {
 };
 
 const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>((props, ref) => {
-  const { investor_org_info } = updateProfile();
+  const { investor_org_info } = useUpdateProfile();
   const authState: any = useAtomValue(authAtom);
   const setStep = useSetAtom(onboardingStepAtom);
   const {
@@ -185,5 +185,7 @@ const InvestorOrganisation = forwardRef<any, InvestmentPreferenceormProps>((prop
     </form>
   );
 });
+
+InvestorOrganisation.displayName = "InvestorOrganisation";
 
 export default InvestorOrganisation;

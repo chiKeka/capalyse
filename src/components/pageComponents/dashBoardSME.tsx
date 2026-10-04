@@ -13,14 +13,14 @@ import { useSmeMatches } from "@/hooks/useDirectories";
 import { GetPrograms } from "@/hooks/usePrograms";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { useGetSmeAssesmentsProgress } from "@/hooks/useSmeAssessments";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useParams } from "next/navigation";
 
 export default function SmeDashBoard() {
   const params = useParams();
 
   const { data: assessmentsProgress } = useGetSmeAssesmentsProgress();
-  const ProfileDetails = getCurrentProfile();
+  const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
   // Fetch readiness score data
   const { data: readinessScore, isLoading: isReadinessLoading } = useGetReadinessScore();

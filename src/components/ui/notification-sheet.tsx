@@ -64,7 +64,7 @@ export function NotificationSheet({ open, onOpenChange, notifications }: Notific
               </div>
               <div className="font-semibold text-lg mb-2">No Notifications Yet</div>
               <div className="text-muted-foreground text-base mb-6 max-w-[27.25rem] text-center">
-                It looks like you haven't received any notifications yet. Once you do, they'll
+                It looks like you haven&#39;t received any notifications yet. Once you do, they&#39;ll
                 appear here to keep you updated on important activities.
               </div>
               <Button

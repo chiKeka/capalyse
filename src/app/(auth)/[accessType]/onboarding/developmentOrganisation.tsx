@@ -5,7 +5,7 @@ import { CountrySelect } from "react-country-state-city";
 
 import Button from "@/components/ui/Button";
 import StatusChangeModal from "@/components/useManagementComponents.tsx/modals";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { handleImageUpload } from "@/lib/uitils/fns";
 import { developmentOrg } from "@/lib/uitils/types";
@@ -27,7 +27,7 @@ interface Props {
 const DevelopmentOrganisation = forwardRef<{ submit: () => void; isLoading: boolean }, Props>(
   ({ setLoading, onFinish, onSuccess, initialData, isProfile }, ref) => {
     const auth: any = useAtomValue(authAtom);
-    const { dev_org } = updateProfile();
+    const { dev_org } = useUpdateProfile();
     const {
       register,
       handleSubmit,
@@ -266,7 +266,7 @@ const DevelopmentOrganisation = forwardRef<{ submit: () => void; isLoading: bool
           {/* Show uploaded file name if present */}
           {certificateFiles?.map((items) => {
             return (
-              <div className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
+              <div key={items.fileName} className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
                 {items.fileName}
               </div>
             );
@@ -309,7 +309,7 @@ const DevelopmentOrganisation = forwardRef<{ submit: () => void; isLoading: bool
           {/* Show uploaded file name if present */}
           {operationalLicences?.map((items: any) => {
             return (
-              <div className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
+              <div key={items.fileName} className="mx-auto w-full items-start text-red-400 fotn-normal text-xs">
                 {items.fileName}
               </div>
             );

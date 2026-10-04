@@ -4,7 +4,7 @@ import { useMemo, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronDown, Loader2 } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";

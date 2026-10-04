@@ -1,7 +1,7 @@
 import Button from "@/components/ui/Button";
 import { CIcons } from "@/components/ui/CIcons";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { updateProgramStatus, useListMyApplications } from "@/hooks/usePrograms";
+import { useUpdateProgramStatus, useListMyApplications } from "@/hooks/usePrograms";
 import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
 import { useAtomValue } from "jotai";
@@ -43,7 +43,7 @@ function Programs({ status = "active", program, editProgram, setEditProgram }: P
     (application: any) => application.programId === program.id,
   );
 
-  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(program.id);
+  const { mutateAsync: updateProgramStatusMutation } = useUpdateProgramStatus(program.id);
   let bg = "#DCFCE7";
   let color = "#22C55E";
 

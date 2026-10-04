@@ -53,7 +53,7 @@ export const GetProgramApplicationById = (id: string, applicationId: string) => 
   });
 };
 
-export const applyToProgram = (id: string) => {
+export const useApplyToProgram = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
@@ -69,7 +69,7 @@ export const applyToProgram = (id: string) => {
   });
 };
 
-export const updateProgramStatus = (id: string) => {
+export const useUpdateProgramStatus = (id: string) => {
   return useMutation({
     mutationFn: async (status: string) => {
       const response = await api.post(programsRoutes.programAction(id, status));
@@ -78,7 +78,7 @@ export const updateProgramStatus = (id: string) => {
   });
 };
 
-export const reviewApplication = (id: string, applicationId: string) => {
+export const useReviewApplication = (id: string, applicationId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: {
@@ -142,7 +142,7 @@ export interface ProgramFormData {
   requirements?: Requirement[];
 }
 
-export const createProgram = () => {
+export const useCreateProgram = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ProgramFormData) => {
@@ -161,7 +161,7 @@ export const createProgram = () => {
   });
 };
 
-export const updateProgram = (id: string) => {
+export const useUpdateProgram = (id: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: ProgramFormData) => {

@@ -7,7 +7,8 @@ import ReadinessScoreCard from "@/components/sections/dashboardCards/readinessSc
 import InlineAgentCTA from "@/components/ui/inline-agent-cta";
 import { ReusableTable } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/Badge";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/Button";
 import {
   Dialog,

@@ -1,5 +1,5 @@
 import InvestmentPreference from "@/app/(auth)/[accessType]/onboarding/investmesntPrefernce";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
 
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
@@ -14,7 +14,7 @@ type InvestmentPreferenceormProps = {
 
 const InvestmentPreferenceWrapper = () => {
   const [loading, setLoading] = useState(false);
-  const { data: user } = getCurrentProfile();
+  const { data: user } = useGetCurrentProfile();
 
   const investmentPreferenceRef = useRef<{
     submit: () => void;

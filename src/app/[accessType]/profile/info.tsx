@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useDocument from "@/hooks/useDocument";
-import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile, useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useAfricanCountries } from "@/hooks/useComplianceCatalogs";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -26,8 +26,8 @@ import { toast } from "sonner";
 type Props = {};
 
 export default function Info({}: Props) {
-  const { data: user, isLoading, error } = getCurrentProfile();
-  const { smes_bussiness_info } = updateProfile();
+  const { data: user, isLoading, error } = useGetCurrentProfile();
+  const { smes_bussiness_info } = useUpdateProfile();
   const { useUploadDocument } = useDocument();
   const uploadDocument = useUploadDocument();
   // console.log(user, 'user');

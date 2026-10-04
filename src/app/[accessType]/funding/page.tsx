@@ -850,7 +850,7 @@ export default function FundingPage() {
   ];
 
   // ---- Milestone table columns ----
-  const milestoneColumns = [
+  const milestoneColumns: { header: string; accessor: (row: MilestoneItem) => React.ReactNode; className?: string }[] = [
     {
       header: "SME Name",
       accessor: (row: MilestoneItem) => (

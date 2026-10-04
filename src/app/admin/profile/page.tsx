@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile, useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -99,8 +99,8 @@ interface ActivityLogEntry {
 
 export default function AdminProfilePage() {
   const auth: any = useAtomValue(authAtom);
-  const { data: details, isLoading } = getCurrentProfile();
-  const { personal_information } = updateProfile();
+  const { data: details, isLoading } = useGetCurrentProfile();
+  const { personal_information } = useUpdateProfile();
 
   // State
   const [tab, setTab] = useState<TabKey>("personal");

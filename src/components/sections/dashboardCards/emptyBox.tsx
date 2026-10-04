@@ -10,7 +10,7 @@ type Props = {
   buttonText?: string;
   progress?: number;
   spinner?: boolean;
-  actionType?: "startAssessment" | "createProgram";
+  actionType?: "startAssessment" | "useCreateProgram";
 };
 
 function EmptyBox({
@@ -43,7 +43,7 @@ function EmptyBox({
       {actionType === "startAssessment" && (
         <AssessmentReadiness isOpen={open} setIsOpen={setOpen} />
       )}
-      {actionType === "createProgram" && <CreateProgram isOpen={open} setIsOpen={setOpen} />}
+      {actionType === "useCreateProgram" && <CreateProgram isOpen={open} setIsOpen={setOpen} />}
     </div>
   );
 }

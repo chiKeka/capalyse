@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
-import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile, useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { authClient } from "@/lib/auth-client";
 import { useAtomValue } from "jotai";
@@ -19,7 +19,7 @@ type Props = {};
 
 function PersonalInfo({}: Props) {
   const auth: any = useAtomValue(authAtom);
-  const { data: details } = getCurrentProfile();
+  const { data: details } = useGetCurrentProfile();
   const {
     register,
     handleSubmit,
@@ -47,7 +47,7 @@ function PersonalInfo({}: Props) {
     }
   }, [details, reset]);
 
-  const { personal_information } = updateProfile();
+  const { personal_information } = useUpdateProfile();
 
   const onSubmit = async (data: PersonalInfoData) => {
     const { email, ...rest } = data;
