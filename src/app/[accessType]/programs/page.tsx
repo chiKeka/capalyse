@@ -3,7 +3,7 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import EmptyBox from "@/components/sections/dashboardCards/emptyBox";
 import Programs from "@/components/sections/dashboardCards/programs";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/card";
 import CreateProgram from "@/components/ui/createProgram";
@@ -1243,7 +1243,7 @@ function ProgramsPage() {
                     ? "You have not created any programs yet."
                     : "There are no available programs at the moment."
               }
-              actionType={isDevOrg ? "createProgram" : undefined}
+              actionType={isDevOrg ? "useCreateProgram" : undefined}
               showButton={isDevOrg && !hasActiveFilters}
             />
             {hasActiveFilters && (

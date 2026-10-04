@@ -20,7 +20,7 @@ export interface VerifyResponse {
 //   });
 // };
 
-export const getCurrentProfile = () => {
+export const useGetCurrentProfile = () => {
   return useQuery({
     queryKey: ["current_profile"],
     queryFn: async () => {
@@ -32,7 +32,7 @@ export const getCurrentProfile = () => {
   });
 };
 
-export const updateProfile = () => {
+export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   const personal_information = useMutation({

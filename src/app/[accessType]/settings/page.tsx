@@ -72,7 +72,7 @@ import {
 import Input from "@/components/ui/Inputs";
 import { ReusableTable } from "@/components/ui/table";
 
-import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile, useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authClient } from "@/lib/auth-client";
 import {
   useNotificationSettings,
@@ -226,7 +226,7 @@ const mockBillingHistory = [
 ];
 
 /* Mock: connected accounts */
-const mockConnectedAccounts = [
+const mockConnectedAccounts: { id: string; name: string; icon: typeof Globe; connected: boolean; lastSynced: string | null; email: string | null }[] = [
   { id: "google", name: "Google", icon: Globe, connected: true, lastSynced: "2026-03-15 08:00", email: "user@gmail.com" },
   { id: "linkedin", name: "LinkedIn", icon: Link2, connected: false, lastSynced: null, email: null },
   { id: "bank", name: "Bank Account", icon: CreditCard, connected: true, lastSynced: "2026-03-14 12:30", email: "****4521" },
@@ -341,8 +341,8 @@ function SectionHeader({ title, description }: { title: string; description: str
 
 function ProfileSection({ accessType }: { accessType: string }) {
   const auth: any = useAtomValue(authAtom);
-  const { data: details } = getCurrentProfile();
-  const { personal_information } = updateProfile();
+  const { data: details } = useGetCurrentProfile();
+  const { personal_information } = useUpdateProfile();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const {
@@ -897,7 +897,7 @@ function PrivacySecuritySection({ accessType }: { accessType: string }) {
 
   useEffect(() => {
     if (serverPrivacy) {
-      setPrivacy({ profileVisibility: "public", searchVisibility: true, showEmail: false, showPhone: false, ...serverPrivacy });
+      setPrivacy(serverPrivacy);
     }
   }, [serverPrivacy]);
 

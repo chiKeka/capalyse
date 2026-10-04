@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { statusBadge } from "@/components/ui/statusBar";
 import { ReusableTable } from "@/components/ui/table";
 import { useGetSmeById } from "@/hooks/useDirectories";
-import { GetProgramById, reviewApplication } from "@/hooks/usePrograms";
+import { GetProgramById, useReviewApplication } from "@/hooks/usePrograms";
 
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { File } from "lucide-react";
@@ -111,7 +111,7 @@ export default function SingleApplicantPage({}: Props) {
   const { data: programDetails } = GetProgramById(params.sluge as string);
   const { data: smeData, isLoading: isSmeLoading } = useGetSmeById(id as string);
 
-  const { mutateAsync: reviewApplicationMutation } = reviewApplication(
+  const { mutateAsync: reviewApplicationMutation } = useReviewApplication(
     params.sluge as string,
     applicationId as string,
   );

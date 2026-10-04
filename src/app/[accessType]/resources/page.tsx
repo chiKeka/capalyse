@@ -34,7 +34,6 @@ import {
   Loader2Icon,
   PlayCircleIcon,
   StarIcon,
-  ToolboxIcon,
   TrendingUpIcon,
   WrenchIcon,
 } from "lucide-react";

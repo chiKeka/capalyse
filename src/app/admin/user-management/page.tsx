@@ -6,6 +6,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   UsersIcon,
+  UserCheckIcon,
+  ClockIcon,
+  UserPlusIcon,
   DownloadIcon,
   EyeIcon,
   BanIcon,

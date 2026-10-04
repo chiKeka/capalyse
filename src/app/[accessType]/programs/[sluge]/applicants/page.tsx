@@ -3,7 +3,7 @@
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import { SearchForm } from "@/components/search-form";
 import Button from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CIcons } from "@/components/ui/CIcons";
 import {
@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { ReusableTable } from "@/components/ui/table";
 import { useIndustries } from "@/hooks/useComplianceCatalogs";
-import { GetProgramApplications, GetProgramById, reviewApplication } from "@/hooks/usePrograms";
+import { GetProgramApplications, GetProgramById, useReviewApplication } from "@/hooks/usePrograms";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import {

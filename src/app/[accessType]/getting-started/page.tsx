@@ -35,7 +35,7 @@ import {
   type OnboardingRole,
 } from "@/hooks/useOnboarding";
 import { useProfileCompletion } from "@/hooks/useOnboarding";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useAtomValue } from "jotai";
 import { authAtom } from "@/lib/atoms/atoms";
 import { routes } from "@/lib/routes";
@@ -82,7 +82,7 @@ const pageTransition = {
   type: "tween",
   ease: "easeInOut",
   duration: 0.35,
-};
+} as const;
 
 // ============================================================================
 // CONFETTI COMPONENT
@@ -156,7 +156,7 @@ function SmeWelcome({ onNext }: { onNext: () => void }) {
         Welcome to Capalyse{auth?.name ? `, ${auth.name.split(" ")[0]}` : ""}!
       </h2>
       <p className="text-base text-black-400 mb-6 leading-relaxed">
-        We're excited to have you on board. In just a few steps, you'll set up
+        We&#39;re excited to have you on board. In just a few steps, you&#39;ll set up
         your business profile, assess your investment readiness, and start
         connecting with investors who are looking for SMEs like yours.
       </p>
@@ -189,7 +189,7 @@ function SmeWelcome({ onNext }: { onNext: () => void }) {
         ))}
       </div>
       <Button variant="primary" size="big" onClick={onNext}>
-        Let's Get Started <ArrowRight className="w-5 h-5 ml-2" />
+        Let&#39;s Get Started <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
     </div>
   );
@@ -205,7 +205,7 @@ function SmeCompleteProfile({
   accessType: string;
 }) {
   const router = useRouter();
-  const { data: profile } = getCurrentProfile();
+  const { data: profile } = useGetCurrentProfile();
   const completionPct = profile
     ? Math.round(
         ((profile?.completedSteps?.length || 0) / (profile?.totalSteps || 1)) *
@@ -315,7 +315,7 @@ function SmeTakeAssessment({
       <Card className="mb-6">
         <CardContent className="p-6">
           <h3 className="font-semibold text-black-500 mb-4">
-            What you'll be assessed on:
+            What you&#39;ll be assessed on:
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
@@ -351,7 +351,7 @@ function SmeTakeAssessment({
           Start Assessment <ArrowRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="secondary" size="medium" onClick={onNext} className="flex-1">
-          I'll do this later
+          I&#39;ll do this later
         </Button>
       </div>
     </div>
@@ -440,11 +440,11 @@ function SmeExploreMatches({
         <PartyPopper className="w-10 h-10 text-green" />
       </div>
       <h2 className="text-2xl lg:text-3xl font-bold text-black-500 mb-3">
-        You're All Set!
+        You&#39;re All Set!
       </h2>
       <p className="text-base text-black-400 mb-8 leading-relaxed">
         Great job completing your onboarding! Your profile is now active and
-        you'll start receiving investor matches based on your readiness score.
+        you&#39;ll start receiving investor matches based on your readiness score.
       </p>
       <div className="grid grid-cols-2 gap-4 w-full mb-8">
         <div
@@ -516,7 +516,7 @@ function InvestorWelcome({ onNext }: { onNext: () => void }) {
         ))}
       </div>
       <Button variant="primary" size="big" onClick={onNext}>
-        Let's Get Started <ArrowRight className="w-5 h-5 ml-2" />
+        Let&#39;s Get Started <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
     </div>
   );
@@ -575,7 +575,7 @@ function InvestorCompleteProfile({
           Complete Profile <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="secondary" size="medium" onClick={onNext} className="flex-1">
-          I'll do this later
+          I&#39;ll do this later
         </Button>
       </div>
     </div>
@@ -640,7 +640,7 @@ function InvestorSetCriteria({
           Set Criteria <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="secondary" size="medium" onClick={onNext} className="flex-1">
-          I'll do this later
+          I&#39;ll do this later
         </Button>
       </div>
     </div>
@@ -661,7 +661,7 @@ function InvestorBrowseSmes({
         <PartyPopper className="w-10 h-10 text-green" />
       </div>
       <h2 className="text-2xl lg:text-3xl font-bold text-black-500 mb-3">
-        You're Ready to Invest!
+        You&#39;re Ready to Invest!
       </h2>
       <p className="text-base text-black-400 mb-8 leading-relaxed">
         Your investor profile is set up. Browse investment-ready SMEs across
@@ -737,7 +737,7 @@ function DevWelcome({ onNext }: { onNext: () => void }) {
         ))}
       </div>
       <Button variant="primary" size="big" onClick={onNext}>
-        Let's Get Started <ArrowRight className="w-5 h-5 ml-2" />
+        Let&#39;s Get Started <ArrowRight className="w-5 h-5 ml-2" />
       </Button>
     </div>
   );
@@ -796,7 +796,7 @@ function DevOrgProfile({
           Go to Profile <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="secondary" size="medium" onClick={onNext} className="flex-1">
-          I'll do this later
+          I&#39;ll do this later
         </Button>
       </div>
     </div>
@@ -859,7 +859,7 @@ function DevCreateProgram({
           Create a Program <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
         <Button variant="secondary" size="medium" onClick={onNext} className="flex-1">
-          I'll do this later
+          I&#39;ll do this later
         </Button>
       </div>
     </div>
@@ -880,7 +880,7 @@ function DevInviteSmes({
         <PartyPopper className="w-10 h-10 text-green" />
       </div>
       <h2 className="text-2xl lg:text-3xl font-bold text-black-500 mb-3">
-        You're All Set!
+        You&#39;re All Set!
       </h2>
       <p className="text-base text-black-400 mb-8 leading-relaxed">
         Your organization is ready. Browse the SME directory and start inviting

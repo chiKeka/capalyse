@@ -1,5 +1,5 @@
 import DevelopmentOrganisation from "@/app/(auth)/[accessType]/onboarding/developmentOrganisation";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
 
 import { useRef, useState } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
@@ -9,7 +9,7 @@ type Props = {};
 
 const OrganisationInforWrapperDevOrg = () => {
   const [loading, setLoading] = useState(false);
-  const { data: user, isLoading, error } = getCurrentProfile();
+  const { data: user, isLoading, error } = useGetCurrentProfile();
 
   const organisationInforRef = useRef<{
     submit: () => void;

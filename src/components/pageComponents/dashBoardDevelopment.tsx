@@ -139,7 +139,7 @@ export default function DevelopmentDashBoard() {
             <div className="w-full h-full py-24 flex items-center justify-center">
               <EmptyBox
                 buttonText="Create Program"
-                actionType="createProgram"
+                actionType="useCreateProgram"
                 caption="No Programs Yet!"
                 caption2="You have not created any programs yet."
               />

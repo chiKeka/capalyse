@@ -919,7 +919,7 @@ export default function InvestorAnalyticsPage() {
               <span className="font-bold text-sm text-[#18181B]">Deal Size Distribution</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {breakdownData.dealSize.map((item: any, index: number) => (
+              {breakdownData?.dealSize?.map((item: any, index: number) => (
                 <div
                   key={index}
                   className="p-3 rounded-lg bg-[#F4FFFC] border border-[#ABD2C7] space-y-0.5"

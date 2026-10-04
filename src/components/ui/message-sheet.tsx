@@ -248,7 +248,7 @@ export function MessageSheet({
               </div>
               <div className="font-semibold text-lg mb-2">No Messages Yet</div>
               <div className="text-muted-foreground text-base mb-6 max-w-[27.25rem] text-center">
-                It looks like you haven't sent or recieved any messages yet. Once you do, they'll
+                It looks like you haven&#39;t sent or recieved any messages yet. Once you do, they&#39;ll
                 appear here to keep you updated on important activities.
               </div>
               <Button

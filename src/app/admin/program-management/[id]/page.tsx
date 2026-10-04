@@ -2,7 +2,7 @@
 
 import { SearchForm } from "@/components/search-form";
 import Button from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CIcons } from "@/components/ui/CIcons";
 import { Input } from "@/components/ui/input";
@@ -132,7 +132,7 @@ function AdminProgramDetailPage() {
 
   const { data: program, isLoading: isProgramLoading } = useAdminProgramById(programId);
   const { data: applicantsData, isLoading: isApplicantsLoading } = useAdminProgramApplications(programId);
-  const updateProgram = useUpdateAdminProgram(programId);
+  const useUpdateProgram = useUpdateAdminProgram(programId);
   const updateStatus = useUpdateProgramStatus(programId);
   const { data: industries = [] } = useIndustries();
 
@@ -193,7 +193,7 @@ function AdminProgramDetailPage() {
   };
 
   const handleSaveDetails = () => {
-    updateProgram.mutate(formData, {
+    useUpdateProgram.mutate(formData, {
       onSuccess: () => {
         toast.success("Program details updated successfully");
         setIsEditing(false);
@@ -435,8 +435,8 @@ function AdminProgramDetailPage() {
                     <X className="w-3 h-3 mr-1" />
                     Cancel
                   </Button>
-                  <Button variant="primary" size="small" className="text-xs" onClick={handleSaveDetails} disabled={updateProgram.isPending}>
-                    {updateProgram.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
+                  <Button variant="primary" size="small" className="text-xs" onClick={handleSaveDetails} disabled={useUpdateProgram.isPending}>
+                    {useUpdateProgram.isPending && <Loader2 className="w-3 h-3 animate-spin mr-1" />}
                     <Save className="w-3 h-3 mr-1" />
                     Save
                   </Button>

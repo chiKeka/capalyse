@@ -8,7 +8,7 @@ import {
   MultiSelectValue,
 } from "@/components/ui/multi-select";
 
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { InvestmentPreferenceInfo } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -40,7 +40,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>((prop
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [selectedInvestmentTypes, setSelectedInvestmentTypes] = useState<string[]>([]);
   const [selectedBusinessStages, setSelectedBusinessStages] = useState<string[]>([]);
-  const { investor_investment_info } = updateProfile();
+  const { investor_investment_info } = useUpdateProfile();
   const { data: industries = [] } = useIndustries();
   const { data: regions = [] } = useAfricanRegions();
   const authState: any = useAtomValue(authAtom);
@@ -357,5 +357,7 @@ const InvestmentPreference = forwardRef<any, InvestmentPreferenceormProps>((prop
     </form>
   );
 });
+
+InvestmentPreference.displayName = "InvestmentPreference";
 
 export default InvestmentPreference;

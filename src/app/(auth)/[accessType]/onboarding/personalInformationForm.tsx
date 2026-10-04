@@ -1,7 +1,7 @@
 "use client";
 
 import Input from "@/components/ui/Inputs";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { PersonalInfoInputs } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -23,7 +23,7 @@ type PersonalInformationFormProps = {
 };
 const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>((props, ref) => {
   const auth: any = useAtomValue(authAtom);
-  const { personal_information } = updateProfile();
+  const { personal_information } = useUpdateProfile();
   const setStep = useSetAtom(onboardingStepAtom);
   // console.log({ auth });
   const names = auth?.name?.split?.(" ");
@@ -178,6 +178,8 @@ const PersonalInfoForm = forwardRef<any, PersonalInformationFormProps>((props, r
     </form>
   );
 });
+
+PersonalInfoForm.displayName = "PersonalInfoForm";
 
 export default PersonalInfoForm;
 

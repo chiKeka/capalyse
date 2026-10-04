@@ -1,6 +1,6 @@
 import Input from "@/components/ui/Inputs";
 import { useAfricanCountries, useIndustries } from "@/hooks/useComplianceCatalogs";
-import { createProgram, ProgramFormData, updateProgram } from "@/hooks/usePrograms";
+import { useCreateProgram, ProgramFormData, useUpdateProgram } from "@/hooks/usePrograms";
 import { format } from "date-fns";
 import { Loader, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -36,8 +36,8 @@ interface ProgramFormValues extends Omit<ProgramFormData, "objectives"> {
 function CreateProgram({ isOpen, setIsOpen, program, isEdit }: Props) {
   const [range, setRange] = useState<{ from?: Date; to?: Date }>({});
   const [partnersInput, setPartnersInput] = useState("");
-  const { mutateAsync: createProgramMutation } = createProgram();
-  const { mutateAsync: updateProgramMutation } = updateProgram(program?.id);
+  const { mutateAsync: createProgramMutation } = useCreateProgram();
+  const { mutateAsync: updateProgramMutation } = useUpdateProgram(program?.id);
 
   const { data: industries = [] } = useIndustries();
 

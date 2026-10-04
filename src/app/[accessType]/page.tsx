@@ -40,7 +40,7 @@ import { CIcons } from "@/components/ui/CIcons";
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/lib/uitils/fns";
 import { ProfileData, useGetInvestorsAnalytics } from "@/hooks/useProfileManagement";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
 import { useGetReadinessScore } from "@/hooks/useReadiness";
 import { GetPrograms, useListMyApplications, useImpactSummary } from "@/hooks/usePrograms";
 import { GetDevOrgAnalytics } from "@/hooks/devOrg/devOrgsAnalytics";

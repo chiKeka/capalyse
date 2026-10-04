@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAfricanCountries, useIndustries } from "@/hooks/useComplianceCatalogs";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom, onboardingStepAtom } from "@/lib/atoms/atoms";
 import { SMEsBusinessInfo } from "@/lib/uitils/types";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -38,7 +38,7 @@ type BusinassInformationFormProps = {
 };
 const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>((props, ref) => {
   const [selectedCountryName, setSelectedCountryName] = useState("");
-  const { smes_bussiness_info } = updateProfile();
+  const { smes_bussiness_info } = useUpdateProfile();
   const authState: any = useAtomValue(authAtom);
   const setStep = useSetAtom(onboardingStepAtom);
   const {
@@ -278,4 +278,6 @@ const BusinassInformationForm = forwardRef<any, BusinassInformationFormProps>((p
     </form>
   );
 });
+BusinassInformationForm.displayName = "BusinassInformationForm";
+
 export default BusinassInformationForm;

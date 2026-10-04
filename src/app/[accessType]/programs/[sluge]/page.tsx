@@ -2,7 +2,7 @@
 
 import DashboardCardLayout from "@/components/layout/dashboardCardLayout";
 import Button from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CIcons } from "@/components/ui/CIcons";
 import CreateProgram from "@/components/ui/createProgram";
@@ -17,10 +17,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import {
-  applyToProgram,
+  useApplyToProgram,
   GetProgramById,
   GetProgramApplications,
-  updateProgramStatus,
+  useUpdateProgramStatus,
 } from "@/hooks/usePrograms";
 import { authAtom } from "@/lib/atoms/atoms";
 import { formatDateRange } from "@/lib/uitils/fns";
@@ -169,8 +169,8 @@ function ProgramDetailPage() {
 
   const { data: program, isLoading } = GetProgramById(params.sluge as string);
   const { data: applicationsData } = GetProgramApplications(params.sluge as string);
-  const { mutateAsync: applyToPtograms, isPending: isApplying } = applyToProgram(params.sluge as string);
-  const { mutateAsync: updateProgramStatusMutation } = updateProgramStatus(params.sluge as string);
+  const { mutateAsync: applyToPtograms, isPending: isApplying } = useApplyToProgram(params.sluge as string);
+  const { mutateAsync: updateProgramStatusMutation } = useUpdateProgramStatus(params.sluge as string);
 
   const isDevOrg = params?.accessType === "development";
   const isAdmin = params?.accessType === "admin";

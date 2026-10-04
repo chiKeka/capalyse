@@ -22,7 +22,7 @@ function Contact({}: Props) {
           </h1>
 
           <p>
-            Got any questions or concerns about any of our services? We really can't wait to hear
+            Got any questions or concerns about any of our services? We really can&#39;t wait to hear
             from you!
           </p>
         </div>

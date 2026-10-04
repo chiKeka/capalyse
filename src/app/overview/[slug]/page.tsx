@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 
 type Props = {};
 
-const page = (props: Props) => {
+const Page = (props: Props) => {
   const params = useParams();
   const router = useRouter();
   const { data: session } = useSession();
@@ -124,7 +124,7 @@ const page = (props: Props) => {
           <div className="gap-2 flex flex-wrap mt-4">
             {data?.services?.map((item) => {
               return (
-                <div className="flex flex-row mt-2 gap-2">
+                <div key={item} className="flex flex-row mt-2 gap-2">
                   <img src="/icons/verifyCheck.svg" />{" "}
                   <p className="text-base font-normal ">{item}</p>
                 </div>
@@ -137,7 +137,7 @@ const page = (props: Props) => {
           <div className="gap-2 flex flex-wrap mt-4">
             {data?.colaboration?.map((item) => {
               return (
-                <div className="flex flex-row mt-2 gap-2">
+                <div key={item} className="flex flex-row mt-2 gap-2">
                   <img src="/icons/verifyCheck.svg" />{" "}
                   <p className="text-base font-normal ">{item}</p>
                 </div>
@@ -150,4 +150,4 @@ const page = (props: Props) => {
   );
 };
 
-export default page;
+export default Page;

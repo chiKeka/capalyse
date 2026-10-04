@@ -9,17 +9,9 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Copy package manifests
-COPY package.json package-lock.json* bun.lock* ./
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install production + dev dependencies (needed for build)
-RUN \
-  if [ -f bun.lock ]; then \
-    npm install -g bun && bun install --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then \
-    npm ci; \
-  else \
-    npm install; \
-  fi
 
 
 # ============================================================================
@@ -37,6 +29,17 @@ COPY . .
 
 # Disable Next.js telemetry during build
 ENV NEXT_TELEMETRY_DISABLED=1
+
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_BETTER_AUTH_URL
+ARG NEXT_PUBLIC_AGENT_API_URL
+ARG NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+ARG NEXT_PUBLIC_CLOUDINARY_PRESET
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_BETTER_AUTH_URL=$NEXT_PUBLIC_BETTER_AUTH_URL
+ENV NEXT_PUBLIC_AGENT_API_URL=$NEXT_PUBLIC_AGENT_API_URL
+ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=$NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+ENV NEXT_PUBLIC_CLOUDINARY_PRESET=$NEXT_PUBLIC_CLOUDINARY_PRESET
 
 # Build Next.js in standalone output mode
 RUN npm run build

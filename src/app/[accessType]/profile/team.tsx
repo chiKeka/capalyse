@@ -1,8 +1,8 @@
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Inputs";
 import { ReusableTable } from "@/components/ui/table";
-import { getCurrentProfile } from "@/hooks/useUpdateProfile";
-import { updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile } from "@/hooks/useUpdateProfile";
+import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,10 +20,10 @@ type TeamFormData = {
 };
 
 export default function Team({}: Props) {
-  const { updateTeamMemeber } = updateProfile();
+  const { updateTeamMemeber } = useUpdateProfile();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const ProfileDetails = getCurrentProfile();
+  const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading, error } = ProfileDetails;
 
   const {

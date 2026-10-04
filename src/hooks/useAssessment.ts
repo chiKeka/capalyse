@@ -251,6 +251,15 @@ export const assessmentQueryKeys = {
 /**
  * Hook for assessment-related queries and mutations
  */
+export const assessmentQuestionsOptions = (category: AssessmentCategory, enabled = true) => ({
+  queryKey: assessmentQueryKeys.questions(category),
+  queryFn: async (): Promise<AssessmentQuestion[]> => {
+    const response = await api.get(assessmentEndpoints.getQuestionsByCategory(category));
+    return response.data;
+  },
+  enabled,
+});
+
 export function useAssessment() {
   const queryClient = useQueryClient();
 
@@ -275,14 +284,7 @@ export function useAssessment() {
    * Get questions by category
    */
   const useGetQuestionsByCategory = (category: AssessmentCategory, enabled = true) => {
-    return useQuery({
-      queryKey: assessmentQueryKeys.questions(category),
-      queryFn: async (): Promise<AssessmentQuestion[]> => {
-        const response = await api.get(assessmentEndpoints.getQuestionsByCategory(category));
-        return response.data;
-      },
-      enabled,
-    });
+    return useQuery(assessmentQuestionsOptions(category, enabled));
   };
 
   /**

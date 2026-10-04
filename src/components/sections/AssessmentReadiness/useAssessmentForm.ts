@@ -1,6 +1,8 @@
+import { useQueries } from "@tanstack/react-query";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
   useAssessment,
+  assessmentQuestionsOptions,
   AssessmentCategory,
   AssessmentQuestion,
   AssessmentAnswer,
@@ -30,7 +32,7 @@ export function useAssessmentForm(
   const auth: any = useAtomValue(authAtom);
   const pathname = usePathname();
   const router = useRouter();
-  const { useGetCategories, useGetQuestionsByCategory, useSubmitResponse, useGetMyResponses } =
+  const { useGetCategories, useSubmitResponse, useGetMyResponses } =
     useAssessment();
 
   const { useGetDocuments } = useDocument();
@@ -41,9 +43,9 @@ export function useAssessmentForm(
   const { data: categoryData, isLoading: categoriesLoading } = useGetCategories();
 
   // Get questions for each category
-  const questionsQueries = categories.map((category) =>
-    useGetQuestionsByCategory(category, !!categoryData),
-  );
+  const questionsQueries = useQueries({
+    queries: categories.map((category) => assessmentQuestionsOptions(category, !!categoryData)),
+  });
 
   // Submit mutation
   const submitMutation = useSubmitResponse();
@@ -66,7 +68,7 @@ export function useAssessmentForm(
         name: category.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
         key: category,
         totalQuestions: questions.length,
-        questions: questions.sort((a, b) => (a.order || 0) - (b.order || 0)),
+        questions: [...questions].sort((a, b) => (a.order || 0) - (b.order || 0)),
       };
     });
   }, [categoryData, questionsQueries, categories]);

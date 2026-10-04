@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import StraightBar from "@/components/ui/straightBar";
-import { getCurrentProfile, updateProfile } from "@/hooks/useUpdateProfile";
+import { useGetCurrentProfile, useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { authAtom } from "@/lib/atoms/atoms";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
@@ -256,7 +256,7 @@ function EditProfileDialog({
   user: any;
   accessType: string;
 }) {
-  const profileMutations = updateProfile();
+  const profileMutations = useUpdateProfile();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -625,7 +625,7 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<ProfileTab>("about");
   const [editOpen, setEditOpen] = useState(false);
 
-  const ProfileDetails = getCurrentProfile();
+  const ProfileDetails = useGetCurrentProfile();
   const { data: user, isLoading } = ProfileDetails;
 
   const fullName = useMemo(() => {
